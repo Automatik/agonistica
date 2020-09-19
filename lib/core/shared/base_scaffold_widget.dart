@@ -1,6 +1,7 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -30,7 +31,7 @@ class _BaseScaffoldWidgetState extends State<BaseScaffoldWidget> {
   Widget build(BuildContext context) {
 
     return PlatformScaffold(
-        appBar: widget.showAppBar ? getPlatformAppBar(widget.title) : null,
+        appBar: widget.showAppBar ? Utils.getPlatformAppBar(widget.title) : null,
         body: Builder(
             builder: (BuildContext innerContext) {
               widget._baseScaffoldService.scaffoldContext = innerContext;
@@ -55,19 +56,6 @@ class _BaseScaffoldWidgetState extends State<BaseScaffoldWidget> {
     return height >= width;
   }
 
-  static PlatformAppBar getPlatformAppBar(String title) {
-    return PlatformAppBar(
-      backgroundColor: appBarBackgroundColor,
-      title: Text(
-        title,
-        style: TextStyle(
-          color: blueAgonisticaColor,
-        ),
-      ),
-      material: (_, __) => MaterialAppBarData(
-        leading: Icon(Icons.menu,color: blueAgonisticaColor,),
-      )
-    );
-  }
+
 
 }

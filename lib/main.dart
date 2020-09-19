@@ -2,6 +2,8 @@ import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';
+import 'package:agonistica/views/matches/matches_view.dart';
+import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
             routes: {
               HomeView.routeName: (context) => HomeView(),
               CategoriesView.routeName: (context) => CategoriesView(),
+              MatchesView.routeName: (context) => MatchesView(),
+              RosterView.routeName: (context) => RosterView(),
             },
           );
         },

@@ -7,7 +7,6 @@ import 'matches_view_model.dart';
 
 part 'matches_mobile.dart';
 part 'matches_tablet.dart';
-part 'matches_desktop.dart';
 
 // ignore: must_be_immutable
 class MatchesView extends StatelessWidget {
@@ -23,12 +22,7 @@ class MatchesView extends StatelessWidget {
       builder: (context, viewModel, child) {
         return ScreenTypeLayout(
           mobile: _MatchesMobile(viewModel),
-          desktop: _MatchesMobile(viewModel),
           tablet: _MatchesMobile(viewModel),
-
-          //Uncomment it if you've planned to support specifically for desktop and tablet
-          //desktop: _MatchesDesktop(viewModel),
-          //tablet: _MatchesTablet(viewModel),  
         );
       }
     );
