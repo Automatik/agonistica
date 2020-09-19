@@ -7,3 +7,4 @@ const appBarBackgroundColor = Colors.white;
 const accentColor = Colors.white;
 
 const String defaultAppBarTitle = "Agonistica 2.0";
+const String mainButtonTitle = "Merate";

@@ -18,31 +18,31 @@ class _HomeMobile extends StatelessWidget {
             maxHeight: sizingInformation.screenSize.height,
             maxWidth: sizingInformation.screenSize.width,
           ),
-          child: homeLayout(sizingInformation),
+          child: homeLayout(context, sizingInformation),
         );
       },
     );
   }
 
-  Widget homeLayout(MySizingInformation sizingInformation) {
+  Widget homeLayout(BuildContext context, MySizingInformation sizingInformation) {
     return sizingInformation.isPortrait()
-        ? homePortraitLayout(sizingInformation)
-        : homeLandscapeLayout(sizingInformation);
+        ? homePortraitLayout(context, sizingInformation)
+        : homeLandscapeLayout(context, sizingInformation);
   }
 
-  Widget homePortraitLayout(MySizingInformation sizingInformation) {
+  Widget homePortraitLayout(BuildContext context, MySizingInformation sizingInformation) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         mainTitleWidget(100),
-        mainButtonWidget(sizingInformation),
+        mainButtonWidget(context, sizingInformation),
         otherPlayersText(50, 24),
         otherPlayersListWidget(sizingInformation),
       ],
     );
   }
 
-  Widget homeLandscapeLayout(MySizingInformation sizingInformation) {
+  Widget homeLandscapeLayout(BuildContext context, MySizingInformation sizingInformation) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -51,7 +51,7 @@ class _HomeMobile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            mainButtonWidget(sizingInformation),
+            mainButtonWidget(context, sizingInformation),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -70,7 +70,7 @@ class _HomeMobile extends StatelessWidget {
       margin: EdgeInsets.only(top: marginTop),
       alignment: Alignment.center,
       child: Text(
-        'AGONISTICA 2.0',
+        defaultAppBarTitle.toUpperCase(),
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 32,
@@ -81,41 +81,44 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget mainButtonWidget(MySizingInformation sizingInformation) {
+  Widget mainButtonWidget(BuildContext context, MySizingInformation sizingInformation) {
 
     double widthFactor = sizingInformation.isPortrait() ? 0.6 : 0.35;
     double width = widthFactor * sizingInformation.screenSize.width;
 
     double marginTop = sizingInformation.isPortrait() ? 50 : 0;
 
-    return Container(
-      margin: EdgeInsets.only(top: marginTop),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      width: width,
-      height: merateButtonHeight,
-      alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/images/prinetti.png',
-            height: merateButtonHeight,
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20),
-            child: Text(
-              'Merate',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold
+    return GestureDetector(
+      onTap: () => viewModel.onMainButtonTap(context),
+      child: Container(
+        margin: EdgeInsets.only(top: marginTop),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        width: width,
+        height: merateButtonHeight,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/prinetti.png',
+              height: merateButtonHeight,
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Text(
+                mainButtonTitle,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -152,7 +155,7 @@ class _HomeMobile extends StatelessWidget {
         itemCount: viewModel.otherPlayersList.length,
         itemBuilder: (BuildContext listContext, int index) {
           return GestureDetector(
-            onTap: () => viewModel.onOtherPlayersTap(index),
+            onTap: () => viewModel.onOtherPlayersTap(listContext, index),
             child: Container(
               margin: EdgeInsets.only(top: marginTopFactor),
               height: 35,

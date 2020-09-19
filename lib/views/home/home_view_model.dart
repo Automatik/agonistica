@@ -1,8 +1,15 @@
+import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/views/categories/categories_view.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
 
   final otherPlayersList = ['Prima Squadra', 'Juniores', 'Allievi', 'Giovanissimi'];
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
 
   HomeViewModel(){
     loadItems();
@@ -18,8 +25,16 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onOtherPlayersTap(int index) {
+  void onMainButtonTap(BuildContext context) {
+    _baseScaffoldService.teamSelected = mainButtonTitle;
+    Navigator.pushNamed(
+        context,
+        CategoriesView.routeName,
+    );
+  }
 
+  void onOtherPlayersTap(BuildContext context, int index) {
+    _baseScaffoldService.teamSelected = otherPlayersList[index];
   }
 
 }

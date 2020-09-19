@@ -65,7 +65,7 @@ class _BaseScaffoldWidgetState extends State<BaseScaffoldWidget> {
         ),
       ),
       material: (_, __) => MaterialAppBarData(
-
+        leading: Icon(Icons.menu,color: blueAgonisticaColor,),
       )
     );
   }

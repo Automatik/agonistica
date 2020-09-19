@@ -1,7 +1,15 @@
+import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:stacked/stacked.dart';
 
 class CategoriesViewModel extends BaseViewModel {
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
+
+  List<String> _followedCategories;
+
   CategoriesViewModel(){
+    _followedCategories = List.from(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
     loadItems();
   }
   
@@ -13,6 +21,24 @@ class CategoriesViewModel extends BaseViewModel {
     //Let other views to render again
     setBusy(false);
     notifyListeners();
+  }
+
+  String getAppBarTitle() {
+    return _baseScaffoldService.teamSelected;
+  }
+
+  int getFollowedCategoriesCount() {
+    return _followedCategories.length;
+  }
+
+  String getFollowedCategory(int index) {
+    if(index < 0 || index >= _followedCategories.length)
+      return "";
+    return _followedCategories[index];
+  }
+
+  void onFollowedCategoryTap(int index) {
+
   }
 
 }
