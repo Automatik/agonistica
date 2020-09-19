@@ -9,7 +9,7 @@ import 'base_widget.dart';
 class BaseScaffoldWidget extends StatefulWidget {
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
-  final Widget Function(BuildContext context, SizingInformation sizingInformation) childBuilder;
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
   final String title;
   final bool showAppBar;
 
@@ -43,13 +43,7 @@ class _BaseScaffoldWidgetState extends State<BaseScaffoldWidget> {
                   ),
                 ),
                 child: BaseWidget(
-                  builder: (baseContext, sizingInfo) {
-                    return Expanded(
-                      child: BaseWidget(
-                        builder: widget.childBuilder,
-                      ),
-                    );
-                  },
+                  builder: widget.childBuilder,
                 ),
               );
             }

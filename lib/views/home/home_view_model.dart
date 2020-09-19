@@ -1,6 +1,9 @@
 import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
+
+  final otherPlayersList = ['Prima Squadra', 'Juniores', 'Allievi', 'Giovanissimi'];
+
   HomeViewModel(){
     loadItems();
   }
@@ -13,6 +16,10 @@ class HomeViewModel extends BaseViewModel {
     //Let other views to render again
     setBusy(false);
     notifyListeners();
+  }
+
+  void onOtherPlayersTap(int index) {
+
   }
 
 }

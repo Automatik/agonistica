@@ -9,7 +9,7 @@ import 'shared_variables.dart';
 class ScrollScaffoldWidget extends StatefulWidget {
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
-  final Widget Function(BuildContext context, SizingInformation sizingInformation) childBuilder;
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
   final String title, previousWidgetTitle;
   final bool showBottomBar;
 

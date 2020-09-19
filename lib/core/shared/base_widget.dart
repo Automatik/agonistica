@@ -3,7 +3,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class BaseWidget extends StatelessWidget {
 
-  final Widget Function(BuildContext context, SizingInformation sizingInformation) builder;
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation) builder;
   const BaseWidget({Key key, this.builder}) : super(key: key);
 
   @override
@@ -12,7 +12,7 @@ class BaseWidget extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, boxSizing) {
-        var sizingInformation = SizingInformation(
+        var sizingInformation = MySizingInformation(
             orientation: mediaQuery.orientation,
             screenSize: mediaQuery.size,
             localWidgetSize: Size(boxSizing.maxWidth, boxSizing.maxHeight),
@@ -24,12 +24,12 @@ class BaseWidget extends StatelessWidget {
 
 }
 
-class SizingInformation {
+class MySizingInformation {
   final Orientation orientation;
   final Size screenSize;
   final Size localWidgetSize;
 
-  SizingInformation({
+  MySizingInformation({
     this.orientation,
     this.screenSize,
     this.localWidgetSize,
