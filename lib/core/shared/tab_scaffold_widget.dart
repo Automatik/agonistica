@@ -9,10 +9,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class TabScaffoldWidget extends StatefulWidget {
 
+  static const int MATCHES_VIEW_INDEX = 0;
+  static const int ROSTER_VIEW_INDEX = 1;
+
   final _baseScaffoldService = locator<BaseScaffoldService>();
   final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
   final String title;
   final bool showAppBar;
+
+  final double iconsSize = 24;
 
   TabScaffoldWidget({
     this.title,
@@ -34,10 +39,10 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     super.initState();
     if(_tabController == null) {
       _tabController = PlatformTabController(
-        initialIndex: 1,
+        initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
       );
     }
-    widget._baseScaffoldService.bottomBarSelectedIndex = 1;
+    widget._baseScaffoldService.bottomBarSelectedIndex = TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
   @override
@@ -46,8 +51,17 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
       tabController: _tabController,
       currentIndex: _tabController.index(context),
       appBarBuilder: (_, index) => Utils.getPlatformAppBar(widget.title),
-      bodyBuilder: (context, index) => BaseWidget(
-        builder: widget.childBuilder,
+      bodyBuilder: (context, index) => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [blueLightAgonisticaColor, blueAgonisticaColor],
+          ),
+        ),
+        child: BaseWidget(
+          builder: widget.childBuilder,
+        ),
       ),
       itemChanged: (index) {
         widget._baseScaffoldService.bottomBarSelectedIndex = index;
@@ -64,7 +78,9 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
             ),
             icon: SvgPicture.asset(
               'assets/images/010-football.svg',
-//              color: blueAgonisticaColor,
+              color: isMatchesViewSelected() ? blueAgonisticaColor : textDisabledColor,
+              width: widget.iconsSize,
+              height: widget.iconsSize,
             ),
           ),
           BottomNavigationBarItem(
@@ -72,11 +88,15 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
               'Rosa',
               textAlign: TextAlign.center,
             ),
-            icon: Icon(context.platformIcons.group)
+            icon: Icon(context.platformIcons.group, size: widget.iconsSize,)
           )
         ]
       ),
     );
+  }
+
+  bool isMatchesViewSelected() {
+    return widget._baseScaffoldService.bottomBarSelectedIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
 }

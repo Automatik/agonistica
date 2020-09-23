@@ -4,6 +4,7 @@ import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
+import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
               CategoriesView.routeName: (context) => CategoriesView(),
               MatchesView.routeName: (context) => MatchesView(),
               RosterView.routeName: (context) => RosterView(),
+              TeamView.routeName: (context) => TeamView(),
             },
           );
         },

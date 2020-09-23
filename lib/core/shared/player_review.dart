@@ -1,15 +1,12 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class MatchReview extends StatelessWidget {
+import '../utils.dart';
 
-  final String team1, team2, result;
-  //final Match match;
-  final int leagueMatch;
-  final DateTime matchDate;
+class PlayerReview extends StatelessWidget{
+
+  final String name, role;
+  final DateTime birthDay;
   final double width, minHeight;
   final Function onTap, onSettingsTap;
 
@@ -17,21 +14,19 @@ class MatchReview extends StatelessWidget {
   final double topMargin = 10;
   final double bottomMargin = 10;
 
-  MatchReview({
-    @required this.team1,
-    @required this.team2,
-    @required this.result,
-    @required this.leagueMatch,
-    @required this.matchDate,
-    @required this.width,
+  PlayerReview({
+    this.name,
+    this.role,
+    this.birthDay,
+    this.width,
     this.minHeight = 50,
     this.onTap,
-    this.onSettingsTap,
+    this.onSettingsTap
   });
+
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -50,20 +45,14 @@ class MatchReview extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 12, right: 5, top: topMargin),
-                  child: SvgPicture.asset(
-                    'assets/images/010-football.svg',
-                    width: iconsSize,
-                    height: iconsSize,
-                    color: blueAgonisticaColor,
-                  ),
+                  child: Icon(Icons.person, color: blueAgonisticaColor, size: iconsSize,),
                 ),
                 Expanded(
                   child: Container(
                     margin: EdgeInsets.only(top: topMargin),
-                    alignment: Alignment.center,
                     child: Text(
-                      team1 + " " + result + " " + team2,
-                      textAlign: TextAlign.center,
+                      name,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -73,8 +62,8 @@ class MatchReview extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                  child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
                 )
               ],
             ),
@@ -84,7 +73,7 @@ class MatchReview extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.only(left: 12, top: topMargin, bottom: bottomMargin),
                     child: Text(
-                      "Giornata $leagueMatch",
+                      role,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         color: Colors.black,
@@ -102,7 +91,7 @@ class MatchReview extends StatelessWidget {
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
+                          "${birthDay.day} " + Utils.monthToString(birthDay.month).substring(0, 4) + " ${birthDay.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,
@@ -120,4 +109,7 @@ class MatchReview extends StatelessWidget {
       ),
     );
   }
+
+
+
 }

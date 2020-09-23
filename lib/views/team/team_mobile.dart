@@ -1,12 +1,29 @@
-part of matches_view;
+part of team_view;
 
-class _MatchesMobile extends StatelessWidget {
-  final MatchesViewModel viewModel;
+// ignore: must_be_immutable
+class _TeamMobile extends StatelessWidget {
 
-  _MatchesMobile(this.viewModel);
+  final TeamViewModel viewModel;
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
+
+  _TeamMobile(this.viewModel);
 
   @override
   Widget build(BuildContext context) {
+    return TabScaffoldWidget(
+      showAppBar: true,
+      title: "Juniores",
+      childBuilder: (BuildContext context, MySizingInformation sizingInformation) {
+        if(_baseScaffoldService.bottomBarSelectedIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX)
+          return _getMatchesLayout();
+        else
+          return _getRosterLayout();
+      },
+    );
+  }
+
+  Widget _getMatchesLayout() {
     return BaseWidget(
       builder: (BuildContext context, MySizingInformation sizingInformation) {
 
@@ -44,11 +61,9 @@ class _MatchesMobile extends StatelessWidget {
     );
   }
 
-  Widget _getScaffold() {
-    return BaseScaffoldWidget(
-      showAppBar: true,
-      title: viewModel.getAppBarTitle(),
-      childBuilder: (BuildContext context, MySizingInformation sizingInformation) {
+  Widget _getRosterLayout() {
+    return BaseWidget(
+      builder: (BuildContext context, MySizingInformation sizingInformation) {
 
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
@@ -67,13 +82,11 @@ class _MatchesMobile extends StatelessWidget {
                   child: Container(
                     margin: EdgeInsets.only(top: 20),
                     width: itemsWidth,
-                    child: MatchReview(
+                    child: PlayerReview(
+                      name: "Mario Rossi",
+                      role: "Attaccante",
                       width: itemsWidth,
-                      team1: "Merate",
-                      team2: "Robbiate",
-                      result: "2-1",
-                      leagueMatch: 1,
-                      matchDate: DateTime.utc(2020, 09, 6, 21),
+                      birthDay: DateTime.utc(1996, 09, 6, 21),
                     ),
                   ),
                 );
