@@ -1,5 +1,7 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/views/matches/matches_view.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class CategoriesViewModel extends BaseViewModel {
@@ -37,8 +39,11 @@ class CategoriesViewModel extends BaseViewModel {
     return _followedCategories[index];
   }
 
-  void onFollowedCategoryTap(int index) {
-
+  void onFollowedCategoryTap(BuildContext context, int index) {
+    Navigator.pushNamed(
+      context,
+      MatchesView.routeName,
+    );
   }
 
 }

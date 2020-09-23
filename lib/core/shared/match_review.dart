@@ -13,6 +13,10 @@ class MatchReview extends StatelessWidget {
   final double width;
   final Function onTap, onSettingsTap;
 
+  final double iconsSize = 20;
+  final double topMargin = 10;
+  final double bottomMargin = 10;
+
   MatchReview({
     @required this.team1,
     @required this.team2,
@@ -34,61 +38,78 @@ class MatchReview extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
         ),
-        width: width,
+        constraints: BoxConstraints(
+          maxWidth: width,
+          minHeight: 50,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(
-                  'assets/images/010-football.svg',
-                  width: 24,
-                  height: 24,
-                  color: blueAgonisticaColor,
-                ),
                 Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    team1 + " " + result + " " + team2,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
+                  margin: EdgeInsets.only(left: 12, right: 5, top: topMargin),
+                  child: SvgPicture.asset(
+                    'assets/images/010-football.svg',
+                    width: iconsSize,
+                    height: iconsSize,
+                    color: blueAgonisticaColor,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(top: topMargin),
+                    alignment: Alignment.center,
+                    child: Text(
+                      team1 + " " + result + " " + team2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                   ),
                 ),
-                Icon(Icons.more_vert, color: blueAgonisticaColor,)
+                Container(
+                  margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                  child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                )
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  child: Text(
-                    "Giornata $leagueMatch",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 12, top: topMargin, bottom: bottomMargin),
+                    child: Text(
+                      "Giornata $leagueMatch",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.calendar_today, color: blueAgonisticaColor,),
-                      Text(
-                        "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                      )
-                    ],
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(right: 15, top: topMargin, bottom: bottomMargin),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
+                        SizedBox(width: 5,),
+                        Text(
+                          "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

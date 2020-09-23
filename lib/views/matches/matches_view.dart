@@ -1,5 +1,8 @@
 library matches_view;
 
+import 'package:agonistica/core/shared/base_scaffold_widget.dart';
+import 'package:agonistica/core/shared/base_widget.dart';
+import 'package:agonistica/core/shared/match_review.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';

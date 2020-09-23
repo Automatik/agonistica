@@ -1,6 +1,11 @@
+import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:stacked/stacked.dart';
 
 class MatchesViewModel extends BaseViewModel {
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
+
   MatchesViewModel(){
     loadItems();
   }
@@ -13,6 +18,10 @@ class MatchesViewModel extends BaseViewModel {
     //Let other views to render again
     setBusy(false);
     notifyListeners();
+  }
+
+  String getAppBarTitle() {
+    return _baseScaffoldService.teamSelected;
   }
 
 }

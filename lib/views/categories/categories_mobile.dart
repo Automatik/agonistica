@@ -49,7 +49,7 @@ class _CategoriesMobile extends StatelessWidget {
                   itemCount: viewModel.getFollowedCategoriesCount(),
                   itemBuilder: (BuildContext listContext, int index) {
                     return GestureDetector(
-                      onTap: () => viewModel.onFollowedCategoryTap(index),
+                      onTap: () => viewModel.onFollowedCategoryTap(context, index),
                       child: Container(
                         margin: EdgeInsets.only(top: 30),
 //                          height: 35,
