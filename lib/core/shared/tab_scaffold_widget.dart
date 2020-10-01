@@ -16,6 +16,7 @@ class TabScaffoldWidget extends StatefulWidget {
   final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
   final String title;
   final bool showAppBar;
+  final Function onBottomItemChanged;
 
   final double iconsSize = 24;
 
@@ -23,6 +24,7 @@ class TabScaffoldWidget extends StatefulWidget {
     this.title,
     this.showAppBar,
     this.childBuilder,
+    this.onBottomItemChanged,
   });
 
   @override
@@ -65,6 +67,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
       ),
       itemChanged: (index) {
         widget._baseScaffoldService.bottomBarSelectedIndex = index;
+        widget.onBottomItemChanged.call();
       },
       tabsBackgroundColor: appBarBackgroundColor,
       materialTabs: (_ , __) => MaterialNavBarData(
