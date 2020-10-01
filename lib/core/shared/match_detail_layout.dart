@@ -2,7 +2,6 @@ import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
-import 'package:agonistica/core/shared/insert_team_dialog2.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,226 +90,201 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       alignment: Alignment.center,
       child: Container(
         width: widget.maxWidth,
-        child: Stack(
-            children: [
-              Column(
-                children: [
-                  Stack(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  child: Column(
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 12, right: 5, top: 10),
-                                  child: SvgPicture.asset(
-                                    'assets/images/010-football.svg',
-                                    width: 24,
-                                    height: 24,
-                                    color: blueAgonisticaColor,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                      margin: EdgeInsets.only(top: 10, right: 20),
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: CustomRichText(
-                                              onTap: () {
-                                                if(editEnabled) {
-                                                  InsertTeamDialog2 insertTeamDialog = InsertTeamDialog2(
-                                                      initialValue: tempTeam1Name,
-                                                      maxHeight: MediaQuery.of(context).size.height,
-                                                      suggestionCallback: (pattern) async {
-                                                        return List.generate(10, (index) => "Prova$index");
-                                                      },
-                                                      onSubmit: (finalValue) {
-                                                        Navigator.of(context).pop();
-                                                        if(finalValue != null) {
-                                                          print("finalValue: $finalValue");
-                                                          setState(() {
-                                                            tempTeam1Name = finalValue;
-                                                          });
-                                                        }
-                                                      }
-                                                  );
-                                                  insertTeamDialog.showInsertTeamDialog(context);
-                                                }
-                                              },
-                                              enabled: editEnabled,
-                                              text: tempTeam1Name,
-                                              textAlign: TextAlign.center,
-                                              fontColor: teamsColor,
-                                              fontWeight: teamsFontWeight,
-                                              fontSize: teamsFontSize,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: resultWidget(resultTextEditingController1, resultTextEditingController2, teamsColor, teamsFontSize, teamsFontWeight, editEnabled),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: CustomRichText(
-                                              onTap: () {
-                                                if(editEnabled) {
-                                                  print("show alert");
-                                                }
-                                              },
-                                              enabled: editEnabled,
-                                              text: tempTeam2Name,
-                                              textAlign: TextAlign.center,
-                                              fontColor: teamsColor,
-                                              fontWeight: teamsFontWeight,
-                                              fontSize: teamsFontSize,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 12, top: 10, bottom: 10),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Giornata',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: matchFontColor,
-                                            fontWeight: matchFontWeight,
-                                            fontSize: matchFontSize,
-                                          ),
-                                        ),
-                                        SizedBox(width: 5,),
-                                        CustomTextField(
-                                          enabled: editEnabled,
-                                          width: 50,
-                                          controller: leagueMatchTextEditingController,
-                                          textAlign: TextAlign.center,
-                                          textAlignVertical: TextAlignVertical.top,
-                                          maxLines: 1,
-                                          textInputType: TextInputType.number,
-                                          textColor: matchFontColor,
-                                          textFontSize: matchFontSize,
-                                          textFontWeight: matchFontWeight,
-                                          bottomBorderPadding: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      if(editEnabled) {
-                                        DateTime curDate = DateTime.now();
-                                        await showDatePicker(
-                                            context: context,
-                                            initialDate: tempMatchDate,
-                                            firstDate: DateTime.utc(2020),
-                                            lastDate: DateTime.utc(curDate.year + 1),
-                                            initialDatePickerMode: DatePickerMode.day,
-                                            helpText: "Seleziona la data della partita"
-                                        ).then((date) {
-                                          if(date != null)
-                                            setState(() {
-                                              tempMatchDate = date;
-                                            });
-                                        });
-                                      }
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 15, top: 10, bottom: 10),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 20,),
-                                          SizedBox(width: 5,),
-                                          Text(
-                                            "${tempMatchDate.day} " + Utils.monthToString(tempMatchDate.month).substring(0, 4) + " ${tempMatchDate.year}",
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                              color: matchFontColor,
-                                              fontSize: matchFontSize,
-                                              fontWeight: matchFontWeight,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () => saveState(),
-                          child: Container(
-                            margin: EdgeInsets.only(top: 10, right: 0), //left: 340
-                            padding: EdgeInsets.all(3),
-                            decoration: BoxDecoration(
+                      Row(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 12, right: 5, top: 10),
+                            child: SvgPicture.asset(
+                              'assets/images/010-football.svg',
+                              width: 24,
+                              height: 24,
                               color: blueAgonisticaColor,
-                              borderRadius: BorderRadius.circular(32),
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: Icon(
-                              editEnabled ? context.platformIcons.checkMark : context.platformIcons.pen,
-                              size: 24,
-                              color: Colors.white,
                             ),
                           ),
-                        ),
+                          Expanded(
+                            child: Container(
+                                margin: EdgeInsets.only(top: 10, right: 20),
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: CustomRichText(
+                                        onTap: () {
+                                          if(editEnabled) {
+                                            InsertTeamDialog2 insertTeamDialog = InsertTeamDialog2(
+                                                initialValue: tempTeam1Name,
+                                                maxHeight: MediaQuery.of(context).size.height,
+                                                suggestionCallback: (pattern) async {
+                                                  return List.generate(10, (index) => "Prova$index");
+                                                },
+                                                onSubmit: (finalValue) {
+                                                  Navigator.of(context).pop();
+                                                  if(finalValue != null) {
+                                                    print("finalValue: $finalValue");
+                                                    setState(() {
+                                                      tempTeam1Name = finalValue;
+                                                    });
+                                                  }
+                                                }
+                                            );
+                                            insertTeamDialog.showInsertTeamDialog(context);
+                                          }
+                                        },
+                                        enabled: editEnabled,
+                                        text: tempTeam1Name,
+                                        textAlign: TextAlign.center,
+                                        fontColor: teamsColor,
+                                        fontWeight: teamsFontWeight,
+                                        fontSize: teamsFontSize,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: resultWidget(resultTextEditingController1, resultTextEditingController2, teamsColor, teamsFontSize, teamsFontWeight, editEnabled),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: CustomRichText(
+                                        onTap: () {
+                                          if(editEnabled) {
+                                            print("show alert");
+                                          }
+                                        },
+                                        enabled: editEnabled,
+                                        text: tempTeam2Name,
+                                        textAlign: TextAlign.center,
+                                        fontColor: teamsColor,
+                                        fontWeight: teamsFontWeight,
+                                        fontSize: teamsFontSize,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            ),
+                          ),
+                        ],
                       ),
-
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 12, top: 10, bottom: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Giornata',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: matchFontColor,
+                                      fontWeight: matchFontWeight,
+                                      fontSize: matchFontSize,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  CustomTextField(
+                                    enabled: editEnabled,
+                                    width: 50,
+                                    controller: leagueMatchTextEditingController,
+                                    textAlign: TextAlign.center,
+                                    textAlignVertical: TextAlignVertical.top,
+                                    maxLines: 1,
+                                    textInputType: TextInputType.number,
+                                    textColor: matchFontColor,
+                                    textFontSize: matchFontSize,
+                                    textFontWeight: matchFontWeight,
+                                    bottomBorderPadding: 1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: GestureDetector(
+                              onTap: () async {
+                                if(editEnabled) {
+                                  DateTime curDate = DateTime.now();
+                                  await showDatePicker(
+                                      context: context,
+                                      initialDate: tempMatchDate,
+                                      firstDate: DateTime.utc(2020),
+                                      lastDate: DateTime.utc(curDate.year + 1),
+                                      initialDatePickerMode: DatePickerMode.day,
+                                      helpText: "Seleziona la data della partita"
+                                  ).then((date) {
+                                    if(date != null)
+                                      setState(() {
+                                        tempMatchDate = date;
+                                      });
+                                  });
+                                }
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right: 15, top: 10, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 20,),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      "${tempMatchDate.day} " + Utils.monthToString(tempMatchDate.month).substring(0, 4) + " ${tempMatchDate.year}",
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: matchFontColor,
+                                        fontSize: matchFontSize,
+                                        fontWeight: matchFontWeight,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-//              showInsertTeamDialog ? insertTeamDialog(insertTeamDialogTeamNameRef) : SizedBox(),
-            ]
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () => saveState(),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 10, right: 0), //left: 340
+                      padding: EdgeInsets.all(3),
+                      decoration: BoxDecoration(
+                        color: blueAgonisticaColor,
+                        borderRadius: BorderRadius.circular(32),
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: Icon(
+                        editEnabled ? context.platformIcons.checkMark : context.platformIcons.pen,
+                        size: 24,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            )
+          ],
         ),
       ),
-    );
-  }
-
-  Widget insertTeamDialog(String tempTeamName) {
-    return InsertTeamDialog(
-        initialValue: tempTeamName,
-        maxHeight: MediaQuery.of(context).size.height,
-        suggestionCallback: (pattern) async {
-          return List.generate(10, (index) => "Prova$index");
-        },
-        onSubmit: (finalValue) {
-//          Navigator.of(context).pop();
-          setState(() {
-            showInsertTeamDialog = false;
-            if(finalValue != null) {
-              print("finalValue: $finalValue");
-              tempTeamName = finalValue;
-            }
-          });
-        }
     );
   }
 
