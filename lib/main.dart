@@ -1,16 +1,28 @@
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp();
+    // set persistence here, before getting any database reference, otherwise persistence will not be enabled
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
+  } catch(e) {
+    print(e);
+  }
   await LocatorInjector.setupLocator();
+  //await DatabaseService.initialize();
+  await locator<DatabaseService>().initialize();
   runApp(MyApp());
 }
 

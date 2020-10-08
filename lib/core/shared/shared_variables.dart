@@ -8,4 +8,12 @@ const appBarBackgroundColor = Colors.white;
 const accentColor = Colors.white;
 
 const String defaultAppBarTitle = "Agonistica 2.0";
-const String mainButtonTitle = "Merate";
+//const String mainButtonTitle = "Merate";
+
+const String mainRequestedTeam = 'Merate';
+final List<String> requestedTeams = List.unmodifiable([mainRequestedTeam, 'Prima Squadra', 'Juniores', 'Allievi', 'Giovanissimi']);
+final List<String> requestedCategories = List.unmodifiable(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
+
+
+const String areTeamsAndCategoriesRequestedStoredKey = 'areTeamsAndCategoriesRequestedStored';
+const String requestedTeamsIdsKey = 'requestedTeamsIds';

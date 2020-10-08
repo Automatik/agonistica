@@ -109,7 +109,7 @@ class _HomeMobile extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 20),
               child: Text(
-                mainButtonTitle,
+                mainRequestedTeam,
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -165,7 +165,7 @@ class _HomeMobile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                viewModel.otherPlayersList[index],
+                viewModel.otherPlayersList[index].name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,

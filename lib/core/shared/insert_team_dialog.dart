@@ -2,16 +2,14 @@ import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import 'base_widget.dart';
-
-class InsertTeamDialog2 {
+class InsertTeamDialog {
 
   final String initialValue;
   final double maxHeight;
   final Function(String) suggestionCallback;
   final Function(String) onSubmit;
 
-  InsertTeamDialog2({
+  InsertTeamDialog({
     this.initialValue,
     @required this.maxHeight,
     @required this.suggestionCallback,
@@ -113,6 +111,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                         enabledBorder: border,
                         border: border,
                         focusedBorder: border,
+                        errorMaxLines: 3,
                       ),
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -131,9 +130,6 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                         }
                         return null;
                       },
-                      onSaved: (value) {
-                        print("onSaved");
-                      },
                     ),
                   ),
                   SizedBox(width: 10,),
@@ -149,7 +145,6 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                     onPressed: () {
                       if(_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        print("onPressed: ${textEditingController.text}");
                         widget.onSubmit.call(textEditingController.text);
                       }
                     },
@@ -212,8 +207,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
           itemBuilder: (context, index) {
             String suggestion = elements[index];
             return GestureDetector(
-              onPanDown: (_) {
-                print("onPanDown suggestion: $suggestion");
+              onTap: () {
                 this.textEditingController.text = suggestion;
               },
               child: ListTile(

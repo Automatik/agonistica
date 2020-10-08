@@ -30,4 +30,27 @@ class MatchPlayerData {
     id = uuid.v4();
   }
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'playerId': playerId,
+    'name': name,
+    'teamId': teamId,
+    'startsFromBegin': startsFromBegin,
+    'shirtNumber': shirtNumber,
+    'numGoals': numGoals,
+    'substitution': substitution,
+    'card': card
+  };
+
+  MatchPlayerData.fromJson(Map<dynamic, dynamic> json)
+    : id = json['id'],
+      playerId = json['playerId'],
+      name = json['name'],
+      teamId = json['teamId'],
+      startsFromBegin = json['startsFromBegin'],
+      shirtNumber = json['shirtNumber'],
+      numGoals = json['numGoals'],
+      substitution = json['substitution'],
+      card = json['card'];
+
 }

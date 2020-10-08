@@ -74,9 +74,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       //todo save team names (and eventually create new team objects)
       widget.match.team1Name = tempTeam1Name;
       widget.match.team2Name = tempTeam2Name;
-      widget.match.team1Goals = resultTextEditingController1.text as int;
-      widget.match.team2Goals = resultTextEditingController2.text as int;
-      widget.match.leagueMatch = leagueMatchTextEditingController.text as int;
+      widget.match.team1Goals = int.parse(resultTextEditingController1.text);
+      widget.match.team2Goals = int.parse(resultTextEditingController2.text);
+      widget.match.leagueMatch = int.parse(leagueMatchTextEditingController.text);
       widget.match.matchDate = tempMatchDate;
     }
     setState(() {
@@ -122,25 +122,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                     Expanded(
                                       flex: 2,
                                       child: CustomRichText(
-                                        onTap: () {
+                                        onTap: () async {
                                           if(editEnabled) {
-                                            InsertTeamDialog2 insertTeamDialog = InsertTeamDialog2(
-                                                initialValue: tempTeam1Name,
-                                                maxHeight: MediaQuery.of(context).size.height,
-                                                suggestionCallback: (pattern) async {
-                                                  return List.generate(10, (index) => "Prova$index");
-                                                },
-                                                onSubmit: (finalValue) {
-                                                  Navigator.of(context).pop();
-                                                  if(finalValue != null) {
-                                                    print("finalValue: $finalValue");
-                                                    setState(() {
-                                                      tempTeam1Name = finalValue;
-                                                    });
-                                                  }
-                                                }
-                                            );
-                                            insertTeamDialog.showInsertTeamDialog(context);
+                                            String newValue = await _showInsertTeamDialog(tempTeam1Name);
+                                            setState(() {
+                                              tempTeam1Name = newValue;
+                                            });
                                           }
                                         },
                                         enabled: editEnabled,
@@ -158,9 +145,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                     Expanded(
                                       flex: 2,
                                       child: CustomRichText(
-                                        onTap: () {
+                                        onTap: () async {
                                           if(editEnabled) {
-                                            print("show alert");
+                                            String newValue = await _showInsertTeamDialog(tempTeam2Name);
+                                            setState(() {
+                                              tempTeam2Name = newValue;
+                                            });
                                           }
                                         },
                                         enabled: editEnabled,
@@ -286,6 +276,26 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         ),
       ),
     );
+  }
+
+  Future<String> _showInsertTeamDialog(String tempTeamName) async {
+    InsertTeamDialog insertTeamDialog = InsertTeamDialog(
+        initialValue: tempTeamName,
+        maxHeight: MediaQuery.of(context).size.height,
+        suggestionCallback: (pattern) async {
+          return List.generate(10, (index) => "Prova$index");
+        },
+        onSubmit: (finalValue) {
+          Navigator.of(context).pop();
+          if(finalValue != null) {
+            setState(() {
+              tempTeamName = finalValue;
+            });
+          }
+        }
+    );
+    await insertTeamDialog.showInsertTeamDialog(context);
+    return tempTeamName;
   }
 
   Widget resultWidget(TextEditingController controller1, TextEditingController controller2, Color fontColor, double fontSize, FontWeight fontWeight, bool enabled) {

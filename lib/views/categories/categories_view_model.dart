@@ -1,5 +1,8 @@
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +11,12 @@ import 'package:stacked/stacked.dart';
 class CategoriesViewModel extends BaseViewModel {
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
+  final _databaseService = locator<DatabaseService>();
 
-  List<String> _followedCategories;
+  List<Category> _followedCategories = [];
 
   CategoriesViewModel(){
-    _followedCategories = List.from(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
+//    _followedCategories = List.from(requestedCategories, growable: true);
     loadItems();
   }
   
@@ -20,6 +24,9 @@ class CategoriesViewModel extends BaseViewModel {
   Future<void> loadItems() async {
     setBusy(true);
     //Write your models loading codes here
+
+    _followedCategories = await _databaseService.getMainCategories();
+
 
     //Let other views to render again
     setBusy(false);
@@ -37,10 +44,11 @@ class CategoriesViewModel extends BaseViewModel {
   String getFollowedCategory(int index) {
     if(index < 0 || index >= _followedCategories.length)
       return "";
-    return _followedCategories[index];
+    return _followedCategories[index].name;
   }
 
   void onFollowedCategoryTap(BuildContext context, int index) {
+    _databaseService.selectedCategory = _followedCategories[index];
     Navigator.pushNamed(
       context,
       TeamView.routeName,

@@ -13,4 +13,15 @@ class Team {
     id = uuid.v4();
   }
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'categoriesIds': categoriesIds
+  };
+
+  Team.fromJson(Map<dynamic, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']);
+
 }

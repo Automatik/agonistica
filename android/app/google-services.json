@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "836314262368",
+    "firebase_url": "https://agonistica-67769.firebaseio.com",
+    "project_id": "agonistica-67769",
+    "storage_bucket": "agonistica-67769.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836314262368:android:2d3d74457196ab3579cc05",
+        "android_client_info": {
+          "package_name": "com.emilsoft.agonistica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836314262368-91rbdoosq5ak01878uf15fk3u588mg7i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG6l2O7y5fhjOGZ141VYS7b0Ty-v-ulas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836314262368-91rbdoosq5ak01878uf15fk3u588mg7i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
