@@ -19,6 +19,30 @@ class Utils {
     );
   }
 
+  static PlatformAppBar getPlatformAppBarWithAddAction(String title, Function onActionAddPressed) {
+    return PlatformAppBar(
+        backgroundColor: appBarBackgroundColor,
+        title: Text(
+          title,
+          style: TextStyle(
+            color: blueAgonisticaColor,
+          ),
+        ),
+        material: (_, __) => MaterialAppBarData(
+          leading: Icon(Icons.menu,color: blueAgonisticaColor,),
+          actions: [
+            GestureDetector(
+              onTap: onActionAddPressed,
+              child: Icon(
+                Icons.add,
+                color: blueAgonisticaColor,
+              ),
+            )
+          ]
+        )
+    );
+  }
+
   static String monthToString(int month) {
     if(month < 1 || month > 12)
       return "";

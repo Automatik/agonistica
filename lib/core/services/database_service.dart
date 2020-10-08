@@ -39,6 +39,7 @@ class DatabaseService {
 
   }
 
+  /// Get List of the requested Teams
   Future<List<Team>> getMainTeams() async {
     final sharedPref = await SharedPreferences.getInstance();
     List<String> teamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
@@ -53,6 +54,7 @@ class DatabaseService {
     return teams;
   }
 
+  /// Get List of the requested categories of the main team (Merate)
   Future<List<Category>> getMainCategories() async {
     // main categories from Merate Team
     final sharedPref = await SharedPreferences.getInstance();
@@ -82,18 +84,24 @@ class DatabaseService {
     return categories;
   }
 
-  Future<List<Match>> getCategoryMatches(Category category) async {
-    if(category == null || category.matchesIds == null || category.matchesIds.isEmpty)
+  /// Download all the matches of a team by filtering for the given category
+  Future<List<Match>> getTeamMatchesByCategory(Team team, Category category) async {
+    if(team == null || team.categoriesIds == null || team.categoriesIds.isEmpty ||
+        team.matchesIds == null || team.matchesIds.isEmpty || category == null)
       return Future.value(List<Match>());
     List<Match> matches = [];
-    for(String id in category.matchesIds) {
+    for(String id in team.matchesIds) {
       final snapshot = await _databaseReference.child(firebaseMatchesChild).child(id).once();
-      if(snapshot.value != null)
-        matches.add(Match.fromJson(snapshot.value));
+      if(snapshot.value != null) {
+        Match match = Match.fromJson(snapshot.value);
+        if(match.categoryId == category.id)
+          matches.add(match);
+      }
     }
     return matches;
   }
 
+  /// Download all teams in firebase
   static Future<List<Team>> _getTeams(DatabaseReference teamsDatabaseReference) async {
     final DataSnapshot snapshot = await teamsDatabaseReference.once();
     List<Team> teams = [];
@@ -103,6 +111,7 @@ class DatabaseService {
     return teams;
   }
 
+  /// Download all categories in firebase
   static Future<List<Category>> _getCategories(DatabaseReference categoriesDatabaseReference) async {
     final DataSnapshot snapshot = await categoriesDatabaseReference.once();
     List<Category> categories = [];
@@ -134,6 +143,8 @@ class DatabaseService {
         Team team = Team();
         team.name = teamName;
         team.categoriesIds = List();
+        team.matchesIds = List();
+        team.playersIds = List();
         if(teamName == mainRequestedTeam)
           merateTeam = team;
         teamsIds.add(team.id);
@@ -167,8 +178,6 @@ class DatabaseService {
       if (!currentCategoriesNamesRequested.contains(catName)) {
         Category category = Category();
         category.name = catName;
-        category.matchesIds = List();
-        category.playersIds = List();
         categoriesIds.add(category.id);
         _databaseReference.child(firebaseCategoriesChild)
             .child(category.id)

@@ -5,6 +5,8 @@ class Match {
 
   String id;
 
+  String categoryId;
+
   String team1Id, team2Id;
 
   int team1Goals, team2Goals;
@@ -27,6 +29,7 @@ class Match {
   Match.empty() {
     var uuid = Uuid();
     id = uuid.v4();
+    categoryId = uuid.v4();
     team1Id = uuid.v4();
     team2Id = uuid.v4();
     team1Goals = 0;
@@ -43,26 +46,28 @@ class Match {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'categoryId': categoryId,
     'team1Id': team1Id,
     'team2Id': team2Id,
     'team1Goals': team1Goals,
     'team2Goals': team2Goals,
     'leagueMatch': leagueMatch,
     'matchDate': matchDate,
-    'team1Name': team1Name,
-    'team2Name': team2Name,
+//    'team1Name': team1Name,
+//    'team2Name': team2Name,
     'playersData': playersData == null ? List() : List.generate(playersData.length, (index) => playersData[index].toJson())
   };
 
   Match.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
+      categoryId = json['categoryId'],
       team1Id = json['team1Id'],
       team2Id = json['team2Id'],
       team1Goals = json['team1Goals'],
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
       matchDate = json['matchDate'],
-      team1Name = json['team1Name'],
-      team2Name = json['team2Name'],
+//      team1Name = json['team1Name'],
+//      team2Name = json['team2Name'],
       playersData = json['playersData'] == null ? List() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index]));
 }

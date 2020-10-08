@@ -9,7 +9,7 @@ class TeamViewModel extends BaseViewModel {
 
   final _databaseService = locator<DatabaseService>();
 
-  static Logger _logger = getLogger('DatabaseService');
+  static Logger _logger = getLogger('TeamViewModel');
 
   List<Match> matches;
 
@@ -24,16 +24,17 @@ class TeamViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    if(_databaseService.selectedCategory == null)
-      _logger.d("selectedCategory is null");
+    if(_databaseService.selectedTeam == null || _databaseService.selectedCategory == null)
+      _logger.d("selectedTeam or selectedCategory is null");
     else
-      matches = await _databaseService.getCategoryMatches(_databaseService.selectedCategory);
+      matches = await _databaseService.getTeamMatchesByCategory(_databaseService.selectedTeam, _databaseService.selectedCategory);
 
     // ONLY FOR TESTING
     if(matches.isEmpty) {
-      Match match = Match();
+      Match match = Match.empty();
+      match.categoryId = _databaseService.selectedCategory.id;
       match.team1Id = _databaseService.selectedTeam.id;
-      match.team1Name = "Merate";
+      match.team1Name = _databaseService.selectedTeam.name;
       match.team2Name = "Robbiate";
       match.team1Goals = 2;
       match.team2Goals = 1;
