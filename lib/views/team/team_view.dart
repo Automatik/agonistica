@@ -1,5 +1,6 @@
 library team_view;
 
+import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/models/Match.dart';
@@ -25,6 +26,9 @@ class TeamView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final TeamViewArguments args = ModalRoute.of(context).settings.arguments;
+
     return ViewModelBuilder<TeamViewModel>.reactive(
       viewModelBuilder: () => TeamViewModel(),
       onModelReady: (viewModel) {
@@ -32,8 +36,8 @@ class TeamView extends StatelessWidget {
       },
       builder: (context, viewModel, child) {
         return ScreenTypeLayout(
-          mobile: _TeamMobile(viewModel),
-          tablet: _TeamMobile(viewModel),
+          mobile: _TeamMobile(viewModel, args.initialTabIndex),
+          tablet: _TeamMobile(viewModel, args.initialTabIndex),
         );
       }
     );

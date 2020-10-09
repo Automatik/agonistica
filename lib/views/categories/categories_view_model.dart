@@ -1,8 +1,10 @@
+import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +54,7 @@ class CategoriesViewModel extends BaseViewModel {
     Navigator.pushNamed(
       context,
       TeamView.routeName,
-//      MatchesView.routeName,
+      arguments: TeamViewArguments(TabScaffoldWidget.MATCHES_VIEW_INDEX)
     );
   }
 

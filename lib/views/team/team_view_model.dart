@@ -1,7 +1,10 @@
+import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/views/matches/matches_view.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
@@ -26,25 +29,42 @@ class TeamViewModel extends BaseViewModel {
 
     if(_databaseService.selectedTeam == null || _databaseService.selectedCategory == null)
       _logger.d("selectedTeam or selectedCategory is null");
-    else
-      matches = await _databaseService.getTeamMatchesByCategory(_databaseService.selectedTeam, _databaseService.selectedCategory);
-
-    // ONLY FOR TESTING
-    if(matches.isEmpty) {
-      Match match = Match.empty();
-      match.categoryId = _databaseService.selectedCategory.id;
-      match.team1Id = _databaseService.selectedTeam.id;
-      match.team1Name = _databaseService.selectedTeam.name;
-      match.team2Name = "Robbiate";
-      match.team1Goals = 2;
-      match.team2Goals = 1;
-      match.leagueMatch = 1;
-      match.matchDate = DateTime.utc(2020, 09, 28);
+    else {
+      matches = await _databaseService.getTeamMatchesByCategory(
+          _databaseService.selectedTeam, _databaseService.selectedCategory);
+      matches = await _databaseService.completeMatchesWithMissingInfo(matches);
     }
 
     //Let other views to render again
     setBusy(false);
     notifyListeners();
+  }
+
+  String getWidgetTitle() {
+    return _databaseService.selectedCategory.name;
+  }
+
+  Future<void> openMatchDetail(BuildContext context, int index) async {
+    if(matches != null && matches.isNotEmpty) {
+      Match match = matches[index];
+      bool isNewMatch = false;
+      Navigator.pushNamed(
+        context,
+        MatchesView.routeName,
+        arguments: MatchesViewArguments(isNewMatch, match)
+      );
+    }
+  }
+
+  Future<void> addNewMatch(BuildContext context) async {
+    bool isNewMatch = true;
+    Match match = Match.empty();
+    match.categoryId = _databaseService.selectedCategory.id;
+    Navigator.pushNamed(
+      context,
+      MatchesView.routeName,
+      arguments: MatchesViewArguments(isNewMatch, match)
+    );
   }
 
 }

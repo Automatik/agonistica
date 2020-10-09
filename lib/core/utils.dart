@@ -39,7 +39,7 @@ class Utils {
               ),
             )
           ]
-        )
+        ),
     );
   }
 
@@ -60,6 +60,27 @@ class Utils {
       case 11: return "Novembre";
       case 12: return "Dicembre";
     }
+  }
+
+  /// Use this to clone DateTime
+  static DateTime fromDateTime(
+      DateTime src, {
+        int year: null,
+        int month : null,
+        int day : null,
+        int hour : null,
+        int minute : null,
+        int second : null,
+        int millisecond : null}) {
+    return new DateTime(
+        year == null ? src.year : year,
+        month == null ? src.month : month,
+        day == null ? src.day : day,
+        hour == null ? src.hour : hour,
+        minute == null ? src.minute : minute,
+        second == null ? src.second : second,
+        millisecond == null ? src.millisecond : millisecond
+    );
   }
 
 }

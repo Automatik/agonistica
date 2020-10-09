@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
@@ -14,12 +15,16 @@ class MatchDetailLayout extends StatefulWidget {
   final bool isNewMatch;
   final Match match;
   final double maxWidth;
+  final List<Team> Function(String) onSuggestionTeamCallback;
+  final Function(Match) onSave;
 
   MatchDetailLayout({
     @required this.isNewMatch,
     @required this.match,
+    @required this.onSuggestionTeamCallback,
+    @required this.onSave,
     this.maxWidth,
-  });
+  }) : assert(match != null);
 
   @override
   State<StatefulWidget> createState() => _MatchDetailLayoutState();
@@ -42,8 +47,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   bool editEnabled = true;
 
   // temp values
-  String tempTeam1Name, tempTeam2Name;
-  DateTime tempMatchDate;
+  Match tempMatch;
+//  String tempTeam1Name, tempTeam2Name;
+//  DateTime tempMatchDate;
 
   bool showInsertTeamDialog = false;
   String insertTeamDialogTeamNameRef;
@@ -54,9 +60,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     // if it's a new match enable already edit mode, otherwise start in view mode
     editEnabled = widget.isNewMatch;
 
-    tempTeam1Name = widget.match.team1Name;
-    tempTeam2Name = widget.match.team2Name;
-    tempMatchDate = widget.match.matchDate;
+    tempMatch = Match.clone(widget.match);
+//    tempTeam1Name = widget.match.team1Name;
+//    tempTeam2Name = widget.match.team2Name;
+//    tempMatchDate = widget.match.matchDate;
 
     resultTextEditingController1 = TextEditingController();
     resultTextEditingController2 = TextEditingController();
@@ -72,12 +79,17 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       // saving new values
 
       //todo save team names (and eventually create new team objects)
-      widget.match.team1Name = tempTeam1Name;
-      widget.match.team2Name = tempTeam2Name;
-      widget.match.team1Goals = int.parse(resultTextEditingController1.text);
-      widget.match.team2Goals = int.parse(resultTextEditingController2.text);
-      widget.match.leagueMatch = int.parse(leagueMatchTextEditingController.text);
-      widget.match.matchDate = tempMatchDate;
+      tempMatch.team1Goals = int.parse(resultTextEditingController1.text);
+      tempMatch.team2Goals = int.parse(resultTextEditingController2.text);
+      tempMatch.leagueMatch = int.parse(leagueMatchTextEditingController.text);
+      widget.onSave(tempMatch);
+//      widget.match.team1Name = tempTeam1Name;
+//      widget.match.team2Name = tempTeam2Name;
+//      widget.match.team1Goals = int.parse(resultTextEditingController1.text);
+//      widget.match.team2Goals = int.parse(resultTextEditingController2.text);
+//      widget.match.leagueMatch = int.parse(leagueMatchTextEditingController.text);
+//      widget.match.matchDate = tempMatchDate;
+
     }
     setState(() {
       editEnabled = !editEnabled;
@@ -124,14 +136,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                       child: CustomRichText(
                                         onTap: () async {
                                           if(editEnabled) {
-                                            String newValue = await _showInsertTeamDialog(tempTeam1Name);
+                                            Team team1 = await _showInsertTeamDialog(tempMatch.team1Name);
                                             setState(() {
-                                              tempTeam1Name = newValue;
+                                              tempMatch.setTeam1(team1);
                                             });
                                           }
                                         },
                                         enabled: editEnabled,
-                                        text: tempTeam1Name,
+                                        text: tempMatch.team1Name,
                                         textAlign: TextAlign.center,
                                         fontColor: teamsColor,
                                         fontWeight: teamsFontWeight,
@@ -147,14 +159,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                       child: CustomRichText(
                                         onTap: () async {
                                           if(editEnabled) {
-                                            String newValue = await _showInsertTeamDialog(tempTeam2Name);
+                                            Team team2 = await _showInsertTeamDialog(tempMatch.team2Name);
                                             setState(() {
-                                              tempTeam2Name = newValue;
+                                              tempMatch.setTeam2(team2);
                                             });
                                           }
                                         },
                                         enabled: editEnabled,
-                                        text: tempTeam2Name,
+                                        text: tempMatch.team2Name,
                                         textAlign: TextAlign.center,
                                         fontColor: teamsColor,
                                         fontWeight: teamsFontWeight,
@@ -210,7 +222,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                   DateTime curDate = DateTime.now();
                                   await showDatePicker(
                                       context: context,
-                                      initialDate: tempMatchDate,
+                                      initialDate: tempMatch.matchDate,
                                       firstDate: DateTime.utc(2020),
                                       lastDate: DateTime.utc(curDate.year + 1),
                                       initialDatePickerMode: DatePickerMode.day,
@@ -218,7 +230,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                   ).then((date) {
                                     if(date != null)
                                       setState(() {
-                                        tempMatchDate = date;
+                                        tempMatch.matchDate = date;
                                       });
                                   });
                                 }
@@ -231,7 +243,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                     Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 20,),
                                     SizedBox(width: 5,),
                                     Text(
-                                      "${tempMatchDate.day} " + Utils.monthToString(tempMatchDate.month).substring(0, 4) + " ${tempMatchDate.year}",
+                                      "${tempMatch.matchDate.day} " + Utils.monthToString(tempMatch.matchDate.month).substring(0, 4) + " ${tempMatch.matchDate.year}",
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: matchFontColor,
@@ -278,24 +290,27 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     );
   }
 
-  Future<String> _showInsertTeamDialog(String tempTeamName) async {
+  Future<Team> _showInsertTeamDialog(String tempTeamName) async {
+    Team tempTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
-        suggestionCallback: (pattern) async {
-          return List.generate(10, (index) => "Prova$index");
+        suggestionCallback: (pattern) {
+          return widget.onSuggestionTeamCallback(pattern);
         },
-        onSubmit: (finalValue) {
+        onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
-          if(finalValue != null) {
-            setState(() {
-              tempTeamName = finalValue;
-            });
+          if(finalTeamValue != null) {
+//            setState(() {
+//              tempTeamName = finalValue;
+//            });
+            tempTeam = finalTeamValue;
           }
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);
-    return tempTeamName;
+//    return tempTeamName;
+    return tempTeam;
   }
 
   Widget resultWidget(TextEditingController controller1, TextEditingController controller2, Color fontColor, double fontSize, FontWeight fontWeight, bool enabled) {

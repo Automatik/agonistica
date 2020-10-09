@@ -1,3 +1,4 @@
+import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -6,8 +7,8 @@ class InsertTeamDialog {
 
   final String initialValue;
   final double maxHeight;
-  final Function(String) suggestionCallback;
-  final Function(String) onSubmit;
+  final List<Team> Function(String) suggestionCallback;
+  final Function(Team) onSubmit;
 
   InsertTeamDialog({
     this.initialValue,
@@ -52,8 +53,8 @@ class _InsertTeamForm extends StatefulWidget {
 
   final String initialValue;
   final double maxHeight;
-  final Function(String) suggestionCallback;
-  final Function(String) onSubmit;
+  final List<Team> Function(String) suggestionCallback;
+  final Function(Team) onSubmit;
 
   _InsertTeamForm({
     this.initialValue,
@@ -73,7 +74,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
   final TextEditingController textEditingController = TextEditingController();
 
   bool _isLoadingSuggestions = true;
-  List<String> suggestionsList;
+  List<Team> suggestionsList;
 
   @override
   void initState() {
@@ -125,6 +126,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                         print("onChanged value: $value");
                       },
                       validator: (value) {
+                        //TODO Aggiungere controlli di validation
                         if(value.isEmpty) {
                           return "Inserisci o seleziona una squadra";
                         }
@@ -145,7 +147,8 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                     onPressed: () {
                       if(_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        widget.onSubmit.call(textEditingController.text);
+                        Team team = submitFinalValue();
+                        widget.onSubmit.call(team);
                       }
                     },
                     material: (_, __) => MaterialRaisedButtonData(
@@ -167,17 +170,26 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
 
   Future<void> loadSuggestions() async {
     String pattern = "";
-    suggestionsList = await widget.suggestionCallback.call(pattern);
+    suggestionsList = widget.suggestionCallback.call(pattern);
     print("suggestions called!");
     setState(() {
       _isLoadingSuggestions = false;
     });
   }
 
+  Team submitFinalValue() {
+    //textEditingController.text is already validated
+
+    // team's name should be unique to use this comparison in order to find which team is selected
+    String text = textEditingController.text;
+    Team team = suggestionsList.firstWhere((element) => element.name == text, orElse: () => Team.name(text));
+    return team;
+  }
+
   Widget suggestions() {
     return _isLoadingSuggestions
     ? indicator()
-    : listview(suggestionsList);
+    : listView(suggestionsList);
   }
 
   Widget indicator() {
@@ -194,7 +206,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
     );
   }
 
-  Widget listview(List<String> elements) {
+  Widget listView(List<Team> elements) {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 20),
@@ -205,7 +217,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
           scrollDirection: Axis.vertical,
           itemCount: elements.length,
           itemBuilder: (context, index) {
-            String suggestion = elements[index];
+            String suggestion = elements[index].name;
             return GestureDetector(
               onTap: () {
                 this.textEditingController.text = suggestion;

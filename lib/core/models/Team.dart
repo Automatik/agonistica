@@ -16,6 +16,12 @@ class Team {
     id = uuid.v4();
   }
 
+  Team.name(String name) {
+    var uuid = Uuid();
+    id = uuid.v4();
+    this.name = name;
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,

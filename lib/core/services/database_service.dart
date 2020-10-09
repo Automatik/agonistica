@@ -39,6 +39,15 @@ class DatabaseService {
 
   }
 
+  /// Download all teams without the other requested teams (merateTeam and other)
+  Future<List<Team>> getTeamsWithoutOtherRequestedTeams() async {
+    final sharedPref = await SharedPreferences.getInstance();
+    List<String> requestedTeamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
+    List<Team> allTeams = await _getTeams(_databaseReference.child(firebaseTeamsChild));
+    allTeams.removeWhere((team) => requestedTeamsIds.contains(team.id));
+    return allTeams;
+  }
+
   /// Get List of the requested Teams
   Future<List<Team>> getMainTeams() async {
     final sharedPref = await SharedPreferences.getInstance();
@@ -99,6 +108,72 @@ class DatabaseService {
       }
     }
     return matches;
+  }
+
+  /// Download missing info for a given list of matches. For instance download the teams' names
+  /// present in the matches list
+  Future<List<Match>> completeMatchesWithMissingInfo(List<Match> matches) async {
+    List<Match> newMatches = [];
+    for(Match match in matches) {
+      // Get teams' name
+      Team tempTeam = await getTeamById(match.team1Id);
+      match.team1Name = tempTeam?.name;
+      tempTeam = await getTeamById(match.team2Id);
+      match.team2Name = tempTeam?.name;
+      newMatches.add(match);
+    }
+    return newMatches;
+  }
+
+  /// Download Team data given its id
+  Future<Team> getTeamById(String teamId) async {
+    final DataSnapshot snapshot = await _databaseReference.child(firebaseTeamsChild).child(teamId).once();
+    Team team;
+    if(snapshot.value != null) {
+      team = Team.fromJson(snapshot.value);
+    }
+    return team;
+  }
+
+  /// Upload Team data (insert)
+  Future<void> saveTeam(Team team) async {
+    await _databaseReference.child(firebaseTeamsChild).child(team.id).set(team.toJson());
+  }
+
+  /// Upload Team data (update)
+  Future<void> updateTeamFromMatch(Match match, Team team) async {
+    Team copy = await getTeamById(team.id);
+    if(copy != null) {
+      team = copy;
+    }
+    if(team.categoriesIds == null)
+      team.categoriesIds = [];
+    if(!team.categoriesIds.contains(match.categoryId))
+      team.categoriesIds.add(match.categoryId);
+    if(team.matchesIds == null)
+      team.matchesIds = [];
+    if(!team.matchesIds.contains(match.id))
+      team.matchesIds.add(match.id);
+
+    //TODO playersIds
+
+    await _databaseReference.child(firebaseTeamsChild).child(team.id).set(team.toJson());
+  }
+
+  /// Upload Match data (insert)
+  Future<void> saveMatch(Match match) async {
+    // it's not necessary to download a full copy of the match object because
+    // the match object provided contains already all the data and thus no
+    // update is needed
+    // (could be different in case of changes to the Match's model)
+    await _databaseReference.child(firebaseMatchesChild).child(match.id).set(match.toJson());
+
+    // Update teams
+    await updateTeamFromMatch(match, match.getTeam1());
+    await updateTeamFromMatch(match, match.getTeam2());
+
+    // Should update also players ?
+
   }
 
   /// Download all teams in firebase

@@ -1,86 +1,43 @@
 part of matches_view;
 
-class _MatchesMobile extends StatelessWidget {
+class _MatchesMobile extends StatefulWidget {
+  
   final MatchesViewModel viewModel;
+  final bool isNewMatch;
+  final Match match;
 
-  _MatchesMobile(this.viewModel);
+  _MatchesMobile(this.viewModel, this.isNewMatch, this.match);
+  
+  @override
+  State<StatefulWidget> createState() => _MatchesMobileState();
+
+}
+
+class _MatchesMobileState extends State<_MatchesMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation) {
-
-        double itemsWidth = 0.7 * sizingInformation.screenSize.width;
-
-        return Container(
-          constraints: BoxConstraints(
-            maxHeight: sizingInformation.screenSize.height,
-            maxWidth: sizingInformation.screenSize.width,
-          ),
-          child: ListView.builder(
-//              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: 5,
-              itemBuilder: (BuildContext listContext, int index) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 20),
-                    width: itemsWidth,
-                    child: MatchReview(
-                      width: itemsWidth,
-                      team1: "Merate",
-                      team2: "Robbiate",
-                      result: "2-1",
-                      leagueMatch: 1,
-                      matchDate: DateTime.utc(2020, 09, 6, 21),
-                    ),
-                  ),
-                );
-              }
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _getScaffold() {
-    return BaseScaffoldWidget(
+    return TabScaffoldWidget(
       showAppBar: true,
-      title: viewModel.getAppBarTitle(),
-      childBuilder: (BuildContext context, MySizingInformation sizingInformation) {
-
-        double itemsWidth = 0.7 * sizingInformation.screenSize.width;
-
-        return Container(
-          constraints: BoxConstraints(
-            maxHeight: sizingInformation.screenSize.height,
-            maxWidth: sizingInformation.screenSize.width,
-          ),
-          child: ListView.builder(
-//              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: 5,
-              itemBuilder: (BuildContext listContext, int index) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 20),
-                    width: itemsWidth,
-                    child: MatchReview(
-                      width: itemsWidth,
-                      team1: "Merate",
-                      team2: "Robbiate",
-                      result: "2-1",
-                      leagueMatch: 1,
-                      matchDate: DateTime.utc(2020, 09, 6, 21),
-                    ),
-                  ),
-                );
-              }
-          ),
-        );
+      title: widget.isNewMatch ? "Nuova Partita" : widget.viewModel.getAppBarTitle(),
+      onBottomItemChanged: (index) {
+        // TODO routes
+      },
+      childBuilder: (BuildContext childContext, MySizingInformation sizingInformation) {
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+        return _matchDetail(childContext, widget.isNewMatch, widget.match, width);
       },
     );
   }
+  
+  Widget _matchDetail(BuildContext context, bool isNewMatch, Match match, double maxWidth) {
+    return MatchDetailLayout(
+      isNewMatch: isNewMatch,
+      match: match,
+      onSuggestionTeamCallback: (pattern) => widget.viewModel.suggestTeamsByPattern(pattern),
+      onSave: (matchData) => widget.viewModel.onMatchSave(context, matchData),
+      maxWidth: maxWidth,
+    );
+  }
+  
 }

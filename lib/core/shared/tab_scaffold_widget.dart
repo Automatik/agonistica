@@ -12,17 +12,20 @@ class TabScaffoldWidget extends StatefulWidget {
   static const int MATCHES_VIEW_INDEX = 0;
   static const int ROSTER_VIEW_INDEX = 1;
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
   final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
   final String title;
   final bool showAppBar;
-  final Function onBottomItemChanged;
+  final int initialIndex;
+  final PlatformAppBar platformAppBar;
+  final Function(int) onBottomItemChanged;
 
   final double iconsSize = 24;
 
   TabScaffoldWidget({
     this.title,
     this.showAppBar,
+    this.initialIndex,
+    this.platformAppBar,
     this.childBuilder,
     this.onBottomItemChanged,
   });
@@ -41,10 +44,9 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     super.initState();
     if(_tabController == null) {
       _tabController = PlatformTabController(
-        initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
+        initialIndex: widget.initialIndex ?? TabScaffoldWidget.MATCHES_VIEW_INDEX,
       );
     }
-    widget._baseScaffoldService.bottomBarSelectedIndex = TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
   @override
@@ -52,7 +54,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     return PlatformTabScaffold(
       tabController: _tabController,
       currentIndex: _tabController.index(context),
-      appBarBuilder: (_, index) => Utils.getPlatformAppBar(widget.title),
+      appBarBuilder: (_, index) => widget.platformAppBar ?? Utils.getPlatformAppBar(widget.title),
       bodyBuilder: (context, index) => Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -66,8 +68,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
         ),
       ),
       itemChanged: (index) {
-        widget._baseScaffoldService.bottomBarSelectedIndex = index;
-        widget.onBottomItemChanged.call();
+        widget.onBottomItemChanged.call(index);
       },
       tabsBackgroundColor: appBarBackgroundColor,
       materialTabs: (_ , __) => MaterialNavBarData(
@@ -75,22 +76,16 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
         unselectedItemColor: textDisabledColor,
         items: [
           BottomNavigationBarItem(
-            title: Text(
-              'Partite',
-              textAlign: TextAlign.center,
-            ),
+            label: 'Partite',
             icon: SvgPicture.asset(
               'assets/images/010-football.svg',
-              color: isMatchesViewSelected() ? blueAgonisticaColor : textDisabledColor,
+              color: isMatchesViewSelected(context) ? blueAgonisticaColor : textDisabledColor,
               width: widget.iconsSize,
               height: widget.iconsSize,
             ),
           ),
           BottomNavigationBarItem(
-            title: Text(
-              'Rosa',
-              textAlign: TextAlign.center,
-            ),
+            label: 'Rosa',
             icon: Icon(context.platformIcons.group, size: widget.iconsSize,)
           )
         ]
@@ -98,8 +93,8 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     );
   }
 
-  bool isMatchesViewSelected() {
-    return widget._baseScaffoldService.bottomBarSelectedIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX;
+  bool isMatchesViewSelected(BuildContext context) {
+    return _tabController.index(context) == TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
 }

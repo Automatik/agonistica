@@ -4,9 +4,9 @@ class _TeamMobile extends StatefulWidget {
 
   final TeamViewModel viewModel;
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
+  final int initialTabIndex;
 
-  _TeamMobile(this.viewModel);
+  _TeamMobile(this.viewModel, this.initialTabIndex);
 
   @override
   State<StatefulWidget> createState() => _TeamMobileState();
@@ -15,45 +15,35 @@ class _TeamMobile extends StatefulWidget {
 
 class _TeamMobileState extends State<_TeamMobile> {
 
-  bool _isDetailPageOpen;
+  int _tabIndex;
 
   @override
   void initState() {
     super.initState();
-    _isDetailPageOpen = false;
+    _tabIndex = widget.initialTabIndex ?? TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
       showAppBar: true,
-      title: "Juniores",
-      onBottomItemChanged: () {
+      initialIndex: _tabIndex,
+      platformAppBar: Utils.getPlatformAppBarWithAddAction(widget.viewModel.getWidgetTitle(), () {
+        // on add action pressed
+        widget.viewModel.addNewMatch(context);
+      }),
+      onBottomItemChanged: (index) {
         setState(() {
-          _isDetailPageOpen = false;
+          _tabIndex = index;
         });
       },
       childBuilder: (BuildContext context, MySizingInformation sizingInformation) {
-        if(widget._baseScaffoldService.bottomBarSelectedIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX) {
-          if(_isDetailPageOpen) {
-            Match match = Match();
-            match.team1Name = "Merate";
-            match.team2Name = "Robbiate";
-            match.team1Goals = 2;
-            match.team2Goals = 1;
-            match.leagueMatch = 1;
-            match.matchDate = DateTime.utc(2020, 09, 28);
-
-            double width = 0.9 * sizingInformation.localWidgetSize.width;
-            return _getMatchDetail(match, width);
-          } else {
-            return _getMatchesLayout();
-          }
+        if(_tabIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX) {
+          return _getMatchesLayout();
         }
         else {
           return _getRosterLayout();
         }
-
       },
     );
   }
@@ -72,8 +62,9 @@ class _TeamMobileState extends State<_TeamMobile> {
           child: ListView.builder(
 //              shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: 5,
+              itemCount: widget.viewModel.matches.length,
               itemBuilder: (BuildContext listContext, int index) {
+                Match match = widget.viewModel.matches[index];
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
@@ -81,16 +72,14 @@ class _TeamMobileState extends State<_TeamMobile> {
                     width: itemsWidth,
                     child: MatchReview(
                       onTap: () {
-                        setState(() {
-                          _isDetailPageOpen = true;
-                        });
+                        widget.viewModel.openMatchDetail(context, index);
                       },
                       width: itemsWidth,
-                      team1: "Merate",
-                      team2: "Robbiate",
-                      result: "2-1",
-                      leagueMatch: 1,
-                      matchDate: DateTime.utc(2020, 09, 6),
+                      team1: match.team1Name,
+                      team2: match.team2Name,
+                      result: "${match.team1Goals} - ${match.team2Goals}",
+                      leagueMatch: match.leagueMatch,
+                      matchDate: match.matchDate,
                     ),
                   ),
                 );
