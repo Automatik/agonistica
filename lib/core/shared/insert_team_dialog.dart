@@ -124,6 +124,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
                         print("onChanged value: $value");
+                        //TODO Send pattern
                       },
                       validator: (value) {
                         //TODO Aggiungere controlli di validation

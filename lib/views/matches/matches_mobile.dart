@@ -21,7 +21,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       showAppBar: true,
       title: widget.isNewMatch ? "Nuova Partita" : widget.viewModel.getAppBarTitle(),
       onBottomItemChanged: (index) {
-        // TODO routes
+        widget.viewModel.onBottomBarItemChanged(context, index);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation) {
         double width = 0.9 * sizingInformation.localWidgetSize.width;

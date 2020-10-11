@@ -55,7 +55,8 @@ class Match {
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
     matchDate = Utils.fromDateTime(match.matchDate);
-    playersData = List.from(match.playersData ?? []);
+//    playersData = List.from(match.playersData ?? []);
+    playersData = List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
   }
 
   Team getTeam1() {

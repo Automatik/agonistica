@@ -13,7 +13,10 @@ class MatchPlayerData {
 
   String id;
 
+  // do not use this field for non followed players
   String playerId;
+
+  // the name also need to be stored for players not saved, not followed
   String name;
 
   String teamId;
@@ -28,6 +31,31 @@ class MatchPlayerData {
   MatchPlayerData() {
     var uuid = Uuid();
     id = uuid.v4();
+  }
+
+  MatchPlayerData.empty() {
+    var uuid = Uuid();
+    id = uuid.v4();
+    //playersId = uuid.v4();
+    name = "Nome Giocatore";
+    teamId = uuid.v4();
+    startsFromBegin = true;
+    shirtNumber = 1;
+    numGoals = 0;
+    setNoSubstitution();
+    setNoCard();
+  }
+
+  MatchPlayerData.clone(MatchPlayerData data) {
+    id = data.id;
+    playerId = data.playerId;
+    name = data.name;
+    teamId = data.teamId;
+    startsFromBegin = data.startsFromBegin;
+    shirtNumber = data.shirtNumber;
+    numGoals = data.numGoals;
+    substitution = data.substitution;
+    card = data.card;
   }
 
   Map<String, dynamic> toJson() => {
@@ -53,4 +81,31 @@ class MatchPlayerData {
       substitution = json['substitution'],
       card = json['card'];
 
+  void setNoSubstitution() {
+    substitution = SUBSTITUTION_NONE;
+  }
+
+  void setEnterSubstitution() {
+    substitution = SUBSTITUTION_ENTERED;
+  }
+
+  void setExitSubstitution() {
+    substitution = SUBSTITUTION_EXITED;
+  }
+
+  void setNoCard() {
+    card = CARD_NONE;
+  }
+
+  void setYellowCard() {
+    card = CARD_YELLOW;
+  }
+
+  void setDoubleYellowCard() {
+    card = CARD_DOUBLE_YELLOW;
+  }
+
+  void setRedCard() {
+    card = CARD_RED;
+  }
 }
