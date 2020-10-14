@@ -14,11 +14,19 @@ class _RosterMobile extends StatelessWidget {
     return TabScaffoldWidget(
       showAppBar: true,
       title: isNewPlayer ? "Nuovo Giocatore" : viewModel.getAppBarTitle(),
+      initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       onBottomItemChanged: (index) {
         viewModel.onBottomBarItemChanged(context, index);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation) {
-        return PlayerDetailLayout();
+
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+
+        return PlayerDetailLayout(
+          isNewPlayer: isNewPlayer,
+          player: player,
+          maxWidth: width,
+        );
       },
     );
   }

@@ -1,9 +1,12 @@
 import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
+import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
+import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
@@ -15,9 +18,11 @@ class TeamViewModel extends BaseViewModel {
   static Logger _logger = getLogger('TeamViewModel');
 
   List<Match> matches;
+  List<Player> players;
 
   TeamViewModel(){
     matches = [];
+    players = [];
 
     loadItems();
   }
@@ -33,6 +38,11 @@ class TeamViewModel extends BaseViewModel {
       matches = await _databaseService.getTeamMatchesByCategory(
           _databaseService.selectedTeam, _databaseService.selectedCategory);
       matches = await _databaseService.completeMatchesWithMissingInfo(matches);
+
+      players = await _databaseService.getPlayersByTeamAndCategory(_databaseService.selectedTeam.id,
+          _databaseService.selectedCategory.id);
+
+
     }
 
     //Let other views to render again
@@ -56,6 +66,18 @@ class TeamViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> openPlayerDetail(BuildContext context, int index) async {
+    if(players != null && players.isNotEmpty) {
+      Player player = players[index];
+      bool isNewPlayer = false;
+      Navigator.pushNamed(
+        context,
+        RosterView.routeName,
+        arguments: RosterViewArguments(isNewPlayer, player)
+      );
+    }
+  }
+
   Future<void> addNewMatch(BuildContext context) async {
     bool isNewMatch = true;
     Match match = Match.empty();
@@ -64,6 +86,18 @@ class TeamViewModel extends BaseViewModel {
       context,
       MatchesView.routeName,
       arguments: MatchesViewArguments(isNewMatch, match)
+    );
+  }
+
+  Future<void> addNewPlayer(BuildContext context) async {
+    bool isNewPlayer = true;
+    Player player = Player.empty();
+    player.setCategory(_databaseService.selectedCategory);
+    player.setTeam(_databaseService.selectedTeam);
+    Navigator.pushNamed(
+      context,
+      RosterView.routeName,
+      arguments: RosterViewArguments(isNewPlayer, player)
     );
   }
 

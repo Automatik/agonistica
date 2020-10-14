@@ -49,11 +49,12 @@ class CustomTextField extends StatelessWidget {
   Widget _textField() {
     return PlatformTextField(
       enabled: enabled,
-      textAlign: TextAlign.center,
-      textAlignVertical: TextAlignVertical.top,
+      readOnly: readOnly,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
       autofocus: false,
       controller: controller,
-      maxLines: 1,
+      maxLines: maxLines,
       material: (_, __) => MaterialTextFieldData(
           decoration: InputDecoration(
             isDense: true,
@@ -66,7 +67,7 @@ class CustomTextField extends StatelessWidget {
         fontSize: textFontSize,
         fontWeight: textFontWeight,
       ),
-      keyboardType: TextInputType.number,
+      keyboardType: textInputType,
     );
   }
 

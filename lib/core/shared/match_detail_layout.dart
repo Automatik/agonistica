@@ -2,6 +2,7 @@ import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
+import 'package:agonistica/core/shared/edit_detail_button.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
@@ -50,9 +51,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   Match tempMatch;
 //  String tempTeam1Name, tempTeam2Name;
 //  DateTime tempMatchDate;
-
-  bool showInsertTeamDialog = false;
-  String insertTeamDialogTeamNameRef;
 
   @override
   void initState() {
@@ -261,27 +259,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: GestureDetector(
-                    onTap: () => saveState(),
-                    child: Container(
-                      margin: EdgeInsets.only(top: 10, right: 0), //left: 340
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        color: blueAgonisticaColor,
-                        borderRadius: BorderRadius.circular(32),
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      child: Icon(
-                        editEnabled ? context.platformIcons.checkMark : context.platformIcons.pen,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                EditDetailButton(
+                  isEditEnabled: editEnabled,
+                  onTap: () => saveState(),
                 ),
-
               ],
             )
           ],

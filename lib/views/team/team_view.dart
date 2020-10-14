@@ -2,6 +2,7 @@ library team_view;
 
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/shared/base_widget.dart';

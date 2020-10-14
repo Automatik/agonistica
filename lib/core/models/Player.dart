@@ -1,3 +1,6 @@
+import 'package:agonistica/core/models/Category.dart';
+import 'package:agonistica/core/models/PlayerMatchNotes.dart';
+import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,6 +18,10 @@ class Player {
   String name, surname;
   String teamId;
   String categoryId;
+
+  //Only temporary
+  String teamName;
+  String categoryName;
 
   DateTime birthDay;
   int height;
@@ -37,6 +44,9 @@ class Player {
 
   List<String> matchesIds;
   List<String> playerMatchNotesIds;
+
+  // Only temporary, do not store
+  List<PlayerMatchNotes> playerMatchesNotes;
 
   Player() {
     var uuid = Uuid();
@@ -67,7 +77,9 @@ class Player {
     name = p.name;
     surname = p.surname;
     teamId = p.teamId;
+    teamName = p.teamName;
     categoryId = p.categoryId;
+    categoryName = p.categoryName;
     birthDay = Utils.fromDateTime(p.birthDay);
     height = p.height;
     weight = p.weight;
@@ -173,6 +185,30 @@ class Player {
       case POSITION_GOALKEEPER: return "Portiere";
       default: return "N/A";
     }
+  }
+
+  Team getTeam() {
+    Team team = Team();
+    team.id = teamId;
+    team.name = teamName;
+    return team;
+  }
+
+  Category getCategory() {
+    Category category = Category();
+    category.id = categoryId;
+    category.name = categoryName;
+    return category;
+  }
+
+  void setTeam(Team team) {
+    teamId = team.id;
+    teamName = team.name;
+  }
+
+  void setCategory(Category category) {
+    categoryId = category.id;
+    categoryName = category.name;
   }
 
 }

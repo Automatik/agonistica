@@ -56,7 +56,7 @@ class Match {
     leagueMatch = match.leagueMatch;
     matchDate = Utils.fromDateTime(match.matchDate);
 //    playersData = List.from(match.playersData ?? []);
-    playersData = List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
+    playersData = match.playersData == null ? List() : List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
   }
 
   Team getTeam1() {

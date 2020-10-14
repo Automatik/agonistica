@@ -30,7 +30,10 @@ class _TeamMobileState extends State<_TeamMobile> {
       initialIndex: _tabIndex,
       platformAppBar: Utils.getPlatformAppBarWithAddAction(widget.viewModel.getWidgetTitle(), () {
         // on add action pressed
-        widget.viewModel.addNewMatch(context);
+        if(_tabIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX)
+          widget.viewModel.addNewMatch(context);
+        else
+          widget.viewModel.addNewPlayer(context);
       }),
       onBottomItemChanged: (index) {
         setState(() {
@@ -104,18 +107,20 @@ class _TeamMobileState extends State<_TeamMobile> {
           child: ListView.builder(
 //              shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount: 5,
+              itemCount: widget.viewModel.players.length,
               itemBuilder: (BuildContext listContext, int index) {
+                Player player = widget.viewModel.players[index];
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
                     margin: EdgeInsets.only(top: 20),
                     width: itemsWidth,
                     child: PlayerReview(
-                      name: "Mario Rossi",
-                      role: "Attaccante",
+                      onTap: () => widget.viewModel.openPlayerDetail(context, index),
+                      name: "${player.name} ${player.surname}",
+                      role: Player.positionToString(player.position),
                       width: itemsWidth,
-                      birthDay: DateTime.utc(1996, 09, 6, 21),
+                      birthDay: player.birthDay,
                     ),
                   ),
                 );
@@ -123,14 +128,6 @@ class _TeamMobileState extends State<_TeamMobile> {
           ),
         );
       },
-    );
-  }
-
-  Widget _getMatchDetail(Match match, double width) {
-    return MatchDetailLayout(
-      isNewMatch: false,
-      match: match,
-      maxWidth: width,
     );
   }
 

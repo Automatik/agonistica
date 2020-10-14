@@ -20,6 +20,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
     return TabScaffoldWidget(
       showAppBar: true,
       title: widget.isNewMatch ? "Nuova Partita" : widget.viewModel.getAppBarTitle(),
+      initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
       onBottomItemChanged: (index) {
         widget.viewModel.onBottomBarItemChanged(context, index);
       },
