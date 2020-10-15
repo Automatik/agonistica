@@ -50,10 +50,13 @@ class MatchReview extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(left: 12, right: 5, top: topMargin),
+                  width: iconsSize,
+                  height: iconsSize,
                   child: SvgPicture.asset(
                     'assets/images/010-football.svg',
                     width: iconsSize,
                     height: iconsSize,
+                    excludeFromSemantics: true,
                     color: blueAgonisticaColor,
                   ),
                 ),
@@ -102,7 +105,7 @@ class MatchReview extends StatelessWidget {
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
+                          "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,

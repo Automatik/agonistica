@@ -1,6 +1,7 @@
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/models/Team.dart';
@@ -89,26 +90,7 @@ class DatabaseService {
       mainTeam = merateTeam;
     else
       return List();
-//    int i = 0;
-//    Team merateTeam;
-//    while(merateTeam == null && i < teamsIds.length) {
-//      final snapshot = await _databaseReference.child(firebaseTeamsChild).child(teamsIds[i]).once();
-//      final teamValue = snapshot.value;
-//      if(teamValue != null && Team.fromJson(teamValue).name == mainRequestedTeam)
-//        merateTeam = Team.fromJson(teamValue);
-//    }
-//    List<Category> categories = [];
-//    if(merateTeam != null) {
-//      // Get Categories
-//      for(String catId in merateTeam.categoriesIds) {
-//        final snapshot = await _databaseReference.child(firebaseCategoriesChild).child(catId).once();
-//        final catValue = snapshot.value;
-//        if(catValue != null)
-//          categories.add(Category.fromJson(catValue));
-//      }
-//      mainTeam = merateTeam;
-//    }
-//    mainCategories = categories;
+
     mainCategories = await _categoryRepository.getCategoriesByIds(merateTeam.categoriesIds);
     return mainCategories;
   }
@@ -118,15 +100,6 @@ class DatabaseService {
     if(team == null || team.categoriesIds == null || team.categoriesIds.isEmpty ||
         team.matchesIds == null || team.matchesIds.isEmpty || category == null)
       return Future.value(List<Match>());
-//    List<Match> matches = [];
-//    for(String id in team.matchesIds) {
-//      final snapshot = await _databaseReference.child(firebaseMatchesChild).child(id).once();
-//      if(snapshot.value != null) {
-//        Match match = Match.fromJson(snapshot.value);
-//        if(match.categoryId == category.id)
-//          matches.add(match);
-//      }
-//    }
     List<Match> matches = await _matchRepository.getMatchesByIds(team.matchesIds);
     matches.removeWhere((match) => match.categoryId != category.id);
     return matches;
@@ -152,15 +125,6 @@ class DatabaseService {
     Team team = await _teamRepository.getTeamById(teamId);
     if(team == null || team.playersIds == null || team.playersIds.isEmpty)
       return Future.value(List<Player>());
-//    List<Player> players = [];
-//    for(String playerId in team.playersIds) {
-//      final snapshot = await _databaseReference.child(firebasePlayersChild).child(playerId).once();
-//      if(snapshot.value != null) {
-//        Player player = Player.fromJson(snapshot.value);
-//        if(player.categoryId == categoryId)
-//          players.add(player);
-//      }
-//    }
     List<Player> players = await _playerRepository.getPlayersByIds(team.playersIds);
     players.removeWhere((player) => player.categoryId != categoryId);
     return players;
@@ -170,56 +134,104 @@ class DatabaseService {
   Future<List<PlayerMatchNotes>> getPlayerNotesByPlayer(Player player) async {
     if(player == null || player.playerMatchNotesIds == null || player.playerMatchNotesIds.isEmpty)
       return Future.value(List<PlayerMatchNotes>());
-//    List<PlayerMatchNotes> playersNotes = [];
-//    for(String id in player.playerMatchNotesIds) {
-//      final snapshot = await _databaseReference.child(firebasePlayersNotesChild).child(id).once();
-//      if(snapshot.value != null) {
-//        PlayerMatchNotes notes = PlayerMatchNotes.fromJson(snapshot.value);
-//        playersNotes.add(notes);
-//      }
-//    }
     List<PlayerMatchNotes> playerMatchNotes = await _playerNotesRepository.getPlayersNotesByIds(player.playerMatchNotesIds);
     return playerMatchNotes;
   }
 
   /// Upload Team data (update)
-  Future<void> updateTeamFromMatch(Match match, Team team) async {
+  Future<void> updateTeamFromMatch(Match match, Team team, List<String> matchPlayersIds) async {
     Team copy = await _teamRepository.getTeamById(team.id);
     if(copy != null) {
       team = copy;
     }
+    // update the categories in which the team appears
     if(team.categoriesIds == null)
       team.categoriesIds = [];
     if(!team.categoriesIds.contains(match.categoryId))
       team.categoriesIds.add(match.categoryId);
+    // update the matches in which the team plays
     if(team.matchesIds == null)
       team.matchesIds = [];
     if(!team.matchesIds.contains(match.id))
       team.matchesIds.add(match.id);
+    // update the team's players
+    if(team.playersIds == null)
+      team.playersIds = [];
+    for(String playerId in matchPlayersIds) {
+      if(!team.playersIds.contains(playerId))
+        team.playersIds.add(playerId);
+    }
 
-    //TODO playersIds
-
-//    await _databaseReference.child(firebaseTeamsChild).child(team.id).set(team.toJson());
     _teamRepository.saveTeam(team);
   }
-
-
 
   /// Upload Match data (insert)
   Future<void> saveMatch(Match match) async {
 
     await _matchRepository.saveMatch(match);
 
-    // Update teams
-    await updateTeamFromMatch(match, match.getTeam1());
-    await updateTeamFromMatch(match, match.getTeam2());
+    // get players data that is needed to both update the players's matchesIds
+    // and teams's playersIds
+    List<String> matchPlayersIds = match.playersData.map((data) => data.playerId);
+    List<Player> matchPlayers = await _playerRepository.getPlayersByIds(matchPlayersIds);
 
-    // Should update also players ?
+    // Update teams's matchesIds, categoriesIds and playersIds
+    await updateTeamFromMatch(match, match.getTeam1(), matchPlayersIds);
+    await updateTeamFromMatch(match, match.getTeam2(), matchPlayersIds);
+
+    // update players's matchesIds and also implicitly the player's
+    // teamId and the player's name (that could had been edited in the MatchView)
+    for(Player player in matchPlayers) {
+      if(player.matchesIds == null)
+        player.matchesIds = [];
+      if(!player.matchesIds.contains(match.id)) {
+        player.matchesIds.add(match.id);
+        await _playerRepository.savePlayer(player);
+      }
+    }
 
   }
 
   Future<void> savePlayer(Player player) async {
     await _playerRepository.savePlayer(player);
+
+    // insert or update team's playerIds
+    Team team = await _teamRepository.getTeamById(player.teamId);
+    if(team.playersIds == null)
+      team.playersIds = [];
+    if(!team.playersIds.contains(player.id)) {
+      team.playersIds.add(player.id);
+      await _teamRepository.saveTeam(team);
+    }
+
+    // update for every match that the player has played the player's name
+    List<Match> matches = await _matchRepository.getMatchesByIds(player.matchesIds);
+    for(Match match in matches) {
+      int index = match.playersData.indexWhere((data) => data.playerId == player.id);
+      if(index > -1) {
+        match.playersData[index].name = player.name;
+        match.playersData[index].surname = player.surname;
+        _matchRepository.saveMatch(match);
+      } else {
+        _logger.d("MatchPlayerData not found from player's matchesIds. Shouldn't happen! Player id: ${player.id} Match id: ${match.id}");
+      }
+    }
+
+    // insert or update player's match notes separately
+  }
+
+  Future<void> savePlayerMatchNotes(PlayerMatchNotes playerMatchNotes) async {
+    await _playerNotesRepository.savePlayerMatchNotes(playerMatchNotes);
+
+    // update player's playerMatchNodesIds
+    Player player = await _playerRepository.getPlayerById(playerMatchNotes.playerId);
+    if(player.playerMatchNotesIds == null)
+      player.playerMatchNotesIds = [];
+    if(!player.playerMatchNotesIds.contains(playerMatchNotes.id)) {
+      player.playerMatchNotesIds.add(playerMatchNotes.id);
+      await _playerRepository.savePlayer(player);
+    }
+
   }
 
   Future<void> _initializeRequestedTeamsAndCategories(SharedPreferences sharedPreferences) async {
@@ -249,8 +261,6 @@ class DatabaseService {
           merateTeam = team;
         teamsIds.add(team.id);
         _teamRepository.saveTeam(team);
-//        _databaseReference.child(firebaseTeamsChild).child(team.id).set(
-//            team.toJson());
       } else {
         int index = currentTeamsNamesRequested.toList().indexOf(teamName);
         if(index > -1) {
@@ -290,7 +300,6 @@ class DatabaseService {
     // Add to the Merate team the requested categories
     merateTeam.categoriesIds = categoriesIds;
     // Update
-//    _databaseReference.child(firebaseTeamsChild).child(merateTeam.id).set(merateTeam.toJson());
     _teamRepository.saveTeam(merateTeam);
   }
 

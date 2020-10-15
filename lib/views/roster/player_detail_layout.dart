@@ -13,10 +13,12 @@ class PlayerDetailLayout extends StatefulWidget {
   final bool isNewPlayer;
   final Player player;
   final double maxWidth;
+  final Function(Player) onSave;
 
   PlayerDetailLayout({
     @required this.isNewPlayer,
     @required this.player,
+    @required this.onSave,
     this.maxWidth
   }) : assert(player != null);
 
@@ -54,6 +56,17 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   void saveState() {
+    if(editEnabled) {
+      // saving player
+
+      //TODO Check if there are not textfields with errors
+
+      tempPlayer.name = nameTextController.text;
+      tempPlayer.surname = surnameTextController.text;
+      tempPlayer.height = int.parse(heightTextController.text);
+      tempPlayer.weight = int.parse(weightTextController.text);
+      widget.onSave(tempPlayer);
+    }
     setState(() {
       editEnabled = !editEnabled;
     });

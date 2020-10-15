@@ -23,6 +23,12 @@ class _TeamMobileState extends State<_TeamMobile> {
     _tabIndex = widget.initialTabIndex ?? TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
+  void onUpdateList() {
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
@@ -75,7 +81,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                     width: itemsWidth,
                     child: MatchReview(
                       onTap: () {
-                        widget.viewModel.openMatchDetail(context, index);
+                        widget.viewModel.openMatchDetail(context, index, onUpdateList);
                       },
                       width: itemsWidth,
                       team1: match.team1Name,
@@ -116,7 +122,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                     margin: EdgeInsets.only(top: 20),
                     width: itemsWidth,
                     child: PlayerReview(
-                      onTap: () => widget.viewModel.openPlayerDetail(context, index),
+                      onTap: () => widget.viewModel.openPlayerDetail(context, index, onUpdateList),
                       name: "${player.name} ${player.surname}",
                       role: Player.positionToString(player.position),
                       width: itemsWidth,

@@ -16,8 +16,11 @@ class MatchPlayerData {
   // do not use this field for non followed players
   String playerId;
 
-  // the name also need to be stored for players not saved, not followed
-  String name;
+  // the name also need to be stored for players not followed by the scouts
+  // I expect that if I edit a player's name from the match view should be propagated accordingly through playerId
+  // And I expect that if the player's name is updated elsewhere, also here the name should be updated
+  // handled this in the service
+  String name, surname;
 
   String teamId;
 
@@ -37,7 +40,8 @@ class MatchPlayerData {
     var uuid = Uuid();
     id = uuid.v4();
     //playersId = uuid.v4();
-    name = "Nome Giocatore";
+    name = "Nome";
+    surname = "Giocatore";
     teamId = uuid.v4();
     startsFromBegin = true;
     shirtNumber = 1;
@@ -50,6 +54,7 @@ class MatchPlayerData {
     id = data.id;
     playerId = data.playerId;
     name = data.name;
+    surname = data.surname;
     teamId = data.teamId;
     startsFromBegin = data.startsFromBegin;
     shirtNumber = data.shirtNumber;
@@ -62,6 +67,7 @@ class MatchPlayerData {
     'id': id,
     'playerId': playerId,
     'name': name,
+    'surname': surname,
     'teamId': teamId,
     'startsFromBegin': startsFromBegin,
     'shirtNumber': shirtNumber,
@@ -74,6 +80,7 @@ class MatchPlayerData {
     : id = json['id'],
       playerId = json['playerId'],
       name = json['name'],
+      surname = json['surname'],
       teamId = json['teamId'],
       startsFromBegin = json['startsFromBegin'],
       shirtNumber = json['shirtNumber'],

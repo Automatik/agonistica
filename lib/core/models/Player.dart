@@ -25,7 +25,7 @@ class Player {
 
   DateTime birthDay;
   int height;
-  double weight;
+  int weight;
 
   int position;
   bool isRightHanded;

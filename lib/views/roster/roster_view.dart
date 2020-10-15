@@ -30,8 +30,8 @@ class RosterView extends StatelessWidget {
       },
       builder: (context, viewModel, child) {
         return ScreenTypeLayout(
-          mobile: _RosterMobile(viewModel, args.isNewPlayer, args.player),
-          tablet: _RosterMobile(viewModel, args.isNewPlayer, args.player),
+          mobile: _RosterMobile(viewModel, args.isNewPlayer, args.player, args.onPlayerDetailUpdate),
+          tablet: _RosterMobile(viewModel, args.isNewPlayer, args.player, args.onPlayerDetailUpdate),
         );
       }
     );

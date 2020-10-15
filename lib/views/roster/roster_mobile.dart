@@ -6,14 +6,15 @@ class _RosterMobile extends StatelessWidget {
 
   final bool isNewPlayer;
   final Player player;
+  final Function(Player) onPlayerDetailUpdate;
 
-  _RosterMobile(this.viewModel, this.isNewPlayer, this.player);
+  _RosterMobile(this.viewModel, this.isNewPlayer, this.player, this.onPlayerDetailUpdate);
 
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
       showAppBar: true,
-      title: isNewPlayer ? "Nuovo Giocatore" : viewModel.getAppBarTitle(),
+      title: isNewPlayer ? "Nuovo Giocatore" : viewModel.getAppBarTitle(player),
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       onBottomItemChanged: (index) {
         viewModel.onBottomBarItemChanged(context, index);
@@ -25,6 +26,7 @@ class _RosterMobile extends StatelessWidget {
         return PlayerDetailLayout(
           isNewPlayer: isNewPlayer,
           player: player,
+          onSave: (p) => viewModel.onPlayerSave(context, p, onPlayerDetailUpdate),
           maxWidth: width,
         );
       },

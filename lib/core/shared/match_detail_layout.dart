@@ -76,7 +76,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     if(editEnabled) {
       // saving new values
 
-      //todo save team names (and eventually create new team objects)
+      //TODO Check if there are not textfields with errors
+
+      //todo save team names (and eventually create new team and player objects)
       tempMatch.team1Goals = int.parse(resultTextEditingController1.text);
       tempMatch.team2Goals = int.parse(resultTextEditingController2.text);
       tempMatch.leagueMatch = int.parse(leagueMatchTextEditingController.text);

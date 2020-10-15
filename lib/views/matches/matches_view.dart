@@ -32,8 +32,8 @@ class MatchesView extends StatelessWidget {
       },
       builder: (context, viewModel, child) {
         return ScreenTypeLayout(
-          mobile: _MatchesMobile(viewModel, args.isNewMatch, args.match),
-          tablet: _MatchesMobile(viewModel, args.isNewMatch, args.match),
+          mobile: _MatchesMobile(viewModel, args.isNewMatch, args.match, args.onMatchDetailUpdate),
+          tablet: _MatchesMobile(viewModel, args.isNewMatch, args.match, args.onMatchDetailUpdate),
         );
       }
     );

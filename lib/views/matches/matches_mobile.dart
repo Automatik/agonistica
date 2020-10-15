@@ -5,8 +5,9 @@ class _MatchesMobile extends StatefulWidget {
   final MatchesViewModel viewModel;
   final bool isNewMatch;
   final Match match;
+  final Function(Match) onMatchDetailUpdate;
 
-  _MatchesMobile(this.viewModel, this.isNewMatch, this.match);
+  _MatchesMobile(this.viewModel, this.isNewMatch, this.match, this.onMatchDetailUpdate);
   
   @override
   State<StatefulWidget> createState() => _MatchesMobileState();
@@ -36,7 +37,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       isNewMatch: isNewMatch,
       match: match,
       onSuggestionTeamCallback: (pattern) => widget.viewModel.suggestTeamsByPattern(pattern),
-      onSave: (matchData) => widget.viewModel.onMatchSave(context, matchData),
+      onSave: (matchData) => widget.viewModel.onMatchSave(context, matchData, widget.onMatchDetailUpdate),
       maxWidth: maxWidth,
     );
   }

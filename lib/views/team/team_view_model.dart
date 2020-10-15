@@ -17,6 +17,8 @@ class TeamViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('TeamViewModel');
 
+  Function _onUpdateList;
+
   List<Match> matches;
   List<Player> players;
 
@@ -35,13 +37,18 @@ class TeamViewModel extends BaseViewModel {
     if(_databaseService.selectedTeam == null || _databaseService.selectedCategory == null)
       _logger.d("selectedTeam or selectedCategory is null");
     else {
+      _logger.d("Loading matches and players...");
       matches = await _databaseService.getTeamMatchesByCategory(
           _databaseService.selectedTeam, _databaseService.selectedCategory);
       matches = await _databaseService.completeMatchesWithMissingInfo(matches);
 
       players = await _databaseService.getPlayersByTeamAndCategory(_databaseService.selectedTeam.id,
           _databaseService.selectedCategory.id);
-
+      // set player's team name and category name
+      for(Player player in players) {
+        player.setTeam(_databaseService.selectedTeam);
+        player.setCategory(_databaseService.selectedCategory);
+      }
 
     }
 
@@ -50,30 +57,67 @@ class TeamViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void _onPlayerDetailUpdate(Player player) {
+    if(players == null) {
+      _logger.d("players list is null");
+      return;
+    }
+    // check if player's id is already in players list
+    // meaning the player is updated
+    int index = players.indexWhere((p) => p.id == player.id);
+    if(index != -1) {
+      players[index] = player;
+      _logger.d("player updated in list");
+    } else {
+      // otherwise it's a new player
+      players.add(player);
+      _logger.d("new player added to list");
+    }
+    if(_onUpdateList != null)
+      _onUpdateList.call();
+  }
+
+  void _onMatchDetailUpdate(Match match) {
+    if(matches == null) {
+      _logger.d("matches list is null");
+      return;
+    }
+    int index = matches.indexWhere((m) => m.id == match.id);
+    if(index != -1) {
+      matches[index] = match;
+    } else {
+      matches.add(match);
+    }
+    if(_onUpdateList != null)
+      _onUpdateList.call();
+  }
+
   String getWidgetTitle() {
     return _databaseService.selectedCategory.name;
   }
 
-  Future<void> openMatchDetail(BuildContext context, int index) async {
+  Future<void> openMatchDetail(BuildContext context, int index, Function onUpdateList) async {
+    this._onUpdateList = onUpdateList;
     if(matches != null && matches.isNotEmpty) {
       Match match = matches[index];
       bool isNewMatch = false;
       Navigator.pushNamed(
         context,
         MatchesView.routeName,
-        arguments: MatchesViewArguments(isNewMatch, match)
+        arguments: MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate)
       );
     }
   }
 
-  Future<void> openPlayerDetail(BuildContext context, int index) async {
+  Future<void> openPlayerDetail(BuildContext context, int index, Function onUpdateList) async {
+    this._onUpdateList = onUpdateList;
     if(players != null && players.isNotEmpty) {
       Player player = players[index];
       bool isNewPlayer = false;
       Navigator.pushNamed(
         context,
         RosterView.routeName,
-        arguments: RosterViewArguments(isNewPlayer, player)
+        arguments: RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate)
       );
     }
   }
@@ -85,7 +129,7 @@ class TeamViewModel extends BaseViewModel {
     Navigator.pushNamed(
       context,
       MatchesView.routeName,
-      arguments: MatchesViewArguments(isNewMatch, match)
+      arguments: MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate)
     );
   }
 
@@ -97,7 +141,7 @@ class TeamViewModel extends BaseViewModel {
     Navigator.pushNamed(
       context,
       RosterView.routeName,
-      arguments: RosterViewArguments(isNewPlayer, player)
+      arguments: RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate)
     );
   }
 

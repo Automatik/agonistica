@@ -56,8 +56,10 @@ class MatchesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> onMatchSave(BuildContext context, Match match) async {
+  Future<void> onMatchSave(BuildContext context, Match match, Function(Match) onMatchDetailUpdate) async {
     await _databaseService.saveMatch(match);
+
+    onMatchDetailUpdate(match);
 
     // return to TeamView
     Navigator.of(context).pop();

@@ -1,10 +1,16 @@
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class RosterViewModel extends BaseViewModel {
+
+  final _databaseService = locator<DatabaseService>();
+
   RosterViewModel(){
     loadItems();
   }
@@ -33,8 +39,19 @@ class RosterViewModel extends BaseViewModel {
     }
   }
 
-  String getAppBarTitle() {
-    return "Player XX";
+  Future<void> onPlayerSave(BuildContext context, Player player, Function(Player) onPlayerUpdateDetail) async {
+    await _databaseService.savePlayer(player);
+
+    // save eventually playerMatchNotes?
+
+    onPlayerUpdateDetail(player);
+
+    // return to TeamView
+    Navigator.of(context).pop();
+  }
+
+  String getAppBarTitle(Player player) {
+    return "${player.name} ${player.surname}";
   }
 
 }

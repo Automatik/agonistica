@@ -91,7 +91,7 @@ class PlayerReview extends StatelessWidget{
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${birthDay.day} " + Utils.monthToString(birthDay.month).substring(0, 4) + " ${birthDay.year}",
+                          "${birthDay.day} " + Utils.monthToString(birthDay.month).substring(0, 3) + " ${birthDay.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,
