@@ -48,6 +48,11 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   TextEditingController matchesTextController, goalsTextController,
       yellowTextController, redTextController;
 
+  TextEditingController morfologiaTextController, sommatoTipoTextController;
+
+  TextEditingController attitude1TextController, attitude2TextController,
+      attitude3TextController;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +71,13 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     yellowTextController = TextEditingController();
     redTextController = TextEditingController();
 
+    morfologiaTextController = TextEditingController();
+    sommatoTipoTextController = TextEditingController();
+
+    attitude1TextController = TextEditingController();
+    attitude2TextController = TextEditingController();
+    attitude3TextController = TextEditingController();
+
     nameTextController.text = tempPlayer.name;
     surnameTextController.text = tempPlayer.surname;
     heightTextController.text = tempPlayer.height.toString();
@@ -77,6 +89,13 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     goalsTextController.text = tempPlayer.goals.toString();
     yellowTextController.text = tempPlayer.yellowCards.toString();
     redTextController.text = tempPlayer.redCards.toString();
+
+    morfologiaTextController.text = tempPlayer.morfologia;
+    sommatoTipoTextController.text = tempPlayer.sommatoTipo;
+
+    attitude1TextController.text = tempPlayer.attitudine1;
+    attitude2TextController.text = tempPlayer.attitudine2;
+    attitude3TextController.text = tempPlayer.attitudine3;
 
   }
 
@@ -90,6 +109,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       tempPlayer.surname = surnameTextController.text;
       tempPlayer.height = int.parse(heightTextController.text);
       tempPlayer.weight = int.parse(weightTextController.text);
+
+
+
       widget.onSave(tempPlayer);
     }
     setState(() {
@@ -107,7 +129,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           child: Column(
             children: [
               playerInfo(editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
-              playerCharacteristics(context, tempPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController),
+              playerCharacteristics(context, tempPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController,
+              morfologiaTextController, sommatoTipoTextController, attitude1TextController, attitude2TextController, attitude3TextController),
             ],
           ),
         ),
@@ -354,7 +377,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
   Widget playerCharacteristics(BuildContext context, Player playerInfo, bool isEditEnabled, String roleText, String footText,
       TextEditingController matchesTextController, TextEditingController goalsTextController,
-    TextEditingController yellowTextController, TextEditingController redTextController) {
+    TextEditingController yellowTextController, TextEditingController redTextController, TextEditingController morfologiaTextController,
+      TextEditingController sommatoTipoTextController, TextEditingController attitude1TextController, TextEditingController attitude2TextController,
+      TextEditingController attitude3TextController) {
 
     return Container(
       decoration: BoxDecoration(
@@ -382,7 +407,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             ],
           ),
           playerCharacteristicsBox(playerInfo, isEditEnabled),
-          playerConditionalCapacitiesBox(playerInfo, isEditEnabled)
+          playerConditionalCapacitiesBox(playerInfo, isEditEnabled),
+          playerMorphologyBox(isEditEnabled, morfologiaTextController, sommatoTipoTextController),
+          playerAttitudesBox(isEditEnabled, attitude1TextController, attitude2TextController, attitude3TextController),
         ],
       ),
     );
@@ -528,7 +555,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerCharacteristicsBox(Player playerInfo, isEditEnabled) {
+  Widget playerCharacteristicsBox(Player playerInfo, bool isEditEnabled) {
 
     if(playerInfo.velocita == null || playerInfo.velocita < Player.MIN_VALUE)
       playerInfo.velocita = Player.MIN_VALUE;
@@ -578,7 +605,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerConditionalCapacitiesBox(Player playerInfo, isEditEnabled) {
+  Widget playerConditionalCapacitiesBox(Player playerInfo, bool isEditEnabled) {
 
     List<int> capacities = [playerInfo.velocita, playerInfo.rapidita, playerInfo.scatto, playerInfo.resistenza, playerInfo.corsa, playerInfo.progressione, playerInfo.cambioPasso, playerInfo.elevazione];
     int sum = capacities.reduce((a, b) => a + b);
@@ -755,6 +782,181 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
         ],
       ),
     );
+  }
+
+  Widget playerMorphologyBox(bool isEditEnabled, TextEditingController morfologiaTextController,
+      TextEditingController sommatoTipoTextController) {
+
+    return BaseWidget(
+      builder: (context, sizingInformation) {
+
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+
+        double fieldWidth = 0.8 * width;
+
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: blueAgonisticaColor)
+            ),
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            width: width,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Morfologia",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: blueAgonisticaColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  width: fieldWidth,
+                  enabled: isEditEnabled,
+                  textAlign: TextAlign.center,
+                  controller: morfologiaTextController,
+                  textColor: blueAgonisticaColor,
+                  textFontSize: 16,
+                  textFontWeight: FontWeight.normal,
+                  hint: "Specifica morfologia",
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Sommato Tipo",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: blueAgonisticaColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  width: fieldWidth,
+                  enabled: isEditEnabled,
+                  textAlign: TextAlign.center,
+                  controller: sommatoTipoTextController,
+                  textColor: blueAgonisticaColor,
+                  textFontSize: 16,
+                  textFontWeight: FontWeight.normal,
+                  hint: "Specifica sommato tipo",
+                ),
+                SizedBox(height: 10,), //use as bottom margin
+              ],
+            ),
+          ),
+        );
+
+      },
+    );
+  }
+
+  Widget playerAttitudesBox(bool isEditEnabled, TextEditingController attitude1TextController,
+      TextEditingController attitude2TextController, TextEditingController attitude3TextController) {
+
+    return BaseWidget(
+      builder: (context, sizingInformation) {
+
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+
+        double fieldWidth = 0.8 * width;
+
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: blueAgonisticaColor)
+            ),
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            width: width,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Attitudine 1",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: blueAgonisticaColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  width: fieldWidth,
+                  enabled: isEditEnabled,
+                  textAlign: TextAlign.center,
+                  controller: attitude1TextController,
+                  textColor: blueAgonisticaColor,
+                  textFontSize: 16,
+                  textFontWeight: FontWeight.normal,
+                  hint: "Specifica la prima attitudine",
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Attitudine 2",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: blueAgonisticaColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  width: fieldWidth,
+                  enabled: isEditEnabled,
+                  textAlign: TextAlign.center,
+                  controller: attitude2TextController,
+                  textColor: blueAgonisticaColor,
+                  textFontSize: 16,
+                  textFontWeight: FontWeight.normal,
+                  hint: "Specifica la seconda attitudine",
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "Attitudine 3",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: blueAgonisticaColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18
+                    ),
+                  ),
+                ),
+                CustomTextField(
+                  width: fieldWidth,
+                  enabled: isEditEnabled,
+                  textAlign: TextAlign.center,
+                  controller: attitude3TextController,
+                  textColor: blueAgonisticaColor,
+                  textFontSize: 16,
+                  textFontWeight: FontWeight.normal,
+                  hint: "Specifica la terza attitudine",
+                ),
+                SizedBox(height: 10,), //use as bottom margin
+              ],
+            ),
+          ),
+        );
+
+      },
+    );
+
   }
 
   static String _mapStatToIcon(int icon) {

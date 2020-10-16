@@ -1,3 +1,4 @@
+import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -15,6 +16,7 @@ class CustomTextField extends StatelessWidget {
   final double textFontSize;
   final FontWeight textFontWeight;
   final double bottomBorderPadding;
+  final String hint;
 
   CustomTextField({
     this.width,
@@ -29,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.textInputType = TextInputType.text,
     this.maxLines,
     this.bottomBorderPadding = 0.0,
+    this.hint,
   });
 
   @override
@@ -47,6 +50,7 @@ class CustomTextField extends StatelessWidget {
 
   //TODO Add input validation, especially for number (remove , . - space)
   Widget _textField() {
+
     return PlatformTextField(
       enabled: enabled,
       readOnly: readOnly,
@@ -60,9 +64,14 @@ class CustomTextField extends StatelessWidget {
             isDense: true,
             contentPadding: EdgeInsets.all(bottomBorderPadding),
             disabledBorder: InputBorder.none,
-          )
+            hintText: hint,
+            hintStyle: TextStyle(
+              color: textDisabledColor,
+            )
+          ),
       ),
       style: TextStyle(
+//        color: showHint ? textDisabledColor : textColor,
         color: textColor,
         fontSize: textFontSize,
         fontWeight: textFontWeight,
