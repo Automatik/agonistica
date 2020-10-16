@@ -6,9 +6,17 @@ import 'package:agonistica/core/shared/edit_detail_button.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PlayerDetailLayout extends StatefulWidget {
+
+  static const int STAT_ROLE = 0;
+  static const int STAT_FOOT = 1;
+  static const int STAT_MATCHES = 2;
+  static const int STAT_GOALS = 3;
+  static const int STAT_YELLOW_CARDS = 4;
+  static const int STAT_RED_CARDS = 5;
 
   final bool isNewPlayer;
   final Player player;
@@ -36,6 +44,10 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   TextEditingController nameTextController, surnameTextController,
       heightTextController, weightTextController;
 
+  String roleText, footText;
+  TextEditingController matchesTextController, goalsTextController,
+      yellowTextController, redTextController;
+
   @override
   void initState() {
     super.initState();
@@ -48,10 +60,23 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     surnameTextController = TextEditingController();
     heightTextController = TextEditingController();
     weightTextController = TextEditingController();
+
+    matchesTextController = TextEditingController();
+    goalsTextController = TextEditingController();
+    yellowTextController = TextEditingController();
+    redTextController = TextEditingController();
+
     nameTextController.text = tempPlayer.name;
     surnameTextController.text = tempPlayer.surname;
     heightTextController.text = tempPlayer.height.toString();
     weightTextController.text = tempPlayer.weight.toString();
+
+    roleText = Player.positionToString(tempPlayer.position);
+    footText = tempPlayer.isRightHanded ? "Destro" : "Sinistro";
+    matchesTextController.text = tempPlayer.matches.toString();
+    goalsTextController.text = tempPlayer.goals.toString();
+    yellowTextController.text = tempPlayer.yellowCards.toString();
+    redTextController.text = tempPlayer.redCards.toString();
 
   }
 
@@ -75,13 +100,16 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
-      child: Container(
-        width: widget.maxWidth,
-        child: Column(
-          children: [
-            playerInfo(editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
-          ],
+      alignment: Alignment.topCenter,
+      child: SingleChildScrollView(
+        child: Container(
+          width: widget.maxWidth,
+          child: Column(
+            children: [
+              playerInfo(editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
+              playerCharacteristics(context, tempPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController),
+            ],
+          ),
         ),
       ),
     );
@@ -117,7 +145,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             borderRadius: BorderRadius.circular(16),
           ),
           height: 90,
-          margin: EdgeInsets.only(top: 20, bottom: 20),
+          margin: EdgeInsets.only(top: 20),
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
             child: Row(
@@ -180,6 +208,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         ),
                         CustomRichText(
                           onTap: () {
+                            // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
+                            // e poi salvare il player nella nuova squadra
                             print("TODO");
                           },
                           enabled: isEditEnabled,
@@ -191,6 +221,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         ),
                         CustomRichText(
                           onTap: () {
+                            // se cambia categoria serve solo aggiornare il player ma può servire aggiungere una nuova categoria alla squadra nel caso
+                            // il player ora faccia parte di una categoria di cui ancora il team non era presente
                             print("TODO");
                           },
                           enabled: isEditEnabled,
@@ -318,6 +350,376 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
         ),
       ],
     );
+  }
+
+  Widget playerCharacteristics(BuildContext context, Player playerInfo, bool isEditEnabled, String roleText, String footText,
+      TextEditingController matchesTextController, TextEditingController goalsTextController,
+    TextEditingController yellowTextController, TextEditingController redTextController) {
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: EdgeInsets.only(top: 20, bottom: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              statElement(context, PlayerDetailLayout.STAT_ROLE, "Ruolo", isEditEnabled, false, elementText: roleText),
+              statElement(context, PlayerDetailLayout.STAT_FOOT, "Piede", isEditEnabled, false, elementText: footText),
+              statElement(context, PlayerDetailLayout.STAT_MATCHES, "Presenze", isEditEnabled, true, elementController: matchesTextController),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              statElement(context, PlayerDetailLayout.STAT_GOALS, "Gol", isEditEnabled, true, elementController: goalsTextController),
+              statElement(context, PlayerDetailLayout.STAT_YELLOW_CARDS, "Gialli", isEditEnabled, true, elementController: yellowTextController),
+              statElement(context, PlayerDetailLayout.STAT_RED_CARDS, "Rossi", isEditEnabled, true, elementController: redTextController),
+            ],
+          ),
+          playerCharacteristicsBox(playerInfo, isEditEnabled),
+        ],
+      ),
+    );
+  }
+
+  Widget statElement(BuildContext context, int icon, String elementName, bool isEditEnabled, bool isFreeText, {TextEditingController elementController, String elementText}) {
+    String iconPath = "assets/images/${_mapStatToIcon(icon)}";
+
+    List<String> positionChoices = [Player.positionToString(Player.POSITION_GOALKEEPER),
+      Player.positionToString(Player.POSITION_DEFENDER), Player.positionToString(Player.POSITION_MIDFIELDER),
+      Player.positionToString(Player.POSITION_FORWARD)];
+
+    List<String> footChoices = ["Destro", "Sinistro"];
+
+    Widget elementWidget;
+    if(isFreeText) {
+      // the text can be edited manually
+      elementWidget = CustomTextField(
+        width: 30,
+        enabled: isEditEnabled,
+        controller: elementController,
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        textInputType: TextInputType.number,
+        textColor: Colors.black,
+        textFontSize: 14,
+        textFontWeight: FontWeight.normal,
+      );
+    } else {
+      // the value can only assume some values
+      elementWidget = Text(
+        elementText,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () async {
+        if(!isFreeText && isEditEnabled) {
+          // show dialog
+
+          bool isPositionChoice = icon == PlayerDetailLayout.STAT_ROLE;
+
+          String title = isPositionChoice ? "Seleziona il ruolo del giocatore" : "Seleziona il piede preferito del giocatore";
+          List<String> choices = isPositionChoice ? positionChoices : footChoices;
+
+          await showStatElementChoiceDialog(context, title, choices, (index)
+          {
+            setState(() {
+              elementText = choices[index];
+            });
+          }, isPositionChoice ? 250 : 150);
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.all(5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  child: SvgPicture.asset(
+                    iconPath,
+                  ),
+                  height: 24,
+                  width: 24,
+                ),
+                SizedBox(width: 5,),
+                Text(
+                  elementName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: blueAgonisticaColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            elementWidget
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> showStatElementChoiceDialog(BuildContext context, String title, List<String> choices, Function(int) onChoiceSelect, double height) async {
+    await showPlatformDialog(
+      context: context,
+      builder: (_) => PlatformAlertDialog(
+        title: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: blueAgonisticaColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        material: (_, __) => MaterialAlertDialogData(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            )
+        ),
+        content: Container(
+          width: 0.9 * MediaQuery.of(context).size.width,
+          height: height,
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: choices.length,
+              itemBuilder: (ctx, index) {
+                return ListTile(
+                  onTap: () {
+                    onChoiceSelect(index);
+
+                    // close dialog
+                    Navigator.of(context).pop();
+                  },
+                  title: Text(
+                    choices[index],
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                );
+              }
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget playerCharacteristicsBox(Player playerInfo, isEditEnabled) {
+
+    if(playerInfo.velocita == null || playerInfo.velocita < Player.MIN_VALUE)
+      playerInfo.velocita = Player.MIN_VALUE;
+    double _currentValue = playerInfo.velocita.toDouble();
+
+    playerInfo.tecnica = 6;
+    playerInfo.agonistica = 4;
+    playerInfo.fisica = 7;
+    playerInfo.tattica = 9;
+    playerInfo.capMotorie = 9;
+
+    List<int> characteristics = [playerInfo.tecnica, playerInfo.agonistica, playerInfo.fisica, playerInfo.tattica, playerInfo.capMotorie];
+    int sum = characteristics.reduce((a, b) => a + b);
+    int meanCharacteristics = (sum / characteristics.length).round();
+
+
+    return BaseWidget(
+      builder: (context, sizingInformation) {
+
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+
+        double circlesBarWidth = 0.6 * width;
+
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: blueAgonisticaColor, width: 1, style: BorderStyle.solid)
+            ),
+            margin: EdgeInsets.only(top: 10, bottom: 10),
+            width: width,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          child: Text(
+                            "Caratteristiche",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: blueAgonisticaColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      summaryWidget(meanCharacteristics, Player.MAX_VALUE)
+                    ],
+                  ),
+                ),
+                statRow("Tecnica", playerInfo.tecnica, isEditEnabled, (newValue) => playerInfo.tecnica = newValue, circlesBarWidth),
+                statRow("Agonistica", playerInfo.agonistica, isEditEnabled, (newValue) => playerInfo.agonistica = newValue, circlesBarWidth),
+                statRow("Fisica", playerInfo.fisica, isEditEnabled, (newValue) => playerInfo.fisica = newValue, circlesBarWidth),
+                statRow("Tattica", playerInfo.tattica, isEditEnabled, (newValue) => playerInfo.tattica = newValue, circlesBarWidth),
+                statRow("Cap. Motorie", playerInfo.capMotorie, isEditEnabled, (newValue) => playerInfo.capMotorie = newValue, circlesBarWidth),
+                SizedBox(height: 5,) //use as margin bottom
+              ],
+            ),
+          )
+        );
+      },
+    );
+  }
+
+  Widget statRow(String statName, int value, bool isEditEnabled, Function(int) onChange, double width) {
+    if(value == null)
+      return SizedBox();
+    double doubleValue = value.toDouble();
+
+    Widget element;
+    if(isEditEnabled) {
+      element = Slider(
+        min: Player.MIN_VALUE.toDouble(),
+        max: Player.MAX_VALUE.toDouble(),
+        divisions: Player.MAX_VALUE,
+        label: value.round().toString(),
+        value: doubleValue,
+        onChanged: (v) {
+          onChange(v.toInt());
+          setState(() {
+            doubleValue = v;
+          });
+        },
+        activeColor: blueAgonisticaColor,
+        inactiveColor: blueLightAgonisticaColor,
+      );
+    } else {
+      element = circlesBar(value, Player.MAX_VALUE, width);
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            statName,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              color: blueAgonisticaColor,
+              fontSize: 16,
+              fontWeight: FontWeight.normal
+            ),
+          ),
+          element
+        ],
+      ),
+    );
+  }
+
+  Widget circlesBar(int value, int numCircles, double maxWidth) {
+    double size = 0.7 * maxWidth / Player.MAX_VALUE;
+    List<int> circles = List.generate(numCircles, (index) => index);
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: blueAgonisticaColor),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 7),
+//      height: 30,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: circles.map((index) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 1),
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: index < value ? blueAgonisticaColor : blueAgonisticaColor.withOpacity(0.38),
+              shape: BoxShape.circle,
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget summaryWidget(int value, int maxValue, {double size}) {
+
+    bool isTrendingUp = value > maxValue / 2;
+
+    Widget trendingIcon = Icon(
+      isTrendingUp ? Icons.trending_up : Icons.trending_down,
+      size: size ?? 20,
+      color: blueAgonisticaColor,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: blueAgonisticaColor),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          trendingIcon,
+          SizedBox(width: 3,),
+          Text(
+            "$value/$maxValue",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: blueAgonisticaColor,
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static String _mapStatToIcon(int icon) {
+    switch(icon) {
+      case PlayerDetailLayout.STAT_ROLE: return '013-football-1.svg';
+      case PlayerDetailLayout.STAT_FOOT: return '006-footwear.svg';
+      case PlayerDetailLayout.STAT_MATCHES: return '027-match.svg';
+      case PlayerDetailLayout.STAT_GOALS: return '050-soccer-ball.svg';
+      case PlayerDetailLayout.STAT_YELLOW_CARDS: return '018-yellow-card.svg';
+      case PlayerDetailLayout.STAT_RED_CARDS: return '026-red-card.svg';
+      default: return "";
+    }
   }
 
 }

@@ -215,20 +215,16 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
         height: 300,
         child: ListView.builder(
 //          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: elements.length,
-          itemBuilder: (context, index) {
-            String suggestion = elements[index].name;
-            return GestureDetector(
-              onTap: () {
-                this.textEditingController.text = suggestion;
-              },
-              child: ListTile(
+            scrollDirection: Axis.vertical,
+            itemCount: elements.length,
+            itemBuilder: (context, index) {
+              String suggestion = elements[index].name;
+              return ListTile(
+                onTap: () => this.textEditingController.text = suggestion,
                 dense: true,
                 title: Text(suggestion),
-              ),
-            );
-          }
+              );
+            }
         ),
       ),
     );

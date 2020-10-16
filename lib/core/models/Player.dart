@@ -11,7 +11,7 @@ class Player {
   static const int POSITION_DEFENDER = 2;
   static const int POSITION_GOALKEEPER = 3;
 
-  static const int MIN_VALUE = 0;
+  static const int MIN_VALUE = 1;
   static const int MAX_VALUE = 10;
 
   String id;
@@ -66,7 +66,15 @@ class Player {
     position = POSITION_MIDFIELDER;
     isRightHanded = true;
 
-    // leave other fields to empty
+    matches = goals = yellowCards = redCards = 0;
+
+    tecnica = agonistica = fisica = tattica = capMotorie = MIN_VALUE;
+
+    velocita = rapidita = scatto = resistenza = corsa = progressione = cambioPasso = elevazione = MIN_VALUE;
+
+    morfologia = sommatoTipo = "";
+
+    attitudine1 = attitudine2 = attitudine3 = "";
 
     matchesIds = List();
     playerMatchNotesIds = List();
