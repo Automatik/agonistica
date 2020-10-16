@@ -382,6 +382,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             ],
           ),
           playerCharacteristicsBox(playerInfo, isEditEnabled),
+          playerConditionalCapacitiesBox(playerInfo, isEditEnabled)
         ],
       ),
     );
@@ -533,11 +534,11 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       playerInfo.velocita = Player.MIN_VALUE;
     double _currentValue = playerInfo.velocita.toDouble();
 
-    playerInfo.tecnica = 6;
-    playerInfo.agonistica = 4;
-    playerInfo.fisica = 7;
-    playerInfo.tattica = 9;
-    playerInfo.capMotorie = 9;
+//    playerInfo.tecnica = 6;
+//    playerInfo.agonistica = 4;
+//    playerInfo.fisica = 7;
+//    playerInfo.tattica = 9;
+//    playerInfo.capMotorie = 9;
 
     List<int> characteristics = [playerInfo.tecnica, playerInfo.agonistica, playerInfo.fisica, playerInfo.tattica, playerInfo.capMotorie];
     int sum = characteristics.reduce((a, b) => a + b);
@@ -562,28 +563,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             width: width,
             child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          child: Text(
-                            "Caratteristiche",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: blueAgonisticaColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      summaryWidget(meanCharacteristics, Player.MAX_VALUE)
-                    ],
-                  ),
-                ),
+                statTitleAndSummary("Caratteristiche", meanCharacteristics),
                 statRow("Tecnica", playerInfo.tecnica, isEditEnabled, (newValue) => playerInfo.tecnica = newValue, circlesBarWidth),
                 statRow("Agonistica", playerInfo.agonistica, isEditEnabled, (newValue) => playerInfo.agonistica = newValue, circlesBarWidth),
                 statRow("Fisica", playerInfo.fisica, isEditEnabled, (newValue) => playerInfo.fisica = newValue, circlesBarWidth),
@@ -598,9 +578,76 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
+  Widget playerConditionalCapacitiesBox(Player playerInfo, isEditEnabled) {
+
+    List<int> capacities = [playerInfo.velocita, playerInfo.rapidita, playerInfo.scatto, playerInfo.resistenza, playerInfo.corsa, playerInfo.progressione, playerInfo.cambioPasso, playerInfo.elevazione];
+    int sum = capacities.reduce((a, b) => a + b);
+    int meanCapacities = (sum / capacities.length).round();
+
+    return BaseWidget(
+      builder: (context, sizingInformation) {
+
+        double width = 0.9 * sizingInformation.localWidgetSize.width;
+
+        double circlesBarWidth = 0.6 * width;
+
+        return Align(
+            alignment: Alignment.center,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: blueAgonisticaColor, width: 1, style: BorderStyle.solid)
+              ),
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              width: width,
+              child: Column(
+                children: [
+                  statTitleAndSummary("Capacità condizionali", meanCapacities),
+                  statRow("Velocità", playerInfo.velocita, isEditEnabled, (newValue) => playerInfo.velocita = newValue, circlesBarWidth),
+                  statRow("Rapidità", playerInfo.rapidita, isEditEnabled, (newValue) => playerInfo.rapidita = newValue, circlesBarWidth),
+                  statRow("Scatto", playerInfo.scatto, isEditEnabled, (newValue) => playerInfo.scatto = newValue, circlesBarWidth),
+                  statRow("Resistenza", playerInfo.resistenza, isEditEnabled, (newValue) => playerInfo.resistenza = newValue, circlesBarWidth),
+                  statRow("Corsa", playerInfo.corsa, isEditEnabled, (newValue) => playerInfo.corsa = newValue, circlesBarWidth),
+                  statRow("Progressione", playerInfo.progressione, isEditEnabled, (newValue) => playerInfo.progressione = newValue, circlesBarWidth),
+                  statRow("Cambio passo", playerInfo.cambioPasso, isEditEnabled, (newValue) => playerInfo.cambioPasso = newValue, circlesBarWidth),
+                  statRow("Elevazione", playerInfo.elevazione, isEditEnabled, (newValue) => playerInfo.elevazione = newValue, circlesBarWidth),
+                  SizedBox(height: 5,) //use as margin bottom
+                ],
+              ),
+            )
+        );
+      },
+    );
+  }
+
+  Widget statTitleAndSummary(String title, int meanValue) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Container(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blueAgonisticaColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          summaryWidget(meanValue, Player.MAX_VALUE)
+        ],
+      ),
+    );
+  }
+
   Widget statRow(String statName, int value, bool isEditEnabled, Function(int) onChange, double width) {
     if(value == null)
-      return SizedBox();
+      value = 1;
     double doubleValue = value.toDouble();
 
     Widget element;
