@@ -308,6 +308,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                                   playerInfo.setTeam(team);
                                 });
                               }
+                              // close dialog
+                              Navigator.of(context).pop();
                             }
                           },
                           enabled: isEditEnabled,
@@ -319,8 +321,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         ),
                         CustomRichText(
                           onTap: () async {
-                            // se cambia categoria serve solo aggiornare il player (NON E' VERO: ma può servire aggiungere una nuova categoria alla squadra nel caso
-                            // il player ora faccia parte di una categoria di cui ancora il team non era presente)
+                            // se cambia categoria serve solo aggiornare il player (ma può servire aggiungere una nuova categoria alla squadra nel caso
+                            // il player ora faccia parte di una categoria di cui ancora il team non era presente) -> no non serve
                             if(isEditEnabled) {
                               List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getTeam());
                               final dialog = SelectCategoryDialog(
@@ -331,6 +333,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                                         playerInfo.setCategory(newCategory);
                                       });
                                     }
+                                    // close dialog
+                                    Navigator.of(context).pop();
                                   }
                               );
                               dialog.showSelectCategoryDialog(context);

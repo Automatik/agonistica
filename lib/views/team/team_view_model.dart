@@ -57,16 +57,27 @@ class TeamViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  /// Use this callback to update the players listView. When this method is
+  /// executed, the player has been already saved
   void _onPlayerDetailUpdate(Player player) {
     if(players == null) {
       _logger.d("players list is null");
       return;
     }
+
     // check if player's id is already in players list
     // meaning the player is updated
     int index = players.indexWhere((p) => p.id == player.id);
     if(index != -1) {
-      players[index] = player;
+
+      // check if the player's team or category has changed
+      if(player.teamId != _databaseService.selectedTeam.id || player.categoryId != _databaseService.selectedCategory.id) {
+        // remove the player from the players list
+        players.removeAt(index);
+      } else {
+        // otherwise update the players list
+        players[index] = player;
+      }
       _logger.d("player updated in list");
     } else {
       // otherwise it's a new player
