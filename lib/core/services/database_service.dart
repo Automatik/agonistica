@@ -63,6 +63,10 @@ class DatabaseService {
 
   }
 
+  Future<Team> getTeamById(String teamId) async {
+    return await _teamRepository.getTeamById(teamId);
+  }
+
   /// Download all teams without the other requested teams (merateTeam and other)
   Future<List<Team>> getTeamsWithoutOtherRequestedTeams() async {
     final sharedPref = await SharedPreferences.getInstance();
@@ -93,6 +97,14 @@ class DatabaseService {
 
     mainCategories = await _categoryRepository.getCategoriesByIds(merateTeam.categoriesIds);
     return mainCategories;
+  }
+
+  /// Get the team's categories
+  Future<List<Category>> getTeamCategories(String teamId) async {
+    Team team = await _teamRepository.getTeamById(teamId);
+    if(team == null || team.categoriesIds == null || team.categoriesIds.isEmpty)
+      return [];
+    return await _categoryRepository.getCategoriesByIds(team.categoriesIds);
   }
 
   /// Download all the matches of a team by filtering for the given category
@@ -193,6 +205,15 @@ class DatabaseService {
   }
 
   Future<void> savePlayer(Player player) async {
+    // if the player's teamId is changed, remove the player's id from the old team's playersIds
+    Player oldPlayer = await _playerRepository.getPlayerById(player.id);
+    if(oldPlayer != null && oldPlayer.teamId != player.teamId) {
+      Team oldTeam = await _teamRepository.getTeamById(oldPlayer.teamId);
+      oldTeam.playersIds.removeWhere((id) => id == oldPlayer.id);
+      await _teamRepository.saveTeam(oldTeam);
+    }
+
+
     await _playerRepository.savePlayer(player);
 
     // insert or update team's playerIds

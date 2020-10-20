@@ -1,10 +1,15 @@
+import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/edit_detail_button.dart';
+import 'package:agonistica/core/shared/insert_team_dialog.dart';
+import 'package:agonistica/core/shared/select_category_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,20 +23,27 @@ class PlayerDetailLayout extends StatefulWidget {
   static const int STAT_YELLOW_CARDS = 4;
   static const int STAT_RED_CARDS = 5;
 
-  final bool isNewPlayer;
+//  final bool isNewPlayer;
   final Player player;
+  final bool isEditEnabled;
   final double maxWidth;
-  final Function(Player) onSave;
+  final PlayerDetailController controller;
+  final List<Team> Function(String) onSuggestionTeamCallback;
+  final Future<List<Category>> Function(Team) teamCategoriesCallback;
+//  final Function(Player) onSave;
 
   PlayerDetailLayout({
-    @required this.isNewPlayer,
     @required this.player,
-    @required this.onSave,
+    @required this.isEditEnabled,
+    @required this.controller,
+    @required this.onSuggestionTeamCallback,
+    @required this.teamCategoriesCallback,
+//    @required this.onSave,
     this.maxWidth
   }) : assert(player != null);
 
   @override
-  State<StatefulWidget> createState() => _PlayerDetailLayoutState();
+  State<StatefulWidget> createState() => _PlayerDetailLayoutState(controller);
 
 }
 
@@ -53,13 +65,16 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   TextEditingController attitude1TextController, attitude2TextController,
       attitude3TextController;
 
+  _PlayerDetailLayoutState(PlayerDetailController controller) {
+    controller.savePlayerStatus = savePlayerState;
+  }
+
   @override
   void initState() {
     super.initState();
+    print("initState");
     // if it's a new player enable already edit mode, otherwise start in view mode
-    editEnabled = widget.isNewPlayer;
-
-    tempPlayer = Player.clone(widget.player);
+    editEnabled = widget.isEditEnabled;
 
     nameTextController = TextEditingController();
     surnameTextController = TextEditingController();
@@ -77,6 +92,26 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     attitude1TextController = TextEditingController();
     attitude2TextController = TextEditingController();
     attitude3TextController = TextEditingController();
+
+    tempPlayer = widget.player;
+    reset();
+
+  }
+
+  @override
+  void didUpdateWidget(covariant PlayerDetailLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget");
+    editEnabled = widget.isEditEnabled;
+    tempPlayer = widget.player;
+//    reset();
+    if(oldWidget.isEditEnabled != widget.isEditEnabled && tempPlayer != null)
+      reset();
+  }
+
+  void reset() {
+//    tempPlayer = Player.clone(widget.player);
+//    tempPlayer = widget.player;
 
     nameTextController.text = tempPlayer.name;
     surnameTextController.text = tempPlayer.surname;
@@ -96,28 +131,61 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     attitude1TextController.text = tempPlayer.attitudine1;
     attitude2TextController.text = tempPlayer.attitudine2;
     attitude3TextController.text = tempPlayer.attitudine3;
-
   }
 
-  void saveState() {
-    if(editEnabled) {
-      // saving player
+  void savePlayerState() {
+    print("savePlayerState called");
+    //TODO Check if there are not textfields with errors
 
-      //TODO Check if there are not textfields with errors
+    tempPlayer.name = nameTextController.text;
+    tempPlayer.surname = surnameTextController.text;
+    tempPlayer.height = int.tryParse(heightTextController.text);
+    tempPlayer.weight = int.tryParse(weightTextController.text);
 
-      tempPlayer.name = nameTextController.text;
-      tempPlayer.surname = surnameTextController.text;
-      tempPlayer.height = int.parse(heightTextController.text);
-      tempPlayer.weight = int.parse(weightTextController.text);
+    tempPlayer.position = Player.stringToPosition(roleText);
+    tempPlayer.isRightHanded = footText == "Destro" ? true : false;
+    tempPlayer.matches = int.tryParse(matchesTextController.text);
+    tempPlayer.goals = int.tryParse(goalsTextController.text);
+    tempPlayer.yellowCards = int.tryParse(yellowTextController.text);
+    tempPlayer.redCards = int.tryParse(redTextController.text);
 
-
-
-      widget.onSave(tempPlayer);
-    }
-    setState(() {
-      editEnabled = !editEnabled;
-    });
+    tempPlayer.morfologia = morfologiaTextController.text;
+    tempPlayer.sommatoTipo = sommatoTipoTextController.text;
+    tempPlayer.attitudine1 = attitude1TextController.text;
+    tempPlayer.attitudine2 = attitude2TextController.text;
+    tempPlayer.attitudine3 = attitude3TextController.text;
   }
+
+//  void saveState() {
+//    if(editEnabled) {
+//      // saving player
+//
+//      //TODO Check if there are not textfields with errors
+//
+//      tempPlayer.name = nameTextController.text;
+//      tempPlayer.surname = surnameTextController.text;
+//      tempPlayer.height = int.tryParse(heightTextController.text);
+//      tempPlayer.weight = int.tryParse(weightTextController.text);
+//
+//      tempPlayer.position = Player.stringToPosition(roleText);
+//      tempPlayer.isRightHanded = footText == "Destro" ? true : false;
+//      tempPlayer.matches = int.tryParse(matchesTextController.text);
+//      tempPlayer.goals = int.tryParse(goalsTextController.text);
+//      tempPlayer.yellowCards = int.tryParse(yellowTextController.text);
+//      tempPlayer.redCards = int.tryParse(redTextController.text);
+//
+//      tempPlayer.morfologia = morfologiaTextController.text;
+//      tempPlayer.sommatoTipo = sommatoTipoTextController.text;
+//      tempPlayer.attitudine1 = attitude1TextController.text;
+//      tempPlayer.attitudine2 = attitude2TextController.text;
+//      tempPlayer.attitudine3 = attitude3TextController.text;
+//
+//      widget.onSave(tempPlayer);
+//    }
+//    setState(() {
+//      editEnabled = !editEnabled;
+//    });
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +196,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           width: widget.maxWidth,
           child: Column(
             children: [
-              playerInfo(editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
+              playerInfo(context, editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
               playerCharacteristics(context, tempPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController,
               morfologiaTextController, sommatoTipoTextController, attitude1TextController, attitude2TextController, attitude3TextController),
             ],
@@ -138,7 +206,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerInfo(bool isEditEnabled, Player playerInfo, TextEditingController nameTextController,
+  Widget playerInfo(BuildContext context, bool isEditEnabled, Player playerInfo, TextEditingController nameTextController,
       TextEditingController surnameTextController, TextEditingController heightTextController,
       TextEditingController weightTextController) {
 
@@ -230,10 +298,17 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                           ),
                         ),
                         CustomRichText(
-                          onTap: () {
+                          onTap: () async {
                             // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
-                            // e poi salvare il player nella nuova squadra
-                            print("TODO");
+                            // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
+                            if(isEditEnabled) {
+                              Team team = await _showInsertTeamDialog(playerInfo.teamName);
+                              if(team != null) {
+                                setState(() {
+                                  playerInfo.setTeam(team);
+                                });
+                              }
+                            }
                           },
                           enabled: isEditEnabled,
                           text: playerInfo.teamName,
@@ -243,10 +318,23 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                           fontWeight: playerTeamTextWeight,
                         ),
                         CustomRichText(
-                          onTap: () {
-                            // se cambia categoria serve solo aggiornare il player ma può servire aggiungere una nuova categoria alla squadra nel caso
-                            // il player ora faccia parte di una categoria di cui ancora il team non era presente
-                            print("TODO");
+                          onTap: () async {
+                            // se cambia categoria serve solo aggiornare il player (NON E' VERO: ma può servire aggiungere una nuova categoria alla squadra nel caso
+                            // il player ora faccia parte di una categoria di cui ancora il team non era presente)
+                            if(isEditEnabled) {
+                              List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getTeam());
+                              final dialog = SelectCategoryDialog(
+                                  categories: categories,
+                                  onSelect: (newCategory) {
+                                    if(newCategory != null) {
+                                      setState(() {
+                                        playerInfo.setCategory(newCategory);
+                                      });
+                                    }
+                                  }
+                              );
+                              dialog.showSelectCategoryDialog(context);
+                            }
                           },
                           enabled: isEditEnabled,
                           text: playerInfo.categoryName,
@@ -367,10 +455,10 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             ),
           ),
         ),
-        EditDetailButton(
-          isEditEnabled: isEditEnabled,
-          onTap: () => saveState(),
-        ),
+//        EditDetailButton(
+//          isEditEnabled: isEditEnabled,
+//          onTap: () => saveState(),
+//        ),
       ],
     );
   }
@@ -556,16 +644,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   Widget playerCharacteristicsBox(Player playerInfo, bool isEditEnabled) {
-
-    if(playerInfo.velocita == null || playerInfo.velocita < Player.MIN_VALUE)
-      playerInfo.velocita = Player.MIN_VALUE;
-    double _currentValue = playerInfo.velocita.toDouble();
-
-//    playerInfo.tecnica = 6;
-//    playerInfo.agonistica = 4;
-//    playerInfo.fisica = 7;
-//    playerInfo.tattica = 9;
-//    playerInfo.capMotorie = 9;
 
     List<int> characteristics = [playerInfo.tecnica, playerInfo.agonistica, playerInfo.fisica, playerInfo.tattica, playerInfo.capMotorie];
     int sum = characteristics.reduce((a, b) => a + b);
@@ -959,6 +1037,25 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
   }
 
+  Future<Team> _showInsertTeamDialog(String tempTeamName) async {
+    Team tempTeam;
+    InsertTeamDialog insertTeamDialog = InsertTeamDialog(
+        initialValue: tempTeamName,
+        maxHeight: MediaQuery.of(context).size.height,
+        suggestionCallback: (pattern) {
+          return widget.onSuggestionTeamCallback(pattern);
+        },
+        onSubmit: (finalTeamValue) {
+          Navigator.of(context).pop();
+          if(finalTeamValue != null) {
+            tempTeam = finalTeamValue;
+          }
+        }
+    );
+    await insertTeamDialog.showInsertTeamDialog(context);
+    return tempTeam;
+  }
+
   static String _mapStatToIcon(int icon) {
     switch(icon) {
       case PlayerDetailLayout.STAT_ROLE: return '013-football-1.svg';
@@ -970,5 +1067,11 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       default: return "";
     }
   }
+
+}
+
+class PlayerDetailController {
+
+  void Function() savePlayerStatus;
 
 }

@@ -137,9 +137,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                         onTap: () async {
                                           if(editEnabled) {
                                             Team team1 = await _showInsertTeamDialog(tempMatch.team1Name);
-                                            setState(() {
-                                              tempMatch.setTeam1(team1);
-                                            });
+                                            if(team1 != null) {
+                                              setState(() {
+                                                tempMatch.setTeam1(team1);
+                                              });
+                                            }
                                           }
                                         },
                                         enabled: editEnabled,
@@ -160,9 +162,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                         onTap: () async {
                                           if(editEnabled) {
                                             Team team2 = await _showInsertTeamDialog(tempMatch.team2Name);
-                                            setState(() {
-                                              tempMatch.setTeam2(team2);
-                                            });
+                                            if(team2 != null) {
+                                              setState(() {
+                                                tempMatch.setTeam2(team2);
+                                              });
+                                            }
                                           }
                                         },
                                         enabled: editEnabled,

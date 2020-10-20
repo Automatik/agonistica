@@ -195,6 +195,16 @@ class Player {
     }
   }
 
+  static int stringToPosition(String position) {
+    switch(position) {
+      case "Attaccante": return POSITION_FORWARD;
+      case "Centrocampista": return POSITION_MIDFIELDER;
+      case "Difensore": return POSITION_DEFENDER;
+      case "Portiere": return POSITION_GOALKEEPER;
+      default: return 0;
+    }
+  }
+
   Team getTeam() {
     Team team = Team();
     team.id = teamId;
