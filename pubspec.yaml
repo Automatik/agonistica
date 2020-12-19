@@ -30,6 +30,7 @@ dependencies:
   hive: ^1.4.4
   hive_flutter: ^0.3.1
   uuid: ^2.2.0
+  expand_widget: ^1.1.0
   flutter_svg: ^0.18.1
   shared_preferences: ^0.5.10
   flutter_platform_widgets: ^0.60.2

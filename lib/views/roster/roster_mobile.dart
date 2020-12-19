@@ -44,8 +44,6 @@ class _RosterMobileState extends State<_RosterMobile> {
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
         return PlayerDetailLayout(
-//          isNewPlayer: widget.isNewPlayer,
-//          player: isEditEnabled ? tempPlayer : widget.viewModel.player,
           player: tempPlayer,
           isEditEnabled: isEditEnabled,
           controller: playerDetailController,
@@ -60,9 +58,9 @@ class _RosterMobileState extends State<_RosterMobile> {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
     if(isEditEnabled) {
-      return Utils.getPlatformAppBarForRosterViewInEditMode(title, () => onActionBack(context), onActionCancel, onActionConfirm);
+      return Utils.getPlatformAppBarForRosterViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
     } else {
-      return Utils.getPlatformAppBarForRosterViewInViewMode(title, () => onActionBack(context), onActionEditPress, onActionAddPress);
+      return Utils.getPlatformAppBarForRosterViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionAddPress(context));
     }
   }
 
@@ -85,8 +83,7 @@ class _RosterMobileState extends State<_RosterMobile> {
     }
   }
 
-  void onActionConfirm() async {
-    print("onActionConfirm");
+  void onActionConfirm(BuildContext context) async {
     if(isEditEnabled) {
       playerDetailController.savePlayerStatus();
       await widget.viewModel.onPlayerSave(context, tempPlayer);
@@ -103,16 +100,8 @@ class _RosterMobileState extends State<_RosterMobile> {
     });
   }
 
-  void onActionAddPress() {
-
+  void onActionAddPress(BuildContext context) {
+    widget.viewModel.navigateToPlayerMatchesNotes(context);
   }
-
-}
-
-abstract class OnActionListener {
-
-  void onActionConfirm();
-
-  void onActionCancel();
 
 }

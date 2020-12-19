@@ -128,6 +128,76 @@ class Utils {
     );
   }
 
+  static PlatformAppBar getPlatformAppBarForNotesViewInViewMode(String title, Function onActionBack, Function onActionEditPress) {
+    return PlatformAppBar(
+      backgroundColor: appBarBackgroundColor,
+      title: Text(
+        title,
+        style: TextStyle(
+          color: blueAgonisticaColor,
+        ),
+      ),
+      material: (_, __) => MaterialAppBarData(
+          leading: GestureDetector(
+              onTap: onActionBack,
+              child: Icon(Icons.arrow_back, color: blueAgonisticaColor,)
+          ),
+          actions: [
+            Container(
+              margin: EdgeInsets.only(right: actionIconsMargin),
+              child: GestureDetector(
+                onTap: onActionEditPress,
+                child: Icon(
+                  Icons.edit,
+                  color: blueAgonisticaColor,
+                ),
+              ),
+            )
+          ]
+      ),
+    );
+  }
+
+  static PlatformAppBar getPlatformAppBarForNotesViewInEditMode(String title, Function onActionBack, Function onActionCancel, Function onActionConfirm) {
+    return PlatformAppBar(
+      backgroundColor: appBarBackgroundColor,
+      title: Text(
+        title,
+        style: TextStyle(
+          color: blueAgonisticaColor,
+        ),
+      ),
+      material: (_, __) => MaterialAppBarData(
+          leading: GestureDetector(
+              onTap: onActionBack,
+              child: Icon(Icons.arrow_back, color: blueAgonisticaColor,)
+          ),
+          actions: [
+            Container(
+              margin: EdgeInsets.only(right: actionIconsMargin),
+              child: GestureDetector(
+                onTap: onActionCancel,
+                child: Icon(
+                  Icons.close,
+                  color: blueAgonisticaColor,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(right: actionIconsMargin),
+              child: GestureDetector(
+                onTap: onActionConfirm,
+                child: Icon(
+                  Icons.done,
+                  color: blueAgonisticaColor,
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
   static String monthToString(int month) {
     if(month < 1 || month > 12)
       return "";

@@ -63,6 +63,8 @@ class DatabaseService {
 
   }
 
+  // GET TEAM
+
   Future<Team> getTeamById(String teamId) async {
     return await _teamRepository.getTeamById(teamId);
   }
@@ -99,12 +101,24 @@ class DatabaseService {
     return mainCategories;
   }
 
+  // GET CATEGORY
+
+  Future<Category> getCategoryById(String categoryId) async {
+    return await _categoryRepository.getCategoryById(categoryId);
+  }
+
   /// Get the team's categories
   Future<List<Category>> getTeamCategories(String teamId) async {
     Team team = await _teamRepository.getTeamById(teamId);
     if(team == null || team.categoriesIds == null || team.categoriesIds.isEmpty)
       return [];
     return await _categoryRepository.getCategoriesByIds(team.categoriesIds);
+  }
+
+  // GET MATCH
+
+  Future<List<Match>> getMatchesByIds(List<String> matchesIds) async {
+    return await _matchRepository.getMatchesByIds(matchesIds);
   }
 
   /// Download all the matches of a team by filtering for the given category
@@ -132,6 +146,12 @@ class DatabaseService {
     return newMatches;
   }
 
+  // GET PLAYER
+
+  Future<Player> getPlayerById(String playerId) async {
+    return await _playerRepository.getPlayerById(playerId);
+  }
+
   /// Download players of the given team and category
   Future<List<Player>> getPlayersByTeamAndCategory(String teamId, String categoryId) async {
     Team team = await _teamRepository.getTeamById(teamId);
@@ -142,6 +162,12 @@ class DatabaseService {
     return players;
   }
 
+  // GET PLAYER MATCH NOTES
+
+  Future<PlayerMatchNotes> getPlayerMatchNotesById(String playerMatchNotesId) async {
+    return await _playerNotesRepository.getPlayerNotesById(playerMatchNotesId);
+  }
+
   /// Download the player's notes
   Future<List<PlayerMatchNotes>> getPlayerNotesByPlayer(Player player) async {
     if(player == null || player.playerMatchNotesIds == null || player.playerMatchNotesIds.isEmpty)
@@ -149,6 +175,8 @@ class DatabaseService {
     List<PlayerMatchNotes> playerMatchNotes = await _playerNotesRepository.getPlayersNotesByIds(player.playerMatchNotesIds);
     return playerMatchNotes;
   }
+
+  // SET TEAM
 
   /// Upload Team data (update)
   Future<void> updateTeamFromMatch(Match match, Team team, List<String> matchPlayersIds) async {
@@ -177,6 +205,15 @@ class DatabaseService {
     _teamRepository.saveTeam(team);
   }
 
+  // SET CATEGORY
+
+  Future<void> saveCategory(Category category) async {
+    // Not tested and not thought about requirements and consequences yet
+    await _categoryRepository.saveCategory(category);
+  }
+
+  // SET MATCH
+
   /// Upload Match data (insert)
   Future<void> saveMatch(Match match) async {
 
@@ -203,6 +240,8 @@ class DatabaseService {
     }
 
   }
+
+  // SET PLAYER
 
   Future<void> savePlayer(Player player) async {
     // if the player's teamId is changed, remove the player's id from the old team's playersIds
@@ -241,6 +280,8 @@ class DatabaseService {
     // insert or update player's match notes separately
   }
 
+  // SET PLAYER MATCH NOTES
+
   Future<void> savePlayerMatchNotes(PlayerMatchNotes playerMatchNotes) async {
     await _playerNotesRepository.savePlayerMatchNotes(playerMatchNotes);
 
@@ -254,6 +295,8 @@ class DatabaseService {
     }
 
   }
+
+  // INITIALIZE
 
   Future<void> _initializeRequestedTeamsAndCategories(SharedPreferences sharedPreferences) async {
     // get all stored teams

@@ -72,7 +72,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   @override
   void initState() {
     super.initState();
-    print("initState");
     // if it's a new player enable already edit mode, otherwise start in view mode
     editEnabled = widget.isEditEnabled;
 
@@ -101,11 +100,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   @override
   void didUpdateWidget(covariant PlayerDetailLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print("didUpdateWidget");
     editEnabled = widget.isEditEnabled;
     tempPlayer = widget.player;
-//    reset();
-    if(oldWidget.isEditEnabled != widget.isEditEnabled && tempPlayer != null)
+    if(oldWidget.isEditEnabled != widget.isEditEnabled)
       reset();
   }
 
@@ -134,7 +131,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   void savePlayerState() {
-    print("savePlayerState called");
     //TODO Check if there are not textfields with errors
 
     tempPlayer.name = nameTextController.text;
@@ -155,37 +151,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     tempPlayer.attitudine2 = attitude2TextController.text;
     tempPlayer.attitudine3 = attitude3TextController.text;
   }
-
-//  void saveState() {
-//    if(editEnabled) {
-//      // saving player
-//
-//      //TODO Check if there are not textfields with errors
-//
-//      tempPlayer.name = nameTextController.text;
-//      tempPlayer.surname = surnameTextController.text;
-//      tempPlayer.height = int.tryParse(heightTextController.text);
-//      tempPlayer.weight = int.tryParse(weightTextController.text);
-//
-//      tempPlayer.position = Player.stringToPosition(roleText);
-//      tempPlayer.isRightHanded = footText == "Destro" ? true : false;
-//      tempPlayer.matches = int.tryParse(matchesTextController.text);
-//      tempPlayer.goals = int.tryParse(goalsTextController.text);
-//      tempPlayer.yellowCards = int.tryParse(yellowTextController.text);
-//      tempPlayer.redCards = int.tryParse(redTextController.text);
-//
-//      tempPlayer.morfologia = morfologiaTextController.text;
-//      tempPlayer.sommatoTipo = sommatoTipoTextController.text;
-//      tempPlayer.attitudine1 = attitude1TextController.text;
-//      tempPlayer.attitudine2 = attitude2TextController.text;
-//      tempPlayer.attitudine3 = attitude3TextController.text;
-//
-//      widget.onSave(tempPlayer);
-//    }
-//    setState(() {
-//      editEnabled = !editEnabled;
-//    });
-//  }
 
   @override
   Widget build(BuildContext context) {

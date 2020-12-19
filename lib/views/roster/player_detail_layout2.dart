@@ -53,6 +53,8 @@ class PlayerDetailLayout2 extends StatelessWidget {
   final attitude2TextController = TextEditingController();
   final attitude3TextController = TextEditingController();
 
+  // NOT WORKING -> ELEMENTS IN UI DON'T CHANGE
+
   PlayerDetailLayout2({this.player, this.isEditEnabled, this.controller, this.onSuggestionTeamCallback, this.teamCategoriesCallback, this.maxWidth}) {
     controller.savePlayerStatus = savePlayerState;
     print("constructor");
