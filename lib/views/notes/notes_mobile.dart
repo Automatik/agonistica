@@ -42,7 +42,7 @@ class _NotesMobileState extends State<_NotesMobile> {
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => widget.viewModel.onBottomBarItemChanged(context, index),
-      childBuilder: (childContext, sizingInformation) {
+      childBuilder: (childContext, sizingInformation, parentSizingInformation) {
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
         return SingleChildScrollView(

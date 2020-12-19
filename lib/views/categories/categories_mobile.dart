@@ -8,10 +8,10 @@ class _CategoriesMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffoldWidget(
+    return ScrollScaffoldWidget(
       showAppBar: true,
       title: viewModel.getAppBarTitle(),
-      childBuilder: (context, sizingInformation) {
+      childBuilder: (context, sizingInformation, parentSizingInformation) {
 
         double titleFontSize = sizingInformation.isPortrait() ? 24 : 20;
 
@@ -22,8 +22,8 @@ class _CategoriesMobile extends StatelessWidget {
 
         return Container(
             constraints: BoxConstraints(
-            maxHeight: sizingInformation.screenSize.height,
-            maxWidth: sizingInformation.screenSize.width,
+            minHeight: parentSizingInformation.localWidgetSize.height,
+            minWidth: sizingInformation.screenSize.width,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

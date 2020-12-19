@@ -46,7 +46,7 @@ class _TeamMobileState extends State<_TeamMobile> {
           _tabIndex = index;
         });
       },
-      childBuilder: (BuildContext context, MySizingInformation sizingInformation) {
+      childBuilder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         if(_tabIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX) {
           return _getMatchesLayout();
         }
@@ -59,7 +59,7 @@ class _TeamMobileState extends State<_TeamMobile> {
 
   Widget _getMatchesLayout() {
     return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation) {
+      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
@@ -101,7 +101,7 @@ class _TeamMobileState extends State<_TeamMobile> {
 
   Widget _getRosterLayout() {
     return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation) {
+      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
@@ -147,7 +147,7 @@ class _TeamMobileState extends State<_TeamMobile> {
 
 
     return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation) {
+      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
         double widgetWidth = 0.95 * sizingInformation.screenSize.width;
         double minHeight = 50;

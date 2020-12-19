@@ -13,7 +13,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       title: viewModel.getAppBarTitle(),
       onBottomItemChanged: (index) => viewModel.onBottomBarItemChanged(context, index),
-      childBuilder: (childContext, sizingInformation) {
+      childBuilder: (childContext, sizingInformation, parentSizingInformation) {
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
         return Container(

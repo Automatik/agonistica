@@ -1,6 +1,5 @@
 part of home_view;
 
-// ignore: must_be_immutable
 class _HomeMobile extends StatelessWidget {
 
   final HomeViewModel viewModel;
@@ -10,13 +9,13 @@ class _HomeMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffoldWidget(
+    return ScrollScaffoldWidget(
       showAppBar: false,
-      childBuilder: (context, sizingInformation) {
+      childBuilder: (context, sizingInformation, parentSizingInformation) {
         return Container(
           constraints: BoxConstraints(
-            maxHeight: sizingInformation.screenSize.height,
-            maxWidth: sizingInformation.screenSize.width,
+            minHeight: parentSizingInformation.localWidgetSize.height,
+            minWidth: sizingInformation.screenSize.width,
           ),
           child: homeLayout(context, sizingInformation),
         );

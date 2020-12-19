@@ -15,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'roster_view_model.dart';
 
 part 'roster_mobile.dart';
-part 'roster_tablet.dart';
 
 // ignore: must_be_immutable
 class RosterView extends StatelessWidget {

@@ -1,7 +1,7 @@
 library home_view;
 
-import 'package:agonistica/core/shared/base_scaffold_widget.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
+import 'package:agonistica/core/shared/scroll_scaffold_widget.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'home_view_model.dart';
 
 part 'home_mobile.dart';
-part 'home_tablet.dart';
 
 // ignore: must_be_immutable
 class HomeView extends StatelessWidget {

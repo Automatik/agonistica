@@ -25,7 +25,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       onBottomItemChanged: (index) {
         widget.viewModel.onBottomBarItemChanged(context, index);
       },
-      childBuilder: (BuildContext childContext, MySizingInformation sizingInformation) {
+      childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         double width = 0.9 * sizingInformation.localWidgetSize.width;
         return _matchDetail(childContext, widget.isNewMatch, widget.match, width);
       },

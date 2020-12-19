@@ -1,13 +1,12 @@
 library categories_view;
 
-import 'package:agonistica/core/shared/base_scaffold_widget.dart';
+import 'package:agonistica/core/shared/scroll_scaffold_widget.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';
 import 'categories_view_model.dart';
 
 part 'categories_mobile.dart';
-part 'categories_tablet.dart';
 
 // ignore: must_be_immutable
 class CategoriesView extends StatelessWidget {

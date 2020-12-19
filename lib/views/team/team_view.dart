@@ -19,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'team_view_model.dart';
 
 part 'team_mobile.dart';
-part 'team_tablet.dart';
 
 // ignore: must_be_immutable
 class TeamView extends StatelessWidget {

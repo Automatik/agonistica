@@ -12,7 +12,7 @@ class TabScaffoldWidget extends StatefulWidget {
   static const int MATCHES_VIEW_INDEX = 0;
   static const int ROSTER_VIEW_INDEX = 1;
 
-  final Widget Function(BuildContext context, MySizingInformation sizingInformation) childBuilder;
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) childBuilder;
   final String title;
   final bool showAppBar;
   final int initialIndex;

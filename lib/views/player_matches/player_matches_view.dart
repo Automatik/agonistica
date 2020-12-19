@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'player_matches_view_model.dart';
 
 part 'player_matches_mobile.dart';
-part 'player_matches_tablet.dart';
 
 // ignore: must_be_immutable
 class PlayerMatchesView extends StatelessWidget {

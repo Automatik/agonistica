@@ -374,7 +374,7 @@ class PlayerDetailLayout2 extends StatelessWidget {
 
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -413,7 +413,7 @@ class PlayerDetailLayout2 extends StatelessWidget {
     int meanCapacities = (sum / capacities.length).round();
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -526,7 +526,7 @@ class PlayerDetailLayout2 extends StatelessWidget {
       TextEditingController sommatoTipoTextController) {
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -602,7 +602,7 @@ class PlayerDetailLayout2 extends StatelessWidget {
       TextEditingController attitude2TextController, TextEditingController attitude3TextController) {
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 

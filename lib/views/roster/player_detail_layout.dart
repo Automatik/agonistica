@@ -620,7 +620,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -659,7 +659,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     int meanCapacities = (sum / capacities.length).round();
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -835,7 +835,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       TextEditingController sommatoTipoTextController) {
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
@@ -911,7 +911,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       TextEditingController attitude2TextController, TextEditingController attitude3TextController) {
 
     return BaseWidget(
-      builder: (context, sizingInformation) {
+      builder: (context, sizingInformation, parentSizingInformation) {
 
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 

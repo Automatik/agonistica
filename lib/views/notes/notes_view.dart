@@ -13,9 +13,7 @@ import 'package:flutter/material.dart';
 import 'notes_view_model.dart';
 
 part 'notes_mobile.dart';
-part 'notes_tablet.dart';
 
-// ignore: must_be_immutable
 class NotesView extends StatelessWidget {
   static const routeName = '/notes';
 

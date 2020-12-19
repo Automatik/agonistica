@@ -3,8 +3,9 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class BaseWidget extends StatelessWidget {
 
-  final Widget Function(BuildContext context, MySizingInformation sizingInformation) builder;
-  const BaseWidget({Key key, this.builder}) : super(key: key);
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) builder;
+  final MySizingInformation parentSizingInformation;
+  const BaseWidget({Key key, this.builder, this.parentSizingInformation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,9 @@ class BaseWidget extends StatelessWidget {
         var sizingInformation = MySizingInformation(
             orientation: mediaQuery.orientation,
             screenSize: mediaQuery.size,
-            localWidgetSize: Size(boxSizing.maxWidth, boxSizing.maxHeight),
+            localWidgetSize: Size(boxSizing?.maxWidth, boxSizing?.maxHeight),
         );
-        return builder(context, sizingInformation);
+        return builder(context, sizingInformation, parentSizingInformation);
       }
     );
   }
@@ -40,6 +41,7 @@ class MySizingInformation {
   }
 
   bool isTablet() {
+    // not working for iPads, see working solution in stili_sociali project
     return getDeviceType(screenSize) == DeviceScreenType.tablet;
   }
 
