@@ -94,6 +94,11 @@ class Player {
     position = p.position;
     isRightHanded = p.isRightHanded;
 
+    matches = p.matches;
+    goals = p.goals;
+    yellowCards = p.yellowCards;
+    redCards = p.redCards;
+
     tecnica = p.tecnica;
     agonistica = p.agonistica;
     fisica = p.fisica;
