@@ -7,7 +7,6 @@ import 'package:agonistica/core/shared/player_review.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils.dart';
 import 'package:agonistica/views/roster/player_detail_layout.dart';
-import 'package:agonistica/views/roster/player_detail_layout2.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
