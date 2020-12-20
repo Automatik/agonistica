@@ -53,6 +53,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
                         minHeight: sizingInfo.localWidgetSize.height,
                       ),
                       child: BaseWidget(
+                        parentSizingInformation: sizingInfo,
                         builder: widget.childBuilder,
                       ),
                     ),
