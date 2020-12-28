@@ -3,10 +3,10 @@ library matches_view;
 import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
-import 'package:agonistica/core/shared/match_detail_layout.dart';
-import 'package:agonistica/core/shared/match_review.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/platform_appbars.dart';
+import 'package:agonistica/views/matches/match_detail_layout.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';
@@ -24,14 +24,14 @@ class MatchesView extends StatelessWidget {
     final MatchesViewArguments args = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<MatchesViewModel>.reactive(
-      viewModelBuilder: () => MatchesViewModel(),
+      viewModelBuilder: () => MatchesViewModel(args.isNewMatch, args.match, args.onMatchDetailUpdate),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },
       builder: (context, viewModel, child) {
         return ScreenTypeLayout(
-          mobile: _MatchesMobile(viewModel, args.isNewMatch, args.match, args.onMatchDetailUpdate),
-          tablet: _MatchesMobile(viewModel, args.isNewMatch, args.match, args.onMatchDetailUpdate),
+          mobile: _MatchesMobile(viewModel),
+          tablet: _MatchesMobile(viewModel),
         );
       }
     );

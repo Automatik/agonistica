@@ -5,6 +5,7 @@ import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/platform_appbars.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';

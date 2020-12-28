@@ -193,242 +193,234 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
     final double heightWidth = 40;
 
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          height: 90,
-          margin: EdgeInsets.only(top: 20),
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    child: SvgPicture.asset(
-                      'assets/images/male.svg',
-                      height: 50,
-                      width: 50,
-                      color: blueAgonisticaColor,
-                    ),
-                  ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      height: 90,
+      margin: EdgeInsets.only(top: 20),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                child: SvgPicture.asset(
+                  'assets/images/male.svg',
+                  height: 50,
+                  width: 50,
+                  color: blueAgonisticaColor,
                 ),
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    margin: EdgeInsets.only(left: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                margin: EdgeInsets.only(left: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    isEditEnabled ?
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        isEditEnabled ?
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomTextField(
-                              enabled: isEditEnabled,
-                              controller: nameTextController,
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                              textInputType: TextInputType.text,
-                              textColor: playerNameTextColor,
-                              textFontSize: playerNameTextSize,
-                              textFontWeight: playerNameTextWeight,
-                            ),
-                            SizedBox(width: 5,),
-                            CustomTextField(
-                              enabled: isEditEnabled,
-                              controller: surnameTextController,
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                              textInputType: TextInputType.text,
-                              textColor: playerNameTextColor,
-                              textFontSize: playerNameTextSize,
-                              textFontWeight: playerNameTextWeight,
-                            ),
-                          ],
-                        )
-                        : Text(
-                          "${nameTextController.text} ${surnameTextController.text}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            color: playerNameTextColor,
-                            fontWeight: playerNameTextWeight,
-                            fontSize: playerNameTextSize,
-                          ),
-                        ),
-                        CustomRichText(
-                          onTap: () async {
-                            // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
-                            // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
-                            if(isEditEnabled) {
-                              Team team = await _showInsertTeamDialog(playerInfo.teamName);
-                              if(team != null) {
-                                setState(() {
-                                  playerInfo.setTeam(team);
-                                });
-                              }
-                              // close dialog
-                              Navigator.of(context).pop();
-                            }
-                          },
+                        CustomTextField(
                           enabled: isEditEnabled,
-                          text: playerInfo.teamName,
+                          controller: nameTextController,
                           textAlign: TextAlign.start,
-                          fontColor: playerTeamTextColor,
-                          fontSize: playerTeamTextSize,
-                          fontWeight: playerTeamTextWeight,
+                          maxLines: 1,
+                          textInputType: TextInputType.text,
+                          textColor: playerNameTextColor,
+                          textFontSize: playerNameTextSize,
+                          textFontWeight: playerNameTextWeight,
                         ),
-                        CustomRichText(
-                          onTap: () async {
-                            // se cambia categoria serve solo aggiornare il player (ma può servire aggiungere una nuova categoria alla squadra nel caso
-                            // il player ora faccia parte di una categoria di cui ancora il team non era presente) -> no non serve
-                            if(isEditEnabled) {
-                              List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getTeam());
-                              final dialog = SelectCategoryDialog(
-                                  categories: categories,
-                                  onSelect: (newCategory) {
-                                    if(newCategory != null) {
-                                      setState(() {
-                                        playerInfo.setCategory(newCategory);
-                                      });
-                                    }
-                                    // close dialog
-                                    Navigator.of(context).pop();
-                                  }
-                              );
-                              dialog.showSelectCategoryDialog(context);
-                            }
-                          },
+                        SizedBox(width: 5,),
+                        CustomTextField(
                           enabled: isEditEnabled,
-                          text: playerInfo.categoryName,
+                          controller: surnameTextController,
                           textAlign: TextAlign.start,
-                          fontColor: playerCategoryTextColor,
-                          fontSize: playerCategoryTextSize,
-                          fontWeight: playerCategoryTextWeight,
+                          maxLines: 1,
+                          textInputType: TextInputType.text,
+                          textColor: playerNameTextColor,
+                          textFontSize: playerNameTextSize,
+                          textFontWeight: playerNameTextWeight,
                         ),
                       ],
+                    )
+                        : Text(
+                      "${nameTextController.text} ${surnameTextController.text}",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: playerNameTextColor,
+                        fontWeight: playerNameTextWeight,
+                        fontSize: playerNameTextSize,
+                      ),
                     ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                            alignment: Alignment.centerRight,
-                            child: GestureDetector(
-                              onTap: () async {
-                                if (isEditEnabled) {
-                                  DateTime curDate = DateTime.now();
-                                  await showDatePicker(
-                                      context: context,
-                                      initialDate: playerInfo.birthDay,
-                                      firstDate: DateTime.utc(
-                                          curDate.year - 50),
-                                      lastDate: DateTime.utc(
-                                          curDate.year + 1),
-                                      initialDatePickerMode: DatePickerMode
-                                          .day,
-                                      helpText: "Seleziona la data di nascita"
-                                  ).then((date) {
-                                    if (date != null)
-                                      setState(() {
-                                        playerInfo.birthDay = date;
-                                      });
+                    CustomRichText(
+                      onTap: () async {
+                        // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
+                        // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
+                        if(isEditEnabled) {
+                          Team team = await _showInsertTeamDialog(playerInfo.teamName);
+                          if(team != null) {
+                            setState(() {
+                              playerInfo.setTeam(team);
+                            });
+                          }
+                          // close dialog
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      enabled: isEditEnabled,
+                      text: playerInfo.teamName,
+                      textAlign: TextAlign.start,
+                      fontColor: playerTeamTextColor,
+                      fontSize: playerTeamTextSize,
+                      fontWeight: playerTeamTextWeight,
+                    ),
+                    CustomRichText(
+                      onTap: () async {
+                        // se cambia categoria serve solo aggiornare il player (ma può servire aggiungere una nuova categoria alla squadra nel caso
+                        // il player ora faccia parte di una categoria di cui ancora il team non era presente) -> no non serve
+                        if(isEditEnabled) {
+                          List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getTeam());
+                          final dialog = SelectCategoryDialog(
+                              categories: categories,
+                              onSelect: (newCategory) {
+                                if(newCategory != null) {
+                                  setState(() {
+                                    playerInfo.setCategory(newCategory);
                                   });
                                 }
-                              },
-                              child: Text(
-                                "${playerInfo.birthDay.day} ${Utils
-                                    .monthToString(
-                                    playerInfo.birthDay.month).substring(
-                                    0, 3)} ${playerInfo.birthDay.year}",
-                                textAlign: TextAlign.end,
-                                style: TextStyle(
-                                  color: playerHeightTextColor,
-                                  fontSize: playerHeightTextSize,
-                                  fontWeight: playerHeightTextWeight,
-                                ),
-                              ),
-                            ),
-                          ),
-                        Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomTextField(
-                                  width: heightWidth,
-                                  enabled: isEditEnabled,
-                                  controller: heightTextController,
-                                  textAlign: TextAlign.end,
-                                  maxLines: 1,
-                                  textInputType: TextInputType.number,
-                                  textColor: playerHeightTextColor,
-                                  textFontSize: playerHeightTextSize,
-                                  textFontWeight: playerHeightTextWeight,
-                                ),
-                                SizedBox(width: 5,),
-                                Text(
-                                  "cm",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: playerHeightTextColor,
-                                    fontSize: playerHeightTextSize,
-                                    fontWeight: playerHeightTextWeight,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomTextField(
-                                  width: heightWidth,
-                                  enabled: isEditEnabled,
-                                  controller: weightTextController,
-                                  textAlign: TextAlign.end,
-                                  maxLines: 1,
-                                  textInputType: TextInputType.number,
-                                  textColor: playerHeightTextColor,
-                                  textFontSize: playerHeightTextSize,
-                                  textFontWeight: playerHeightTextWeight,
-                                ),
-                                SizedBox(width: 5,),
-                                Text(
-                                  "kg",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: playerHeightTextColor,
-                                    fontSize: playerHeightTextSize,
-                                    fontWeight: playerHeightTextWeight,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                      ],
+                                // close dialog
+                                Navigator.of(context).pop();
+                              }
+                          );
+                          dialog.showSelectCategoryDialog(context);
+                        }
+                      },
+                      enabled: isEditEnabled,
+                      text: playerInfo.categoryName,
+                      textAlign: TextAlign.start,
+                      fontColor: playerCategoryTextColor,
+                      fontSize: playerCategoryTextSize,
+                      fontWeight: playerCategoryTextWeight,
                     ),
-                  ),
-                )
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (isEditEnabled) {
+                            DateTime curDate = DateTime.now();
+                            await showDatePicker(
+                                context: context,
+                                initialDate: playerInfo.birthDay,
+                                firstDate: DateTime.utc(
+                                    curDate.year - 50),
+                                lastDate: DateTime.utc(
+                                    curDate.year + 1),
+                                initialDatePickerMode: DatePickerMode
+                                    .day,
+                                helpText: "Seleziona la data di nascita"
+                            ).then((date) {
+                              if (date != null)
+                                setState(() {
+                                  playerInfo.birthDay = date;
+                                });
+                            });
+                          }
+                        },
+                        child: Text(
+                          "${playerInfo.birthDay.day} ${Utils
+                              .monthToString(
+                              playerInfo.birthDay.month).substring(
+                              0, 3)} ${playerInfo.birthDay.year}",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: playerHeightTextColor,
+                            fontSize: playerHeightTextSize,
+                            fontWeight: playerHeightTextWeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomTextField(
+                            width: heightWidth,
+                            enabled: isEditEnabled,
+                            controller: heightTextController,
+                            textAlign: TextAlign.end,
+                            maxLines: 1,
+                            textInputType: TextInputType.number,
+                            textColor: playerHeightTextColor,
+                            textFontSize: playerHeightTextSize,
+                            textFontWeight: playerHeightTextWeight,
+                          ),
+                          SizedBox(width: 5,),
+                          Text(
+                            "cm",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              color: playerHeightTextColor,
+                              fontSize: playerHeightTextSize,
+                              fontWeight: playerHeightTextWeight,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomTextField(
+                            width: heightWidth,
+                            enabled: isEditEnabled,
+                            controller: weightTextController,
+                            textAlign: TextAlign.end,
+                            maxLines: 1,
+                            textInputType: TextInputType.number,
+                            textColor: playerHeightTextColor,
+                            textFontSize: playerHeightTextSize,
+                            textFontWeight: playerHeightTextWeight,
+                          ),
+                          SizedBox(width: 5,),
+                          Text(
+                            "kg",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              color: playerHeightTextColor,
+                              fontSize: playerHeightTextSize,
+                              fontWeight: playerHeightTextWeight,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
-//        EditDetailButton(
-//          isEditEnabled: isEditEnabled,
-//          onTap: () => saveState(),
-//        ),
-      ],
+      ),
     );
   }
 

@@ -3,11 +3,8 @@ part of matches_view;
 class _MatchesMobile extends StatefulWidget {
   
   final MatchesViewModel viewModel;
-  final bool isNewMatch;
-  final Match match;
-  final Function(Match) onMatchDetailUpdate;
 
-  _MatchesMobile(this.viewModel, this.isNewMatch, this.match, this.onMatchDetailUpdate);
+  _MatchesMobile(this.viewModel);
   
   @override
   State<StatefulWidget> createState() => _MatchesMobileState();
@@ -16,30 +13,96 @@ class _MatchesMobile extends StatefulWidget {
 
 class _MatchesMobileState extends State<_MatchesMobile> {
 
+  bool isEditEnabled;
+
+  Match tempMatch;
+
+  final MatchDetailController matchDetailController = MatchDetailController();
+
+  void initializeState() {
+    tempMatch = Match.clone(widget.viewModel.match);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isEditEnabled = widget.viewModel.isNewMatch;
+    initializeState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
       showAppBar: true,
-      title: widget.isNewMatch ? "Nuova Partita" : widget.viewModel.getAppBarTitle(),
       initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
+      platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) {
         widget.viewModel.onBottomBarItemChanged(context, index);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         double width = 0.9 * sizingInformation.localWidgetSize.width;
-        return _matchDetail(childContext, widget.isNewMatch, widget.match, width);
+        return _matchDetail(childContext, isEditEnabled, widget.viewModel.match, width, matchDetailController);
       },
     );
   }
+
+  PlatformAppBar getPlatformAppBar(BuildContext context) {
+    String title = widget.viewModel.getAppBarTitle();
+    if(isEditEnabled) {
+      return PlatformAppBars.getPlatformAppBarForMatchesViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
+    } else {
+      return PlatformAppBars.getPlatformAppBarForMatchesViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionConfirm(context));
+    }
+  }
   
-  Widget _matchDetail(BuildContext context, bool isNewMatch, Match match, double maxWidth) {
+  Widget _matchDetail(BuildContext context, bool isEditEnabled, Match match, double maxWidth, MatchDetailController matchDetailController) {
     return MatchDetailLayout(
-      isNewMatch: isNewMatch,
+      isEditEnabled: isEditEnabled,
       match: match,
+      controller: matchDetailController,
       onSuggestionTeamCallback: (pattern) => widget.viewModel.suggestTeamsByPattern(pattern),
-      onSave: (matchData) => widget.viewModel.onMatchSave(context, matchData, widget.onMatchDetailUpdate),
       maxWidth: maxWidth,
     );
+  }
+
+  void onActionBack(BuildContext context) {
+    if(isEditEnabled) {
+      setState(() {
+        isEditEnabled = false;
+      });
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void onActionCancel() {
+    if(isEditEnabled) {
+      setState(() {
+        isEditEnabled = false;
+        initializeState();
+      });
+    }
+  }
+
+  void onActionConfirm(BuildContext context) async {
+    if(isEditEnabled) {
+      matchDetailController.saveMatchStatus();
+      await widget.viewModel.onMatchSave(context, tempMatch);
+      setState(() {
+        isEditEnabled = false;
+      });
+    }
+  }
+
+  void onActionEditPress() {
+    setState(() {
+      isEditEnabled = true;
+      initializeState();
+    });
+  }
+
+  void onActionAddPress(BuildContext context) {
+    //todo navigate to match notes
   }
   
 }

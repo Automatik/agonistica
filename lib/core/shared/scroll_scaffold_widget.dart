@@ -1,6 +1,6 @@
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
-import 'package:agonistica/core/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -34,7 +34,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
   Widget build(BuildContext context) {
 
     return PlatformScaffold(
-      appBar: widget.showAppBar ? Utils.getPlatformAppBar(widget.title) : null,
+      appBar: widget.showAppBar ? PlatformAppBars.getPlatformAppBar(widget.title) : null,
       body: Builder(
           builder: (BuildContext innerContext) {
             widget._baseScaffoldService.scaffoldContext = innerContext;

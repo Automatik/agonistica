@@ -11,12 +11,16 @@ import 'package:stacked/stacked.dart';
 
 class MatchesViewModel extends BaseViewModel {
 
+  final bool isNewMatch;
+  Match match;
+  final Function(Match) onMatchDetailUpdate;
+
   final _baseScaffoldService = locator<BaseScaffoldService>();
   final _databaseService = locator<DatabaseService>();
 
   List<Team> teams;
 
-  MatchesViewModel(){
+  MatchesViewModel(this.isNewMatch, this.match, this.onMatchDetailUpdate){
     teams = [];
     loadItems();
   }
@@ -56,18 +60,19 @@ class MatchesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> onMatchSave(BuildContext context, Match match, Function(Match) onMatchDetailUpdate) async {
+  Future<void> onMatchSave(BuildContext context, Match match) async {
     await _databaseService.saveMatch(match);
 
     onMatchDetailUpdate(match);
 
     // return to TeamView
-    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
+
+    match = Match.clone(match);
   }
 
   String getAppBarTitle() {
-//    return _baseScaffoldService.teamSelected;
-    return _databaseService.selectedTeam.name;
+    return isNewMatch ? "Nuova Partita" : _databaseService.selectedTeam.name;
   }
 
 }

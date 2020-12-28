@@ -1,8 +1,6 @@
-import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/platform_appbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,7 +52,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     return PlatformTabScaffold(
       tabController: _tabController,
       currentIndex: _tabController.index(context),
-      appBarBuilder: (_, index) => widget.platformAppBar ?? Utils.getPlatformAppBar(widget.title),
+      appBarBuilder: (_, index) => widget.platformAppBar ?? PlatformAppBars.getPlatformAppBar(widget.title),
       bodyBuilder: (context, index) => Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

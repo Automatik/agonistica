@@ -34,7 +34,7 @@ class _TeamMobileState extends State<_TeamMobile> {
     return TabScaffoldWidget(
       showAppBar: true,
       initialIndex: _tabIndex,
-      platformAppBar: Utils.getPlatformAppBarWithAddAction(widget.viewModel.getWidgetTitle(), () {
+      platformAppBar: PlatformAppBars.getPlatformAppBarWithAddAction(widget.viewModel.getWidgetTitle(), () {
         // on add action pressed
         if(_tabIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX)
           widget.viewModel.addNewMatch(context);
