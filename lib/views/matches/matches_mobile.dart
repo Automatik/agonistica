@@ -41,7 +41,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         double width = 0.9 * sizingInformation.localWidgetSize.width;
-        return _matchDetail(childContext, isEditEnabled, widget.viewModel.match, width, matchDetailController);
+        return _matchDetail(childContext, isEditEnabled, tempMatch, width, matchDetailController);
       },
     );
   }
