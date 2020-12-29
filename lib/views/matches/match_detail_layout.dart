@@ -275,7 +275,19 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   Widget matchCharacteristics(BuildContext context, Match matchInfo, bool isEditEnabled) {
-    return SizedBox();
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: EdgeInsets.only(top: 20, bottom: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+
+        ],
+      ),
+    );
   }
 
   Future<Team> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
