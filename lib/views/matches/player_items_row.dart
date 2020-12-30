@@ -1,11 +1,11 @@
-import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/views/matches/player_item.dart';
 import 'package:flutter/material.dart';
 
 class PlayerItemsRow extends StatelessWidget {
 
-  final Player homePlayer; //left
-  final Player awayPlayer; //right
+  final MatchPlayerData homePlayer; //left
+  final MatchPlayerData awayPlayer; //right
 
   PlayerItemsRow({
     this.homePlayer,
@@ -18,14 +18,19 @@ class PlayerItemsRow extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          PlayerItem(
-            isLeftOrientation: true,
-            player: homePlayer,
+          Expanded(
+            child: PlayerItem(
+              isLeftOrientation: true,
+              matchPlayer: homePlayer,
+            ),
           ),
-          PlayerItem(
-            isLeftOrientation: false,
-            player: awayPlayer,
+          Expanded(
+            child: PlayerItem(
+              isLeftOrientation: false,
+              matchPlayer: awayPlayer,
+            ),
           )
         ],
       ),

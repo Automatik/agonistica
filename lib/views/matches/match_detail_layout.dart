@@ -1,11 +1,12 @@
 import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
-import 'package:agonistica/core/shared/edit_detail_button.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/views/matches/player_items_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -284,9 +285,42 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            child: Text(
+              "Titolari",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: blueAgonisticaColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          regularPlayers(),
         ],
       ),
+    );
+  }
+
+  Widget regularPlayers() {
+    final p1 = MatchPlayerData.empty();
+    final p2 = MatchPlayerData.empty();
+    final p3 = MatchPlayerData.empty();
+    final p4 = MatchPlayerData.empty();
+    p1.surname = "CognomeLunghissimo";
+    final homePlayers = List.of([p1, p2]);
+    final awayPlayers = List.of([p3, p4]);
+
+    return ListView.builder(
+      itemCount: 2,
+      shrinkWrap: true,
+      itemBuilder: (ctx, index) {
+        return PlayerItemsRow(
+          homePlayer: homePlayers[index],
+          awayPlayer: awayPlayers[index],
+        );
+      }
     );
   }
 

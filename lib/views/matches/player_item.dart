@@ -1,5 +1,4 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
-import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,11 +8,11 @@ const double ICON_HORIZ_MARGIN = 2.5;
 
 class PlayerItem extends StatefulWidget {
 
-  final Player player;
+  final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
 
   PlayerItem({
-    this.player,
+    this.matchPlayer,
     this.isLeftOrientation,
   });
 
@@ -41,16 +40,40 @@ class _PlayerItemState extends State<PlayerItem> {
         padding: const EdgeInsets.all(5),
         child: Row(
           mainAxisAlignment: widget.isLeftOrientation ? MainAxisAlignment.start : MainAxisAlignment.end,
-          children: [
-            _PlayerItemName(
-              playerName: widget.player.name,
-              playerSurname: widget.player.surname,
-              isLeftOrientation: widget.isLeftOrientation,
-            )
-          ],
+          mainAxisSize: MainAxisSize.min,
+          children: playerItems(),
         ),
       ),
     );
+  }
+
+  List<Widget> playerItems() {
+    List<Widget> widgets = [];
+    widgets.add(
+      _PlayerItemName(
+        playerName: widget.matchPlayer.name,
+        playerSurname: widget.matchPlayer.surname,
+        isLeftOrientation: widget.isLeftOrientation,
+      ),
+    );
+    widgets.add(
+      _SubstitutionItem(
+        substitution: widget.matchPlayer.substitution,
+      ),
+    );
+    widgets.add(
+      _CardItem(
+        card: widget.matchPlayer.card,
+      ),
+    );
+    widgets.add(
+      _GoalItem(
+          goals: widget.matchPlayer.numGoals),
+    );
+    if(widget.isLeftOrientation)
+      return widgets;
+    else
+      return widgets.reversed.toList();
   }
 
 }
@@ -61,7 +84,7 @@ class _PlayerItemName extends StatelessWidget {
   final String playerSurname;
   final bool isLeftOrientation;
 
-  final double fontSize = 18;
+  final double fontSize = 16;
   final FontWeight fontWeight = FontWeight.normal;
   final Color fontColor = Colors.black;
 
