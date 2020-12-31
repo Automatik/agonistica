@@ -29,12 +29,12 @@ class _PlayerItemState extends State<PlayerItem> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: blueAgonisticaColor,
-            width: 1,
-            style: BorderStyle.solid,
-          )
+          // borderRadius: BorderRadius.circular(16),
+          // border: Border.all(
+          //   color: blueAgonisticaColor,
+          //   width: 1,
+          //   style: BorderStyle.solid,
+          // )
         ),
         margin: const EdgeInsets.symmetric(horizontal: 5),
         padding: const EdgeInsets.all(5),

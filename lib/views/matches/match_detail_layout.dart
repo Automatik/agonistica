@@ -119,7 +119,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 20, bottom: 20),
+      margin: EdgeInsets.only(top: 20),
       child: Column(
         children: [
           Row(
