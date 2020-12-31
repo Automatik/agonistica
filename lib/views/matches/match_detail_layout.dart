@@ -309,6 +309,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     final p3 = MatchPlayerData.empty();
     final p4 = MatchPlayerData.empty();
     p1.surname = "CognomeLunghissimo";
+    p1.setYellowCard();
+    p1.setExitSubstitution();
+    p2.setRedCard();
+    p2.setEnterSubstitution();
+    p3.numGoals = 2;
+    p3.setYellowCard();
+    p4.setDoubleYellowCard();
     final homePlayers = List.of([p1, p2]);
     final awayPlayers = List.of([p3, p4]);
 
