@@ -32,6 +32,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
 
   @override
   Widget build(BuildContext context) {
+    print("building MatchesMobile view");
     return TabScaffoldWidget(
       showAppBar: true,
       initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
@@ -48,6 +49,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
 
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
+    print("isEditEnabled: $isEditEnabled");
     if(isEditEnabled) {
       return PlatformAppBars.getPlatformAppBarForMatchesViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
     } else {
@@ -84,10 +86,14 @@ class _MatchesMobileState extends State<_MatchesMobile> {
     }
   }
 
-  void onActionConfirm(BuildContext context) async {
+  Future<void> onActionConfirm(BuildContext context) async {
+    print("onActionConfirm");
     if(isEditEnabled) {
+      print("saveMatchStatus");
       matchDetailController.saveMatchStatus();
+      print("onMatchSave");
       await widget.viewModel.onMatchSave(context, tempMatch);
+      print("setting isEditENabled to false");
       setState(() {
         isEditEnabled = false;
       });

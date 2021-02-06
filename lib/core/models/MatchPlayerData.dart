@@ -24,7 +24,7 @@ class MatchPlayerData {
 
   String teamId;
 
-  bool startsFromBegin;
+  bool isRegular; // is regular player or a reserve
 
   int shirtNumber;
   int numGoals;
@@ -36,15 +36,15 @@ class MatchPlayerData {
     id = uuid.v4();
   }
 
-  MatchPlayerData.empty() {
+  MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
     var uuid = Uuid();
     id = uuid.v4();
-    //playersId = uuid.v4();
+    playerId = null;
     name = "Nome";
     surname = "Giocatore";
-    teamId = uuid.v4();
-    startsFromBegin = true;
-    shirtNumber = 1;
+    this.teamId = teamId;
+    this.isRegular = isRegular;
+    shirtNumber = 0;
     numGoals = 0;
     setNoSubstitution();
     setNoCard();
@@ -56,7 +56,7 @@ class MatchPlayerData {
     name = data.name;
     surname = data.surname;
     teamId = data.teamId;
-    startsFromBegin = data.startsFromBegin;
+    isRegular = data.isRegular;
     shirtNumber = data.shirtNumber;
     numGoals = data.numGoals;
     substitution = data.substitution;
@@ -69,7 +69,7 @@ class MatchPlayerData {
     'name': name,
     'surname': surname,
     'teamId': teamId,
-    'startsFromBegin': startsFromBegin,
+    'isRegular': isRegular,
     'shirtNumber': shirtNumber,
     'numGoals': numGoals,
     'substitution': substitution,
@@ -82,7 +82,7 @@ class MatchPlayerData {
       name = json['name'],
       surname = json['surname'],
       teamId = json['teamId'],
-      startsFromBegin = json['startsFromBegin'],
+      isRegular = json['isRegular'],
       shirtNumber = json['shirtNumber'],
       numGoals = json['numGoals'],
       substitution = json['substitution'],
@@ -115,4 +115,44 @@ class MatchPlayerData {
   void setRedCard() {
     card = CARD_RED;
   }
+
+  static String getCardAsset(int card) {
+    String assetName;
+    switch(card) {
+      case CARD_YELLOW: assetName = "assets/images/018-yellow-card.svg"; break;
+      case CARD_DOUBLE_YELLOW: assetName = "assets/images/039-amonestation.svg"; break;
+      case CARD_RED: assetName = "assets/images/026-red-card.svg"; break;
+      default: assetName = "";
+    }
+    return assetName;
+  }
+
+  static String getSubstitutionAsset(int substitution) {
+    String assetName;
+    switch(substitution) {
+      case SUBSTITUTION_EXITED: assetName = "assets/images/008-change-1.svg"; break;
+      case SUBSTITUTION_ENTERED: assetName = "assets/images/009-change.svg"; break;
+      default: assetName = "";
+    }
+    return assetName;
+  }
+
+  static String getCardText(int card) {
+    switch(card) {
+      case CARD_YELLOW: return "Ammoniz.";
+      case CARD_DOUBLE_YELLOW: return "Dopp. Ammoniz.";
+      case CARD_RED: return "Espulso";
+      default: return "Nessuno";
+    }
+  }
+
+  static String getSubstitutionText(int substitution) {
+    switch(substitution) {
+      case SUBSTITUTION_EXITED: return "Uscito";
+      case SUBSTITUTION_ENTERED: return "Entrato";
+      default: return "Nessuno";
+    }
+  }
+
+
 }

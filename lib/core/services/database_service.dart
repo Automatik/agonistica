@@ -219,6 +219,8 @@ class DatabaseService {
 
     await _matchRepository.saveMatch(match);
 
+    // TODO Rimuovere giocatori con uuid null (significa che non sono necessari) altrimenti da errore nel getPlayersByIds
+
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
     List<String> matchPlayersIds = match.playersData.map((data) => data.playerId).toList();

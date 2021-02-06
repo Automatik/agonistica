@@ -1,9 +1,10 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-const double ICON_SIZE = 20;
+const double ICON_SIZE = 16;
 const double ICON_HORIZ_MARGIN = 2.5;
 
 class PlayerItem extends StatefulWidget {
@@ -26,18 +27,21 @@ class _PlayerItemState extends State<PlayerItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        final dialog = PlayerItemEditDialog(
+          matchPlayerData: widget.matchPlayer,
+          onSaveCallback: () {
+            Navigator.pop(context);
+            // update view
+            setState(() {});
+          }
+        );
+        dialog.showPlayerItemEditDialog(context);
+      },
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          // borderRadius: BorderRadius.circular(16),
-          // border: Border.all(
-          //   color: blueAgonisticaColor,
-          //   width: 1,
-          //   style: BorderStyle.solid,
-          // )
-        ),
+        color: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 5),
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.symmetric(vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
@@ -50,9 +54,15 @@ class _PlayerItemState extends State<PlayerItem> {
   List<Widget> playerData() {
     List<Widget> widgets = [
       Expanded(
+        flex: 1,
+        child: playerShirtNumber(),
+      ),
+      Expanded(
+        flex: 4,
         child: playerName(),
       ),
       Expanded(
+        flex: 3,
         child: Row(
           mainAxisAlignment: widget.isLeftOrientation ? MainAxisAlignment.end : MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -61,6 +71,13 @@ class _PlayerItemState extends State<PlayerItem> {
       ),
     ];
     return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
+  }
+
+  Widget playerShirtNumber() {
+    return _PlayerItemShirtNumber(
+      shirtNumber: widget.matchPlayer.shirtNumber,
+      isLeftOrientation: widget.isLeftOrientation,
+    );
   }
 
   Widget playerName() {
@@ -95,6 +112,41 @@ class _PlayerItemState extends State<PlayerItem> {
       return widgets;
     else
       return widgets.reversed.toList();
+  }
+
+}
+
+class _PlayerItemShirtNumber extends StatelessWidget {
+
+  final int shirtNumber;
+  final bool isLeftOrientation;
+
+  final double fontSize = 16;
+  final FontWeight fontWeight = FontWeight.normal;
+  final Color fontColor = Colors.black;
+
+  _PlayerItemShirtNumber({
+    this.shirtNumber,
+    this.isLeftOrientation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String playerShirtNumber = shirtNumberToString(shirtNumber);
+
+    return Text(
+      playerShirtNumber,
+      textAlign: isLeftOrientation ? TextAlign.start : TextAlign.end,
+      style: TextStyle(
+        color: fontColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      ),
+    );
+  }
+
+  String shirtNumberToString(int shirtNumber) {
+    return (shirtNumber > 0 && shirtNumber < 100) ? "$shirtNumber" : "-";
   }
 
 }
@@ -149,17 +201,6 @@ class _GoalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   width: iconSize,
-    //   height: iconSize,
-    //   margin: const EdgeInsets.symmetric(horizontal: ICON_HORIZ_MARGIN),
-    //   child: Stack(
-    //     children: [
-    //       goalsIcon(),
-    //       goalsText(),
-    //     ],
-    //   ),
-    // );
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: ICON_HORIZ_MARGIN),
       child: Stack(
@@ -174,16 +215,21 @@ class _GoalItem extends StatelessWidget {
   Widget goalsIcon() {
     final double widthFactor = goals > 0 ? 0.9 : 1;
     final double size = widthFactor * iconSize;
-    return Container(
-      width: size,
-      height: size,
-      child: SvgPicture.asset('assets/images/010-football.svg', color: blueAgonisticaColor,),
-    );
+    if(goals > 0) {
+      return Container(
+        width: size,
+        height: size,
+        child: SvgPicture.asset(
+          'assets/images/010-football.svg', color: blueAgonisticaColor,),
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Widget goalsText() {
     final double size = iconSize;
-    if(goals > 0) {
+    if(goals > 1) {
       return Align(
         alignment: Alignment.bottomRight,
         child: Container(

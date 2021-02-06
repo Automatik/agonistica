@@ -28,12 +28,14 @@ class PlayerItemsRow extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
+            flex: 1,
             child: PlayerItem(
               isLeftOrientation: true,
               matchPlayer: homePlayer,
             ),
           ),
           Expanded(
+            flex: 1,
             child: PlayerItem(
               isLeftOrientation: false,
               matchPlayer: awayPlayer,

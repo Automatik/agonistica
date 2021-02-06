@@ -60,15 +60,15 @@ class MatchesViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> onMatchSave(BuildContext context, Match match) async {
-    await _databaseService.saveMatch(match);
+  Future<void> onMatchSave(BuildContext context, Match newMatch) async {
+    await _databaseService.saveMatch(newMatch);
 
-    onMatchDetailUpdate(match);
+    onMatchDetailUpdate(newMatch);
 
     // return to TeamView
     //Navigator.of(context).pop();
 
-    match = Match.clone(match);
+    match = Match.clone(newMatch);
   }
 
   String getAppBarTitle() {

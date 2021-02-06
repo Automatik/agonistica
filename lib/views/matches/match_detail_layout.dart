@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Team.dart';
@@ -6,10 +8,13 @@ import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+const int MAX_REGULARS_PLAYERS = 11;
 
 class MatchDetailLayout extends StatefulWidget {
 
@@ -39,6 +44,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   // temp values
   Match tempMatch;
 
+  String homeTeamId, awayTeamId;
+  List<MatchPlayerData> homePlayers, awayPlayers;
+
   TextEditingController resultTextEditingController1, resultTextEditingController2,
       leagueMatchTextEditingController;
 
@@ -56,7 +64,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     resultTextEditingController2 = TextEditingController();
     leagueMatchTextEditingController = TextEditingController();
 
-    tempMatch = widget.match;
+    updateMatchObjects();
     reset();
 
   }
@@ -65,7 +73,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   void didUpdateWidget(covariant MatchDetailLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
     editEnabled = widget.isEditEnabled;
-    tempMatch = widget.match;
+    updateMatchObjects();
     if(oldWidget.isEditEnabled != widget.isEditEnabled)
       reset();
   }
@@ -74,6 +82,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     resultTextEditingController1.text = widget.match.team1Goals.toString();
     resultTextEditingController2.text = widget.match.team2Goals.toString();
     leagueMatchTextEditingController.text = widget.match.leagueMatch.toString();
+  }
+
+  void updateMatchObjects() {
+    tempMatch = widget.match;
+    homeTeamId = widget.match.team1Id;
+    awayTeamId = widget.match.team2Id;
+    homePlayers = widget.match.playersData.where((e) => e.teamId == homeTeamId).toList();
+    awayPlayers = widget.match.playersData.where((e) => e.teamId == awayTeamId).toList();
   }
 
   void saveMatchState() {
@@ -297,38 +313,79 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               ),
             ),
           ),
-          regularPlayers(),
+          regularPlayers(isEditEnabled),
         ],
       ),
     );
   }
 
-  Widget regularPlayers() {
-    final p1 = MatchPlayerData.empty();
-    final p2 = MatchPlayerData.empty();
-    final p3 = MatchPlayerData.empty();
-    final p4 = MatchPlayerData.empty();
-    p1.surname = "CognomeLunghissimo";
-    p1.setYellowCard();
-    p1.setExitSubstitution();
-    p2.setRedCard();
-    p2.setEnterSubstitution();
-    p3.numGoals = 2;
-    p3.setYellowCard();
-    p4.setDoubleYellowCard();
-    final homePlayers = List.of([p1, p2]);
-    final awayPlayers = List.of([p3, p4]);
+  Widget regularPlayers(bool isEditEnabled) {
+    // final p1 = MatchPlayerData.empty();
+    //     // final p2 = MatchPlayerData.empty();
+    //     // final p3 = MatchPlayerData.empty();
+    //     // final p4 = MatchPlayerData.empty();
+    //     // p1.surname = "CognomeLunghissimo";
+    //     // p1.setYellowCard();
+    //     // p1.setExitSubstitution();
+    //     // p2.setRedCard();
+    //     // p2.setEnterSubstitution();
+    //     // p3.numGoals = 2;
+    //     // p3.setYellowCard();
+    //     // p4.setDoubleYellowCard();
+    //     // final homePlayers = List.of([p1, p2]);
+    //     // final awayPlayers = List.of([p3, p4]);
+
+    int numHomeRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == homeTeamId).length;
+    int numAwayRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == awayTeamId).length;
+    int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
+    // int numReservePlayers = widget.match.playersData.where((e) => !e.isRegular).length;
+
+    bool areRemainingRegularPlayersToFill;
+    int rowsCount;
+    if(isEditEnabled) {
+      areRemainingRegularPlayersToFill = numRegularPlayers < MAX_REGULARS_PLAYERS;
+      rowsCount = areRemainingRegularPlayersToFill ? numRegularPlayers + 1 : MAX_REGULARS_PLAYERS;
+    } else {
+      rowsCount = numRegularPlayers;
+      areRemainingRegularPlayersToFill = false;
+    }
+
+    print("rowsCount: $rowsCount");
+
 
     return ListView.builder(
-      itemCount: 2,
+      itemCount: rowsCount,
       shrinkWrap: true,
       itemBuilder: (ctx, index) {
-        return PlayerItemsRow(
-          homePlayer: homePlayers[index],
-          awayPlayer: awayPlayers[index],
-        );
+        if(_isRowWithPlayers(index, rowsCount, areRemainingRegularPlayersToFill)) {
+          return PlayerItemsRow(
+            homePlayer: homePlayers[index],
+            awayPlayer: awayPlayers[index],
+          );
+        } else {
+          return PlayerItemsEmptyRow(
+            onTap: () => _addNewRow(),
+          );
+        }
       }
     );
+  }
+
+  bool _isRowWithPlayers(int rowIndex, int numRows, bool areRemainingRegularPlayersToFill) {
+    bool isLastRow = rowIndex == numRows - 1;
+    bool isRowWithNoPlayers = isLastRow && areRemainingRegularPlayersToFill;
+    return !isRowWithNoPlayers;
+  }
+
+  void _addNewRow() {
+    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId);
+    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId);
+    setState(() {
+      tempMatch.playersData.add(newHomePlayer);
+      tempMatch.playersData.add(newAwayPlayer);
+      homePlayers.add(newHomePlayer);
+      awayPlayers.add(newAwayPlayer);
+    });
   }
 
   Future<Team> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
@@ -342,9 +399,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
           if(finalTeamValue != null) {
-//            setState(() {
-//              tempTeamName = finalValue;
-//            });
             tempTeam = finalTeamValue;
           }
         }

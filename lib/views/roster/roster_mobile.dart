@@ -83,7 +83,7 @@ class _RosterMobileState extends State<_RosterMobile> {
     }
   }
 
-  void onActionConfirm(BuildContext context) async {
+  Future<void> onActionConfirm(BuildContext context) async {
     if(isEditEnabled) {
       playerDetailController.savePlayerStatus();
       await widget.viewModel.onPlayerSave(context, tempPlayer);

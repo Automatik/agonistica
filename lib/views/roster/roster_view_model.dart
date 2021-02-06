@@ -60,8 +60,8 @@ class RosterViewModel extends BaseViewModel {
       Navigator.of(context).pop();
     } else {
       Navigator.of(context).pushNamed(
-          TeamView.routeName,
-          arguments: TeamViewArguments(TabScaffoldWidget.MATCHES_VIEW_INDEX)
+        TeamView.routeName,
+        arguments: TeamViewArguments(TabScaffoldWidget.MATCHES_VIEW_INDEX)
       );
     }
   }

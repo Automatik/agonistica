@@ -89,6 +89,7 @@ class TeamViewModel extends BaseViewModel {
   }
 
   void _onMatchDetailUpdate(Match match) {
+    _logger.d("TeamViewModel/onMatchDetailUpdate");
     if(matches == null) {
       _logger.d("matches list is null");
       return;
