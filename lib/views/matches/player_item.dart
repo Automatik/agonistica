@@ -4,7 +4,7 @@ import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-const double ICON_SIZE = 16;
+const double ICON_SIZE = 20;
 const double ICON_HORIZ_MARGIN = 2.5;
 
 class PlayerItem extends StatefulWidget {
@@ -43,7 +43,7 @@ class _PlayerItemState extends State<PlayerItem> {
         margin: const EdgeInsets.symmetric(horizontal: 5),
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: playerData(),
         ),
@@ -58,9 +58,14 @@ class _PlayerItemState extends State<PlayerItem> {
         child: playerShirtNumber(),
       ),
       Expanded(
-        flex: 4,
+        flex: 3,
         child: playerName(),
       ),
+      // Row(
+      //   mainAxisAlignment: widget.isLeftOrientation ? MainAxisAlignment.end : MainAxisAlignment.start,
+      //   mainAxisSize: MainAxisSize.min,
+      //   children: playerItems(),
+      // ),
       Expanded(
         flex: 3,
         child: Row(
@@ -89,20 +94,45 @@ class _PlayerItemState extends State<PlayerItem> {
   }
 
   List<Widget> playerItems() {
+    // List<Widget> widgets = [];
+    // widgets.add(
+    //   _SubstitutionItem(
+    //     substitution: widget.matchPlayer.substitution,
+    //   ),
+    // );
+    // widgets.add(
+    //   _CardItem(
+    //     card: widget.matchPlayer.card,
+    //   ),
+    // );
+    // widgets.add(
+    //   _GoalItem(
+    //     goals: widget.matchPlayer.numGoals),
+    // );
+    // return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
     List<Widget> widgets = [];
     widgets.add(
-      _SubstitutionItem(
-        substitution: widget.matchPlayer.substitution,
+      Expanded(
+        flex: 1,
+        child: _SubstitutionItem(
+          substitution: widget.matchPlayer.substitution,
+        ),
       ),
     );
     widgets.add(
-      _CardItem(
-        card: widget.matchPlayer.card,
+      Expanded(
+        flex: 1,
+        child: _CardItem(
+          card: widget.matchPlayer.card,
+        ),
       ),
     );
     widgets.add(
-      _GoalItem(
-          goals: widget.matchPlayer.numGoals),
+      Expanded(
+        flex: 1,
+        child: _GoalItem(
+            goals: widget.matchPlayer.numGoals),
+      ),
     );
     return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
   }
@@ -213,7 +243,7 @@ class _GoalItem extends StatelessWidget {
   }
 
   Widget goalsIcon() {
-    final double widthFactor = goals > 0 ? 0.9 : 1;
+    final double widthFactor = goals > 0 ? 0.8 : 1;
     final double size = widthFactor * iconSize;
     if(goals > 0) {
       return Container(
@@ -230,21 +260,18 @@ class _GoalItem extends StatelessWidget {
   Widget goalsText() {
     final double size = iconSize;
     if(goals > 1) {
-      return Align(
+      return Container(
+        width: size,
+        height: size,
         alignment: Alignment.bottomRight,
-        child: Container(
-          width: size,
-          height: size,
-          alignment: Alignment.bottomRight,
-          margin: EdgeInsets.only(top: size / 3, left: size / 3),
-          child: Text(
-            "$goals",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: fontColor,
-              fontSize: fontSize,
-              fontWeight: fontWeight,
-            ),
+        margin: EdgeInsets.only(top: size / 3, left: size / 3),
+        child: Text(
+          "$goals",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: fontColor,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
           ),
         ),
       );
@@ -285,7 +312,7 @@ class _SubstitutionItem extends StatelessWidget {
     return Container(
       width: iconSize,
       height: iconSize,
-      child: SvgPicture.asset('assets/images/down-arrow.svg', color: Colors.red,)
+      child: SvgPicture.asset(MatchPlayerData.getSubstitutionAsset(MatchPlayerData.SUBSTITUTION_EXITED))
     );
   }
 
@@ -293,7 +320,7 @@ class _SubstitutionItem extends StatelessWidget {
     return Container(
         width: iconSize,
         height: iconSize,
-        child: SvgPicture.asset('assets/images/up-arrow.svg', color: Colors.green,)
+        child: SvgPicture.asset(MatchPlayerData.getSubstitutionAsset(MatchPlayerData.SUBSTITUTION_ENTERED))
     );
   }
 
@@ -308,12 +335,6 @@ class _CardItem extends StatelessWidget {
   final int card;
 
   final double iconSize = ICON_SIZE;
-  final double widthCardFactor = 0.7;
-
-  final Color yellowColorLight = Color.fromRGBO(255, 250, 23, 1);
-  final Color yellowColorDark = Color.fromRGBO(255, 209, 0, 1);
-  final Color redColorLight = Color.fromRGBO(255, 55, 97, 1);
-  final Color redColorDark = Color.fromRGBO(221, 0, 57, 1);
 
   _CardItem({ this.card });
 
@@ -335,55 +356,22 @@ class _CardItem extends StatelessWidget {
   }
 
   Widget yellowCardWidget(double size) {
-    return cardWidget(yellowColorLight, yellowColorDark, size);
+    return cardWidget(MatchPlayerData.getCardAsset(MatchPlayerData.CARD_YELLOW), size);
   }
 
   Widget redCardWidget(double size) {
-    return cardWidget(redColorLight, redColorDark, size);
+    return cardWidget(MatchPlayerData.getCardAsset(MatchPlayerData.CARD_RED), size);
   }
 
   Widget doubleCardWidget(double size) {
-
-    final double factor = 0.8;
-
-    return Container(
-      width: size,
-      height: size,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: yellowCardWidget(factor * size)
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: redCardWidget(factor * size),
-          )
-        ],
-      ),
-    );
+    return cardWidget(MatchPlayerData.getCardAsset(MatchPlayerData.CARD_DOUBLE_YELLOW), size);
   }
 
-  Widget cardWidget(Color leftColor, Color rightColor, double size) {
+  Widget cardWidget(String assetName, double size) {
     return Container(
       width: size,
       height: size,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: (widthCardFactor * size) / 2,
-            height: size,
-            color: leftColor,
-          ),
-          Container(
-            width: (widthCardFactor * size) / 2,
-            height: size,
-            color: rightColor,
-          ),
-        ],
-      ),
+      child: SvgPicture.asset(assetName),
     );
   }
 
