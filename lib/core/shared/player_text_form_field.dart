@@ -16,6 +16,7 @@ class PlayerTextFormField extends StatelessWidget {
   final FontWeight fontWeight;
   final int maxErrorLines;
   final TextInputType textInputType;
+  final FocusNode focusNode;
 
   PlayerTextFormField({
     @required this.controller,
@@ -28,6 +29,7 @@ class PlayerTextFormField extends StatelessWidget {
     this.fontWeight,
     this.maxErrorLines,
     this.textInputType = TextInputType.text,
+    this.focusNode,
   });
 
   @override
@@ -69,6 +71,7 @@ class PlayerTextFormField extends StatelessWidget {
           ),
           autofocus: false,
           keyboardType: textInputType,
+          focusNode: focusNode,
           onChanged: (value) => onChanged(value),
           validator: (value) => validator(value),
         ),

@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/player_text_form_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
@@ -10,10 +11,12 @@ class PlayerItemEditDialog {
 
   final MatchPlayerData matchPlayerData;
   final Function onSaveCallback;
+  final List<Player> Function(String, String) suggestionCallback;
 
   PlayerItemEditDialog({
     @required this.matchPlayerData,
     this.onSaveCallback,
+    @required this.suggestionCallback,
   });
 
   Future<void> showPlayerItemEditDialog(BuildContext context) async {
@@ -38,6 +41,7 @@ class PlayerItemEditDialog {
         content: _PlayerItemDialogForm(
           matchPlayerData: matchPlayerData,
           onSaveCallback: onSaveCallback,
+          suggestionCallback: suggestionCallback,
         ),
       )
     );
@@ -49,10 +53,12 @@ class _PlayerItemDialogForm extends StatefulWidget {
 
   final MatchPlayerData matchPlayerData;
   final Function onSaveCallback;
+  final List<Player> Function(String, String) suggestionCallback;
 
   _PlayerItemDialogForm({
     @required this.matchPlayerData,
     this.onSaveCallback,
+    @required this.suggestionCallback,
   });
 
   @override
@@ -68,6 +74,12 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   final Color formFontColor = blueAgonisticaColor;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FocusNode _nameTextFocusNode = FocusNode();
+  final FocusNode _surnameTextFocusNode = FocusNode();
+  bool _isLoadingPlayersSuggestions;
+  bool _isTextFocused;
+  List<Player> _playersSuggestionsList;
+
   final TextEditingController shirtTextEditingController = TextEditingController();
   final TextEditingController nameTextEditingController = TextEditingController();
   final TextEditingController surnameTextEditingController = TextEditingController();
@@ -78,6 +90,10 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   @override
   void initState() {
     super.initState();
+    _isTextFocused = false;
+    _nameTextFocusNode.addListener(onTextFocusChange);
+    _surnameTextFocusNode.addListener(onTextFocusChange);
+
     nameTextEditingController.text = widget.matchPlayerData.name ?? "";
     surnameTextEditingController.text = widget.matchPlayerData.surname ?? "";
     int shirt = widget.matchPlayerData.shirtNumber ?? 1;
@@ -90,6 +106,9 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   void onSave() {
     if(areShirtNameAndSurnameValid()) {
       // the other fields (goals and dropdown) are always valid
+
+      // If matchPlayerData.playerId is not set by onItemPlayerTap method
+      // then it's a new player
       widget.matchPlayerData.name = nameTextEditingController.text;
       widget.matchPlayerData.surname = surnameTextEditingController.text;
       widget.matchPlayerData.shirtNumber = int.tryParse(shirtTextEditingController.text);
@@ -106,6 +125,34 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     return _formKey.currentState.validate();
   }
 
+  void onTextFocusChange() {
+    _isTextFocused = _nameTextFocusNode.hasFocus || _surnameTextFocusNode.hasFocus;
+    if(_isTextFocused) {
+      _isLoadingPlayersSuggestions = true;
+
+      String namePattern = nameTextEditingController.text;
+      String surnamePattern = surnameTextEditingController.text;
+      loadPlayersSuggestions(namePattern, surnamePattern);
+    }
+  }
+
+  Future<void> loadPlayersSuggestions(String namePattern, String surnamePattern) async {
+    if(namePattern == MatchPlayerData.EMPTY_PLAYER_NAME)
+      namePattern = "";
+    if(surnamePattern == MatchPlayerData.EMPTY_PLAYER_SURNAME)
+      surnamePattern = "";
+    _playersSuggestionsList = widget.suggestionCallback(namePattern, surnamePattern);
+    setState(() {
+      _isLoadingPlayersSuggestions = false;
+    });
+  }
+
+  void onItemPlayerTap(Player player) {
+    widget.matchPlayerData.playerId = player.id;
+    this.nameTextEditingController.text = player.name;
+    this.surnameTextEditingController.text = player.surname;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -113,15 +160,22 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         maxHeight: 0.6 * MediaQuery.of(context).size.height,
       ),
       width: 0.9 * MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          playerShirtAndNameForm(),
-          playerGoalCardAndSub(),
-          okButton(),
-        ],
-      ),
+      child: SingleChildScrollView(
+        child: dialogContent(),
+      )
+    );
+  }
+
+  Widget dialogContent() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        playerShirtAndNameForm(),
+        playersSuggestions(),
+        playerGoalCardAndSub(),
+        okButton(),
+      ],
     );
   }
 
@@ -255,8 +309,9 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         fontWeight: formFontWeight,
         fontColor: formFontColor,
         maxErrorLines: formErrorMaxLines,
+        focusNode: _nameTextFocusNode,
         onChanged: (value) {
-          print("name onChanged value: $value");
+          loadPlayersSuggestions(value, surnameTextEditingController.text);
         },
         validator: (value) => InputValidation.validatePlayerName(value),
       ),
@@ -273,8 +328,9 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         fontWeight: formFontWeight,
         fontColor: formFontColor,
         maxErrorLines: formErrorMaxLines,
+        focusNode: _surnameTextFocusNode,
         onChanged: (value) {
-          print("name onChanged value: $value");
+          loadPlayersSuggestions(nameTextEditingController.text, value);
         },
         validator: (value) => InputValidation.validatePlayerSurname(value),
       ),
@@ -421,6 +477,96 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
           fontWeight: FontWeight.bold,
           fontSize: fontSize,
         ),
+      ),
+    );
+  }
+
+  Widget playersSuggestions() {
+    if(_isTextFocused) {
+      Widget widget;
+      if(_isLoadingPlayersSuggestions) {
+        widget = indicator();
+      } else {
+        if(_playersSuggestionsList.isEmpty) {
+          widget = SizedBox();
+        } else {
+          widget = playersListView(_playersSuggestionsList);
+        }
+      }
+      return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            widget,
+          ]
+      );
+    } else {
+      return SizedBox();
+    }
+  }
+
+  Widget indicator() {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(top: 20, bottom: 20),
+      width: 50,
+      height: 50,
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.transparent,
+        valueColor: AlwaysStoppedAnimation(blueAgonisticaColor),
+        strokeWidth: 4,
+      ),
+    );
+  }
+
+  Widget playersListView(List<Player> players) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 10, top: 10, right: 5),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Giocatori squadra esistenti",
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: blueAgonisticaColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            constraints: BoxConstraints(
+              minHeight: 100,
+              maxHeight: 150,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: blueAgonisticaColor),
+            ),
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: players.length,
+                itemBuilder: (context, index) {
+                  String playerName = players[index].name;
+                  String playerSurname = players[index].surname;
+                  return ListTile(
+                    onTap: () => onItemPlayerTap(players[index]),
+                    title: Text(
+                      "$playerName $playerSurname",
+                      style: TextStyle(
+                        color: blueAgonisticaColor,
+                        fontSize: 14,
+                      ),
+                    ),
+                    dense: true,
+                  );
+                }
+            ),
+          ),
+        ]
       ),
     );
   }

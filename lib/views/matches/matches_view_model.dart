@@ -1,6 +1,7 @@
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
@@ -20,8 +21,11 @@ class MatchesViewModel extends BaseViewModel {
 
   List<Team> teams;
 
+  Map<String, List<Player>> teamsPlayersMap;
+
   MatchesViewModel(this.isNewMatch, this.match, this.onMatchDetailUpdate){
     teams = [];
+    teamsPlayersMap = Map();
     loadItems();
   }
   
@@ -41,9 +45,31 @@ class MatchesViewModel extends BaseViewModel {
   List<Team> suggestTeamsByPattern(String pattern) {
     if(pattern == null || pattern.isEmpty)
       return teams;
-//    Iterable<Team> iterable = teams.where((team) => team.name.startsWith(pattern));
-//    return List<Team>.from(iterable);
     return teams.where((team) => team.name.startsWith(pattern));
+  }
+
+  Future<void> loadTeamPlayers(String teamId) async {
+    String categoryId = _databaseService.selectedCategory.id;
+    List<Player> teamPlayers = await _databaseService.getPlayersByTeamAndCategory(teamId, categoryId);
+    if(!teamsPlayersMap.containsKey(teamId))
+      teamsPlayersMap.putIfAbsent(teamId, () => teamPlayers);
+    else
+      teamsPlayersMap.update(teamId, (_) => teamPlayers);
+  }
+
+  List<Player> suggestPlayersByPattern(String namePattern, String surnamePattern, String teamId) {
+    List<Player> teamPlayers = teamsPlayersMap[teamId];
+    if(teamPlayers == null)
+      return [];
+    if(namePattern.isEmpty) {
+      return teamPlayers.where((player) => player.surname.startsWith(surnamePattern)).toList();
+    }
+    if(surnamePattern.isEmpty) {
+      return teamPlayers.where((player) => player.name.startsWith(namePattern)).toList();
+    }
+    return teamPlayers.where((player) {
+      return player.name.startsWith(namePattern) && player.surname.startsWith(surnamePattern);
+    }).toList();
   }
 
   void onBottomBarItemChanged(BuildContext context, int index) {

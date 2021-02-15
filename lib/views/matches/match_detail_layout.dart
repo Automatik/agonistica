@@ -22,13 +22,17 @@ class MatchDetailLayout extends StatefulWidget {
   final bool isEditEnabled;
   final double maxWidth;
   final MatchDetailController controller;
-  final List<Team> Function(String) onSuggestionTeamCallback;
+  final List<Team> Function(String) onTeamSuggestionCallback;
+  final Function(String) onTeamInserted;
+  final Function(String, String, String) onPlayersSuggestionCallback;
 
   MatchDetailLayout({
     @required this.match,
     @required this.isEditEnabled,
     @required this.controller,
-    @required this.onSuggestionTeamCallback,
+    @required this.onTeamSuggestionCallback,
+    @required this.onTeamInserted,
+    @required this.onPlayersSuggestionCallback,
     this.maxWidth,
   }) : assert(match != null);
 
@@ -165,6 +169,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                   setState(() {
                                     matchInfo.setTeam1(team1);
                                   });
+                                  widget.onTeamInserted(team1.id);
                                 }
                               }
                             },
@@ -190,6 +195,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                                   setState(() {
                                     matchInfo.setTeam2(team2);
                                   });
+                                  widget.onTeamInserted(team2.id);
                                 }
                               }
                             },
@@ -320,21 +326,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   Widget regularPlayers(bool isEditEnabled) {
-    // final p1 = MatchPlayerData.empty();
-    //     // final p2 = MatchPlayerData.empty();
-    //     // final p3 = MatchPlayerData.empty();
-    //     // final p4 = MatchPlayerData.empty();
-    //     // p1.surname = "CognomeLunghissimo";
-    //     // p1.setYellowCard();
-    //     // p1.setExitSubstitution();
-    //     // p2.setRedCard();
-    //     // p2.setEnterSubstitution();
-    //     // p3.numGoals = 2;
-    //     // p3.setYellowCard();
-    //     // p4.setDoubleYellowCard();
-    //     // final homePlayers = List.of([p1, p2]);
-    //     // final awayPlayers = List.of([p3, p4]);
-
     int numHomeRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == homeTeamId).length;
     int numAwayRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == awayTeamId).length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
@@ -361,6 +352,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           return PlayerItemsRow(
             homePlayer: homePlayers[index],
             awayPlayer: awayPlayers[index],
+            onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
+              String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
+              return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
+            },
           );
         } else {
           return PlayerItemsEmptyRow(
@@ -394,7 +389,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
         suggestionCallback: (pattern) {
-          return widget.onSuggestionTeamCallback(pattern);
+          return widget.onTeamSuggestionCallback(pattern);
         },
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();

@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,12 @@ class PlayerItem extends StatefulWidget {
 
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
+  final List<Player> Function(String, String) onPlayersSuggestionCallback;
 
   PlayerItem({
-    this.matchPlayer,
-    this.isLeftOrientation,
+    @required this.matchPlayer,
+    @required this.isLeftOrientation,
+    @required this.onPlayersSuggestionCallback,
   });
 
   @override
@@ -34,7 +37,8 @@ class _PlayerItemState extends State<PlayerItem> {
             Navigator.pop(context);
             // update view
             setState(() {});
-          }
+          },
+          suggestionCallback: widget.onPlayersSuggestionCallback,
         );
         dialog.showPlayerItemEditDialog(context);
       },
@@ -61,11 +65,6 @@ class _PlayerItemState extends State<PlayerItem> {
         flex: 3,
         child: playerName(),
       ),
-      // Row(
-      //   mainAxisAlignment: widget.isLeftOrientation ? MainAxisAlignment.end : MainAxisAlignment.start,
-      //   mainAxisSize: MainAxisSize.min,
-      //   children: playerItems(),
-      // ),
       Expanded(
         flex: 3,
         child: Row(
@@ -94,22 +93,6 @@ class _PlayerItemState extends State<PlayerItem> {
   }
 
   List<Widget> playerItems() {
-    // List<Widget> widgets = [];
-    // widgets.add(
-    //   _SubstitutionItem(
-    //     substitution: widget.matchPlayer.substitution,
-    //   ),
-    // );
-    // widgets.add(
-    //   _CardItem(
-    //     card: widget.matchPlayer.card,
-    //   ),
-    // );
-    // widgets.add(
-    //   _GoalItem(
-    //     goals: widget.matchPlayer.numGoals),
-    // );
-    // return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
     List<Widget> widgets = [];
     widgets.add(
       Expanded(

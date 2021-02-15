@@ -62,7 +62,9 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       isEditEnabled: isEditEnabled,
       match: match,
       controller: matchDetailController,
-      onSuggestionTeamCallback: (pattern) => widget.viewModel.suggestTeamsByPattern(pattern),
+      onTeamSuggestionCallback: (pattern) => widget.viewModel.suggestTeamsByPattern(pattern),
+      onTeamInserted: (teamId) => widget.viewModel.loadTeamPlayers(teamId),
+      onPlayersSuggestionCallback: (namePattern, surnamePattern, teamId) => widget.viewModel.suggestPlayersByPattern(namePattern, surnamePattern, teamId),
       maxWidth: maxWidth,
     );
   }

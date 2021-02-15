@@ -162,7 +162,6 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                 ]
             ),
             suggestions(),
-//            indicator(),
           ],
         ),
       ),

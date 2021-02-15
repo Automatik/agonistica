@@ -11,6 +11,9 @@ class MatchPlayerData {
   static const int CARD_DOUBLE_YELLOW = 2;
   static const int CARD_RED = 3;
 
+  static const String EMPTY_PLAYER_NAME = "Nome";
+  static const String EMPTY_PLAYER_SURNAME = "Giocatore";
+
   String id;
 
   // do not use this field for non followed players
@@ -40,8 +43,8 @@ class MatchPlayerData {
     var uuid = Uuid();
     id = uuid.v4();
     playerId = null;
-    name = "Nome";
-    surname = "Giocatore";
+    name = EMPTY_PLAYER_NAME;
+    surname = EMPTY_PLAYER_SURNAME;
     this.teamId = teamId;
     this.isRegular = isRegular;
     shirtNumber = 0;

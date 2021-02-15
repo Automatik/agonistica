@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,13 @@ class PlayerItemsRow extends StatelessWidget {
   final MatchPlayerData homePlayer; //left
   final MatchPlayerData awayPlayer; //right
   final double lineSeparatorWidth;
+  final List<Player> Function(String, String, bool) onPlayerSuggestionCallback;
 
   PlayerItemsRow({
     this.homePlayer,
     this.awayPlayer,
     this.lineSeparatorWidth = 0.5,
+    this.onPlayerSuggestionCallback,
   });
 
   @override
@@ -32,6 +35,10 @@ class PlayerItemsRow extends StatelessWidget {
             child: PlayerItem(
               isLeftOrientation: true,
               matchPlayer: homePlayer,
+              onPlayersSuggestionCallback: (namePattern, surnamePattern) {
+                bool isHomePlayer = true;
+                return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);
+              },
             ),
           ),
           Expanded(
@@ -39,6 +46,10 @@ class PlayerItemsRow extends StatelessWidget {
             child: PlayerItem(
               isLeftOrientation: false,
               matchPlayer: awayPlayer,
+              onPlayersSuggestionCallback: (namePattern, surnamePattern) {
+                bool isHomePlayer = false;
+                return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);
+              },
             ),
           )
         ],
