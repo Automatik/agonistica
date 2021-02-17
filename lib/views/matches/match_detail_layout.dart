@@ -106,6 +106,17 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
   }
 
+  bool userCanEditPlayers() {
+    return areTeamsInserted() && editEnabled;
+  }
+
+  /// Return true if both teams have been selected or inserted
+  bool areTeamsInserted() {
+    String team1Id = tempMatch.team1Id;
+    String team2Id = tempMatch.team2Id;
+    return team1Id != null && team2Id != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -307,42 +318,46 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            child: Text(
-              "Titolari",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: blueAgonisticaColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          ),
+          lineUpText("Titolari"),
           regularPlayers(isEditEnabled),
+          lineUpText("Riserve"),
+          reservePlayers(isEditEnabled),
         ],
       ),
     );
   }
 
+  Widget lineUpText(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: blueAgonisticaColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
   Widget regularPlayers(bool isEditEnabled) {
-    int numHomeRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == homeTeamId).length;
-    int numAwayRegularPlayers = widget.match.playersData.where((e) => e.isRegular && e.teamId == awayTeamId).length;
+    List<MatchPlayerData> homeRegularPlayers = homePlayers.where((e) => e.isRegular).toList();
+    List<MatchPlayerData> awayRegularPlayers = awayPlayers.where((e) => e.isRegular).toList();
+    int numHomeRegularPlayers = homeRegularPlayers.length;
+    int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
-    // int numReservePlayers = widget.match.playersData.where((e) => !e.isRegular).length;
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
     if(isEditEnabled) {
       areRemainingRegularPlayersToFill = numRegularPlayers < MAX_REGULARS_PLAYERS;
-      rowsCount = areRemainingRegularPlayersToFill ? numRegularPlayers + 1 : MAX_REGULARS_PLAYERS;
+      rowsCount = areRemainingRegularPlayersToFill ? numRegularPlayers + 1 : MAX_REGULARS_PLAYERS; //+1 to add the empty row
     } else {
       rowsCount = numRegularPlayers;
       areRemainingRegularPlayersToFill = false;
     }
-
-    print("rowsCount: $rowsCount");
-
 
     return ListView.builder(
       itemCount: rowsCount,
@@ -352,6 +367,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           return PlayerItemsRow(
             homePlayer: homePlayers[index],
             awayPlayer: awayPlayers[index],
+            isEditEnabled: isEditEnabled,
             onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
               String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
               return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
@@ -359,10 +375,64 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           );
         } else {
           return PlayerItemsEmptyRow(
-            onTap: () => _addNewRow(),
+            onTap: () {
+              if(userCanEditPlayers()) {
+                _addNewRowWithRegularPlayers();
+              } else {
+                //TODO show snackbar that tells user to select teams before editing players or remove empty row when edit is not enabled
+                print("seleziona i team prima di modificare i giocatori");
+              }
+              },
           );
         }
       }
+    );
+  }
+
+  Widget reservePlayers(bool isEditEnabled) {
+    List<MatchPlayerData> homeReservePlayers = homePlayers.where((e) => !e.isRegular).toList();
+    List<MatchPlayerData> awayReservePlayers = awayPlayers.where((e) => !e.isRegular).toList();
+    int numHomeReservePlayers = homeReservePlayers.length;
+    int numAwayReservePlayers = awayReservePlayers.length;
+    int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
+
+    bool areRemainingRegularPlayersToFill;
+    int rowsCount;
+    if(isEditEnabled) {
+      areRemainingRegularPlayersToFill = true;
+      rowsCount = numReservePlayers + 1; //+1 to add the empty row
+    } else {
+      areRemainingRegularPlayersToFill = false;
+      rowsCount = numReservePlayers;
+    }
+
+    return ListView.builder(
+        itemCount: rowsCount,
+        shrinkWrap: true,
+        itemBuilder: (ctx, index) {
+          if(_isRowWithPlayers(index, rowsCount, areRemainingRegularPlayersToFill)) {
+            return PlayerItemsRow(
+              homePlayer: homeReservePlayers[index],
+              awayPlayer: awayReservePlayers[index],
+              isEditEnabled: isEditEnabled,
+              onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
+                String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
+                return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
+              },
+            );
+          } else {
+            return PlayerItemsEmptyRow(
+              onTap: () {
+                if(userCanEditPlayers()) {
+                  _addNewRowWithReservePlayers();
+                } else {
+                  //TODO show snackbar that tells user to select teams before editing players or remove empty row when edit is not enabled
+                  print("seleziona i team prima di modificare i giocatori");
+                }
+              },
+            );
+          }
+        }
     );
   }
 
@@ -372,9 +442,19 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return !isRowWithNoPlayers;
   }
 
-  void _addNewRow() {
-    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId);
-    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId);
+  void _addNewRowWithRegularPlayers() {
+    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId, isRegular: true);
+    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId, isRegular: true);
+    _addNewRow(newHomePlayer, newAwayPlayer);
+  }
+
+  void _addNewRowWithReservePlayers() {
+    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId, isRegular: false);
+    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId, isRegular: false);
+    _addNewRow(newHomePlayer, newAwayPlayer);
+  }
+
+  void _addNewRow(MatchPlayerData newHomePlayer, MatchPlayerData newAwayPlayer) {
     setState(() {
       tempMatch.playersData.add(newHomePlayer);
       tempMatch.playersData.add(newAwayPlayer);

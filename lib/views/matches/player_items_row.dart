@@ -9,12 +9,14 @@ class PlayerItemsRow extends StatelessWidget {
   final MatchPlayerData homePlayer; //left
   final MatchPlayerData awayPlayer; //right
   final double lineSeparatorWidth;
+  final bool isEditEnabled;
   final List<Player> Function(String, String, bool) onPlayerSuggestionCallback;
 
   PlayerItemsRow({
     this.homePlayer,
     this.awayPlayer,
     this.lineSeparatorWidth = 0.5,
+    this.isEditEnabled,
     this.onPlayerSuggestionCallback,
   });
 
@@ -34,6 +36,7 @@ class PlayerItemsRow extends StatelessWidget {
             flex: 1,
             child: PlayerItem(
               isLeftOrientation: true,
+              isEditEnabled: isEditEnabled,
               matchPlayer: homePlayer,
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = true;
@@ -45,6 +48,7 @@ class PlayerItemsRow extends StatelessWidget {
             flex: 1,
             child: PlayerItem(
               isLeftOrientation: false,
+              isEditEnabled: isEditEnabled,
               matchPlayer: awayPlayer,
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = false;

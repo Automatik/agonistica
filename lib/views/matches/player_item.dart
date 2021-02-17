@@ -12,11 +12,13 @@ class PlayerItem extends StatefulWidget {
 
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
+  final bool isEditEnabled;
   final List<Player> Function(String, String) onPlayersSuggestionCallback;
 
   PlayerItem({
     @required this.matchPlayer,
     @required this.isLeftOrientation,
+    @required this.isEditEnabled,
     @required this.onPlayersSuggestionCallback,
   });
 
@@ -31,16 +33,18 @@ class _PlayerItemState extends State<PlayerItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final dialog = PlayerItemEditDialog(
-          matchPlayerData: widget.matchPlayer,
-          onSaveCallback: () {
-            Navigator.pop(context);
-            // update view
-            setState(() {});
-          },
-          suggestionCallback: widget.onPlayersSuggestionCallback,
-        );
-        dialog.showPlayerItemEditDialog(context);
+        if(widget.isEditEnabled) {
+          final dialog = PlayerItemEditDialog(
+            matchPlayerData: widget.matchPlayer,
+            onSaveCallback: () {
+              Navigator.pop(context);
+              // update view
+              setState(() {});
+            },
+            suggestionCallback: widget.onPlayersSuggestionCallback,
+          );
+          dialog.showPlayerItemEditDialog(context);
+        }
       },
       child: Container(
         color: Colors.white,

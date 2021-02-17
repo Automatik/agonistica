@@ -32,8 +32,8 @@ class Match {
     var uuid = Uuid();
     id = uuid.v4();
     categoryId = uuid.v4();
-    team1Id = uuid.v4();
-    team2Id = uuid.v4();
+    // team1Id = uuid.v4(); removed to allow detecting if a team is inserted or not in Match View
+    // team2Id = uuid.v4();
     team1Goals = 0;
     team2Goals = 0;
     leagueMatch = 0;
