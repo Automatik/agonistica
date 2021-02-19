@@ -67,6 +67,8 @@ class RosterViewModel extends BaseViewModel {
   }
 
   Future<void> onPlayerSave(BuildContext context, Player newPlayer) async {
+    //TODO Implement a check if a player with already the same name and surname exists?
+
     await _databaseService.savePlayer(newPlayer);
 
     // save eventually playerMatchNotes?

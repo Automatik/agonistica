@@ -10,14 +10,16 @@ class PlayerItemsRow extends StatelessWidget {
   final MatchPlayerData awayPlayer; //right
   final double lineSeparatorWidth;
   final bool isEditEnabled;
+  final bool Function(String, int, bool) onPlayerValidation;
   final List<Player> Function(String, String, bool) onPlayerSuggestionCallback;
 
   PlayerItemsRow({
-    this.homePlayer,
-    this.awayPlayer,
+    @required this.homePlayer,
+    @required this.awayPlayer,
     this.lineSeparatorWidth = 0.5,
-    this.isEditEnabled,
-    this.onPlayerSuggestionCallback,
+    @required this.isEditEnabled,
+    @required this.onPlayerValidation,
+    @required this.onPlayerSuggestionCallback,
   });
 
   @override
@@ -38,6 +40,7 @@ class PlayerItemsRow extends StatelessWidget {
               isLeftOrientation: true,
               isEditEnabled: isEditEnabled,
               matchPlayer: homePlayer,
+              onPlayerValidation: (playerId, shirtNumber) => onPlayerValidation(playerId, shirtNumber, true),
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = true;
                 return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);
@@ -50,6 +53,7 @@ class PlayerItemsRow extends StatelessWidget {
               isLeftOrientation: false,
               isEditEnabled: isEditEnabled,
               matchPlayer: awayPlayer,
+              onPlayerValidation: (playerId, shirtNumber) => onPlayerValidation(playerId, shirtNumber, false),
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = false;
                 return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);

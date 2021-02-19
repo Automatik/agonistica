@@ -13,12 +13,14 @@ class PlayerItem extends StatefulWidget {
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
   final bool isEditEnabled;
+  final bool Function(String, int) onPlayerValidation;
   final List<Player> Function(String, String) onPlayersSuggestionCallback;
 
   PlayerItem({
     @required this.matchPlayer,
     @required this.isLeftOrientation,
     @required this.isEditEnabled,
+    @required this.onPlayerValidation,
     @required this.onPlayersSuggestionCallback,
   });
 
@@ -36,6 +38,7 @@ class _PlayerItemState extends State<PlayerItem> {
         if(widget.isEditEnabled) {
           final dialog = PlayerItemEditDialog(
             matchPlayerData: widget.matchPlayer,
+            onPlayerValidation: widget.onPlayerValidation,
             onSaveCallback: () {
               Navigator.pop(context);
               // update view

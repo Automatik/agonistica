@@ -8,6 +8,7 @@ import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 const int MAX_REGULARS_PLAYERS = 11;
 
 class MatchDetailLayout extends StatefulWidget {
+
+  static const String SNACKBAR_TEXT_SELECT_TEAMS = "Seleziona le squadre prima di modificare i giocatori";
 
   final Match match;
   final bool isEditEnabled;
@@ -100,7 +103,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
     //TODO Check if there are not textfields with errors
 
-    //todo save team names (and eventually create new team and player objects)
+    //TODO save team names and create new team and player objects
     tempMatch.team1Goals = int.tryParse(resultTextEditingController1.text);
     tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
@@ -115,6 +118,22 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     String team1Id = tempMatch.team1Id;
     String team2Id = tempMatch.team2Id;
     return team1Id != null && team2Id != null;
+  }
+
+  /// Check if the edited player does not contain the same shirt number of other
+  /// players in the same team, beside himself. This allows to have more players
+  /// with the same name and surname
+  bool validatePlayerShirtNumber(String playerId, int shirtNumber, bool isHomeTeam) {
+    List<MatchPlayerData> teamPlayers = isHomeTeam ? homePlayers : awayPlayers;
+    int index;
+    if(playerId != null) {
+      // the player is already defined in the match, so the playerId must be removed from the results
+      index = teamPlayers.indexWhere((p) => p.playerId != playerId && p.shirtNumber == shirtNumber);
+    } else {
+      index = teamPlayers.indexWhere((p) => p.shirtNumber == shirtNumber);
+    }
+    bool isAnotherPlayerWithSameParameters = index != -1;
+    return !isAnotherPlayerWithSameParameters;
   }
 
   @override
@@ -319,9 +338,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           lineUpText("Titolari"),
-          regularPlayers(isEditEnabled),
+          regularPlayers(context, isEditEnabled),
           lineUpText("Riserve"),
-          reservePlayers(isEditEnabled),
+          reservePlayers(context, isEditEnabled),
         ],
       ),
     );
@@ -342,7 +361,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     );
   }
 
-  Widget regularPlayers(bool isEditEnabled) {
+  Widget regularPlayers(BuildContext context, bool isEditEnabled) {
     List<MatchPlayerData> homeRegularPlayers = homePlayers.where((e) => e.isRegular).toList();
     List<MatchPlayerData> awayRegularPlayers = awayPlayers.where((e) => e.isRegular).toList();
     int numHomeRegularPlayers = homeRegularPlayers.length;
@@ -359,37 +378,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       areRemainingRegularPlayersToFill = false;
     }
 
-    return ListView.builder(
-      itemCount: rowsCount,
-      shrinkWrap: true,
-      itemBuilder: (ctx, index) {
-        if(_isRowWithPlayers(index, rowsCount, areRemainingRegularPlayersToFill)) {
-          return PlayerItemsRow(
-            homePlayer: homePlayers[index],
-            awayPlayer: awayPlayers[index],
-            isEditEnabled: isEditEnabled,
-            onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
-              String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
-              return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
-            },
-          );
-        } else {
-          return PlayerItemsEmptyRow(
-            onTap: () {
-              if(userCanEditPlayers()) {
-                _addNewRowWithRegularPlayers();
-              } else {
-                //TODO show snackbar that tells user to select teams before editing players or remove empty row when edit is not enabled
-                print("seleziona i team prima di modificare i giocatori");
-              }
-              },
-          );
-        }
-      }
-    );
+    return listPlayers(homeRegularPlayers, awayRegularPlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled);
   }
 
-  Widget reservePlayers(bool isEditEnabled) {
+  Widget reservePlayers(BuildContext context, bool isEditEnabled) {
     List<MatchPlayerData> homeReservePlayers = homePlayers.where((e) => !e.isRegular).toList();
     List<MatchPlayerData> awayReservePlayers = awayPlayers.where((e) => !e.isRegular).toList();
     int numHomeReservePlayers = homeReservePlayers.length;
@@ -406,15 +398,20 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       rowsCount = numReservePlayers;
     }
 
+    return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled);
+  }
+
+  Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled) {
     return ListView.builder(
         itemCount: rowsCount,
         shrinkWrap: true,
         itemBuilder: (ctx, index) {
           if(_isRowWithPlayers(index, rowsCount, areRemainingRegularPlayersToFill)) {
             return PlayerItemsRow(
-              homePlayer: homeReservePlayers[index],
-              awayPlayer: awayReservePlayers[index],
+              homePlayer: homePlayers[index],
+              awayPlayer: awayPlayers[index],
               isEditEnabled: isEditEnabled,
+              onPlayerValidation: (playerId, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(playerId, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
                 return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
@@ -426,8 +423,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                 if(userCanEditPlayers()) {
                   _addNewRowWithReservePlayers();
                 } else {
-                  //TODO show snackbar that tells user to select teams before editing players or remove empty row when edit is not enabled
-                  print("seleziona i team prima di modificare i giocatori");
+                  MySnackBar.showSnackBar(context, MatchDetailLayout.SNACKBAR_TEXT_SELECT_TEAMS);
                 }
               },
             );

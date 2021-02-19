@@ -16,7 +16,7 @@ class MatchPlayerData {
 
   String id;
 
-  // do not use this field for non followed players
+  // do not use this field for non followed players -> Da rivedere: se io aggiungo un player tramite MatchPlayerData a una partita e poi in un secondo momento voglio creare un vero e proprio Player? Avere già un playerId aiuta a ricollegare tutte le partite di quel giocatore
   String playerId;
 
   // the name also need to be stored for players not followed by the scouts

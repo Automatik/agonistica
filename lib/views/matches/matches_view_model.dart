@@ -1,5 +1,6 @@
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
@@ -8,15 +9,17 @@ import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class MatchesViewModel extends BaseViewModel {
+
+  static Logger _logger = getLogger('MatchesViewModel');
 
   final bool isNewMatch;
   Match match;
   final Function(Match) onMatchDetailUpdate;
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
   final _databaseService = locator<DatabaseService>();
 
   List<Team> teams;

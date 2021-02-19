@@ -6,15 +6,18 @@ import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 
 class PlayerItemEditDialog {
 
   final MatchPlayerData matchPlayerData;
+  final bool Function(String, int) onPlayerValidation;
   final Function onSaveCallback;
   final List<Player> Function(String, String) suggestionCallback;
 
   PlayerItemEditDialog({
     @required this.matchPlayerData,
+    @required this.onPlayerValidation,
     this.onSaveCallback,
     @required this.suggestionCallback,
   });
@@ -40,6 +43,7 @@ class PlayerItemEditDialog {
         ),
         content: _PlayerItemDialogForm(
           matchPlayerData: matchPlayerData,
+          onPlayerValidation: onPlayerValidation,
           onSaveCallback: onSaveCallback,
           suggestionCallback: suggestionCallback,
         ),
@@ -52,11 +56,13 @@ class PlayerItemEditDialog {
 class _PlayerItemDialogForm extends StatefulWidget {
 
   final MatchPlayerData matchPlayerData;
+  final bool Function(String, int) onPlayerValidation;
   final Function onSaveCallback;
   final List<Player> Function(String, String) suggestionCallback;
 
   _PlayerItemDialogForm({
     @required this.matchPlayerData,
+    @required this.onPlayerValidation,
     this.onSaveCallback,
     @required this.suggestionCallback,
   });
@@ -76,6 +82,8 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _nameTextFocusNode = FocusNode();
   final FocusNode _surnameTextFocusNode = FocusNode();
+  String _formErrorMessage;
+  bool _isFormError;
   bool _isLoadingPlayersSuggestions;
   bool _isTextFocused;
   List<Player> _playersSuggestionsList;
@@ -90,6 +98,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   @override
   void initState() {
     super.initState();
+    _isFormError = false;
     _isTextFocused = false;
     _nameTextFocusNode.addListener(onTextFocusChange);
     _surnameTextFocusNode.addListener(onTextFocusChange);
@@ -107,17 +116,36 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     if(areShirtNameAndSurnameValid()) {
       // the other fields (goals and dropdown) are always valid
 
-      // If matchPlayerData.playerId is not set by onItemPlayerTap method
-      // then it's a new player
-      widget.matchPlayerData.name = nameTextEditingController.text;
-      widget.matchPlayerData.surname = surnameTextEditingController.text;
-      widget.matchPlayerData.shirtNumber = int.tryParse(shirtTextEditingController.text);
-      widget.matchPlayerData.numGoals = goals;
-      widget.matchPlayerData.card = card;
-      widget.matchPlayerData.substitution = substitution;
+      String playerId = widget.matchPlayerData.playerId;
+      String name = nameTextEditingController.text;
+      String surname = surnameTextEditingController.text;
+      int shirtNumber = int.tryParse(shirtTextEditingController.text);
 
-      if(widget.onSaveCallback != null)
-        widget.onSaveCallback.call();
+      if(widget.onPlayerValidation(playerId, shirtNumber)) {
+        // If matchPlayerData.playerId is not set by onItemPlayerTap method
+        // then it's a new player
+        if(playerId == null) {
+          var uuid = Uuid();
+          playerId = uuid.v4();
+          widget.matchPlayerData.playerId = playerId;
+        }
+
+        widget.matchPlayerData.name = name;
+        widget.matchPlayerData.surname = surname;
+        widget.matchPlayerData.shirtNumber = shirtNumber;
+        widget.matchPlayerData.numGoals = goals;
+        widget.matchPlayerData.card = card;
+        widget.matchPlayerData.substitution = substitution;
+
+        if (widget.onSaveCallback != null)
+          widget.onSaveCallback.call();
+
+      } else {
+        setState(() {
+          _isFormError = true;
+          _formErrorMessage = "E' già presente un giocatore con questo numero di maglia.";
+        });
+      }
     }
   }
 
@@ -171,12 +199,32 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        errorMessage(),
         playerShirtAndNameForm(),
         playersSuggestions(),
         playerGoalCardAndSub(),
         okButton(),
       ],
     );
+  }
+
+  Widget errorMessage() {
+    if(!_isFormError) {
+      return SizedBox();
+    } else {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        child: Text(
+          _formErrorMessage,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.red,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      );
+    }
   }
 
   Widget playerShirtAndNameForm() {
@@ -291,9 +339,6 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         fontColor: formFontColor,
         maxErrorLines: formErrorMaxLines,
         textInputType: TextInputType.number,
-        onChanged: (value) {
-          print("shirt onChanged value: $value");
-        },
         validator: (value) => InputValidation.validatePlayerShirtNumber(value),
       ),
     );
