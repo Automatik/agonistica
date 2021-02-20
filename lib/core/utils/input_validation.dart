@@ -2,10 +2,10 @@ class InputValidation {
 
   static const String MESSAGE_SHIRT_EMPTY = "Inserire un numero di maglia";
   static const String MESSAGE_SHIRT_RANGE = "Numero deve essere compreso tra 1 e 99";
-  static const String MESSAGE_NAME_EMPTY = "Inserire un nome di giocatore";
+  static const String MESSAGE_NAME_EMPTY = "Inserire un nome";
   static const String MESSAGE_NAME_TOO_LONG = "Nome troppo lungo";
   static const String MESSAGE_NAME_NOT_VALID = "Inserire un nome valido";
-  static const String MESSAGE_SURNAME_EMPTY = "Inserire un cognome di giocatore";
+  static const String MESSAGE_SURNAME_EMPTY = "Inserire un cognome";
   static const String MESSAGE_SURNAME_TOO_LONG = "Cognome troppo lungo";
   static const String MESSAGE_SURNAME_NOT_VALID = "Inserire un cognome valido";
 

@@ -103,13 +103,21 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     _nameTextFocusNode.addListener(onTextFocusChange);
     _surnameTextFocusNode.addListener(onTextFocusChange);
 
-    nameTextEditingController.text = widget.matchPlayerData.name ?? "";
-    surnameTextEditingController.text = widget.matchPlayerData.surname ?? "";
+    nameTextEditingController.text = initializeName(widget.matchPlayerData.name);
+    surnameTextEditingController.text = initializeSurname(widget.matchPlayerData.surname);
     int shirt = widget.matchPlayerData.shirtNumber ?? 1;
     shirtTextEditingController.text = "$shirt";
     goals = widget.matchPlayerData.numGoals ?? 0;
     card = widget.matchPlayerData.card ?? MatchPlayerData.CARD_NONE;
     substitution = widget.matchPlayerData.substitution ?? MatchPlayerData.SUBSTITUTION_NONE;
+  }
+
+  String initializeName(String name) {
+    return (name == null || name == MatchPlayerData.EMPTY_PLAYER_NAME) ? "" : name;
+  }
+
+  String initializeSurname(String surname) {
+    return (surname == null || surname == MatchPlayerData.EMPTY_PLAYER_SURNAME) ? "" : surname;
   }
 
   void onSave() {
