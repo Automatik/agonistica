@@ -8,6 +8,13 @@ class InputValidation {
   static const String MESSAGE_SURNAME_EMPTY = "Inserire un cognome";
   static const String MESSAGE_SURNAME_TOO_LONG = "Cognome troppo lungo";
   static const String MESSAGE_SURNAME_NOT_VALID = "Inserire un cognome valido";
+  static const String MESSAGE_TEAM_EMPTY = "Inserire un nome di squadra";
+  static const String MESSAGE_TEAM_TOO_LONG = "Nome di squadra troppo lungo";
+  static const String MESSAGE_TEAM_NOT_VALID = "Inserire un nome di squadra valido";
+  static const String MESSAGE_RESULT_EMPTY = "Inserire un risultato";
+  static const String MESSAGE_RESULT_NOT_VALID = "Inserire un risultato valido";
+  static const String MESSAGE_LEAGUE_MATCH_EMPTY = "Inserire una giornata";
+  static const String MESSAGE_LEAGUE_MATCH_NOT_VALID = "Inserire una giornata valida";
 
   static const int _MAX_CHARS = 50;
 
@@ -38,6 +45,32 @@ class InputValidation {
     if(isPersonSurname(value))
       return null; //Everything is ok
     return MESSAGE_SURNAME_NOT_VALID;
+  }
+
+  static String validateTeamName(String value) {
+    if(value.isEmpty)
+      return MESSAGE_TEAM_EMPTY;
+    if(value.length > _MAX_CHARS)
+      return MESSAGE_TEAM_TOO_LONG;
+    if(isTeamName(value))
+      return null; //Everything is ok
+    return MESSAGE_TEAM_NOT_VALID;
+  }
+
+  static String validateResultGoal(String value) {
+    if(value.isEmpty)
+      return MESSAGE_RESULT_EMPTY;
+    if(isInteger(value))
+      return null;
+    return MESSAGE_RESULT_NOT_VALID;
+  }
+
+  static String validateLeagueMatch(String value) {
+    if(value.isEmpty)
+      return MESSAGE_LEAGUE_MATCH_EMPTY;
+    if(isInteger(value))
+      return null;
+    return MESSAGE_LEAGUE_MATCH_NOT_VALID;
   }
 
   static bool isPersonName(String name) {
@@ -72,6 +105,24 @@ class InputValidation {
       multiLine: false,
     );
     return regExp.hasMatch(surname);
+  }
+
+  static bool isTeamName(String team) {
+    RegExp regExp = RegExp(
+      r"^([a-zòàèé]{2,30})?([a-zòàèé]{2,30})(\s?'?-?[a-zòàèé0-9]{2,30}){0,3}?$",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return regExp.hasMatch(team);
+  }
+
+  static bool isInteger(String number) {
+    RegExp regExp = RegExp(
+      r"^[0-9]{1,3}$",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return regExp.hasMatch(number);
   }
 
 }

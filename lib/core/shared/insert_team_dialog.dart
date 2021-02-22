@@ -1,5 +1,6 @@
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -127,11 +128,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                         //TODO Send pattern
                       },
                       validator: (value) {
-                        //TODO Aggiungere controlli di validation
-                        if(value.isEmpty) {
-                          return "Inserisci o seleziona una squadra";
-                        }
-                        return null;
+                        return InputValidation.validateTeamName(value);
                       },
                     ),
                   ),

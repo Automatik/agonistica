@@ -1,13 +1,16 @@
 import 'dart:math';
 
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
@@ -58,7 +61,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       leagueMatchTextEditingController;
 
   _MatchDetailLayoutState(MatchDetailController controller) {
-    controller.saveMatchStatus = saveMatchState;
+    controller.saveMatchStatus = () => saveMatchState();
   }
 
   @override
@@ -99,14 +102,36 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     awayPlayers = widget.match.playersData.where((e) => e.teamId == awayTeamId).toList();
   }
 
-  void saveMatchState() {
+  bool saveMatchState() {
 
     //TODO Check if there are not textfields with errors
+    String errorMessage = validateTextFields();
+    bool isError = errorMessage != null;
+    if(isError) {
+      final _baseScaffoldService = locator<BaseScaffoldService>();
+      MySnackBar.showSnackBar(_baseScaffoldService.scaffoldContext, errorMessage);
+      return false;
+    }
 
     //TODO save team names and create new team and player objects
     tempMatch.team1Goals = int.tryParse(resultTextEditingController1.text);
     tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
+    return true;
+  }
+
+  String validateTextFields() {
+    String errorMessage = InputValidation.validateTeamName(tempMatch.team1Name);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateTeamName(tempMatch.team2Name);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateResultGoal(resultTextEditingController1.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateResultGoal(resultTextEditingController2.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateLeagueMatch(leagueMatchTextEditingController.text);
+    if(errorMessage != null) return errorMessage;
+    return null;
   }
 
   bool userCanEditPlayers() {
@@ -378,7 +403,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       areRemainingRegularPlayersToFill = false;
     }
 
-    return listPlayers(homeRegularPlayers, awayRegularPlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled);
+    return listPlayers(homeRegularPlayers, awayRegularPlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, true);
   }
 
   Widget reservePlayers(BuildContext context, bool isEditEnabled) {
@@ -398,10 +423,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       rowsCount = numReservePlayers;
     }
 
-    return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled);
+    return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, false);
   }
 
-  Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled) {
+  Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled, bool areRegulars) {
     return ListView.builder(
         itemCount: rowsCount,
         shrinkWrap: true,
@@ -421,7 +446,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
             return PlayerItemsEmptyRow(
               onTap: () {
                 if(userCanEditPlayers()) {
-                  _addNewRowWithReservePlayers();
+                  if(areRegulars) {
+                    _addNewRowWithRegularPlayers();
+                  } else {
+                    _addNewRowWithReservePlayers();
+                  }
                 } else {
                   MySnackBar.showSnackBar(context, MatchDetailLayout.SNACKBAR_TEXT_SELECT_TEAMS);
                 }
@@ -523,6 +552,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
 class MatchDetailController {
 
-  void Function() saveMatchStatus;
+  bool Function() saveMatchStatus;
 
 }

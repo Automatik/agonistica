@@ -1,6 +1,8 @@
 part of matches_view;
 
 class _MatchesMobile extends StatefulWidget {
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
   
   final MatchesViewModel viewModel;
 
@@ -41,6 +43,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
         widget.viewModel.onBottomBarItemChanged(context, index);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+        widget._baseScaffoldService.scaffoldContext = childContext;
         double width = 0.9 * sizingInformation.localWidgetSize.width;
         return _matchDetail(childContext, isEditEnabled, tempMatch, width, matchDetailController);
       },
@@ -92,13 +95,15 @@ class _MatchesMobileState extends State<_MatchesMobile> {
     print("onActionConfirm");
     if(isEditEnabled) {
       print("saveMatchStatus");
-      matchDetailController.saveMatchStatus();
-      print("onMatchSave");
-      await widget.viewModel.onMatchSave(context, tempMatch);
-      print("setting isEditENabled to false");
-      setState(() {
-        isEditEnabled = false;
-      });
+      bool isValid = matchDetailController.saveMatchStatus();
+      if(isValid) {
+        print("onMatchSave");
+        await widget.viewModel.onMatchSave(context, tempMatch);
+        print("setting isEditENabled to false");
+        setState(() {
+          isEditEnabled = false;
+        });
+      }
     }
   }
 
