@@ -514,6 +514,11 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           {
             setState(() {
               elementText = choices[index];
+              // Direct assignment to global variables because elementText is not overwriting them
+              if(icon == PlayerDetailLayout.STAT_ROLE)
+                roleText = elementText;
+              if(icon == PlayerDetailLayout.STAT_FOOT)
+                footText = elementText;
             });
           }, isPositionChoice ? 250 : 150);
         }
