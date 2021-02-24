@@ -92,14 +92,10 @@ class _MatchesMobileState extends State<_MatchesMobile> {
   }
 
   Future<void> onActionConfirm(BuildContext context) async {
-    print("onActionConfirm");
     if(isEditEnabled) {
-      print("saveMatchStatus");
       bool isValid = matchDetailController.saveMatchStatus();
       if(isValid) {
-        print("onMatchSave");
         await widget.viewModel.onMatchSave(context, tempMatch);
-        print("setting isEditENabled to false");
         setState(() {
           isEditEnabled = false;
         });

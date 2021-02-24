@@ -217,9 +217,15 @@ class DatabaseService {
   /// Upload Match data (insert)
   Future<void> saveMatch(Match match) async {
 
+    //TODO Se di una partita cambio Team, devo rimuovere l'id della partita da quel vecchio Team
+    // Aggiornare anche i matchesIds dei singoli player che non fanno più parte della partita
+
+    //TODO Creare Player objects da quei MatchPlayerData che non esistevano prima come giocatori
+
+    //TODO Verificare che se in una partita esistente, rimuovo un giocatore e salvo, questo effettivamente non ricompare più tra i players della partita
     await _matchRepository.saveMatch(match);
 
-    // TODO Rimuovere giocatori con uuid null (significa che non sono necessari) altrimenti da errore nel getPlayersByIds
+    // Rimuovere giocatori con uuid null (significa che non sono necessari) altrimenti da errore nel getPlayersByIds -> RISOLTO, ora vengono creati Player per ogni nuovo giocatore
 
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
@@ -253,7 +259,6 @@ class DatabaseService {
       oldTeam.playersIds.removeWhere((id) => id == oldPlayer.id);
       await _teamRepository.saveTeam(oldTeam);
     }
-
 
     await _playerRepository.savePlayer(player);
 

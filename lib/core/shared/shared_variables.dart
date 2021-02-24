@@ -7,6 +7,8 @@ const appBarBackgroundColor = Colors.white;
 
 const accentColor = Colors.white;
 
+const bool ALLOW_DUPLICATE_MATCH_PLAYERS = false;
+
 const String defaultAppBarTitle = "Agonistica 2.0";
 //const String mainButtonTitle = "Merate";
 

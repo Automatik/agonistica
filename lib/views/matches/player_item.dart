@@ -33,6 +33,7 @@ class _PlayerItemState extends State<PlayerItem> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO Add delete option (and/or move option)
     return GestureDetector(
       onTap: () {
         if(widget.isEditEnabled) {

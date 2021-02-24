@@ -130,9 +130,12 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
       int shirtNumber = int.tryParse(shirtTextEditingController.text);
 
       if(widget.onPlayerValidation(playerId, shirtNumber)) {
+
+        avoidDuplicateMatchPlayer();
+
         // If matchPlayerData.playerId is not set by onItemPlayerTap method
         // then it's a new player
-        if(playerId == null) {
+        if(!isExistingPlayer(playerId)) {
           var uuid = Uuid();
           playerId = uuid.v4();
           widget.matchPlayerData.playerId = playerId;
@@ -157,6 +160,24 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     }
   }
 
+  bool isExistingPlayer(String playerId) {
+    return playerId != null;
+  }
+  
+  /// If the user write manually the name and surname of an existing player
+  /// this method allows to get the player's id
+  String avoidDuplicateMatchPlayer() {
+    String playerId = widget.matchPlayerData.playerId;
+    if(!ALLOW_DUPLICATE_MATCH_PLAYERS || isExistingPlayer(playerId)) {
+      return playerId;
+    }
+    String name = nameTextEditingController.text;
+    String surname = surnameTextEditingController.text;
+    loadPlayersSuggestions(MatchPlayerData.EMPTY_PLAYER_NAME, MatchPlayerData.EMPTY_PLAYER_SURNAME);
+    int index = _playersSuggestionsList.indexWhere((p) => p.name == name && p.surname == surname);
+    return index == -1 ? playerId : _playersSuggestionsList[index].id;
+  }
+
   bool areShirtNameAndSurnameValid() {
     return _formKey.currentState.validate();
   }
@@ -172,7 +193,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     }
   }
 
-  Future<void> loadPlayersSuggestions(String namePattern, String surnamePattern) async {
+  void loadPlayersSuggestions(String namePattern, String surnamePattern) {
     if(namePattern == MatchPlayerData.EMPTY_PLAYER_NAME)
       namePattern = "";
     if(surnamePattern == MatchPlayerData.EMPTY_PLAYER_SURNAME)
@@ -181,6 +202,17 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     setState(() {
       _isLoadingPlayersSuggestions = false;
     });
+  }
+
+  /// The onChanged method in TextField is called only when writing through the
+  /// keyboard and it's not called when selecting the player through the
+  /// playersSuggestionsList. This method prevents from using the playerId of an
+  /// existing player when writing something in the textfield, even after
+  /// selecting a player.
+  /// Example: Start writing a name in the textfield, click on a suggested
+  /// player and then add a letter to the name.
+  void updateMatchPlayerData() {
+    widget.matchPlayerData.playerId = null;
   }
 
   void onItemPlayerTap(Player player) {
@@ -254,11 +286,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
               child: shirtTextForm(border),
             ),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: nameTextForm(border),
             ),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: surnameTextForm(border),
             ),
           ],
@@ -364,6 +396,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         maxErrorLines: formErrorMaxLines,
         focusNode: _nameTextFocusNode,
         onChanged: (value) {
+          updateMatchPlayerData();
           loadPlayersSuggestions(value, surnameTextEditingController.text);
         },
         validator: (value) => InputValidation.validatePlayerName(value),
@@ -383,6 +416,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         maxErrorLines: formErrorMaxLines,
         focusNode: _surnameTextFocusNode,
         onChanged: (value) {
+          updateMatchPlayerData();
           loadPlayersSuggestions(nameTextEditingController.text, value);
         },
         validator: (value) => InputValidation.validatePlayerSurname(value),

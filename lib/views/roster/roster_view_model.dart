@@ -68,13 +68,13 @@ class RosterViewModel extends BaseViewModel {
 
   Future<void> onPlayerSave(BuildContext context, Player newPlayer) async {
     //TODO Implement a check if a player with already the same name and surname exists?
-
+    print("savePlayer");
     await _databaseService.savePlayer(newPlayer);
-
+    print("onUpdate");
     // save eventually playerMatchNotes?
 
     onPlayerDetailUpdate(newPlayer);
-
+    print("clone");
     // return to TeamView
 //    Navigator.of(context).pop();
 

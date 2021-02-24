@@ -75,6 +75,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     leagueMatchTextEditingController = TextEditingController();
 
     updateMatchObjects();
+    preloadTeams();
     reset();
 
   }
@@ -102,9 +103,15 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     awayPlayers = widget.match.playersData.where((e) => e.teamId == awayTeamId).toList();
   }
 
+  void preloadTeams() {
+    if(homeTeamId != null)
+      widget.onTeamInserted(homeTeamId);
+    if(awayTeamId != null)
+      widget.onTeamInserted(awayTeamId);
+  }
+
   bool saveMatchState() {
 
-    //TODO Check if there are not textfields with errors
     String errorMessage = validateTextFields();
     bool isError = errorMessage != null;
     if(isError) {
@@ -114,9 +121,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     }
 
     //TODO save team names and create new team and player objects
+    // teams' names and ids are already inserted from the InsertTeamDialog
+    // match's date is already saved from dialog
+    // players data is inserted with addNewRow method
     tempMatch.team1Goals = int.tryParse(resultTextEditingController1.text);
     tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
+
     return true;
   }
 
@@ -439,6 +450,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               onPlayerValidation: (playerId, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(playerId, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
+                //TODO Rimuovere player già inseriti in formazione dalla lista
                 return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
               },
             );
