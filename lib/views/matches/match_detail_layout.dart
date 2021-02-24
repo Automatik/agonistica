@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/MatchPlayerData.dart';
+import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
@@ -450,8 +451,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               onPlayerValidation: (playerId, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(playerId, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
-                //TODO Rimuovere player già inseriti in formazione dalla lista
-                return widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
+                List<Player> players = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
+                // Remove players already in the lineup
+                players.removeWhere((p) => isHomePlayer ? homePlayers.any((hp) => hp.playerId == p.id) : awayPlayers.any((ap) => ap.playerId == p.id));
+                return players;
               },
             );
           } else {

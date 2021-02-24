@@ -33,7 +33,7 @@ class _PlayerItemState extends State<PlayerItem> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Add delete option (and/or move option)
+    //TODO Add delete and go to player page option (and/or move option)
     return GestureDetector(
       onTap: () {
         if(widget.isEditEnabled) {
@@ -122,7 +122,8 @@ class _PlayerItemState extends State<PlayerItem> {
       Expanded(
         flex: 1,
         child: _GoalItem(
-            goals: widget.matchPlayer.numGoals),
+            goals: widget.matchPlayer.numGoals
+        ),
       ),
     );
     return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
