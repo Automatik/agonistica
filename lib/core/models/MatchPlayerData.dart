@@ -1,3 +1,4 @@
+import 'package:agonistica/core/models/Player.dart';
 import 'package:uuid/uuid.dart';
 
 class MatchPlayerData {
@@ -90,6 +91,36 @@ class MatchPlayerData {
       numGoals = json['numGoals'],
       substitution = json['substitution'],
       card = json['card'];
+
+  /// Create a new Player object from this MatchPlayerData object, assuming
+  /// it's the player's first match
+  Player toPlayer() {
+    Player p = Player.empty();
+    p.id = playerId;
+    p.name = name;
+    p.surname = surname;
+    p.teamId = teamId;
+
+    // match data (vedere se aggiungerli qui o lasciarli aggiungere da un'altra parte dove si aggiornano già le statistiche di tutti i giocatori)
+    p.matches = 1;
+    p.goals = numGoals;
+    p.yellowCards = getYellowCardsCount();
+    p.redCards = getRedCardCount();
+
+    return p;
+  }
+
+  int getYellowCardsCount() {
+    switch(card) {
+      case CARD_YELLOW: return 1;
+      case CARD_DOUBLE_YELLOW: return 2;
+      default: return 0;
+    }
+  }
+
+  int getRedCardCount() {
+    return card == CARD_RED ? 1 : 0;
+  }
 
   void setNoSubstitution() {
     substitution = SUBSTITUTION_NONE;

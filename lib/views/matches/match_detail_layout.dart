@@ -50,6 +50,8 @@ class MatchDetailLayout extends StatefulWidget {
 
 class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
+  //TODO Se dopo aver selezionato le due squadre e inserito i giocatori, cambio una delle due squadre vanno tolti i giocatori di quella squadra, dato che non gli appartengono
+
   bool editEnabled;
 
   // temp values

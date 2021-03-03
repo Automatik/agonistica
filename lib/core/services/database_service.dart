@@ -216,11 +216,28 @@ class DatabaseService {
 
   /// Upload Match data (insert)
   Future<void> saveMatch(Match match) async {
+    
+    Match oldMatch = await _matchRepository.getMatchById(match.id);
+    bool matchPrevioslySaved = oldMatch != null;
+    if(matchPrevioslySaved) {
+      // If a team is changed, remove the match's id from the old team
+      await _removeOldTeamFromMatch(oldMatch.team1Id, match.team1Id, match.id);
+      await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
 
-    //TODO Se di una partita cambio Team, devo rimuovere l'id della partita da quel vecchio Team
-    // Aggiornare anche i matchesIds dei singoli player che non fanno più parte della partita
+      // Remove the match's id from the players that are not more in the match
+      await _removeMatchIdFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
+    }
 
-    //TODO Creare Player objects da quei MatchPlayerData che non esistevano prima come giocatori
+    // Create Player objects from those players appearing for the first time in
+    // a match, as MatchPlayerData objects, that do not exist yet
+    match.playersData.forEach((p) async {
+      Player player = await _playerRepository.getPlayerById(p.playerId);
+      bool playerExists = player != null;
+      if(!playerExists) {
+        player = p.toPlayer();
+        await _playerRepository.savePlayer(player);
+      }
+    });
 
     //TODO Verificare che se in una partita esistente, rimuovo un giocatore e salvo, questo effettivamente non ricompare più tra i players della partita
     await _matchRepository.saveMatch(match);
@@ -242,12 +259,35 @@ class DatabaseService {
       if(player.matchesIds == null)
         player.matchesIds = [];
       if(!player.matchesIds.contains(match.id)) {
+        // TODO Aggiornare statistiche giocatori
         player.matchesIds.add(match.id);
         await _playerRepository.savePlayer(player);
       }
     }
 
   }
+
+  Future<void> _removeOldTeamFromMatch(String oldMatchTeamId, String currentMatchTeamId, String matchId) async {
+    if(oldMatchTeamId != currentMatchTeamId) {
+      Team team = await _teamRepository.getTeamById(oldMatchTeamId);
+      if(team != null) {
+        team.matchesIds.remove(matchId);
+      }
+      await _teamRepository.saveTeam(team);
+    }
+  }
+
+  Future<void> _removeMatchIdFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
+    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.playerId);
+    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.playerId);
+    oldPlayerIds.removeWhere((op) => currentPlayerIds.any((cp) => op == cp));
+    // oldMatchPlayersData.removeWhere((op) => currentMatchPlayerData.any((cp) => cp.playerId == op.playerId));
+    List<Player> players = await _playerRepository.getPlayersByIds(oldPlayerIds);
+    for(Player player in players) {
+      player.matchesIds.removeWhere((id) => matchId == id);
+      await _playerRepository.savePlayer(player);
+    }
+}
 
   // SET PLAYER
 
