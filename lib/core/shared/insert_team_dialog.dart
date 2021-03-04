@@ -81,13 +81,12 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
   void initState() {
     super.initState();
     textEditingController.text = widget.initialValue ?? "";
-    loadSuggestions();
+    String pattern = "";
+    loadSuggestions(pattern);
   }
 
   @override
   Widget build(BuildContext context) {
-
-    double maxDialogHeight = 0.7 * widget.maxHeight;
 
     InputBorder border = OutlineInputBorder(
       borderSide: BorderSide(color: blueAgonisticaColor),
@@ -124,8 +123,9 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                       autofocus: false,
                       keyboardType: TextInputType.text,
                       onChanged: (value) {
-                        print("onChanged value: $value");
-                        //TODO Send pattern
+                        bool isNameValid = InputValidation.validateTeamName(value) == null;
+                        if(isNameValid)
+                          loadSuggestions(value);
                       },
                       validator: (value) {
                         return InputValidation.validateTeamName(value);
@@ -165,10 +165,8 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
     );
   }
 
-  Future<void> loadSuggestions() async {
-    String pattern = "";
+  void loadSuggestions(String pattern) {
     suggestionsList = widget.suggestionCallback.call(pattern);
-    print("suggestions called!");
     setState(() {
       _isLoadingSuggestions = false;
     });

@@ -396,8 +396,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         maxErrorLines: formErrorMaxLines,
         focusNode: _nameTextFocusNode,
         onChanged: (value) {
-          updateMatchPlayerData();
-          loadPlayersSuggestions(value, surnameTextEditingController.text);
+          bool isNameValid = InputValidation.validatePlayerName(value) == null;
+          if(isNameValid) {
+            updateMatchPlayerData();
+            loadPlayersSuggestions(value, surnameTextEditingController.text);
+          }
         },
         validator: (value) => InputValidation.validatePlayerName(value),
       ),
@@ -416,8 +419,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         maxErrorLines: formErrorMaxLines,
         focusNode: _surnameTextFocusNode,
         onChanged: (value) {
-          updateMatchPlayerData();
-          loadPlayersSuggestions(nameTextEditingController.text, value);
+          bool isSurnameValid = InputValidation.validatePlayerSurname(value) == null;
+          if(isSurnameValid) {
+            updateMatchPlayerData();
+            loadPlayersSuggestions(nameTextEditingController.text, value);
+          }
         },
         validator: (value) => InputValidation.validatePlayerSurname(value),
       ),
