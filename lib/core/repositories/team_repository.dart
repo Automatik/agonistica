@@ -34,6 +34,13 @@ class TeamRepository {
     return true;
   }
 
+  // CHECK
+
+  Future<bool> teamExists(String teamId) async {
+    final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
+    return snapshot.value != null;
+  }
+
   // GET
 
   /// Download Team data given its id

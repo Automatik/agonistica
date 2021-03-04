@@ -123,7 +123,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       return false;
     }
 
-    //TODO save team names and create new team and player objects
     // teams' names and ids are already inserted from the InsertTeamDialog
     // match's date is already saved from dialog
     // players data is inserted with addNewRow method

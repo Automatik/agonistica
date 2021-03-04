@@ -178,6 +178,15 @@ class DatabaseService {
 
   // SET TEAM
 
+  Future<bool> saveTeam(Team team) async {
+    // not thought about requirements and consequences yet
+    // used only for saveMatch method
+
+    // the insert team dialog already check for team name uniqueness
+    bool isSaved = await _teamRepository.saveTeam(team);
+    return isSaved;
+  }
+
   /// Upload Team data (update)
   Future<void> updateTeamFromMatch(Match match, Team team, List<String> matchPlayersIds) async {
     Team copy = await _teamRepository.getTeamById(team.id);
@@ -224,9 +233,16 @@ class DatabaseService {
       await _removeOldTeamFromMatch(oldMatch.team1Id, match.team1Id, match.id);
       await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
 
-      // Remove the match's id from the players that are not more in the match
+      // Remove the match's id from the players that are no more in the match
       await _removeMatchIdFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
     }
+
+    // Create Team objects if they do not exist yet
+    bool team1Exists = !await _teamRepository.teamExists(match.team1Id);
+    bool team2Exists = !await _teamRepository.teamExists(match.team2Id);
+    if(!team1Exists) await saveTeam(match.getTeam1());
+    if(!team2Exists) await saveTeam(match.getTeam2());
+
 
     // Create Player objects from those players appearing for the first time in
     // a match, as MatchPlayerData objects, that do not exist yet
@@ -272,8 +288,8 @@ class DatabaseService {
       Team team = await _teamRepository.getTeamById(oldMatchTeamId);
       if(team != null) {
         team.matchesIds.remove(matchId);
+        await _teamRepository.saveTeam(team);
       }
-      await _teamRepository.saveTeam(team);
     }
   }
 
