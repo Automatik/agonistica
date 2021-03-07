@@ -13,6 +13,7 @@ import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
+import 'package:agonistica/views/matches/change_team_dialog.dart';
 import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,7 +131,18 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
 
+    removeEmptyPlayers();
+
     return true;
+  }
+
+  /// Remove empty players from match's playersData. The saveMatch in
+  /// databaseService is creating a Player object for every player inserted in
+  /// the match and it can't do that with empty MatchPlayerData. This causes
+  /// next time the match view is open to display in different positions the
+  /// existing players, because no empty player is shown
+  void removeEmptyPlayers() {
+    tempMatch.playersData.removeWhere((p) => p.isEmptyPlayer());
   }
 
   String validateTextFields() {
@@ -153,9 +165,23 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   /// Return true if both teams have been selected or inserted
   bool areTeamsInserted() {
-    String team1Id = tempMatch.team1Id;
-    String team2Id = tempMatch.team2Id;
-    return team1Id != null && team2Id != null;
+    return isTeam1Inserted() && isTeam2Inserted();
+  }
+
+  bool isTeam1Populated() {
+    return isTeam1Inserted() && homePlayers.length > 0;
+  }
+
+  bool isTeam2Populated() {
+    return isTeam2Inserted() && awayPlayers.length > 0;
+  }
+
+  bool isTeam1Inserted() {
+    return tempMatch.team1Id != null;
+  }
+
+  bool isTeam2Inserted() {
+    return tempMatch.team2Id != null;
   }
 
   /// Check if the edited player does not contain the same shirt number of other
@@ -172,6 +198,83 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     }
     bool isAnotherPlayerWithSameParameters = index != -1;
     return !isAnotherPlayerWithSameParameters;
+  }
+
+  Future<void> updateTeam1OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
+    if(isEditEnabled) {
+      Team team1;
+      String oldTeam1Id = match.team1Id;
+      bool isTeamPopulated = isTeam1Populated();
+      if(isTeamPopulated) {
+        team1 = await updateTeamDialog(context, match.team1Name);
+      } else {
+        team1 = await updateTeamOnInsert(context, match.team1Name);
+      }
+      if(team1 != null) {
+        if(isTeamPopulated) {
+          removeTeamPlayersFromMatch(match, oldTeam1Id);
+        }
+        setState(() {
+          match.setTeam1(team1);
+        });
+      }
+    }
+  }
+
+  Future<void> updateTeam2OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
+    if(isEditEnabled) {
+      Team team2;
+      String oldTeam2Id = match.team2Id;
+      bool isTeamPopulated = isTeam2Populated();
+      if(isTeamPopulated) {
+        team2 = await updateTeamDialog(context, match.team2Name);
+      } else {
+        team2 = await updateTeamOnInsert(context, match.team2Name);
+      }
+      if(team2 != null) {
+        if(isTeamPopulated) {
+          removeTeamPlayersFromMatch(match, oldTeam2Id);
+        }
+        setState(() {
+          match.setTeam2(team2);
+        });
+      }
+    }
+  }
+
+  Future<Team> updateTeamDialog(BuildContext context, String teamName) async {
+    Team team;
+    final dialog = ChangeTeamDialog(
+      onConfirm: () async {
+        print("onConfirm");
+        team = await updateTeamOnInsert(context, teamName);
+        Navigator.of(context).pop();
+      },
+      onCancel: () => Navigator.of(context).pop(),
+    );
+    await dialog.showChangeTeamDialog(context);
+    return team;
+  }
+
+  Future<Team> updateTeamOnInsert(BuildContext context, String teamName) async {
+    Team team = await _showInsertTeamDialog(context, teamName);
+    if(team != null) {
+      widget.onTeamInserted(team.id);
+    }
+    return team;
+  }
+
+  /// Replace team players with an empty player
+  void removeTeamPlayersFromMatch(Match match, String teamId) {
+    print("remove players");
+    List<MatchPlayerData> newPlayerDataList = List();
+    match.playersData.forEach((p) {
+      if(p.teamId == teamId) {
+        p = MatchPlayerData.empty(teamId, isRegular: p.isRegular);
+      }
+      newPlayerDataList.add(p);
+    });
+    match.playersData = newPlayerDataList;
   }
 
   @override
@@ -230,17 +333,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                         Expanded(
                           flex: 2,
                           child: CustomRichText(
-                            onTap: () async {
-                              if(isEditEnabled) {
-                                Team team1 = await _showInsertTeamDialog(context, matchInfo.team1Name);
-                                if(team1 != null) {
-                                  setState(() {
-                                    matchInfo.setTeam1(team1);
-                                  });
-                                  widget.onTeamInserted(team1.id);
-                                }
-                              }
-                            },
+                            onTap: () => updateTeam1OnInsert(context, isEditEnabled, matchInfo),
                             enabled: isEditEnabled,
                             text: matchInfo.team1Name,
                             textAlign: TextAlign.center,
@@ -256,17 +349,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                         Expanded(
                           flex: 2,
                           child: CustomRichText(
-                            onTap: () async {
-                              if(isEditEnabled) {
-                                Team team2 = await _showInsertTeamDialog(context, matchInfo.team2Name);
-                                if(team2 != null) {
-                                  setState(() {
-                                    matchInfo.setTeam2(team2);
-                                  });
-                                  widget.onTeamInserted(team2.id);
-                                }
-                              }
-                            },
+                            onTap: () => updateTeam2OnInsert(context, isEditEnabled, matchInfo),
                             enabled: isEditEnabled,
                             text: matchInfo.team2Name,
                             textAlign: TextAlign.center,
@@ -405,6 +488,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeRegularPlayers = homeRegularPlayers.length;
     int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
+    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, homeTeamId, true);
+    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, awayTeamId, true);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -425,6 +510,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeReservePlayers = homeReservePlayers.length;
     int numAwayReservePlayers = awayReservePlayers.length;
     int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
+    balanceTeamPlayers(homeReservePlayers, numReservePlayers, homeTeamId, false);
+    balanceTeamPlayers(awayReservePlayers, numReservePlayers, awayTeamId, false);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -457,6 +544,18 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                 players.removeWhere((p) => isHomePlayer ? homePlayers.any((hp) => hp.playerId == p.id) : awayPlayers.any((ap) => ap.playerId == p.id));
                 return players;
               },
+              onSaveCallback: (matchPlayerData, isHomePlayer) {
+                setState(() {
+                  if(isHomePlayer) {
+                    tempMatch.playersData.add(matchPlayerData);
+                    this.homePlayers.add(matchPlayerData);
+                    return;
+                  }
+                  tempMatch.playersData.add(matchPlayerData);
+                  this.awayPlayers.add(matchPlayerData);
+                });
+
+              },
             );
           } else {
             return PlayerItemsEmptyRow(
@@ -483,16 +582,32 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return !isRowWithNoPlayers;
   }
 
+  void balanceTeamPlayers(List<MatchPlayerData> players, int numPlayersToReach, String teamId, bool areRegulars) {
+    int originalLength = players.length;
+    if(numPlayersToReach <= originalLength)
+      return;
+    players.length = numPlayersToReach;
+    players.fillRange(originalLength, numPlayersToReach, areRegulars ? _addRegularPlayer(teamId) : _addReservePlayer(teamId));
+  }
+
   void _addNewRowWithRegularPlayers() {
-    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId, isRegular: true);
-    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId, isRegular: true);
+    MatchPlayerData newHomePlayer = _addRegularPlayer(homeTeamId);
+    MatchPlayerData newAwayPlayer = _addRegularPlayer(awayTeamId);
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
   void _addNewRowWithReservePlayers() {
-    MatchPlayerData newHomePlayer = MatchPlayerData.empty(homeTeamId, isRegular: false);
-    MatchPlayerData newAwayPlayer = MatchPlayerData.empty(awayTeamId, isRegular: false);
+    MatchPlayerData newHomePlayer = _addReservePlayer(homeTeamId);
+    MatchPlayerData newAwayPlayer = _addReservePlayer(awayTeamId);
     _addNewRow(newHomePlayer, newAwayPlayer);
+  }
+
+  MatchPlayerData _addRegularPlayer(String teamId) {
+    return MatchPlayerData.empty(teamId, isRegular: true);
+  }
+
+  MatchPlayerData _addReservePlayer(String teamId) {
+    return MatchPlayerData.empty(teamId, isRegular: false);
   }
 
   void _addNewRow(MatchPlayerData newHomePlayer, MatchPlayerData newAwayPlayer) {

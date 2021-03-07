@@ -294,10 +294,9 @@ class DatabaseService {
   }
 
   Future<void> _removeMatchIdFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
-    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.playerId);
-    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.playerId);
+    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.playerId).toList();
+    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.playerId).toList();
     oldPlayerIds.removeWhere((op) => currentPlayerIds.any((cp) => op == cp));
-    // oldMatchPlayersData.removeWhere((op) => currentMatchPlayerData.any((cp) => cp.playerId == op.playerId));
     List<Player> players = await _playerRepository.getPlayersByIds(oldPlayerIds);
     for(Player player in players) {
       player.matchesIds.removeWhere((id) => matchId == id);

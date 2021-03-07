@@ -15,6 +15,7 @@ class PlayerItem extends StatefulWidget {
   final bool isEditEnabled;
   final bool Function(String, int) onPlayerValidation;
   final List<Player> Function(String, String) onPlayersSuggestionCallback;
+  final void Function(MatchPlayerData) onSaveCallback;
 
   PlayerItem({
     @required this.matchPlayer,
@@ -22,6 +23,7 @@ class PlayerItem extends StatefulWidget {
     @required this.isEditEnabled,
     @required this.onPlayerValidation,
     @required this.onPlayersSuggestionCallback,
+    @required this.onSaveCallback,
   });
 
   @override
@@ -30,6 +32,8 @@ class PlayerItem extends StatefulWidget {
 }
 
 class _PlayerItemState extends State<PlayerItem> {
+
+  //TODO Can be transformed to stateless?
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +44,9 @@ class _PlayerItemState extends State<PlayerItem> {
           final dialog = PlayerItemEditDialog(
             matchPlayerData: widget.matchPlayer,
             onPlayerValidation: widget.onPlayerValidation,
-            onSaveCallback: () {
+            onSaveCallback: (matchPlayerData) {
               Navigator.pop(context);
-              // update view
-              setState(() {});
+              widget.onSaveCallback(matchPlayerData);
             },
             suggestionCallback: widget.onPlayersSuggestionCallback,
           );

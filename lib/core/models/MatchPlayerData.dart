@@ -40,6 +40,11 @@ class MatchPlayerData {
     id = uuid.v4();
   }
 
+  bool isEmptyPlayer() {
+    //Eventually reduce to only checking if playerId is null
+    return playerId == null && name == EMPTY_PLAYER_NAME && surname == EMPTY_PLAYER_SURNAME;
+  }
+
   MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
     var uuid = Uuid();
     id = uuid.v4();

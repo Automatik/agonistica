@@ -12,7 +12,7 @@ class PlayerItemEditDialog {
 
   final MatchPlayerData matchPlayerData;
   final bool Function(String, int) onPlayerValidation;
-  final Function onSaveCallback;
+  final Function(MatchPlayerData) onSaveCallback;
   final List<Player> Function(String, String) suggestionCallback;
 
   PlayerItemEditDialog({
@@ -133,23 +133,25 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
 
         avoidDuplicateMatchPlayer();
 
+        MatchPlayerData newPlayerData = MatchPlayerData.clone(widget.matchPlayerData);
+
         // If matchPlayerData.playerId is not set by onItemPlayerTap method
         // then it's a new player
         if(!isExistingPlayer(playerId)) {
           var uuid = Uuid();
           playerId = uuid.v4();
-          widget.matchPlayerData.playerId = playerId;
+          newPlayerData.playerId = playerId;
         }
 
-        widget.matchPlayerData.name = name;
-        widget.matchPlayerData.surname = surname;
-        widget.matchPlayerData.shirtNumber = shirtNumber;
-        widget.matchPlayerData.numGoals = goals;
-        widget.matchPlayerData.card = card;
-        widget.matchPlayerData.substitution = substitution;
+        newPlayerData.name = name;
+        newPlayerData.surname = surname;
+        newPlayerData.shirtNumber = shirtNumber;
+        newPlayerData.numGoals = goals;
+        newPlayerData.card = card;
+        newPlayerData.substitution = substitution;
 
         if (widget.onSaveCallback != null)
-          widget.onSaveCallback.call();
+          widget.onSaveCallback(newPlayerData);
 
       } else {
         setState(() {
