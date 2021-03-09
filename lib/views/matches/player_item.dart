@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 const double ICON_SIZE = 20;
 const double ICON_HORIZ_MARGIN = 2.5;
 
-class PlayerItem extends StatefulWidget {
+class PlayerItem extends StatelessWidget {
 
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
@@ -27,28 +27,19 @@ class PlayerItem extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _PlayerItemState();
-
-}
-
-class _PlayerItemState extends State<PlayerItem> {
-
-  //TODO Can be transformed to stateless?
-
-  @override
   Widget build(BuildContext context) {
     //TODO Add delete and go to player page option (and/or move option)
     return GestureDetector(
       onTap: () {
-        if(widget.isEditEnabled) {
+        if(isEditEnabled) {
           final dialog = PlayerItemEditDialog(
-            matchPlayerData: widget.matchPlayer,
-            onPlayerValidation: widget.onPlayerValidation,
+            matchPlayerData: matchPlayer,
+            onPlayerValidation: onPlayerValidation,
             onSaveCallback: (matchPlayerData) {
               Navigator.pop(context);
-              widget.onSaveCallback(matchPlayerData);
+              onSaveCallback(matchPlayerData);
             },
-            suggestionCallback: widget.onPlayersSuggestionCallback,
+            suggestionCallback: onPlayersSuggestionCallback,
           );
           dialog.showPlayerItemEditDialog(context);
         }
@@ -79,27 +70,27 @@ class _PlayerItemState extends State<PlayerItem> {
       Expanded(
         flex: 3,
         child: Row(
-          mainAxisAlignment: widget.isLeftOrientation ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: isLeftOrientation ? MainAxisAlignment.end : MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: playerItems(),
         ),
       ),
     ];
-    return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
+    return reverseListBasedOnOrientation(widgets, isLeftOrientation);
   }
 
   Widget playerShirtNumber() {
     return _PlayerItemShirtNumber(
-      shirtNumber: widget.matchPlayer.shirtNumber,
-      isLeftOrientation: widget.isLeftOrientation,
+      shirtNumber: matchPlayer.shirtNumber,
+      isLeftOrientation: isLeftOrientation,
     );
   }
 
   Widget playerName() {
     return _PlayerItemName(
-      playerName: widget.matchPlayer.name,
-      playerSurname: widget.matchPlayer.surname,
-      isLeftOrientation: widget.isLeftOrientation,
+      playerName: matchPlayer.name,
+      playerSurname: matchPlayer.surname,
+      isLeftOrientation: isLeftOrientation,
     );
   }
 
@@ -109,7 +100,7 @@ class _PlayerItemState extends State<PlayerItem> {
       Expanded(
         flex: 1,
         child: _SubstitutionItem(
-          substitution: widget.matchPlayer.substitution,
+          substitution: matchPlayer.substitution,
         ),
       ),
     );
@@ -117,7 +108,7 @@ class _PlayerItemState extends State<PlayerItem> {
       Expanded(
         flex: 1,
         child: _CardItem(
-          card: widget.matchPlayer.card,
+          card: matchPlayer.card,
         ),
       ),
     );
@@ -125,11 +116,11 @@ class _PlayerItemState extends State<PlayerItem> {
       Expanded(
         flex: 1,
         child: _GoalItem(
-            goals: widget.matchPlayer.numGoals
+            goals: matchPlayer.numGoals
         ),
       ),
     );
-    return reverseListBasedOnOrientation(widgets, widget.isLeftOrientation);
+    return reverseListBasedOnOrientation(widgets, isLeftOrientation);
   }
 
   static List<Widget> reverseListBasedOnOrientation(List<Widget> widgets, bool isLeftOrientation) {
