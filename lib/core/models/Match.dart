@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/utils.dart';
@@ -81,19 +82,24 @@ class Match {
     team2Name = team.name;
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'categoryId': categoryId,
-    'team1Id': team1Id,
-    'team2Id': team2Id,
-    'team1Goals': team1Goals,
-    'team2Goals': team2Goals,
-    'leagueMatch': leagueMatch,
-    'matchDate': matchDate.toIso8601String(),
+  Map<String, dynamic> toJson() {
+    checkRequiredFields();
+
+    return {
+      'id': id,
+      'categoryId': categoryId,
+      'team1Id': team1Id,
+      'team2Id': team2Id,
+      'team1Goals': team1Goals,
+      'team2Goals': team2Goals,
+      'leagueMatch': leagueMatch,
+      'matchDate': matchDate.toIso8601String(),
 //    'team1Name': team1Name,
 //    'team2Name': team2Name,
-    'playersData': playersData == null ? List() : List.generate(playersData.length, (index) => playersData[index].toJson())
-  };
+      'playersData': playersData == null ? List() : List.generate(
+          playersData.length, (index) => playersData[index].toJson())
+    };
+  }
 
   Match.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
@@ -107,4 +113,12 @@ class Match {
 //      team1Name = json['team1Name'],
 //      team2Name = json['team2Name'],
       playersData = json['playersData'] == null ? List() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index]));
+
+  void checkRequiredFields() {
+    Preconditions.requireFieldNotNull("id", id);
+    Preconditions.requireFieldNotNull("categoryId", categoryId);
+    Preconditions.requireFieldNotNull("team1Id", team1Id);
+    Preconditions.requireFieldNotNull("team2Id", team2Id);
+    Preconditions.requireFieldNotNull("matchDate", matchDate);
+  }
 }

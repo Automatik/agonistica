@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:uuid/uuid.dart';
 
 class PlayerMatchNotes {
@@ -13,17 +14,28 @@ class PlayerMatchNotes {
     id = uuid.v4();
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'playerId': playerId,
-    'matchId': matchId,
-    'notes': notes
-  };
+  Map<String, dynamic> toJson() {
+    checkRequiredFields();
+
+    return {
+      'id': id,
+      'playerId': playerId,
+      'matchId': matchId,
+      'notes': notes
+    };
+  }
 
   PlayerMatchNotes.fromJson(Map<dynamic, dynamic> json) :
       id = json['id'],
       playerId = json['playerId'],
       matchId = json['matchId'],
       notes = json['notes'];
+
+  void checkRequiredFields() {
+    Preconditions.requireFieldNotNull("id", id);
+    Preconditions.requireFieldNotNull("playerId", playerId);
+    Preconditions.requireFieldNotNull("matchId", matchId);
+    Preconditions.requireFieldNotNull("notes", notes);
+  }
 
 }

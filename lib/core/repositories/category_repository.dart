@@ -20,7 +20,7 @@ class CategoryRepository {
   // SET
 
   Future<void> saveCategory(Category category) async {
-    Preconditions.requireNotNull(category.id);
+    Preconditions.requireArgumentNotNull(category.id);
 
     await _databaseReference.child(_firebaseCategoriesChild).child(category.id).set(category.toJson());
   }
@@ -29,7 +29,7 @@ class CategoryRepository {
 
   /// Download Category data given its id
   Future<Category> getCategoryById(String categoryId) async {
-    Preconditions.requireNotNull(categoryId);
+    Preconditions.requireArgumentNotNull(categoryId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseCategoriesChild).child(categoryId).once();
     Category category;
@@ -41,7 +41,7 @@ class CategoryRepository {
 
   /// Download categories identified by the given ids
   Future<List<Category>> getCategoriesByIds(List<String> categoriesIds) async {
-    Preconditions.requireNotNulls(categoriesIds);
+    Preconditions.requireArgumentsNotNulls(categoriesIds);
 
     List<Category> categories = List();
     for(String catId in categoriesIds) {

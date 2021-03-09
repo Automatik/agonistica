@@ -20,7 +20,7 @@ class PlayerRepository {
   // SET
 
   Future<void> savePlayer(Player player) async {
-    Preconditions.requireNotNull(player.id);
+    Preconditions.requireArgumentNotNull(player.id);
 
     await _databaseReference.child(_firebasePlayersChild).child(player.id).set(player.toJson());
   }
@@ -28,7 +28,7 @@ class PlayerRepository {
   // GET
 
   Future<Player> getPlayerById(String playerId) async {
-    Preconditions.requireNotNull(playerId);
+    Preconditions.requireArgumentNotNull(playerId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();
     Player player;
@@ -39,7 +39,7 @@ class PlayerRepository {
   }
 
   Future<List<Player>> getPlayersByIds(List<String> playersIds) async {
-    Preconditions.requireNotNulls(playersIds);
+    Preconditions.requireArgumentsNotNulls(playersIds);
 
     List<Player> players = List();
     for(String playerId in playersIds) {

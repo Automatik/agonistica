@@ -21,7 +21,7 @@ class TeamRepository {
 
   /// Upload Team data (insert)
   Future<bool> saveTeam(Team team) async {
-    Preconditions.requireNotNull(team.id);
+    Preconditions.requireArgumentNotNull(team.id);
 
     // check if the team exists already by using its id
     Team oldTeam = await getTeamById(team.id);
@@ -40,7 +40,7 @@ class TeamRepository {
   // CHECK
 
   Future<bool> teamExists(String teamId) async {
-    Preconditions.requireNotNull(teamId);
+    Preconditions.requireArgumentNotNull(teamId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     return snapshot.value != null;
@@ -50,7 +50,7 @@ class TeamRepository {
 
   /// Download Team data given its id
   Future<Team> getTeamById(String teamId) async {
-    Preconditions.requireNotNull(teamId);
+    Preconditions.requireArgumentNotNull(teamId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     Team team;
@@ -62,7 +62,7 @@ class TeamRepository {
 
   /// Download Team data given its name and searching only across the team whose id is given
   Future<Team> getTeamByNameFromIds(String teamName, List<String> teamsIds) async {
-    Preconditions.requireNotNulls(teamsIds);
+    Preconditions.requireArgumentsNotNulls(teamsIds);
 
     bool teamFound = false;
     Team team;
@@ -77,7 +77,7 @@ class TeamRepository {
 
   /// Get List of the requested Teams
   Future<List<Team>> getTeamsByIds(List<String> teamsIds) async {
-    Preconditions.requireNotNulls(teamsIds);
+    Preconditions.requireArgumentsNotNulls(teamsIds);
 
     List<Team> teams = List();
     for(String teamId in teamsIds) {
@@ -91,7 +91,7 @@ class TeamRepository {
 
   /// Download all teams stores excluding the teams that are referred by the given ids
   Future<List<Team>> getTeamsWithoutIds(List<String> teamsIds) async {
-    Preconditions.requireNotNulls(teamsIds);
+    Preconditions.requireArgumentsNotNulls(teamsIds);
 
     List<Team> allTeams = await getTeams();
     allTeams.removeWhere((team) => teamsIds.contains(team.id));
@@ -115,7 +115,7 @@ class TeamRepository {
 
   /// Return true if the team name given is unique across all teams stored
   Future<bool> isTeamNameUnique(String newTeamName) async {
-    Preconditions.requireNotNull(newTeamName);
+    Preconditions.requireArgumentNotNull(newTeamName);
 
     List<Team> teams = await getTeams();
     bool teamNameFound = false;

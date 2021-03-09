@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/models/Team.dart';
@@ -125,42 +126,48 @@ class Player {
     playerMatchNotesIds = List.from(p.playerMatchNotesIds ?? []);
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'surname': surname,
-    'teamId': teamId,
-    'categoryId': categoryId,
-    'birthDay': birthDay.toIso8601String(),
-    'height': height,
-    'weight': weight,
-    'position': position,
-    'isRightHanded': isRightHanded,
-    'matches': matches,
-    'goals': goals,
-    'yellowCards': yellowCards,
-    'redCards': redCards,
-    'tecnica': tecnica,
-    'agonistica': agonistica,
-    'fisica': fisica,
-    'tattica': tattica,
-    'capMotorie': capMotorie,
-    'velocita': velocita,
-    'rapidita': rapidita,
-    'scatto': scatto,
-    'resistenza': resistenza,
-    'corsa': corsa,
-    'progressione': progressione,
-    'cambioPasso': cambioPasso,
-    'elevazione': elevazione,
-    'morfologia': morfologia,
-    'sommatoTipo': sommatoTipo,
-    'attitudine1': attitudine1,
-    'attitudine2': attitudine2,
-    'attitudine3': attitudine3,
-    'matchesIds': matchesIds == null ? List() : matchesIds,
-    'playerMatchNotesIds': playerMatchNotesIds == null ? List() : playerMatchNotesIds
-  };
+  Map<String, dynamic> toJson() {
+    checkRequiredFields();
+
+    return {
+      'id': id,
+      'name': name,
+      'surname': surname,
+      'teamId': teamId,
+      'categoryId': categoryId,
+      'birthDay': birthDay.toIso8601String(),
+      'height': height,
+      'weight': weight,
+      'position': position,
+      'isRightHanded': isRightHanded,
+      'matches': matches,
+      'goals': goals,
+      'yellowCards': yellowCards,
+      'redCards': redCards,
+      'tecnica': tecnica,
+      'agonistica': agonistica,
+      'fisica': fisica,
+      'tattica': tattica,
+      'capMotorie': capMotorie,
+      'velocita': velocita,
+      'rapidita': rapidita,
+      'scatto': scatto,
+      'resistenza': resistenza,
+      'corsa': corsa,
+      'progressione': progressione,
+      'cambioPasso': cambioPasso,
+      'elevazione': elevazione,
+      'morfologia': morfologia,
+      'sommatoTipo': sommatoTipo,
+      'attitudine1': attitudine1,
+      'attitudine2': attitudine2,
+      'attitudine3': attitudine3,
+      'matchesIds': matchesIds == null ? List() : matchesIds,
+      'playerMatchNotesIds': playerMatchNotesIds == null
+          ? List()
+          : playerMatchNotesIds
+    };
+  }
 
   Player.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
@@ -240,6 +247,14 @@ class Player {
   void setCategory(Category category) {
     categoryId = category.id;
     categoryName = category.name;
+  }
+
+  void checkRequiredFields() {
+    Preconditions.requireFieldNotNull("id", id);
+    Preconditions.requireFieldNotNull("name", name);
+    Preconditions.requireFieldNotNull("surname", surname);
+    Preconditions.requireFieldNotNull("teamId", teamId);
+    Preconditions.requireFieldNotNull("categoryId", categoryId);
   }
 
 }

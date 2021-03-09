@@ -1,4 +1,6 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/Player.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class MatchPlayerData {
@@ -72,18 +74,22 @@ class MatchPlayerData {
     card = data.card;
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'playerId': playerId,
-    'name': name,
-    'surname': surname,
-    'teamId': teamId,
-    'isRegular': isRegular,
-    'shirtNumber': shirtNumber,
-    'numGoals': numGoals,
-    'substitution': substitution,
-    'card': card
-  };
+  Map<String, dynamic> toJson() {
+    checkRequiredFields();
+
+    return {
+      'id': id,
+      'playerId': playerId,
+      'name': name,
+      'surname': surname,
+      'teamId': teamId,
+      'isRegular': isRegular,
+      'shirtNumber': shirtNumber,
+      'numGoals': numGoals,
+      'substitution': substitution,
+      'card': card
+    };
+  }
 
   MatchPlayerData.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
@@ -193,5 +199,12 @@ class MatchPlayerData {
     }
   }
 
+  void checkRequiredFields() {
+    Preconditions.requireFieldNotNull("id", id);
+    Preconditions.requireFieldNotNull("playerId", playerId);
+    Preconditions.requireFieldNotNull("name", name);
+    Preconditions.requireFieldNotNull("surname", surname);
+    Preconditions.requireFieldNotNull("teamId", teamId);
+  }
 
 }
