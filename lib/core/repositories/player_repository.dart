@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/services/database_service.dart';
@@ -9,7 +10,7 @@ class PlayerRepository {
   DatabaseReference _databaseReference;
   String _firebasePlayersChild;
 
-  static Logger _logger = getLogger('TeamService');
+  static Logger _logger = getLogger('PlayerRepository');
 
   PlayerRepository(DatabaseReference databaseReference) {
     this._databaseReference = databaseReference;
@@ -19,12 +20,16 @@ class PlayerRepository {
   // SET
 
   Future<void> savePlayer(Player player) async {
+    Preconditions.requireNotNull(player.id);
+
     await _databaseReference.child(_firebasePlayersChild).child(player.id).set(player.toJson());
   }
 
   // GET
 
   Future<Player> getPlayerById(String playerId) async {
+    Preconditions.requireNotNull(playerId);
+
     final DataSnapshot snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();
     Player player;
     if(snapshot.value != null) {
@@ -34,6 +39,8 @@ class PlayerRepository {
   }
 
   Future<List<Player>> getPlayersByIds(List<String> playersIds) async {
+    Preconditions.requireNotNulls(playersIds);
+
     List<Player> players = List();
     for(String playerId in playersIds) {
       final snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();

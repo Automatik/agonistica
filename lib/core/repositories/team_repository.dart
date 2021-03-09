@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/database_service.dart';
@@ -9,7 +10,7 @@ class TeamRepository {
   DatabaseReference _databaseReference;
   String _firebaseTeamsChild;
 
-  static Logger _logger = getLogger('TeamService');
+  static Logger _logger = getLogger('TeamRepository');
 
   TeamRepository(DatabaseReference databaseReference) {
     this._databaseReference = databaseReference;
@@ -20,6 +21,8 @@ class TeamRepository {
 
   /// Upload Team data (insert)
   Future<bool> saveTeam(Team team) async {
+    Preconditions.requireNotNull(team.id);
+
     // check if the team exists already by using its id
     Team oldTeam = await getTeamById(team.id);
     if(oldTeam == null) {
@@ -37,6 +40,8 @@ class TeamRepository {
   // CHECK
 
   Future<bool> teamExists(String teamId) async {
+    Preconditions.requireNotNull(teamId);
+
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     return snapshot.value != null;
   }
@@ -45,6 +50,8 @@ class TeamRepository {
 
   /// Download Team data given its id
   Future<Team> getTeamById(String teamId) async {
+    Preconditions.requireNotNull(teamId);
+
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     Team team;
     if(snapshot.value != null) {
@@ -55,6 +62,8 @@ class TeamRepository {
 
   /// Download Team data given its name and searching only across the team whose id is given
   Future<Team> getTeamByNameFromIds(String teamName, List<String> teamsIds) async {
+    Preconditions.requireNotNulls(teamsIds);
+
     bool teamFound = false;
     Team team;
     int i = 0;
@@ -68,6 +77,8 @@ class TeamRepository {
 
   /// Get List of the requested Teams
   Future<List<Team>> getTeamsByIds(List<String> teamsIds) async {
+    Preconditions.requireNotNulls(teamsIds);
+
     List<Team> teams = List();
     for(String teamId in teamsIds) {
       final snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
@@ -80,6 +91,8 @@ class TeamRepository {
 
   /// Download all teams stores excluding the teams that are referred by the given ids
   Future<List<Team>> getTeamsWithoutIds(List<String> teamsIds) async {
+    Preconditions.requireNotNulls(teamsIds);
+
     List<Team> allTeams = await getTeams();
     allTeams.removeWhere((team) => teamsIds.contains(team.id));
     return allTeams;
@@ -102,6 +115,8 @@ class TeamRepository {
 
   /// Return true if the team name given is unique across all teams stored
   Future<bool> isTeamNameUnique(String newTeamName) async {
+    Preconditions.requireNotNull(newTeamName);
+
     List<Team> teams = await getTeams();
     bool teamNameFound = false;
     int i = 0;

@@ -1,3 +1,4 @@
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/services/database_service.dart';
@@ -9,7 +10,7 @@ class CategoryRepository {
   DatabaseReference _databaseReference;
   String _firebaseCategoriesChild;
 
-  static Logger _logger = getLogger('TeamService');
+  static Logger _logger = getLogger('CategoryRepository');
 
   CategoryRepository(DatabaseReference databaseReference) {
     this._databaseReference = databaseReference;
@@ -19,6 +20,8 @@ class CategoryRepository {
   // SET
 
   Future<void> saveCategory(Category category) async {
+    Preconditions.requireNotNull(category.id);
+
     await _databaseReference.child(_firebaseCategoriesChild).child(category.id).set(category.toJson());
   }
 
@@ -26,6 +29,8 @@ class CategoryRepository {
 
   /// Download Category data given its id
   Future<Category> getCategoryById(String categoryId) async {
+    Preconditions.requireNotNull(categoryId);
+
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseCategoriesChild).child(categoryId).once();
     Category category;
     if(snapshot.value != null) {
@@ -36,6 +41,8 @@ class CategoryRepository {
 
   /// Download categories identified by the given ids
   Future<List<Category>> getCategoriesByIds(List<String> categoriesIds) async {
+    Preconditions.requireNotNulls(categoriesIds);
+
     List<Category> categories = List();
     for(String catId in categoriesIds) {
       final snapshot = await _databaseReference.child(_firebaseCategoriesChild).child(catId).once();
