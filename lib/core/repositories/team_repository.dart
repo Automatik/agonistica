@@ -121,8 +121,10 @@ class TeamRepository {
     bool teamNameFound = false;
     int i = 0;
     while(i < teams.length && !teamNameFound) {
-      if(teams[i].name == newTeamName)
+      if(teams[i].name == newTeamName) {
         teamNameFound = true;
+      }
+      i++;
     }
     return !teamNameFound;
   }

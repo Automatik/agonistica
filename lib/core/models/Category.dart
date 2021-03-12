@@ -1,4 +1,3 @@
-import 'package:agonistica/core/exceptions/field_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:uuid/uuid.dart';
 

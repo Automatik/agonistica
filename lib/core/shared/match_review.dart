@@ -27,7 +27,11 @@ class MatchReview extends StatelessWidget {
     this.minHeight = 50,
     this.onTap,
     this.onSettingsTap,
-  });
+  }) : assert(team1 != null),
+       assert(team2 != null),
+       assert(result != null),
+       assert(leagueMatch != null),
+       assert(matchDate != null);
 
   @override
   Widget build(BuildContext context) {

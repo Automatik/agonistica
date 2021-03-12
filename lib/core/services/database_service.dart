@@ -227,9 +227,10 @@ class DatabaseService {
   Future<void> saveMatch(Match match) async {
     
     Match oldMatch = await _matchRepository.getMatchById(match.id);
-    bool matchPrevioslySaved = oldMatch != null;
-    if(matchPrevioslySaved) {
+    bool matchPreviouslySaved = oldMatch != null;
+    if(matchPreviouslySaved) {
       // If a team is changed, remove the match's id from the old team
+
       await _removeOldTeamFromMatch(oldMatch.team1Id, match.team1Id, match.id);
       await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
 
@@ -238,8 +239,8 @@ class DatabaseService {
     }
 
     // Create Team objects if they do not exist yet
-    bool team1Exists = !await _teamRepository.teamExists(match.team1Id);
-    bool team2Exists = !await _teamRepository.teamExists(match.team2Id);
+    bool team1Exists = await _teamRepository.teamExists(match.team1Id);
+    bool team2Exists = await _teamRepository.teamExists(match.team2Id);
     if(!team1Exists) await saveTeam(match.getTeam1());
     if(!team2Exists) await saveTeam(match.getTeam2());
 

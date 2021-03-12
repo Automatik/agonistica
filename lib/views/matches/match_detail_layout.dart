@@ -534,6 +534,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               homePlayer: homePlayers[index],
               awayPlayer: awayPlayers[index],
               isEditEnabled: isEditEnabled,
+              lineSeparatorWidth: _getLineSeparatorWidth(index, rowsCount),
               onPlayerValidation: (playerId, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(playerId, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
@@ -615,6 +616,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       homePlayers.add(newHomePlayer);
       awayPlayers.add(newAwayPlayer);
     });
+  }
+
+  double _getLineSeparatorWidth(int index, int rowsCount) {
+    return index == 0 || index == rowsCount - 1 ? 0 : 0.5;
   }
 
   Future<Team> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {

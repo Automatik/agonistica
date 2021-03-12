@@ -34,7 +34,6 @@ class _MatchesMobileState extends State<_MatchesMobile> {
 
   @override
   Widget build(BuildContext context) {
-    print("building MatchesMobile view");
     return TabScaffoldWidget(
       showAppBar: true,
       initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
@@ -52,7 +51,6 @@ class _MatchesMobileState extends State<_MatchesMobile> {
 
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
-    print("isEditEnabled: $isEditEnabled");
     if(isEditEnabled) {
       return PlatformAppBars.getPlatformAppBarForMatchesViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
     } else {
