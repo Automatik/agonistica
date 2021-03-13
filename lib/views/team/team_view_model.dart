@@ -5,8 +5,7 @@ import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/services/database_service.dart';
-import 'package:agonistica/views/matches/matches_view.dart';
-import 'package:agonistica/views/roster/roster_view.dart';
+import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
@@ -113,11 +112,7 @@ class TeamViewModel extends BaseViewModel {
     if(matches != null && matches.isNotEmpty) {
       Match match = matches[index];
       bool isNewMatch = false;
-      Navigator.pushNamed(
-        context,
-        MatchesView.routeName,
-        arguments: MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate)
-      );
+      NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
     }
   }
 
@@ -126,11 +121,7 @@ class TeamViewModel extends BaseViewModel {
     if(players != null && players.isNotEmpty) {
       Player player = players[index];
       bool isNewPlayer = false;
-      Navigator.pushNamed(
-        context,
-        RosterView.routeName,
-        arguments: RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate)
-      );
+      NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate));
     }
   }
 
@@ -138,11 +129,7 @@ class TeamViewModel extends BaseViewModel {
     bool isNewMatch = true;
     Match match = Match.empty();
     match.categoryId = _databaseService.selectedCategory.id;
-    Navigator.pushNamed(
-      context,
-      MatchesView.routeName,
-      arguments: MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate)
-    );
+    NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
   }
 
   Future<void> addNewPlayer(BuildContext context) async {
@@ -150,11 +137,7 @@ class TeamViewModel extends BaseViewModel {
     Player player = Player.empty();
     player.setCategory(_databaseService.selectedCategory);
     player.setTeam(_databaseService.selectedTeam);
-    Navigator.pushNamed(
-      context,
-      RosterView.routeName,
-      arguments: RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate)
-    );
+    NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate));
   }
 
 }

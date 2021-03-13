@@ -13,6 +13,8 @@ class PlayerItemsRow extends StatelessWidget {
   final bool Function(String, int, bool) onPlayerValidation;
   final List<Player> Function(String, String, bool) onPlayerSuggestionCallback;
   final void Function(MatchPlayerData, bool) onSaveCallback;
+  final void Function(MatchPlayerData) onViewPlayerCardCallback;
+  final void Function(MatchPlayerData, bool) onDeleteCallback;
 
   PlayerItemsRow({
     @required this.homePlayer,
@@ -22,6 +24,8 @@ class PlayerItemsRow extends StatelessWidget {
     @required this.onPlayerValidation,
     @required this.onPlayerSuggestionCallback,
     @required this.onSaveCallback,
+    @required this.onViewPlayerCardCallback,
+    @required this.onDeleteCallback,
   });
 
   @override
@@ -51,6 +55,11 @@ class PlayerItemsRow extends StatelessWidget {
                 bool isHomePlayer = true;
                 onSaveCallback(matchPlayerData, isHomePlayer);
               },
+              onViewPlayerCardCallback: onViewPlayerCardCallback,
+              onDeleteCallback: (matchPlayerData) {
+                bool isHomePlayer = true;
+                onDeleteCallback(matchPlayerData, isHomePlayer);
+              },
             ),
           ),
           Expanded(
@@ -67,6 +76,11 @@ class PlayerItemsRow extends StatelessWidget {
               onSaveCallback: (matchPlayerData) {
                 bool isHomePlayer = false;
                 onSaveCallback(matchPlayerData, isHomePlayer);
+              },
+              onViewPlayerCardCallback: onViewPlayerCardCallback,
+              onDeleteCallback: (matchPlayerData) {
+                bool isHomePlayer = false;
+                onDeleteCallback(matchPlayerData, isHomePlayer);
               },
             ),
           )

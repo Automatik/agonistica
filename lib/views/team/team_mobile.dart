@@ -223,7 +223,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                                   Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 24,),
                                   SizedBox(width: 5,),
                                   Text(
-                                    "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
+                                    "${matchDate.day} " + DateUtils.monthToString(matchDate.month).substring(0, 4) + " ${matchDate.year}",
                                     textAlign: TextAlign.end,
                                     style: TextStyle(
                                       color: Colors.black,

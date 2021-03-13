@@ -1,7 +1,6 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MatchReview extends StatelessWidget {
@@ -109,7 +108,7 @@ class MatchReview extends StatelessWidget {
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${matchDate.day} " + Utils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
+                          "${matchDate.day} " + DateUtils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,

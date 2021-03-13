@@ -1,6 +1,6 @@
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +101,7 @@ class MatchNotesElement extends StatelessWidget {
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${match.matchDate.day} " + Utils.monthToString(match.matchDate.month).substring(0, 3) + " ${match.matchDate.year}",
+                          "${match.matchDate.day} " + DateUtils.monthToString(match.matchDate.month).substring(0, 3) + " ${match.matchDate.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,

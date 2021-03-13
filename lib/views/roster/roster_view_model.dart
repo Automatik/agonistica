@@ -73,7 +73,9 @@ class RosterViewModel extends BaseViewModel {
     print("onUpdate");
     // save eventually playerMatchNotes?
 
-    onPlayerDetailUpdate(newPlayer);
+    if(onPlayerDetailUpdate != null) {
+      onPlayerDetailUpdate(newPlayer);
+    }
     print("clone");
     // return to TeamView
 //    Navigator.of(context).pop();

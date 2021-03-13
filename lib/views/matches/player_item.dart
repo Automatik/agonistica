@@ -3,6 +3,7 @@ import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const double ICON_SIZE = 20;
@@ -10,12 +11,17 @@ const double ICON_HORIZ_MARGIN = 2.5;
 
 class PlayerItem extends StatelessWidget {
 
+  static const int VIEW_PLAYER_CARD = 1;
+  static const int DELETE_PLAYER = 2;
+
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
   final bool isEditEnabled;
   final bool Function(String, int) onPlayerValidation;
   final List<Player> Function(String, String) onPlayersSuggestionCallback;
   final void Function(MatchPlayerData) onSaveCallback;
+  final void Function(MatchPlayerData) onViewPlayerCardCallback;
+  final void Function(MatchPlayerData) onDeleteCallback;
 
   PlayerItem({
     @required this.matchPlayer,
@@ -24,26 +30,16 @@ class PlayerItem extends StatelessWidget {
     @required this.onPlayerValidation,
     @required this.onPlayersSuggestionCallback,
     @required this.onSaveCallback,
+    @required this.onViewPlayerCardCallback,
+    @required this.onDeleteCallback,
   });
 
   @override
   Widget build(BuildContext context) {
     //TODO Add delete and go to player page option (and/or move option)
     return GestureDetector(
-      onTap: () {
-        if(isEditEnabled) {
-          final dialog = PlayerItemEditDialog(
-            matchPlayerData: matchPlayer,
-            onPlayerValidation: onPlayerValidation,
-            onSaveCallback: (matchPlayerData) {
-              Navigator.pop(context);
-              onSaveCallback(matchPlayerData);
-            },
-            suggestionCallback: onPlayersSuggestionCallback,
-          );
-          dialog.showPlayerItemEditDialog(context);
-        }
-      },
+      onTap: () => onPlayerItemClick(context),
+      onLongPressStart: (longPressDetails)  => onPlayerItemLongClick(context, longPressDetails.globalPosition),
       child: Container(
         color: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -55,6 +51,64 @@ class PlayerItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onPlayerItemClick(BuildContext context) {
+    if(!isEditEnabled) {
+      return;
+    }
+    final dialog = PlayerItemEditDialog(
+      matchPlayerData: matchPlayer,
+      onPlayerValidation: onPlayerValidation,
+      onSaveCallback: (matchPlayerData) {
+        Navigator.pop(context);
+        onSaveCallback(matchPlayerData);
+      },
+      suggestionCallback: onPlayersSuggestionCallback,
+    );
+    dialog.showPlayerItemEditDialog(context);
+  }
+
+  Future<void> onPlayerItemLongClick(BuildContext context, Offset offset) async {
+    if(!shouldShowMenu()) {
+      return;
+    }
+    double left = offset.dx;
+    double top = offset.dy;
+    int value = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, left+1, top+1),
+      elevation: 8.0,
+      items: [
+        PopupMenuItem(
+          value: VIEW_PLAYER_CARD,
+          child: PopupMenuItemTile(
+            text: "Scheda Giocatore",
+            iconData: PlatformIcons(context).person,
+          ),
+        ),
+        PopupMenuItem(
+          value: DELETE_PLAYER,
+          child: PopupMenuItemTile(
+            text: "Elimina",
+            iconData: PlatformIcons(context).delete,
+          ),
+        ),
+      ]
+    );
+    selectLongClickAction(value);
+  }
+
+  bool shouldShowMenu() {
+    return isEditEnabled && !matchPlayer.isEmptyPlayer();
+  }
+
+  void selectLongClickAction(int value) {
+    switch(value) {
+      case VIEW_PLAYER_CARD: onViewPlayerCardCallback(matchPlayer); break;
+      case DELETE_PLAYER: onDeleteCallback(matchPlayer); break;
+      default: return;
+    }
   }
 
   List<Widget> playerData() {
@@ -363,6 +417,57 @@ class _CardItem extends StatelessWidget {
 
   Widget noneCardWidget() {
     return SizedBox();
+  }
+
+}
+
+class PopupMenuItemTile extends StatelessWidget {
+
+  final String text;
+  final IconData iconData;
+  final double fontSize;
+  final Color fontColor;
+
+  PopupMenuItemTile({
+    @required this.text,
+    @required this.iconData,
+    this.fontSize = 16,
+    this.fontColor = blueAgonisticaColor,
+  }) : assert(text != null),
+       assert(iconData != null);
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 2.5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 2.5),
+              child: Text(
+                text,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: fontColor,
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 2.5),
+            child: Icon(
+              iconData,
+              color: fontColor,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 }

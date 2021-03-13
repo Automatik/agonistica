@@ -1,7 +1,7 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
-import '../utils.dart';
+import '../utils/date_utils.dart';
 
 class PlayerReview extends StatelessWidget{
 
@@ -91,7 +91,7 @@ class PlayerReview extends StatelessWidget{
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                         SizedBox(width: 5,),
                         Text(
-                          "${birthDay.day} " + Utils.monthToString(birthDay.month).substring(0, 3) + " ${birthDay.year}",
+                          "${birthDay.day} " + DateUtils.monthToString(birthDay.month).substring(0, 3) + " ${birthDay.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.black,

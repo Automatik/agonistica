@@ -1,4 +1,6 @@
+import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
@@ -7,6 +9,7 @@ import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -98,6 +101,18 @@ class MatchesViewModel extends BaseViewModel {
     //Navigator.of(context).pop();
 
     match = Match.clone(newMatch);
+  }
+
+  Future<void> viewPlayerCard(BuildContext context, String playerId) async {
+    Preconditions.requireArgumentNotNull(playerId);
+
+    Player player = await _databaseService.getPlayerById(playerId);
+    player = await _databaseService.completePlayerWithMissingInfo(player);
+    bool playerExists = player != null;
+    if(playerExists) {
+      bool isNewPlayer = false;
+      NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, null));
+    }
   }
 
   String getAppBarTitle() {

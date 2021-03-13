@@ -10,7 +10,7 @@ import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/matches/change_team_dialog.dart';
@@ -33,6 +33,7 @@ class MatchDetailLayout extends StatefulWidget {
   final List<Team> Function(String) onTeamSuggestionCallback;
   final Function(String) onTeamInserted;
   final Function(String, String, String) onPlayersSuggestionCallback;
+  final Function(String) onViewPlayerCardCallback;
 
   MatchDetailLayout({
     @required this.match,
@@ -41,6 +42,7 @@ class MatchDetailLayout extends StatefulWidget {
     @required this.onTeamSuggestionCallback,
     @required this.onTeamInserted,
     @required this.onPlayersSuggestionCallback,
+    @required this.onViewPlayerCardCallback,
     this.maxWidth,
   }) : assert(match != null);
 
@@ -426,7 +428,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                         Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 20,),
                         SizedBox(width: 5,),
                         Text(
-                          "${matchInfo.matchDate.day} " + Utils.monthToString(matchInfo.matchDate.month).substring(0, 3) + " ${matchInfo.matchDate.year}",
+                          "${matchInfo.matchDate.day} " + DateUtils.monthToString(matchInfo.matchDate.month).substring(0, 3) + " ${matchInfo.matchDate.year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: matchFontColor,
@@ -524,6 +526,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, false);
   }
 
+  //TODO Sistemare bug che quando aggiungo un giocatore in una riga, mi crea due righe, una vuota e una con il palyer che ho messo
   Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled, bool areRegulars) {
     return ListView.builder(
         itemCount: rowsCount,
@@ -545,15 +548,24 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               },
               onSaveCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
+                  tempMatch.playersData.add(matchPlayerData);
                   if(isHomePlayer) {
-                    tempMatch.playersData.add(matchPlayerData);
                     this.homePlayers.add(matchPlayerData);
                     return;
                   }
-                  tempMatch.playersData.add(matchPlayerData);
                   this.awayPlayers.add(matchPlayerData);
                 });
-
+              },
+              onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.playerId),
+              onDeleteCallback: (matchPlayerData, isHomePlayer) {
+                setState(() {
+                  tempMatch.playersData.remove(matchPlayerData);
+                  if(isHomePlayer) {
+                    this.homePlayers.remove(matchPlayerData);
+                    return;
+                  }
+                  this.awayPlayers.remove(matchPlayerData);
+                });
               },
             );
           } else {

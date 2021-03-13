@@ -2,7 +2,7 @@ import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/models/Team.dart';
-import 'package:agonistica/core/utils.dart';
+import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:uuid/uuid.dart';
 
 class Player {
@@ -89,7 +89,7 @@ class Player {
     teamName = p.teamName;
     categoryId = p.categoryId;
     categoryName = p.categoryName;
-    birthDay = Utils.fromDateTime(p.birthDay);
+    birthDay = DateUtils.fromDateTime(p.birthDay);
     height = p.height;
     weight = p.weight;
     position = p.position;

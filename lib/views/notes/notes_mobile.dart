@@ -109,7 +109,7 @@ class _NotesMobileState extends State<_NotesMobile> {
                             Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
                             SizedBox(width: 5,),
                             Text(
-                              "${match.matchDate.day} " + Utils.monthToString(match.matchDate.month).substring(0, 3) + " ${match.matchDate.year}",
+                              "${match.matchDate.day} " + DateUtils.monthToString(match.matchDate.month).substring(0, 3) + " ${match.matchDate.year}",
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 color: Colors.black,

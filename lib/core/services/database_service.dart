@@ -152,6 +152,21 @@ class DatabaseService {
     return await _playerRepository.getPlayerById(playerId);
   }
 
+  /// Download missing info for a player (for instance after calling getPlayerId)
+  /// like the team's name and the category's name
+  Future<Player> completePlayerWithMissingInfo(Player player) async {
+    String teamId = player.teamId;
+    String categoryId = player.categoryId;
+
+    Category category = await getCategoryById(categoryId);
+    Team team = await getTeamById(teamId);
+
+    player.categoryName = category != null ? category.name : "";
+    player.teamName = team != null ? team.name : "";
+
+    return player;
+  }
+
   /// Download players of the given team and category
   Future<List<Player>> getPlayersByTeamAndCategory(String teamId, String categoryId) async {
     Team team = await _teamRepository.getTeamById(teamId);
