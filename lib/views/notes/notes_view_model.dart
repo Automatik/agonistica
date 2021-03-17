@@ -16,19 +16,7 @@ class NotesViewModel extends BaseViewModel {
   final Match match;
   final String playerName;
 
-  NotesViewModel(this.notes, this.match, this.playerName){
-    loadItems();
-  }
-  
-  // Add ViewModel specific code here
-  Future<void> loadItems() async {
-    setBusy(true);
-    //Write your models loading codes here
-
-    //Let other views to render again
-    setBusy(false);
-    notifyListeners();
-  }
+  NotesViewModel(this.notes, this.match, this.playerName);
 
   void onBottomBarItemChanged(BuildContext context, int index) {
 
@@ -45,7 +33,7 @@ class NotesViewModel extends BaseViewModel {
 
   Future<void> onNotesSave(String text) async {
     notes.notes = text;
-//    await _databaseService.savePlayerMatchNotes(notes);
+    await _databaseService.savePlayerMatchNotes(notes);
   }
 
   String getAppBarTitle() {

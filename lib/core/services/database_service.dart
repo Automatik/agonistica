@@ -361,10 +361,15 @@ class DatabaseService {
   // SET PLAYER MATCH NOTES
 
   Future<void> savePlayerMatchNotes(PlayerMatchNotes playerMatchNotes) async {
+    Player player = await _playerRepository.getPlayerById(playerMatchNotes.playerId);
+    if(player == null) {
+      _logger.d("databaseService: player not found when saving the PlayerMatchNotes");
+      return;
+    }
+
     await _playerNotesRepository.savePlayerMatchNotes(playerMatchNotes);
 
     // update player's playerMatchNodesIds
-    Player player = await _playerRepository.getPlayerById(playerMatchNotes.playerId);
     if(player.playerMatchNotesIds == null)
       player.playerMatchNotesIds = [];
     if(!player.playerMatchNotesIds.contains(playerMatchNotes.id)) {

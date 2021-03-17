@@ -20,13 +20,9 @@ class PlayerMatchesViewModel extends BaseViewModel {
   final String playerName;
 
   Player player;
-//  List<Match> matches;
-//  List<PlayerMatchNotes> notes;
   List<MatchNotesObject> objects;
 
   PlayerMatchesViewModel(this.playerId, this.playerName){
-//    matches = [];
-//    notes = [];
     objects = [];
     loadItems();
   }
@@ -59,10 +55,11 @@ class PlayerMatchesViewModel extends BaseViewModel {
         if(index != -1) {
           // a note exists for this match
           PlayerMatchNotes note = notes.removeAt(index);
-          object = MatchNotesObject(match, notes: note);
+          object = MatchNotesObject(match, note);
         } else {
           // a note does not exist for this match
-          object = MatchNotesObject(match);
+          PlayerMatchNotes note = PlayerMatchNotes(match.id, playerId);
+          object = MatchNotesObject(match, note);
         }
         objects.add(object);
       }

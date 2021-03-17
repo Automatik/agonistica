@@ -41,8 +41,9 @@ class PlayerNotesRepository {
     for(String playerMatchNotesId in playersMatchNotesIds) {
       final snapshot = await _databaseReference.child(_firebasePlayersNotesChild).child(playerMatchNotesId).once();
       final playerMatchNotesValue = snapshot.value;
-      if(playerMatchNotesValue != null)
+      if(playerMatchNotesValue != null) {
         playersMatchNotes.add(PlayerMatchNotes.fromJson(playerMatchNotesValue));
+      }
     }
     return playersMatchNotes;
   }

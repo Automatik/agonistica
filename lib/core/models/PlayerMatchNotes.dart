@@ -9,9 +9,16 @@ class PlayerMatchNotes {
 
   String notes;
 
-  PlayerMatchNotes() {
+  PlayerMatchNotes(this.matchId, this.playerId) {
     var uuid = Uuid();
     id = uuid.v4();
+  }
+
+  PlayerMatchNotes.clone(PlayerMatchNotes playerMatchNotes) {
+    id = playerMatchNotes.id;
+    playerId = playerMatchNotes.playerId;
+    matchId = playerMatchNotes.matchId;
+    notes = playerMatchNotes.notes;
   }
 
   Map<String, dynamic> toJson() {

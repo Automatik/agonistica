@@ -36,7 +36,7 @@ class PlayerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO Add delete and go to player page option (and/or move option)
+    //TODO and/or move option
     return GestureDetector(
       onTap: () => onPlayerItemClick(context),
       onLongPressStart: (longPressDetails)  => onPlayerItemLongClick(context, longPressDetails.globalPosition),

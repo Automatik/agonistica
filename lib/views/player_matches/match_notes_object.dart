@@ -6,6 +6,6 @@ class MatchNotesObject {
   final Match match;
   final PlayerMatchNotes notes;
 
-  MatchNotesObject(this.match, {this.notes});
+  MatchNotesObject(this.match, this.notes);
 
 }

@@ -17,6 +17,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
 
         return Container(
+          margin: EdgeInsets.only(top: 20, bottom: 20),
           constraints: BoxConstraints(
             maxHeight: sizingInformation.screenSize.height,
             maxWidth: sizingInformation.screenSize.width,
