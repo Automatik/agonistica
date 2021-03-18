@@ -60,7 +60,7 @@ class _RosterMobileState extends State<_RosterMobile> {
     if(isEditEnabled) {
       return PlatformAppBars.getPlatformAppBarForRosterViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
     } else {
-      return PlatformAppBars.getPlatformAppBarForRosterViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionAddPress(context));
+      return PlatformAppBars.getPlatformAppBarForRosterViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionNotesPress(context));
     }
   }
 
@@ -103,7 +103,7 @@ class _RosterMobileState extends State<_RosterMobile> {
     });
   }
 
-  void onActionAddPress(BuildContext context) {
+  void onActionNotesPress(BuildContext context) {
     widget.viewModel.navigateToPlayerMatchesNotes(context);
   }
 

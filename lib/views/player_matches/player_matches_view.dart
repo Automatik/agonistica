@@ -1,9 +1,11 @@
 library player_matches_view;
 
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
+import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/views/player_matches/match_notes_element.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';

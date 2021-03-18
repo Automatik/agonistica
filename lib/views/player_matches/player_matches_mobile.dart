@@ -11,7 +11,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
     return TabScaffoldWidget(
       showAppBar: true,
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
-      title: viewModel.getAppBarTitle(),
+      platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => viewModel.onBottomBarItemChanged(context, index),
       childBuilder: (childContext, sizingInformation, parentSizingInformation) {
         double itemsWidth = 0.7 * sizingInformation.screenSize.width;
@@ -45,4 +45,14 @@ class _PlayerMatchesMobile extends StatelessWidget {
       },
     );
   }
+
+  PlatformAppBar getPlatformAppBar(BuildContext context) {
+    String title = viewModel.getAppBarTitle();
+    return PlatformAppBars.getPlatformAppBarForPlayerMatchesView(title, () => onActionBack(context));
+  }
+
+  void onActionBack(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
 }

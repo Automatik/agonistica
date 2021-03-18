@@ -48,7 +48,7 @@ class PlatformAppBars {
     );
   }
 
-  static PlatformAppBar getPlatformAppBarForRosterViewInViewMode(String title, Function onActionBack, Function onActionEditPress, Function onActionAddPress) {
+  static PlatformAppBar getPlatformAppBarForRosterViewInViewMode(String title, Function onActionBack, Function onActionEditPress, Function onActionNotesPress) {
     return PlatformAppBar(
       backgroundColor: appBarBackgroundColor,
       title: Text(
@@ -76,9 +76,9 @@ class PlatformAppBars {
             Container(
               margin: EdgeInsets.only(right: actionIconsMargin),
               child: GestureDetector(
-                onTap: onActionAddPress,
+                onTap: onActionNotesPress,
                 child: Icon(
-                  Icons.add,
+                  Icons.assignment_rounded,
                   color: blueAgonisticaColor,
                 ),
               ),
@@ -204,6 +204,24 @@ class PlatformAppBars {
               ),
             ),
           ]
+      ),
+    );
+  }
+
+  static PlatformAppBar getPlatformAppBarForPlayerMatchesView(String title, Function onActionBack) {
+    return PlatformAppBar(
+      backgroundColor: appBarBackgroundColor,
+      title: Text(
+        title,
+        style: TextStyle(
+          color: blueAgonisticaColor,
+        ),
+      ),
+      material: (_, __) => MaterialAppBarData(
+          leading: GestureDetector(
+              onTap: onActionBack,
+              child: Icon(Icons.arrow_back, color: blueAgonisticaColor,)
+          ),
       ),
     );
   }
