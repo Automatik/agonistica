@@ -1,5 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/Category.dart';
+import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
@@ -67,7 +68,7 @@ class Player {
     position = POSITION_MIDFIELDER;
     isRightHanded = true;
 
-    matches = goals = yellowCards = redCards = 0;
+    resetStats();
 
     tecnica = agonistica = fisica = tattica = capMotorie = MIN_VALUE;
 
@@ -124,6 +125,18 @@ class Player {
 
     matchesIds = List.from(p.matchesIds ?? []);
     playerMatchNotesIds = List.from(p.playerMatchNotesIds ?? []);
+  }
+
+  /// Reset stats before updating them by summing all the match player data
+  void resetStats() {
+    matches = goals = yellowCards = redCards = 0;
+  }
+
+  void updateFromMatch(MatchPlayerData playerData) {
+    matches += 1;
+    goals += playerData.numGoals;
+    yellowCards += playerData.getYellowCardsCount();
+    redCards += playerData.getRedCardCount();
   }
 
   Map<String, dynamic> toJson() {

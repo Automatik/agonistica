@@ -1,6 +1,5 @@
 part of player_matches_view;
 
-// ignore: must_be_immutable
 class _PlayerMatchesMobile extends StatelessWidget {
   final PlayerMatchesViewModel viewModel;
 

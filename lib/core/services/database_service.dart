@@ -240,7 +240,7 @@ class DatabaseService {
 
   /// Upload Match data (insert)
   Future<void> saveMatch(Match match) async {
-    
+
     Match oldMatch = await _matchRepository.getMatchById(match.id);
     bool matchPreviouslySaved = oldMatch != null;
     if(matchPreviouslySaved) {
@@ -250,7 +250,9 @@ class DatabaseService {
       await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
 
       // Remove the match's id from the players that are no more in the match
-      await _removeMatchIdFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
+      //TODO Rimuovere anche le stats relative a questa partita(ad esempio matches -= 1 ecc.)
+      // await _removeMatchIdFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
+      await _removeMatchIdAndStatsFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
     }
 
     // Create Team objects if they do not exist yet
@@ -271,7 +273,6 @@ class DatabaseService {
       }
     });
 
-    //TODO Verificare che se in una partita esistente, rimuovo un giocatore e salvo, questo effettivamente non ricompare più tra i players della partita
     await _matchRepository.saveMatch(match);
 
     // Rimuovere giocatori con uuid null (significa che non sono necessari) altrimenti da errore nel getPlayersByIds -> RISOLTO, ora vengono creati Player per ogni nuovo giocatore
@@ -285,16 +286,30 @@ class DatabaseService {
     await updateTeamFromMatch(match, match.getTeam1(), matchPlayersIds);
     await updateTeamFromMatch(match, match.getTeam2(), matchPlayersIds);
 
-    // update players's matchesIds and also implicitly the player's
-    // teamId and the player's name (that could had been edited in the MatchView)
+    // update players's matchesIds and also implicitly the player's teamId
     for(Player player in matchPlayers) {
       if(player.matchesIds == null)
         player.matchesIds = [];
       if(!player.matchesIds.contains(match.id)) {
-        // TODO Aggiornare statistiche giocatori
         player.matchesIds.add(match.id);
-        await _playerRepository.savePlayer(player);
       }
+      _updatePlayerStatsFromMatchPlayerData(player);
+      await _playerRepository.savePlayer(player);
+    }
+
+  }
+
+  /// Update the player stats based on all the matches he has played.
+  /// To avoid counting stats more time the count is done from start every time
+  Future<void> _updatePlayerStatsFromMatchPlayerData(Player player) async {
+    // Get matches in which the player has played
+    List<Match> matches = await getMatchesByIds(player.matchesIds);
+
+    List<MatchPlayerData> playerDataList = matches.map((m) => m.playersData.firstWhere((p) => p.playerId == player.id)).toList();
+
+    player.resetStats();
+    for(MatchPlayerData playerData in playerDataList) {
+      player.updateFromMatch(playerData);
     }
 
   }
@@ -309,16 +324,24 @@ class DatabaseService {
     }
   }
 
-  Future<void> _removeMatchIdFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
+  Future<void> _removeMatchIdAndStatsFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
+    // Map MatchPlayerData to a list of players ids
     List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.playerId).toList();
     List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.playerId).toList();
-    oldPlayerIds.removeWhere((op) => currentPlayerIds.any((cp) => op == cp));
+    // Keep in oldPlayerIds only the players that are now removed from the Match
+    oldPlayerIds.retainWhere((op) => !currentPlayerIds.contains(op));
+    // Do the same for the list of MatchPlayerData
+    oldMatchPlayersData.retainWhere((mpd) => oldPlayerIds.contains(mpd.playerId));
+    // Update Player objects
     List<Player> players = await _playerRepository.getPlayersByIds(oldPlayerIds);
     for(Player player in players) {
+      // Remove this match id from the matchesIds of the removed player
       player.matchesIds.removeWhere((id) => matchId == id);
+      // Update the player stats (remove this match from the matches count and eventually goals and cards)
+      await _updatePlayerStatsFromMatchPlayerData(player);
       await _playerRepository.savePlayer(player);
     }
-}
+  }
 
   // SET PLAYER
 
