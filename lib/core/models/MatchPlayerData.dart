@@ -105,14 +105,16 @@ class MatchPlayerData {
 
   /// Create a new Player object from this MatchPlayerData object, assuming
   /// it's the player's first match
-  Player toPlayer() {
+  Player toPlayer(String categoryId) {
     Player p = Player.empty();
     p.id = playerId;
     p.name = name;
     p.surname = surname;
     p.teamId = teamId;
+    p.categoryId = categoryId;
 
-    // match data (vedere se aggiungerli qui o lasciarli aggiungere da un'altra parte dove si aggiornano già le statistiche di tutti i giocatori)
+    // match data
+    // In databaseService.saveMatch this data is re-calculated to avoid mistakes
     p.matches = 1;
     p.goals = numGoals;
     p.yellowCards = getYellowCardsCount();

@@ -250,8 +250,7 @@ class DatabaseService {
       await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
 
       // Remove the match's id from the players that are no more in the match
-      //TODO Rimuovere anche le stats relative a questa partita(ad esempio matches -= 1 ecc.)
-      // await _removeMatchIdFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
+      // and also remove the stats regarding this match from the player stats
       await _removeMatchIdAndStatsFromRemovedPlayers(oldMatch.playersData, match.playersData, match.id);
     }
 
@@ -268,7 +267,8 @@ class DatabaseService {
       Player player = await _playerRepository.getPlayerById(p.playerId);
       bool playerExists = player != null;
       if(!playerExists) {
-        player = p.toPlayer();
+        // The player's matchesIds is updated later
+        player = p.toPlayer(match.categoryId);
         await _playerRepository.savePlayer(player);
       }
     });
