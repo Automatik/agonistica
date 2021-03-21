@@ -530,6 +530,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return ListView.builder(
         itemCount: rowsCount,
         shrinkWrap: true,
+        primary: false, //prevent it from scrolling separately
         itemBuilder: (ctx, index) {
           if(_isRowWithPlayers(index, rowsCount, areRemainingRegularPlayersToFill)) {
             return PlayerItemsRow(
