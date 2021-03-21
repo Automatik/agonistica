@@ -526,7 +526,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, false);
   }
 
-  //TODO Sistemare bug che quando aggiungo un giocatore in una riga, mi crea due righe, una vuota e una con il palyer che ho messo
   Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled, bool areRegulars) {
     return ListView.builder(
         itemCount: rowsCount,
@@ -543,7 +542,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
                 List<Player> players = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
                 // Remove players already in the lineup
-                players.removeWhere((p) => isHomePlayer ? homePlayers.any((hp) => hp.playerId == p.id) : awayPlayers.any((ap) => ap.playerId == p.id));
+                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.playerId).toList();
+                players.removeWhere((p) => lineupPlayersIds.contains(p.id));
                 return players;
               },
               onSaveCallback: (matchPlayerData, isHomePlayer) {

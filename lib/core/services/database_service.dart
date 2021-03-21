@@ -279,12 +279,16 @@ class DatabaseService {
 
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
-    List<String> matchPlayersIds = match.playersData.map((data) => data.playerId).toList();
+    // List<String> matchPlayersIds = match.playersData.map((p) => p.playerId).toList();
+    List<String> team1MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team1Id).map((p) => p.playerId).toList();
+    List<String> team2MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team2Id).map((p) => p.playerId).toList();
+    List<String> matchPlayersIds = List.from(team1MatchPlayerIds);
+    matchPlayersIds.addAll(team2MatchPlayerIds);
     List<Player> matchPlayers = await _playerRepository.getPlayersByIds(matchPlayersIds);
 
     // Update teams's matchesIds, categoriesIds and playersIds
-    await updateTeamFromMatch(match, match.getTeam1(), matchPlayersIds);
-    await updateTeamFromMatch(match, match.getTeam2(), matchPlayersIds);
+    await updateTeamFromMatch(match, match.getTeam1(), team1MatchPlayerIds);
+    await updateTeamFromMatch(match, match.getTeam2(), team2MatchPlayerIds);
 
     // update players's matchesIds and also implicitly the player's teamId
     for(Player player in matchPlayers) {

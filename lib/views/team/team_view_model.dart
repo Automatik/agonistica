@@ -39,6 +39,8 @@ class TeamViewModel extends BaseViewModel {
       _logger.d("Loading matches and players...");
       matches = await _databaseService.getTeamMatchesByCategory(
           _databaseService.selectedTeam, _databaseService.selectedCategory);
+
+      print("matches size: ${matches.length}");
       matches = await _databaseService.completeMatchesWithMissingInfo(matches);
 
       players = await _databaseService.getPlayersByTeamAndCategory(_databaseService.selectedTeam.id,
