@@ -46,7 +46,7 @@ class PlayerItemsRow extends StatelessWidget {
               isLeftOrientation: true,
               isEditEnabled: isEditEnabled,
               matchPlayer: homePlayer,
-              onPlayerValidation: (playerId, shirtNumber) => onPlayerValidation(playerId, shirtNumber, true),
+              onPlayerValidation: (id, shirtNumber) => onPlayerValidation(id, shirtNumber, true),
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = true;
                 return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);
@@ -68,7 +68,7 @@ class PlayerItemsRow extends StatelessWidget {
               isLeftOrientation: false,
               isEditEnabled: isEditEnabled,
               matchPlayer: awayPlayer,
-              onPlayerValidation: (playerId, shirtNumber) => onPlayerValidation(playerId, shirtNumber, false),
+              onPlayerValidation: (id, shirtNumber) => onPlayerValidation(id, shirtNumber, false),
               onPlayersSuggestionCallback: (namePattern, surnamePattern) {
                 bool isHomePlayer = false;
                 return onPlayerSuggestionCallback(namePattern, surnamePattern, isHomePlayer);

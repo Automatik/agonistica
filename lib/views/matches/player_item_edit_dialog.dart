@@ -129,7 +129,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
       String surname = surnameTextEditingController.text;
       int shirtNumber = int.tryParse(shirtTextEditingController.text);
 
-      if(widget.onPlayerValidation(playerId, shirtNumber)) {
+      if(widget.onPlayerValidation(widget.matchPlayerData.id, shirtNumber)) {
 
         avoidDuplicateMatchPlayer();
 

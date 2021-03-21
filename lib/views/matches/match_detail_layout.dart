@@ -187,15 +187,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   /// Check if the edited player does not contain the same shirt number of other
   /// players in the same team, beside himself. This allows to have more players
   /// with the same name and surname
-  bool validatePlayerShirtNumber(String playerId, int shirtNumber, bool isHomeTeam) {
+  bool validatePlayerShirtNumber(String matchPlayerDataId, int shirtNumber, bool isHomeTeam) {
     List<MatchPlayerData> teamPlayers = isHomeTeam ? homePlayers : awayPlayers;
     int index;
-    if(playerId != null) {
-      // the player is already defined in the match, so the playerId must be removed from the results
-      index = teamPlayers.indexWhere((p) => p.playerId != playerId && p.shirtNumber == shirtNumber);
-    } else {
-      index = teamPlayers.indexWhere((p) => p.shirtNumber == shirtNumber);
-    }
+    // if the player is already defined in the match, so the playerId must be removed from the results
+    index = teamPlayers.indexWhere((p) => p.id != matchPlayerDataId && p.shirtNumber == shirtNumber);
     bool isAnotherPlayerWithSameParameters = index != -1;
     return !isAnotherPlayerWithSameParameters;
   }
@@ -538,7 +534,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               awayPlayer: awayPlayers[index],
               isEditEnabled: isEditEnabled,
               lineSeparatorWidth: _getLineSeparatorWidth(index, rowsCount),
-              onPlayerValidation: (playerId, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(playerId, shirtNumber, isHomePlayer),
+              onPlayerValidation: (id, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(id, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
                 String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
                 List<Player> players = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
@@ -594,7 +590,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     String id = player.id;
     int index = players.indexWhere((p) => p.id == id);
     if(index == -1) {
-      throw new Exception("MatchPlayerData with id $id not found in the list of MatchPlayerData");
+      // MatchPlayerData with id not found in the list of MatchPlayerData
+      players.add(player);
+      return;
     }
     players[index] = player;
   }
