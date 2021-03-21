@@ -549,12 +549,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               },
               onSaveCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
-                  tempMatch.playersData.add(matchPlayerData);
+                  _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
                   if(isHomePlayer) {
-                    this.homePlayers.add(matchPlayerData);
+                    _replacePlayerUsingId(this.homePlayers, matchPlayerData);
                     return;
                   }
-                  this.awayPlayers.add(matchPlayerData);
+                  _replacePlayerUsingId(this.awayPlayers, matchPlayerData);
                 });
               },
               onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.playerId),
@@ -586,6 +586,17 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           }
         }
     );
+  }
+
+  /// Replace in the List of MatchPlayerData the empty MatchPlayerData with the
+  /// new MatchPlayerData using the MatchPlayerData's id to identify it
+  void _replacePlayerUsingId(List<MatchPlayerData> players, MatchPlayerData player) {
+    String id = player.id;
+    int index = players.indexWhere((p) => p.id == id);
+    if(index == -1) {
+      throw new Exception("MatchPlayerData with id $id not found in the list of MatchPlayerData");
+    }
+    players[index] = player;
   }
 
   bool _isRowWithPlayers(int rowIndex, int numRows, bool areRemainingRegularPlayersToFill) {
