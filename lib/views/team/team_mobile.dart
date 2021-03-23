@@ -75,7 +75,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 10, bottom: 10),
                     width: itemsWidth,
                     child: MatchReview(
                       onTap: () {
@@ -117,7 +117,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
-                    margin: EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 10, bottom: 10),
                     width: itemsWidth,
                     child: PlayerReview(
                       onTap: () => widget.viewModel.openPlayerDetail(context, index, onUpdateList),
