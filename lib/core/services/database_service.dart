@@ -1,3 +1,5 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
+import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/Match.dart';
@@ -403,6 +405,30 @@ class DatabaseService {
       player.playerMatchNotesIds.add(playerMatchNotes.id);
       await _playerRepository.savePlayer(player);
     }
+
+  }
+
+  // DELETE MATCH
+
+  Future<void> deleteMatch(String matchId) async {
+    Match match = await _matchRepository.getMatchById(matchId);
+    if(match == null) {
+      throw NotFoundException("Match with id $matchId not found in database.");
+    }
+
+    // Delete match id from teams
+    String team1Id = match.team1Id;
+    String team2Id = match.team2Id;
+    await _teamRepository.deleteMatchFromTeam(team1Id, matchId);
+    await _teamRepository.deleteMatchFromTeam(team2Id, matchId);
+
+    // Delete match id from players
+    match.playersData.map((p) => p.playerId).forEach((id) async {
+      await _playerRepository.deleteMatchFromPlayer(id, matchId);
+    });
+
+    // Delete match
+    await _matchRepository.deleteMatch(matchId);
 
   }
 

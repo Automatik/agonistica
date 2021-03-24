@@ -55,4 +55,12 @@ class MatchRepository {
     return matches;
   }
 
+  // DELETE
+
+  Future<void> deleteMatch(String matchId) async {
+    Preconditions.requireArgumentNotNull(matchId);
+
+    await _databaseReference.child(_firebaseMatchesChild).child(matchId).remove();
+  }
+
 }

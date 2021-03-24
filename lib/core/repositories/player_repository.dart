@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Player.dart';
@@ -49,6 +50,18 @@ class PlayerRepository {
         players.add(Player.fromJson(playerValue));
     }
     return players;
+  }
+
+  // DELETE
+
+  /// Delete a match's id from the player's matchesIds list
+  Future<void> deleteMatchFromPlayer(String playerId, String matchId) async {
+    Player player = await getPlayerById(playerId);
+    if (player == null) {
+      throw NotFoundException("Player with id $playerId not found in database.");
+    }
+    player.matchesIds.removeWhere((id) => id == matchId);
+    await savePlayer(player);
   }
 
 }

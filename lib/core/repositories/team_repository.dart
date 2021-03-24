@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Team.dart';
@@ -109,7 +110,17 @@ class TeamRepository {
     return teams;
   }
 
+  // DELETE
 
+  /// Delete a match's id from the team's matchesIds list
+  Future<void> deleteMatchFromTeam(String teamId, String matchId) async {
+    Team team = await getTeamById(teamId);
+    if (team == null) {
+      throw NotFoundException("Team with id $teamId not found in database.");
+    }
+    team.matchesIds.removeWhere((id) => id == matchId);
+    await saveTeam(team);
+  }
 
   // UTILS
 
