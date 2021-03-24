@@ -54,6 +54,12 @@ class PlayerRepository {
 
   // DELETE
 
+  Future<void> deletePlayer(String playerId) async {
+    Preconditions.requireArgumentNotNull(playerId);
+
+    await _databaseReference.child(_firebasePlayersChild).child(playerId).remove();
+  }
+
   /// Delete a match's id from the player's matchesIds list
   Future<void> deleteMatchFromPlayer(String playerId, String matchId) async {
     Player player = await getPlayerById(playerId);

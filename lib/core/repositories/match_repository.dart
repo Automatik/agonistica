@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/Match.dart';
@@ -61,6 +62,18 @@ class MatchRepository {
     Preconditions.requireArgumentNotNull(matchId);
 
     await _databaseReference.child(_firebaseMatchesChild).child(matchId).remove();
+  }
+
+  /// Delete a MatchPlayerData from the given Match.
+  /// It doesn't remove the goal scored by the player removed (not enforcing
+  /// this constraint)
+  Future<void> deletePlayerFromMatch(String matchId, String playerId) async {
+    Match match = await getMatchById(matchId);
+    if (match == null) {
+      throw NotFoundException("Match with id $matchId not found in database.");
+    }
+    match.playersData.removeWhere((mp) => mp.playerId == playerId);
+    await saveMatch(match);
   }
 
 }

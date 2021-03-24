@@ -408,6 +408,26 @@ class DatabaseService {
 
   }
 
+  // DELETE PLAYER
+
+  Future<void> deletePlayer(String playerId) async {
+    Player player = await _playerRepository.getPlayerById(playerId);
+    if(player == null) {
+      throw NotFoundException("Player with id $playerId not found in database.");
+    }
+    
+    // Delete player id from team
+    await _teamRepository.deletePlayerFromTeam(player.teamId, playerId);
+
+    // Delete player id from the matches he has played
+    player.matchesIds.forEach((id) async {
+      await _matchRepository.deletePlayerFromMatch(id, playerId);
+    });
+
+    await _playerRepository.deletePlayer(playerId);
+
+  }
+
   // DELETE MATCH
 
   Future<void> deleteMatch(String matchId) async {
