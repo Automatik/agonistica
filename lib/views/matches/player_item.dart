@@ -1,5 +1,6 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/shared/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +37,9 @@ class PlayerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO and/or move option
     return GestureDetector(
       onTap: () => onPlayerItemClick(context),
-      onLongPressStart: (longPressDetails)  => onPlayerItemLongClick(context, longPressDetails.globalPosition),
+      onLongPressStart: (longPressDetails) => onPlayerItemLongClick(context, longPressDetails.globalPosition),
       child: Container(
         color: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -417,57 +417,6 @@ class _CardItem extends StatelessWidget {
 
   Widget noneCardWidget() {
     return SizedBox();
-  }
-
-}
-
-class PopupMenuItemTile extends StatelessWidget {
-
-  final String text;
-  final IconData iconData;
-  final double fontSize;
-  final Color fontColor;
-
-  PopupMenuItemTile({
-    @required this.text,
-    @required this.iconData,
-    this.fontSize = 16,
-    this.fontColor = blueAgonisticaColor,
-  }) : assert(text != null),
-       assert(iconData != null);
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 2.5),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 2.5),
-              child: Text(
-                text,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  color: fontColor,
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 2.5),
-            child: Icon(
-              iconData,
-              color: fontColor,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
 }

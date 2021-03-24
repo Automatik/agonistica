@@ -61,9 +61,12 @@ class PlayerReview extends StatelessWidget{
                     ),
                   ),
                 ),
-                Container(
-                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                GestureDetector(
+                  onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
+                  child: Container(
+                      margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                      child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                  ),
                 )
               ],
             ),

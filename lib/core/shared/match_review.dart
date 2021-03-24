@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 class MatchReview extends StatelessWidget {
 
   final String team1, team2, result;
-  //final Match match;
   final int leagueMatch;
   final DateTime matchDate;
   final double width, minHeight;
@@ -78,9 +77,12 @@ class MatchReview extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                  child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                GestureDetector(
+                  onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                  ),
                 )
               ],
             ),
