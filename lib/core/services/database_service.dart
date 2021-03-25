@@ -13,6 +13,7 @@ import 'file:///C:/Users/Emil/Google%20Drive/FlutterProjects/agonistica/lib/core
 import 'file:///C:/Users/Emil/Google%20Drive/FlutterProjects/agonistica/lib/core/repositories/player_repository.dart';
 import 'file:///C:/Users/Emil/Google%20Drive/FlutterProjects/agonistica/lib/core/repositories/team_repository.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -174,6 +175,10 @@ class DatabaseService {
     Team team = await _teamRepository.getTeamById(teamId);
     if(team == null || team.playersIds == null || team.playersIds.isEmpty)
       return Future.value(List<Player>());
+    if (DbUtils.listContainsNulls(team.playersIds)) {
+      _logger.w("The team with id $teamId contains null values in playersIds");
+      team.playersIds = DbUtils.removeNullValues(team.playersIds);
+    }
     List<Player> players = await _playerRepository.getPlayersByIds(team.playersIds);
     players.removeWhere((player) => player.categoryId != categoryId);
     return players;
@@ -281,7 +286,6 @@ class DatabaseService {
 
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
-    // List<String> matchPlayersIds = match.playersData.map((p) => p.playerId).toList();
     List<String> team1MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team1Id).map((p) => p.playerId).toList();
     List<String> team2MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team2Id).map((p) => p.playerId).toList();
     List<String> matchPlayersIds = List.from(team1MatchPlayerIds);

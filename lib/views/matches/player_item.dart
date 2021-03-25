@@ -53,20 +53,17 @@ class PlayerItem extends StatelessWidget {
     );
   }
 
-  void onPlayerItemClick(BuildContext context) {
+  Future<void> onPlayerItemClick(BuildContext context) async {
     if(!isEditEnabled) {
       return;
     }
     final dialog = PlayerItemEditDialog(
       matchPlayerData: matchPlayer,
       onPlayerValidation: onPlayerValidation,
-      onSaveCallback: (matchPlayerData) {
-        Navigator.pop(context);
-        onSaveCallback(matchPlayerData);
-      },
+      onSaveCallback: onSaveCallback,
       suggestionCallback: onPlayersSuggestionCallback,
     );
-    dialog.showPlayerItemEditDialog(context);
+    await dialog.showPlayerItemEditDialog(context);
   }
 
   Future<void> onPlayerItemLongClick(BuildContext context, Offset offset) async {

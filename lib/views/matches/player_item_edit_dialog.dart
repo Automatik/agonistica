@@ -120,7 +120,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     return (surname == null || surname == MatchPlayerData.EMPTY_PLAYER_SURNAME) ? "" : surname;
   }
 
-  void onSave() {
+  void onSave(BuildContext context) {
     if(areShirtNameAndSurnameValid()) {
       // the other fields (goals and dropdown) are always valid
 
@@ -150,8 +150,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         newPlayerData.card = card;
         newPlayerData.substitution = substitution;
 
-        if (widget.onSaveCallback != null)
+        if (widget.onSaveCallback != null) {
           widget.onSaveCallback(newPlayerData);
+        }
+
+        Navigator.of(context, rootNavigator: true).pop();
 
       } else {
         setState(() {
@@ -231,12 +234,12 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
       ),
       width: 0.9 * MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
-        child: dialogContent(),
+        child: dialogContent(context),
       )
     );
   }
 
-  Widget dialogContent() {
+  Widget dialogContent(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -245,7 +248,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         playerShirtAndNameForm(),
         playersSuggestions(),
         playerGoalCardAndSub(),
-        okButton(),
+        okButton(context),
       ],
     );
   }
@@ -347,9 +350,9 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     );
   }
 
-  Widget okButton() {
+  Widget okButton(BuildContext context) {
     return GestureDetector(
-      onTap: () => onSave(),
+      onTap: () => onSave(context),
       child: Container(
         margin: const EdgeInsets.only(top: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
