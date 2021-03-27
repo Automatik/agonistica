@@ -303,7 +303,7 @@ class DatabaseService {
       if(!player.matchesIds.contains(match.id)) {
         player.matchesIds.add(match.id);
       }
-      _updatePlayerStatsFromMatchPlayerData(player);
+      await _updatePlayerStatsFromMatchPlayerData(player);
       await _playerRepository.savePlayer(player);
     }
 
@@ -321,7 +321,6 @@ class DatabaseService {
     for(MatchPlayerData playerData in playerDataList) {
       player.updateFromMatch(playerData);
     }
-
   }
 
   Future<void> _removeOldTeamFromMatch(String oldMatchTeamId, String currentMatchTeamId, String matchId) async {
