@@ -72,6 +72,54 @@ class Match {
     return team;
   }
 
+  String getHomeTeamId() {
+    return getTeam1().id;
+  }
+
+  String getAwayTeamId() {
+    return getTeam2().id;
+  }
+
+  List<MatchPlayerData> getHomePlayers() {
+    return _getPlayers(getHomeTeamId());
+  }
+
+  List<MatchPlayerData> getAwayPlayers() {
+    return _getPlayers(getAwayTeamId());
+  }
+
+  List<MatchPlayerData> getHomeRegularPlayers() {
+    return getRegularPlayers(getHomeTeamId());
+  }
+
+  List<MatchPlayerData> getAwayRegularPlayers() {
+    return getRegularPlayers(getAwayTeamId());
+  }
+
+  List<MatchPlayerData> getHomeReservePlayers() {
+    return getReservePlayers(getHomeTeamId());
+  }
+
+  List<MatchPlayerData> getAwayReservePlayers() {
+    return getReservePlayers(getAwayTeamId());
+  }
+
+  List<MatchPlayerData> getRegularPlayers(String teamId) {
+    return _getLineUpPlayers(teamId, true);
+  }
+
+  List<MatchPlayerData> getReservePlayers(String teamId) {
+    return _getLineUpPlayers(teamId, false);
+  }
+
+  List<MatchPlayerData> _getPlayers(String teamId) {
+    return playersData.where((p) => p.teamId == teamId).toList();
+  }
+
+  List<MatchPlayerData> _getLineUpPlayers(String teamId, bool isRegular) {
+    return playersData.where((p) => p.teamId == teamId && p.isRegular == isRegular).toList();
+  }
+
   void setTeam1(Team team) {
     team1Id = team.id;
     team1Name = team.name;

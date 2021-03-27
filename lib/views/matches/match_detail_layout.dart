@@ -58,9 +58,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   // temp values
   Match tempMatch;
 
-  String homeTeamId, awayTeamId;
-  List<MatchPlayerData> homePlayers, awayPlayers;
-
   TextEditingController resultTextEditingController1, resultTextEditingController2,
       leagueMatchTextEditingController;
 
@@ -100,14 +97,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void updateMatchObjects() {
+    print("Updating match objects");
     tempMatch = widget.match;
-    homeTeamId = widget.match.team1Id;
-    awayTeamId = widget.match.team2Id;
-    homePlayers = widget.match.playersData.where((e) => e.teamId == homeTeamId).toList();
-    awayPlayers = widget.match.playersData.where((e) => e.teamId == awayTeamId).toList();
   }
 
   void preloadTeams() {
+    String homeTeamId = tempMatch.getHomeTeamId();
+    String awayTeamId = tempMatch.getAwayTeamId();
     if(homeTeamId != null)
       widget.onTeamInserted(homeTeamId);
     if(awayTeamId != null)
@@ -169,11 +165,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   bool isTeam1Populated() {
-    return isTeam1Inserted() && homePlayers.length > 0;
+    return isTeam1Inserted() && tempMatch.getHomePlayers().length > 0;
   }
 
   bool isTeam2Populated() {
-    return isTeam2Inserted() && awayPlayers.length > 0;
+    return isTeam2Inserted() && tempMatch.getAwayPlayers().length > 0;
   }
 
   bool isTeam1Inserted() {
@@ -188,6 +184,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   /// players in the same team, beside himself. This allows to have more players
   /// with the same name and surname
   bool validatePlayerShirtNumber(String matchPlayerDataId, int shirtNumber, bool isHomeTeam) {
+    List<MatchPlayerData> homePlayers = tempMatch.getHomePlayers();
+    List<MatchPlayerData> awayPlayers = tempMatch.getAwayPlayers();
     List<MatchPlayerData> teamPlayers = isHomeTeam ? homePlayers : awayPlayers;
     int index;
     // if the player is already defined in the match, so the playerId must be removed from the results
@@ -262,7 +260,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   /// Replace team players with an empty player
   void removeTeamPlayersFromMatch(Match match, String teamId) {
-    print("remove players");
     List<MatchPlayerData> newPlayerDataList = List();
     match.playersData.forEach((p) {
       if(p.teamId == teamId) {
@@ -479,13 +476,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   Widget regularPlayers(BuildContext context, bool isEditEnabled) {
-    List<MatchPlayerData> homeRegularPlayers = homePlayers.where((e) => e.isRegular).toList();
-    List<MatchPlayerData> awayRegularPlayers = awayPlayers.where((e) => e.isRegular).toList();
+    List<MatchPlayerData> homeRegularPlayers = tempMatch.getHomeRegularPlayers();
+    List<MatchPlayerData> awayRegularPlayers = tempMatch.getAwayRegularPlayers();
     int numHomeRegularPlayers = homeRegularPlayers.length;
     int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
-    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, homeTeamId, true);
-    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, awayTeamId, true);
+    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeTeamId(), true);
+    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwayTeamId(), true);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -501,13 +498,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   Widget reservePlayers(BuildContext context, bool isEditEnabled) {
-    List<MatchPlayerData> homeReservePlayers = homePlayers.where((e) => !e.isRegular).toList();
-    List<MatchPlayerData> awayReservePlayers = awayPlayers.where((e) => !e.isRegular).toList();
+    List<MatchPlayerData> homeReservePlayers = tempMatch.getHomeReservePlayers();
+    List<MatchPlayerData> awayReservePlayers = tempMatch.getAwayReservePlayers();
     int numHomeReservePlayers = homeReservePlayers.length;
     int numAwayReservePlayers = awayReservePlayers.length;
     int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
-    balanceTeamPlayers(homeReservePlayers, numReservePlayers, homeTeamId, false);
-    balanceTeamPlayers(awayReservePlayers, numReservePlayers, awayTeamId, false);
+    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeTeamId(), false);
+    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwayTeamId(), false);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -546,22 +543,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               onSaveCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
                   _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
-                  if(isHomePlayer) {
-                    _replacePlayerUsingId(this.homePlayers, matchPlayerData);
-                    return;
-                  }
-                  _replacePlayerUsingId(this.awayPlayers, matchPlayerData);
                 });
               },
               onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.playerId),
               onDeleteCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
                   tempMatch.playersData.remove(matchPlayerData);
-                  if(isHomePlayer) {
-                    this.homePlayers.remove(matchPlayerData);
-                    return;
-                  }
-                  this.awayPlayers.remove(matchPlayerData);
                 });
               },
             );
@@ -612,14 +599,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void _addNewRowWithRegularPlayers() {
-    MatchPlayerData newHomePlayer = _addRegularPlayer(homeTeamId);
-    MatchPlayerData newAwayPlayer = _addRegularPlayer(awayTeamId);
+    MatchPlayerData newHomePlayer = _addRegularPlayer(tempMatch.getHomeTeamId());
+    MatchPlayerData newAwayPlayer = _addRegularPlayer(tempMatch.getAwayTeamId());
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
   void _addNewRowWithReservePlayers() {
-    MatchPlayerData newHomePlayer = _addReservePlayer(homeTeamId);
-    MatchPlayerData newAwayPlayer = _addReservePlayer(awayTeamId);
+    MatchPlayerData newHomePlayer = _addReservePlayer(tempMatch.getHomeTeamId());
+    MatchPlayerData newAwayPlayer = _addReservePlayer(tempMatch.getAwayTeamId());
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
@@ -635,8 +622,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     setState(() {
       tempMatch.playersData.add(newHomePlayer);
       tempMatch.playersData.add(newAwayPlayer);
-      homePlayers.add(newHomePlayer);
-      awayPlayers.add(newAwayPlayer);
     });
   }
 
