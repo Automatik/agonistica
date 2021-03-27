@@ -17,7 +17,8 @@ class _TeamMobileState extends State<_TeamMobile> {
 
   static const int VIEW_MATCH_CARD = 0;
   static const int VIEW_PLAYER_CARD = 1;
-  static const int DELETE_ITEM = 2;
+  static const int DELETE_MATCH_CARD = 2;
+  static const int DELETE_PLAYER_CARD = 3;
 
   int _tabIndex;
 
@@ -138,18 +139,18 @@ class _TeamMobileState extends State<_TeamMobile> {
   }
 
   Future<void> onMatchLongPress(BuildContext context, Offset offset, int index) async {
-    await onItemLongPress(context, offset, index, VIEW_MATCH_CARD);
+    await onItemLongPress(context, offset, index, VIEW_MATCH_CARD, DELETE_MATCH_CARD);
   }
 
   Future<void> onRosterLongPress(BuildContext context, Offset offset, int index) async {
-    await onItemLongPress(context, offset, index, VIEW_PLAYER_CARD);
+    await onItemLongPress(context, offset, index, VIEW_PLAYER_CARD, DELETE_PLAYER_CARD);
   }
 
-  Future<void> onItemLongPress(BuildContext context, Offset offset, int index, int viewItemValue) async {
+  Future<void> onItemLongPress(BuildContext context, Offset offset, int index, int viewItemValue, int deleteItemValue) async {
     double left = offset.dx;
     double top = offset.dy;
     _ItemTileObject viewTileObject = selectItemTileObject(viewItemValue);
-    _ItemTileObject deleteTileObject = selectItemTileObject(DELETE_ITEM);
+    _ItemTileObject deleteTileObject = selectItemTileObject(deleteItemValue);
     int value = await showMenu(
         context: context,
         position: RelativeRect.fromLTRB(left, top, left+1, top+1),
@@ -162,7 +163,7 @@ class _TeamMobileState extends State<_TeamMobile> {
               )
           ),
           PopupMenuItem(
-              value: DELETE_ITEM,
+              value: deleteItemValue,
               child: PopupMenuItemTile(
                 text: deleteTileObject.text,
                 iconData: deleteTileObject.icon,
@@ -177,7 +178,8 @@ class _TeamMobileState extends State<_TeamMobile> {
     switch(choice) {
       case VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index, onUpdateList); break;
       case VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index, onUpdateList); break;
-      case DELETE_ITEM: break; //TODO
+      case DELETE_MATCH_CARD: widget.viewModel.deleteMatch(index, onUpdateList); break;
+      case DELETE_PLAYER_CARD: widget.viewModel.deletePlayer(index, onUpdateList); break;
       default: return;
     }
   }
@@ -186,7 +188,8 @@ class _TeamMobileState extends State<_TeamMobile> {
     switch(value) {
       case VIEW_MATCH_CARD: return _ItemTileObject("Scheda Partita", PlatformIcons(context).forward);
       case VIEW_PLAYER_CARD: return _ItemTileObject("Scheda Giocatore", PlatformIcons(context).person);
-      case DELETE_ITEM: return _ItemTileObject("Elimina", PlatformIcons(context).delete);
+      case DELETE_MATCH_CARD:
+      case DELETE_PLAYER_CARD: return _ItemTileObject("Elimina", PlatformIcons(context).delete);
       default: throw ArgumentException("Value not found");
     }
   }

@@ -111,20 +111,24 @@ class TeamViewModel extends BaseViewModel {
 
   Future<void> openMatchDetail(BuildContext context, int index, Function onUpdateList) async {
     this._onUpdateList = onUpdateList;
-    if(matches != null && matches.isNotEmpty) {
-      Match match = matches[index];
-      bool isNewMatch = false;
-      NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
+    if(matches == null || matches.isEmpty) {
+      _logger.d("Matches is null or empty when calling deleteMatch");
+      return;
     }
+    Match match = matches[index];
+    bool isNewMatch = false;
+    NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
   }
 
   Future<void> openPlayerDetail(BuildContext context, int index, Function onUpdateList) async {
     this._onUpdateList = onUpdateList;
-    if(players != null && players.isNotEmpty) {
-      Player player = players[index];
-      bool isNewPlayer = false;
-      NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate));
+    if(players == null || players.isEmpty) {
+      _logger.d("Players is null or empty when calling deleteMatch");
+      return;
     }
+    Player player = players[index];
+    bool isNewPlayer = false;
+    NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate));
   }
 
   Future<void> addNewMatch(BuildContext context) async {
@@ -141,5 +145,30 @@ class TeamViewModel extends BaseViewModel {
     player.setTeam(_databaseService.selectedTeam);
     NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, _onPlayerDetailUpdate));
   }
+
+  Future<void> deleteMatch(int index, Function onUpdateList) async {
+    if(matches == null || matches.isEmpty) {
+      _logger.d("Matches is null or empty when calling deleteMatch");
+      return;
+    }
+    Match match = matches[index];
+    await _databaseService.deleteMatch(match.id);
+    if(onUpdateList != null) {
+      onUpdateList();
+    }
+  }
+
+  Future<void> deletePlayer(int index, Function onUpdateList) async {
+    if(players == null || players.isEmpty) {
+      _logger.d("Players is null or empty when calling deleteMatch");
+      return;
+    }
+    Player player = players[index];
+    await _databaseService.deletePlayer(player.id);
+    if(onUpdateList != null) {
+      onUpdateList();
+    }
+  }
+
 
 }
