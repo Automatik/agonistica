@@ -28,10 +28,6 @@ class _TeamMobileState extends State<_TeamMobile> {
     _tabIndex = widget.initialTabIndex ?? TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
-  void onUpdateList() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
@@ -82,7 +78,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                     margin: EdgeInsets.only(top: 10, bottom: 10),
                     width: itemsWidth,
                     child: MatchReview(
-                      onTap: () => widget.viewModel.openMatchDetail(context, index, onUpdateList),
+                      onTap: () => widget.viewModel.openMatchDetail(context, index),
                       onSettingsTap: (offset) => onMatchLongPress(context, offset, index),
                       width: itemsWidth,
                       team1: match.team1Name,
@@ -122,7 +118,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                     margin: EdgeInsets.only(top: 10, bottom: 10),
                     width: itemsWidth,
                     child: PlayerReview(
-                      onTap: () => widget.viewModel.openPlayerDetail(context, index, onUpdateList),
+                      onTap: () => widget.viewModel.openPlayerDetail(context, index),
                       onSettingsTap: (offset) => onRosterLongPress(context, offset, index),
                       name: "${player.name} ${player.surname}",
                       role: Player.positionToString(player.position),
@@ -176,10 +172,10 @@ class _TeamMobileState extends State<_TeamMobile> {
 
   void selectLongClickAction(BuildContext context, int choice, int index) {
     switch(choice) {
-      case VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index, onUpdateList); break;
-      case VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index, onUpdateList); break;
-      case DELETE_MATCH_CARD: widget.viewModel.deleteMatch(index, onUpdateList); break;
-      case DELETE_PLAYER_CARD: widget.viewModel.deletePlayer(index, onUpdateList); break;
+      case VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index); break;
+      case VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index); break;
+      case DELETE_MATCH_CARD: widget.viewModel.deleteMatch(index); break;
+      case DELETE_PLAYER_CARD: widget.viewModel.deletePlayer(index); break;
       default: return;
     }
   }
