@@ -15,6 +15,8 @@ class InputValidation {
   static const String MESSAGE_RESULT_NOT_VALID = "Inserire un risultato valido";
   static const String MESSAGE_LEAGUE_MATCH_EMPTY = "Inserire una giornata";
   static const String MESSAGE_LEAGUE_MATCH_NOT_VALID = "Inserire una giornata valida";
+  static const String MESSAGE_INTEGERS_NOT_VALID = "Inserire valori interi validi";
+
 
   static const int _MAX_CHARS = 50;
 
@@ -71,6 +73,15 @@ class InputValidation {
     if(isInteger(value))
       return null;
     return MESSAGE_LEAGUE_MATCH_NOT_VALID;
+  }
+
+  /// Check if the string value is a valid integer for values like height,
+  /// weight, number of matches, goals, etc. It's not needed to check for
+  /// empty value
+  static String validateInteger(String value) {
+    if(value.isEmpty || isInteger(value))
+      return null; //Everything ok
+    return MESSAGE_INTEGERS_NOT_VALID;
   }
 
   static bool isPersonName(String name) {

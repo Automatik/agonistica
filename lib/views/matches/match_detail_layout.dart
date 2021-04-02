@@ -97,7 +97,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void updateMatchObjects() {
-    print("Updating match objects");
     tempMatch = widget.match;
   }
 

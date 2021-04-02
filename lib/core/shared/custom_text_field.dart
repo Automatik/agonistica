@@ -48,7 +48,7 @@ class CustomTextField extends StatelessWidget {
       );
     }
   }
-  
+
   Widget _textField() {
 
     return PlatformTextField(

@@ -85,14 +85,13 @@ class _RosterMobileState extends State<_RosterMobile> {
 
   Future<void> onActionConfirm(BuildContext context) async {
     if(isEditEnabled) {
-      print("edit $isEditEnabled");
-      playerDetailController.savePlayerStatus();
-      print("savePlayerStatus");
-      await widget.viewModel.onPlayerSave(context, tempPlayer);
-      print("onPlayerSave");
-      setState(() {
-        isEditEnabled = false;
-      });
+      bool isValid = playerDetailController.savePlayerStatus();
+      if(isValid) {
+        await widget.viewModel.onPlayerSave(context, tempPlayer);
+        setState(() {
+          isEditEnabled = false;
+        });
+      }
     }
   }
 

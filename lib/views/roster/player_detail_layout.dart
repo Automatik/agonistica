@@ -1,6 +1,8 @@
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
@@ -8,6 +10,8 @@ import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/select_category_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
+import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/roster/stat_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -65,7 +69,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       attitude3TextController;
 
   _PlayerDetailLayoutState(PlayerDetailController controller) {
-    controller.savePlayerStatus = savePlayerState;
+    controller.savePlayerStatus = () => savePlayerState();
   }
 
   @override
@@ -91,7 +95,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     attitude2TextController = TextEditingController();
     attitude3TextController = TextEditingController();
 
-    tempPlayer = widget.player;
+    updatePlayerObject();
     reset();
 
   }
@@ -100,15 +104,12 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   void didUpdateWidget(covariant PlayerDetailLayout oldWidget) {
     super.didUpdateWidget(oldWidget);
     editEnabled = widget.isEditEnabled;
-    tempPlayer = widget.player;
+    updatePlayerObject();
     if(oldWidget.isEditEnabled != widget.isEditEnabled)
       reset();
   }
 
   void reset() {
-//    tempPlayer = Player.clone(widget.player);
-//    tempPlayer = widget.player;
-
     nameTextController.text = tempPlayer.name;
     surnameTextController.text = tempPlayer.surname;
     heightTextController.text = tempPlayer.height.toString();
@@ -129,8 +130,18 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     attitude3TextController.text = tempPlayer.attitudine3;
   }
 
-  void savePlayerState() {
-    //TODO Check if there are not textfields with errors
+  void updatePlayerObject() {
+    tempPlayer = widget.player;
+  }
+
+  bool savePlayerState() {
+    String errorMessage = validateTextFields();
+    bool isError = errorMessage != null;
+    if(isError) {
+      final _baseScaffoldService = locator<BaseScaffoldService>();
+      MySnackBar.showSnackBar(_baseScaffoldService.scaffoldContext, errorMessage);
+      return false;
+    }
 
     tempPlayer.name = nameTextController.text;
     tempPlayer.surname = surnameTextController.text;
@@ -149,6 +160,30 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     tempPlayer.attitudine1 = attitude1TextController.text;
     tempPlayer.attitudine2 = attitude2TextController.text;
     tempPlayer.attitudine3 = attitude3TextController.text;
+
+    return true;
+  }
+
+  /// Validate Player's name, surname and integers values. Position and
+  /// isRightHanded are already restricted values. The other fields are all text
+  String validateTextFields() {
+    String errorMessage = InputValidation.validatePlayerName(nameTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validatePlayerSurname(surnameTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(heightTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(weightTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(matchesTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(goalsTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(yellowTextController.text);
+    if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateInteger(redTextController.text);
+    if(errorMessage != null) return errorMessage;
+    return null;
   }
 
   @override
@@ -944,6 +979,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
 class PlayerDetailController {
 
-  void Function() savePlayerStatus;
+  bool Function() savePlayerStatus;
 
 }
