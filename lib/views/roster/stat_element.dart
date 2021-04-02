@@ -14,7 +14,7 @@ class StatElement extends StatefulWidget {
   final bool isFreeText;
   final TextEditingController elementController;
   final String elementText;
-  final Function(int) onElementChange;
+  final Function(String) onElementChange;
 
   StatElement({
     @required this.icon,
@@ -93,7 +93,9 @@ class _StatElementState extends State<StatElement> {
             setState(() {
               elementTextState = choices[index];
             });
-            widget.onElementChange(index);
+            if(widget.onElementChange != null) {
+              widget.onElementChange(elementTextState);
+            }
           }, isPositionChoice ? 250 : 150);
         }
       },

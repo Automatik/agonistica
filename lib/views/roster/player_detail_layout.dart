@@ -8,6 +8,7 @@ import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/select_category_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/views/roster/stat_element.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -439,19 +440,11 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              statElement(context, PlayerDetailLayout.STAT_ROLE, "Ruolo", isEditEnabled, false, elementText: roleText),
-              statElement(context, PlayerDetailLayout.STAT_FOOT, "Piede", isEditEnabled, false, elementText: footText),
-              statElement(context, PlayerDetailLayout.STAT_MATCHES, "Presenze", isEditEnabled, true, elementController: matchesTextController),
-            ],
+            children: firstRowStatElements(isEditEnabled, roleText, footText, matchesTextController),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              statElement(context, PlayerDetailLayout.STAT_GOALS, "Gol", isEditEnabled, true, elementController: goalsTextController),
-              statElement(context, PlayerDetailLayout.STAT_YELLOW_CARDS, "Gialli", isEditEnabled, true, elementController: yellowTextController),
-              statElement(context, PlayerDetailLayout.STAT_RED_CARDS, "Rossi", isEditEnabled, true, elementController: redTextController),
-            ],
+            children: secondRowStatElements(isEditEnabled, goalsTextController, yellowTextController, redTextController),
           ),
           playerCharacteristicsBox(playerInfo, isEditEnabled),
           playerConditionalCapacitiesBox(playerInfo, isEditEnabled),
@@ -462,149 +455,64 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget statElement(BuildContext context, int icon, String elementName, bool isEditEnabled, bool isFreeText, {TextEditingController elementController, String elementText}) {
-    String iconPath = "assets/images/${_mapStatToIcon(icon)}";
-
-    List<String> positionChoices = [Player.positionToString(Player.POSITION_GOALKEEPER),
-      Player.positionToString(Player.POSITION_DEFENDER), Player.positionToString(Player.POSITION_MIDFIELDER),
-      Player.positionToString(Player.POSITION_FORWARD)];
-
-    List<String> footChoices = ["Destro", "Sinistro"];
-
-    Widget elementWidget;
-    if(isFreeText) {
-      // the text can be edited manually
-      elementWidget = CustomTextField(
-        width: 30,
-        enabled: isEditEnabled,
-        controller: elementController,
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        textInputType: TextInputType.number,
-        textColor: Colors.black,
-        textFontSize: 14,
-        textFontWeight: FontWeight.normal,
-      );
-    } else {
-      // the value can only assume some values
-      elementWidget = Text(
-        elementText,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: () async {
-        if(!isFreeText && isEditEnabled) {
-          // show dialog
-
-          bool isPositionChoice = icon == PlayerDetailLayout.STAT_ROLE;
-
-          String title = isPositionChoice ? "Seleziona il ruolo del giocatore" : "Seleziona il piede preferito del giocatore";
-          List<String> choices = isPositionChoice ? positionChoices : footChoices;
-
-          await showStatElementChoiceDialog(context, title, choices, (index)
-          {
-            setState(() {
-              elementText = choices[index];
-              // Direct assignment to global variables because elementText is not overwriting them
-              if(icon == PlayerDetailLayout.STAT_ROLE)
-                roleText = elementText;
-              if(icon == PlayerDetailLayout.STAT_FOOT)
-                footText = elementText;
-            });
-          }, isPositionChoice ? 250 : 150);
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.all(5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  child: SvgPicture.asset(
-                    iconPath,
-                  ),
-                  height: 24,
-                  width: 24,
-                ),
-                SizedBox(width: 5,),
-                Text(
-                  elementName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blueAgonisticaColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            elementWidget
-          ],
-        ),
+  List<Widget> firstRowStatElements(bool isEditEnabled, String roleText, String footText,
+      TextEditingController matchesTextController) {
+    return [
+      StatElement(
+        icon: PlayerDetailLayout.STAT_ROLE,
+        elementName: "Ruolo",
+        isEditEnabled: isEditEnabled,
+        isFreeText: false,
+        elementText: roleText,
+        onElementChange: (value) => this.roleText = value, //use this variable otherwise new value isn't saved
       ),
-    );
+      StatElement(
+        icon: PlayerDetailLayout.STAT_FOOT,
+        elementName: "Piede",
+        isEditEnabled: isEditEnabled,
+        isFreeText: false,
+        elementText: footText,
+        onElementChange: (value) => this.footText = value,
+      ),
+      StatElement(
+        icon: PlayerDetailLayout.STAT_MATCHES,
+        elementName: "Presenze",
+        isEditEnabled: isEditEnabled,
+        isFreeText: true,
+        onElementChange: null,
+        elementController: matchesTextController,
+      ),
+    ];
   }
 
-  Future<void> showStatElementChoiceDialog(BuildContext context, String title, List<String> choices, Function(int) onChoiceSelect, double height) async {
-    await showPlatformDialog(
-      context: context,
-      builder: (_) => PlatformAlertDialog(
-        title: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: blueAgonisticaColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        material: (_, __) => MaterialAlertDialogData(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            )
-        ),
-        content: Container(
-          width: 0.9 * MediaQuery.of(context).size.width,
-          height: height,
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: choices.length,
-              itemBuilder: (ctx, index) {
-                return ListTile(
-                  onTap: () {
-                    onChoiceSelect(index);
-
-                    // close dialog
-                    Navigator.of(context).pop();
-                  },
-                  title: Text(
-                    choices[index],
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                );
-              }
-          ),
-        ),
+  List<Widget> secondRowStatElements(bool isEditEnabled, TextEditingController goalsTextController,
+      TextEditingController yellowTextController, TextEditingController redTextController) {
+    return [
+      StatElement(
+        icon: PlayerDetailLayout.STAT_GOALS,
+        elementName: "Gol",
+        isEditEnabled: isEditEnabled,
+        isFreeText: true,
+        onElementChange: null,
+        elementController: goalsTextController,
       ),
-    );
+      StatElement(
+        icon: PlayerDetailLayout.STAT_YELLOW_CARDS,
+        elementName: "Gialli",
+        isEditEnabled: isEditEnabled,
+        isFreeText: true,
+        onElementChange: null,
+        elementController: yellowTextController,
+      ),
+      StatElement(
+        icon: PlayerDetailLayout.STAT_RED_CARDS,
+        elementName: "Rossi",
+        isEditEnabled: isEditEnabled,
+        isFreeText: true,
+        onElementChange: null,
+        elementController: redTextController,
+      ),
+    ];
   }
 
   Widget playerCharacteristicsBox(Player playerInfo, bool isEditEnabled) {
