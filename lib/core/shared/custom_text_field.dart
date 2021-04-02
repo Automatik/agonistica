@@ -1,4 +1,5 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -47,8 +48,7 @@ class CustomTextField extends StatelessWidget {
       );
     }
   }
-
-  //TODO Add input validation, especially for number (remove , . - space)
+  
   Widget _textField() {
 
     return PlatformTextField(
@@ -77,7 +77,16 @@ class CustomTextField extends StatelessWidget {
         fontWeight: textFontWeight,
       ),
       keyboardType: textInputType,
+      onChanged: (value) => removeInvalidCharacters(value),
     );
+  }
+
+  void removeInvalidCharacters(String value) {
+    String newValue = value;
+    if(textInputType == TextInputType.number) {
+      newValue = InputValidation.removeCharactersExceptDigits(value);
+    }
+    controller.text = newValue;
   }
 
 }
