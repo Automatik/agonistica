@@ -136,13 +136,4 @@ class InputValidation {
     return regExp.hasMatch(number);
   }
 
-  static String removeCharactersExceptDigits(String value) {
-    RegExp regExp = RegExp(
-      r"[^0-9]",
-      caseSensitive: false,
-      multiLine: false,
-    );
-    return value.replaceAll(regExp, "");
-  }
-
 }

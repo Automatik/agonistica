@@ -963,18 +963,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     return tempTeam;
   }
 
-  static String _mapStatToIcon(int icon) {
-    switch(icon) {
-      case PlayerDetailLayout.STAT_ROLE: return '013-football-1.svg';
-      case PlayerDetailLayout.STAT_FOOT: return '006-footwear.svg';
-      case PlayerDetailLayout.STAT_MATCHES: return '027-match.svg';
-      case PlayerDetailLayout.STAT_GOALS: return '050-soccer-ball.svg';
-      case PlayerDetailLayout.STAT_YELLOW_CARDS: return '018-yellow-card.svg';
-      case PlayerDetailLayout.STAT_RED_CARDS: return '026-red-card.svg';
-      default: return "";
-    }
-  }
-
 }
 
 class PlayerDetailController {

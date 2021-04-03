@@ -1,6 +1,7 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -77,16 +78,21 @@ class CustomTextField extends StatelessWidget {
         fontWeight: textFontWeight,
       ),
       keyboardType: textInputType,
-      onChanged: (value) => removeInvalidCharacters(value),
+      inputFormatters: textInputFormatters(),
     );
   }
 
-  void removeInvalidCharacters(String value) {
-    String newValue = value;
+  List<TextInputFormatter> textInputFormatters() {
+    List<TextInputFormatter> formatters = [];
     if(textInputType == TextInputType.number) {
-      newValue = InputValidation.removeCharactersExceptDigits(value);
+      RegExp onlyDigits = RegExp(
+        r"[0-9]",
+        caseSensitive: false,
+        multiLine: false,
+      );
+      formatters.add(FilteringTextInputFormatter.allow(onlyDigits));
     }
-    controller.text = newValue;
+    return formatters;
   }
 
 }
