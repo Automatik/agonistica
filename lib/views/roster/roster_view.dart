@@ -1,7 +1,9 @@
 library roster_view;
 
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
 import 'package:agonistica/core/platform_appbars.dart';

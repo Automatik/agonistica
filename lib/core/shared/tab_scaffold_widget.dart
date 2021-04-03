@@ -1,3 +1,5 @@
+import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/platform_appbars.dart';
@@ -9,6 +11,8 @@ class TabScaffoldWidget extends StatefulWidget {
 
   static const int MATCHES_VIEW_INDEX = 0;
   static const int ROSTER_VIEW_INDEX = 1;
+
+  final _baseScaffoldService = locator<BaseScaffoldService>();
 
   final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) childBuilder;
   final String title;
@@ -53,18 +57,26 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
       tabController: _tabController,
       currentIndex: _tabController.index(context),
       appBarBuilder: (_, index) => widget.platformAppBar ?? PlatformAppBars.getPlatformAppBar(widget.title),
-      bodyBuilder: (context, index) => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [blueLightAgonisticaColor, blueAgonisticaColor],
-          ),
-        ),
-        child: BaseWidget(
-          builder: widget.childBuilder,
-        ),
-      ),
+      bodyBuilder: (_, index) {
+        // Use a nested builder to get a context inside the Scaffold used then by the snackBars
+        return Builder(
+          builder: (innerContext) {
+            widget._baseScaffoldService.scaffoldContext = innerContext;
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [blueLightAgonisticaColor, blueAgonisticaColor],
+                ),
+              ),
+              child: BaseWidget(
+                builder: widget.childBuilder,
+              ),
+            );
+          },
+        );
+      },
       itemChanged: (index) {
         widget.onBottomItemChanged.call(index);
       },

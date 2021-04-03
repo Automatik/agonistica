@@ -40,7 +40,8 @@ class _RosterMobileState extends State<_RosterMobile> {
         widget.viewModel.onBottomBarItemChanged(context, index);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
-
+        // final _baseScaffoldService = locator<BaseScaffoldService>();
+        // _baseScaffoldService.scaffoldContext = childContext;
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
         return PlayerDetailLayout(
