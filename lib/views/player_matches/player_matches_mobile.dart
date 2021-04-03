@@ -30,6 +30,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Container(
                   width: itemsWidth,
+                  margin: const EdgeInsets.symmetric(vertical: 10),
                   child: MatchNotesElement(
                     object: object,
                     onTap: () => viewModel.onPlayerMatchNotesClick(context, object),
