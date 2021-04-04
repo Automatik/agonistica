@@ -20,9 +20,9 @@ class Match {
   // Leave this as temporary
   String team1Name, team2Name;
 
-//  List<String> playersIds;
-
   List<MatchPlayerData> playersData;
+
+  String matchNotes;
 
   Match() {
     var uuid = Uuid();
@@ -41,10 +41,7 @@ class Match {
     matchDate = DateTime.now();
     team1Name = "Squadra 1";
     team2Name = "Squadra 2";
-
-    //add playersIds
-
-    //call matchPlayerData.empty for all players
+    matchNotes = "";
   }
 
   Match.clone(Match match) {
@@ -56,8 +53,8 @@ class Match {
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
     matchDate = DateUtils.fromDateTime(match.matchDate);
-//    playersData = List.from(match.playersData ?? []);
     playersData = match.playersData == null ? List() : List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
+    matchNotes = match.matchNotes;
   }
 
   Team getTeam1() {
@@ -142,10 +139,9 @@ class Match {
       'team2Goals': team2Goals,
       'leagueMatch': leagueMatch,
       'matchDate': matchDate.toIso8601String(),
-//    'team1Name': team1Name,
-//    'team2Name': team2Name,
       'playersData': playersData == null ? List() : List.generate(
-          playersData.length, (index) => playersData[index].toJson())
+          playersData.length, (index) => playersData[index].toJson()),
+      'matchNotes': matchNotes == null ? "" : matchNotes
     };
   }
 
@@ -158,9 +154,8 @@ class Match {
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
       matchDate = DateTime.tryParse(json['matchDate']),
-//      team1Name = json['team1Name'],
-//      team2Name = json['team2Name'],
-      playersData = json['playersData'] == null ? List() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index]));
+      playersData = json['playersData'] == null ? List() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
+      matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotNull("id", id);

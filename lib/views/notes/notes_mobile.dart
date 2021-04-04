@@ -13,8 +13,6 @@ class _NotesMobile extends StatefulWidget {
 
 class _NotesMobileState extends State<_NotesMobile> {
 
-  static const int int64MaxValue = 9223372036854775807;
-
   final double iconsSize = 24;
   final double topMargin = 10;
   final double bottomMargin = 10;
@@ -147,26 +145,9 @@ class _NotesMobileState extends State<_NotesMobile> {
                       color: blueAgonisticaColor,
                       height: 1.5,
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      constraints: BoxConstraints(
-                        minHeight: 100,
-                      ),
-                      child: TextField(
-                        enabled: isEditEnabled,
-                        autofocus: true,
-                        controller: notesController,
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        minLines: 15,
-                        maxLines: int64MaxValue,
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                      ),
+                    TextBox(
+                      isEnabled: isEditEnabled,
+                      controller: notesController
                     ),
                   ],
                 ),

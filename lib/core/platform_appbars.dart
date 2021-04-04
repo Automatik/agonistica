@@ -128,7 +128,7 @@ class PlatformAppBars {
     );
   }
 
-  static PlatformAppBar getPlatformAppBarForMatchesViewInViewMode(String title, Function onActionBack, Function onActionEditPress, Function onActionAddPress) {
+  static PlatformAppBar getPlatformAppBarForMatchesViewInViewMode(String title, Function onActionBack, Function onActionEditPress) {
     return PlatformAppBar(
       backgroundColor: appBarBackgroundColor,
       title: Text(
@@ -149,16 +149,6 @@ class PlatformAppBars {
                 onTap: onActionEditPress,
                 child: Icon(
                   Icons.edit,
-                  color: blueAgonisticaColor,
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: actionIconsMargin),
-              child: GestureDetector(
-                onTap: onActionAddPress,
-                child: Icon(
-                  Icons.add,
                   color: blueAgonisticaColor,
                 ),
               ),

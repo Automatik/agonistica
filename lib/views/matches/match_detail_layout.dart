@@ -10,6 +10,7 @@ import 'package:agonistica/core/shared/custom_rich_text.dart';
 import 'package:agonistica/core/shared/custom_text_field.dart';
 import 'package:agonistica/core/shared/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/shared/text_box.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
@@ -59,7 +60,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   Match tempMatch;
 
   TextEditingController resultTextEditingController1, resultTextEditingController2,
-      leagueMatchTextEditingController;
+      leagueMatchTextEditingController, notesTextEditingController;
 
   _MatchDetailLayoutState(MatchDetailController controller) {
     controller.saveMatchStatus = () => saveMatchState();
@@ -74,6 +75,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     resultTextEditingController1 = TextEditingController();
     resultTextEditingController2 = TextEditingController();
     leagueMatchTextEditingController = TextEditingController();
+    notesTextEditingController = TextEditingController();
 
     updateMatchObjects();
     preloadTeams();
@@ -94,6 +96,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     resultTextEditingController1.text = widget.match.team1Goals.toString();
     resultTextEditingController2.text = widget.match.team2Goals.toString();
     leagueMatchTextEditingController.text = widget.match.leagueMatch.toString();
+    notesTextEditingController.text = widget.match.matchNotes;
   }
 
   void updateMatchObjects() {
@@ -125,6 +128,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     tempMatch.team1Goals = int.tryParse(resultTextEditingController1.text);
     tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
     tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
+    tempMatch.matchNotes = notesTextEditingController.text;
 
     removeEmptyPlayers();
 
@@ -279,7 +283,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           child: Column(
             children: [
               matchInfo(context, tempMatch, editEnabled),
-              matchCharacteristics(context, tempMatch, editEnabled),
+              matchCharacteristics(context, editEnabled),
+              matchNotes(editEnabled),
             ],
           ),
         ),
@@ -302,7 +307,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 20, bottom: 10),
       child: Column(
         children: [
           Row(
@@ -440,13 +445,13 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     );
   }
 
-  Widget matchCharacteristics(BuildContext context, Match matchInfo, bool isEditEnabled) {
+  Widget matchCharacteristics(BuildContext context, bool isEditEnabled) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 20, bottom: 20),
+      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -454,6 +459,22 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           regularPlayers(context, isEditEnabled),
           lineUpText("Riserve"),
           reservePlayers(context, isEditEnabled),
+        ],
+      ),
+    );
+  }
+
+  Widget matchNotes(bool isEditEnabled) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      margin: EdgeInsets.only(top: 10, bottom: 20),
+      child: Column(
+        children: [
+          lineUpText("Note Partita"),
+          textBox(isEditEnabled),
         ],
       ),
     );
@@ -567,6 +588,23 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
             );
           }
         }
+    );
+  }
+
+  Widget textBox(bool isEditEnabled) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: isEditEnabled ? 0.5 : 0,
+          color: blueAgonisticaColor
+        ),
+      ),
+      child: TextBox(
+        isEnabled: isEditEnabled,
+        controller: notesTextEditingController,
+        autofocus: false,
+        minLines: 5,
+      ),
     );
   }
 

@@ -54,7 +54,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
     if(isEditEnabled) {
       return PlatformAppBars.getPlatformAppBarForMatchesViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
     } else {
-      return PlatformAppBars.getPlatformAppBarForMatchesViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionConfirm(context));
+      return PlatformAppBars.getPlatformAppBarForMatchesViewInViewMode(title, () => onActionBack(context), onActionEditPress);
     }
   }
   
@@ -107,10 +107,6 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       isEditEnabled = true;
       initializeState();
     });
-  }
-
-  void onActionAddPress(BuildContext context) {
-    //todo navigate to match notes
   }
   
 }
