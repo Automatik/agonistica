@@ -14,7 +14,7 @@ import 'package:agonistica/core/shared/text_box.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
-import 'package:agonistica/views/matches/change_team_dialog.dart';
+import 'package:agonistica/widgets/dialogs/change_team_dialog.dart';
 import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
 import 'package:flutter/cupertino.dart';
