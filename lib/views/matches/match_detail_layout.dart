@@ -8,7 +8,7 @@ import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
-import 'package:agonistica/core/shared/insert_team_dialog.dart';
+import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/text/text_box.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
