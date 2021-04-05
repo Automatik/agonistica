@@ -2,7 +2,7 @@ import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/views/matches/player_item_edit_dialog.dart';
+import 'package:agonistica/widgets/dialogs/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
