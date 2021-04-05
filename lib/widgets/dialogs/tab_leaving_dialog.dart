@@ -1,75 +1,20 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/widgets/dialogs/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class TabLeavingDialog {
+class TabLeavingDialog extends ConfirmDialog {
 
   static const String DIALOG_TITLE = "Attenzione";
   static const String DIALOG_MESSAGE = "Vuoi davvero perdere le modifiche?";
   static const String DIALOG_CONFIRM = "Confermo";
   static const String DIALOG_CANCEL = "Annulla";
 
-  final Function onConfirm, onCancel;
-
-  TabLeavingDialog({
-    this.onConfirm,
-    this.onCancel
-  });
+  TabLeavingDialog({Function onConfirm, Function onCancel}) :
+        super(onConfirm: onConfirm, onCancel: onCancel);
 
   Future<void> showTabLeavingDialog(BuildContext context) async {
-    await showPlatformDialog(
-      context: context,
-      builder: (_) => PlatformAlertDialog(
-        title: PlatformText(
-          DIALOG_TITLE,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: blueAgonisticaColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        material: (_, __) => MaterialAlertDialogData(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            )
-        ),
-        content: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Text(
-            DIALOG_MESSAGE,
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-        ),
-        actions: [
-          actionButton(DIALOG_CONFIRM, onConfirm),
-          actionButton(DIALOG_CANCEL, onCancel),
-        ],
-      )
-    );
-  }
-
-  Widget actionButton(String text, Function onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child: PlatformText(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: blueAgonisticaColor,
-            fontFamily: 'Raleway',
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-      ),
-    );
+    super.showDialog(context, DIALOG_TITLE, DIALOG_MESSAGE, DIALOG_CONFIRM, DIALOG_CANCEL);
   }
 
 }
