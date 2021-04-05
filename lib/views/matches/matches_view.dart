@@ -4,7 +4,7 @@ import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
-import 'package:agonistica/core/shared/base_widget.dart';
+import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/views/matches/match_detail_layout.dart';
