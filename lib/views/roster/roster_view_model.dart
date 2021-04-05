@@ -6,8 +6,10 @@ import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/views/player_matches/player_matches_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
+import 'package:agonistica/widgets/dialogs/tab_leaving_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -52,18 +54,9 @@ class RosterViewModel extends BaseViewModel {
     return await _databaseService.getTeamCategories(team.id);
   }
 
-  void onBottomBarItemChanged(BuildContext context, int index) {
-    // TODO Ask to save before leaving
-
-    if(index == TabScaffoldWidget.ROSTER_VIEW_INDEX) {
-      // This is possible only if we come to this RosterView only from TeamView
-      Navigator.of(context).pop();
-    } else {
-      Navigator.of(context).pushNamed(
-        TeamView.routeName,
-        arguments: TeamViewArguments(TabScaffoldWidget.MATCHES_VIEW_INDEX)
-      );
-    }
+  Future<void> onBottomBarItemChanged(BuildContext context, int index, bool isEditEnabled) async {
+    await NavUtils.leaveBottomBarTab(context, index, isEditEnabled,
+        TabScaffoldWidget.ROSTER_VIEW_INDEX, TabScaffoldWidget.MATCHES_VIEW_INDEX);
   }
 
   Future<void> onPlayerSave(BuildContext context, Player newPlayer) async {

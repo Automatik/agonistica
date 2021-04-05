@@ -1,7 +1,10 @@
 import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
+import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
+import 'package:agonistica/views/team/team_view.dart';
+import 'package:agonistica/widgets/dialogs/tab_leaving_dialog.dart';
 import 'package:flutter/material.dart';
 
 class NavUtils {
@@ -20,6 +23,41 @@ class NavUtils {
       MatchesView.routeName,
       arguments: args,
     );
+  }
+
+  static void closeView(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  /// If the user tap on a BottomBar item and edit mode is enabled then ask
+  /// through a dialog if he wants to leave.
+  static Future<void> leaveBottomBarTab(BuildContext context, int currentTabIndex, bool isEditEnabled, int index1, int index2) async {
+    if(isEditEnabled) {
+      final dialog = TabLeavingDialog(
+        onConfirm: () {
+          NavUtils.closeView(context); //close dialog
+          changeBottomBarItem(context, currentTabIndex, index1, index2);
+        },
+        onCancel: () => NavUtils.closeView(context), //close dialog
+      );
+      await dialog.showTabLeavingDialog(context);
+      return;
+    }
+    changeBottomBarItem(context, currentTabIndex, index1, index2);
+  }
+
+  /// If the current index corresponds to the current tab (index1) then pop the
+  /// view, otherwise change tab to index2
+  static void changeBottomBarItem(BuildContext context, int currentTabIndex, int index1, int index2) {
+    if(currentTabIndex == index1) {
+      // This is possible only if we come to this Tab from TeamView
+      closeView(context);
+    } else {
+      Navigator.of(context).pushNamed(
+          TeamView.routeName,
+          arguments: TeamViewArguments(index2),
+      );
+    }
   }
 
 }

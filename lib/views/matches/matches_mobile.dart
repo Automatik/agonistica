@@ -39,7 +39,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) {
-        widget.viewModel.onBottomBarItemChanged(context, index);
+        widget.viewModel.onBottomBarItemChanged(context, index, isEditEnabled);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         widget._baseScaffoldService.scaffoldContext = childContext;

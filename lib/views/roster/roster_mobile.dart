@@ -37,7 +37,7 @@ class _RosterMobileState extends State<_RosterMobile> {
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) {
-        widget.viewModel.onBottomBarItemChanged(context, index);
+        widget.viewModel.onBottomBarItemChanged(context, index, isEditEnabled);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         // final _baseScaffoldService = locator<BaseScaffoldService>();
