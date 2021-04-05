@@ -1,7 +1,6 @@
 import 'package:agonistica/core/models/Category.dart';
-import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/shared/custom_rich_text.dart';
-import 'package:agonistica/core/shared/select_category_dialog.dart';
+import 'package:agonistica/widgets/dialogs/select_category_dialog.dart';
 import 'package:flutter/material.dart';
 
 class CategoryLabel extends StatefulWidget {
