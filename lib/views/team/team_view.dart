@@ -8,7 +8,7 @@ import 'package:agonistica/core/shared/base_widget.dart';
 import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/core/shared/match_review.dart';
 import 'package:agonistica/core/shared/player_review.dart';
-import 'package:agonistica/core/shared/popup_menu_item_tile.dart';
+import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
