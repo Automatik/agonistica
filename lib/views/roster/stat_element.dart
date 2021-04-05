@@ -1,5 +1,5 @@
 import 'package:agonistica/core/models/Player.dart';
-import 'package:agonistica/core/shared/custom_text_field.dart';
+import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/roster/player_detail_layout.dart';
 import 'package:flutter/material.dart';

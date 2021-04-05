@@ -1,6 +1,6 @@
 import 'package:agonistica/core/models/MatchPlayerData.dart';
 import 'package:agonistica/core/models/Player.dart';
-import 'package:agonistica/core/shared/player_text_form_field.dart';
+import 'package:agonistica/widgets/text/player_text_form_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';

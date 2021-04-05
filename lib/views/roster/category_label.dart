@@ -1,5 +1,5 @@
 import 'package:agonistica/core/models/Category.dart';
-import 'package:agonistica/core/shared/custom_rich_text.dart';
+import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/select_category_dialog.dart';
 import 'package:flutter/material.dart';
 
