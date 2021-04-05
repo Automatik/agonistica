@@ -3,7 +3,7 @@ library roster_view;
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/shared/base_widget.dart';
-import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/views/roster/player_detail_layout.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';

@@ -4,7 +4,7 @@ import 'package:agonistica/core/arguments/NotesViewArguments.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/shared/text_box.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/platform_appbars.dart';

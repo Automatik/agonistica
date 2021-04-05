@@ -3,7 +3,7 @@ import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Match.dart';
 import 'package:agonistica/core/models/PlayerMatchNotes.dart';
 import 'package:agonistica/core/services/database_service.dart';
-import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';

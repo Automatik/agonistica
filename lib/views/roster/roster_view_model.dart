@@ -1,15 +1,12 @@
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
-import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/Category.dart';
 import 'package:agonistica/core/models/Player.dart';
 import 'package:agonistica/core/models/Team.dart';
 import 'package:agonistica/core/services/database_service.dart';
-import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
+import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/views/player_matches/player_matches_view.dart';
-import 'package:agonistica/views/team/team_view.dart';
-import 'package:agonistica/widgets/dialogs/tab_leaving_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
