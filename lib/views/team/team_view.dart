@@ -9,11 +9,8 @@ import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/core/shared/match_review.dart';
 import 'package:agonistica/core/shared/player_review.dart';
 import 'package:agonistica/core/shared/popup_menu_item_tile.dart';
-import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/shared/tab_scaffold_widget.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +18,6 @@ import 'team_view_model.dart';
 
 part 'team_mobile.dart';
 
-// ignore: must_be_immutable
 class TeamView extends StatelessWidget {
   static const routeName = '/team';
 

@@ -1,6 +1,6 @@
 library categories_view;
 
-import 'package:agonistica/core/shared/scroll_scaffold_widget.dart';
+import 'package:agonistica/widgets/scaffolds/scroll_scaffold_widget.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter/material.dart';
