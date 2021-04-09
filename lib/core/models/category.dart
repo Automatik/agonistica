@@ -1,5 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class Category {
 
@@ -8,8 +8,7 @@ class Category {
   String name;
 
   Category() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   Map<String, dynamic> toJson() {

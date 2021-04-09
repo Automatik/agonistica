@@ -2,7 +2,7 @@ import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class Match {
 
@@ -25,14 +25,12 @@ class Match {
   String matchNotes;
 
   Match() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   Match.empty() {
-    var uuid = Uuid();
-    id = uuid.v4();
-    categoryId = uuid.v4();
+    id = DbUtils.newUuid();
+    categoryId = DbUtils.newUuid();
     // team1Id = uuid.v4(); removed to allow detecting if a team is inserted or not in Match View
     // team2Id = uuid.v4();
     team1Goals = 0;

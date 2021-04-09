@@ -1,5 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class PlayerMatchNotes {
 
@@ -10,8 +10,7 @@ class PlayerMatchNotes {
   String notes;
 
   PlayerMatchNotes(this.matchId, this.playerId) {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   PlayerMatchNotes.clone(PlayerMatchNotes playerMatchNotes) {

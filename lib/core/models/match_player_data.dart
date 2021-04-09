@@ -1,6 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/player.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class MatchPlayerData {
 
@@ -37,8 +37,7 @@ class MatchPlayerData {
   int card;
 
   MatchPlayerData() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   bool isEmptyPlayer() {
@@ -47,8 +46,7 @@ class MatchPlayerData {
   }
 
   MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
     playerId = null;
     name = EMPTY_PLAYER_NAME;
     surname = EMPTY_PLAYER_SURNAME;

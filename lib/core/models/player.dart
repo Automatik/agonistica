@@ -4,7 +4,7 @@ import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class Player {
 
@@ -51,17 +51,15 @@ class Player {
   List<PlayerMatchNotes> playerMatchesNotes;
 
   Player() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   Player.empty() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
     name = "Nome";
     surname = "Cognome";
-    teamId = uuid.v4();
-    categoryId = uuid.v4();
+    teamId = DbUtils.newUuid();
+    categoryId = DbUtils.newUuid();
     birthDay = DateTime.utc(2020, 1, 1);
     height = 0;
     weight = 0;

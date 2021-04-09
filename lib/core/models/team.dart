@@ -1,5 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:uuid/uuid.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 
 class Team {
 
@@ -13,13 +13,11 @@ class Team {
   List<String> playersIds;
 
   Team() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   Team.name(String name) {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
     this.name = name;
   }
 
