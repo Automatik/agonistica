@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/models/Match.dart';
-import 'package:agonistica/core/models/MatchPlayerData.dart';
-import 'package:agonistica/core/models/Player.dart';
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/match.dart';
+import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';

@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/PlayerMatchNotes.dart';
+import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';

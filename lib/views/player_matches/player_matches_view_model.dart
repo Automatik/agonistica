@@ -1,9 +1,9 @@
 import 'package:agonistica/core/arguments/NotesViewArguments.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/models/Match.dart';
-import 'package:agonistica/core/models/Player.dart';
-import 'package:agonistica/core/models/PlayerMatchNotes.dart';
+import 'package:agonistica/core/models/match.dart';
+import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/notes/notes_view.dart';

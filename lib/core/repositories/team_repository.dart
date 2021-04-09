@@ -1,7 +1,7 @@
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';

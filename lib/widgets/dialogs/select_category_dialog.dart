@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/Category.dart';
+import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';

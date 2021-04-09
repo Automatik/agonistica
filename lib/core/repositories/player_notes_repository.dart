@@ -1,5 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/models/PlayerMatchNotes.dart';
+import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 

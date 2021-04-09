@@ -1,6 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/models/Player.dart';
-import 'package:flutter/material.dart';
+import 'package:agonistica/core/models/player.dart';
 import 'package:uuid/uuid.dart';
 
 class MatchPlayerData {

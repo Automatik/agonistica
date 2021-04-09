@@ -1,6 +1,6 @@
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/models/Category.dart';
+import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';

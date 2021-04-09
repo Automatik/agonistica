@@ -1,5 +1,5 @@
-import 'package:agonistica/core/models/MatchPlayerData.dart';
-import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item.dart';
 import 'package:flutter/material.dart';

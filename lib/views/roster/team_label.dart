@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
 import 'package:flutter/material.dart';

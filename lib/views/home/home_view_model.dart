@@ -1,6 +1,6 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';

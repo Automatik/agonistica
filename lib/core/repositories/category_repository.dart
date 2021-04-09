@@ -1,6 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
-import 'package:agonistica/core/models/Category.dart';
+import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';

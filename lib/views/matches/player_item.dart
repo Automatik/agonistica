@@ -1,5 +1,5 @@
-import 'package:agonistica/core/models/MatchPlayerData.dart';
-import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/player_item_edit_dialog.dart';

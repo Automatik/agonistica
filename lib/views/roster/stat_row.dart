@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/Player.dart';
+import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 

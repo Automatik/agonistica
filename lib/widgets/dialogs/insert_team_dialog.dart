@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,7 @@
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/models/Category.dart';
-import 'package:agonistica/core/models/Player.dart';
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/category.dart';
+import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';

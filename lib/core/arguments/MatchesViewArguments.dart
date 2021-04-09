@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/Match.dart';
+import 'package:agonistica/core/models/match.dart';
 
 class MatchesViewArguments {
 

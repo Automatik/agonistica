@@ -1,6 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/models/MatchPlayerData.dart';
-import 'package:agonistica/core/models/Team.dart';
+import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:uuid/uuid.dart';
 

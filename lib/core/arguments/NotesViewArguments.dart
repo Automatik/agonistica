@@ -1,5 +1,5 @@
-import 'package:agonistica/core/models/Match.dart';
-import 'package:agonistica/core/models/PlayerMatchNotes.dart';
+import 'package:agonistica/core/models/match.dart';
+import 'package:agonistica/core/models/player_match_notes.dart';
 
 class NotesViewArguments {
 
