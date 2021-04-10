@@ -110,28 +110,6 @@ class TeamRepository {
     return teams;
   }
 
-  // DELETE
-
-  /// Delete a player id from the team's playerIds list
-  Future<void> deletePlayerFromTeam(String teamId, String playerId) async {
-    Team team = await getTeamById(teamId);
-    if (team == null) {
-      throw NotFoundException("Team with id $teamId not found in database.");
-    }
-    team.playersIds.removeWhere((id) => id == playerId);
-    await saveTeam(team);
-  }
-
-  /// Delete a match id from the team's matchesIds list
-  Future<void> deleteMatchFromTeam(String teamId, String matchId) async {
-    Team team = await getTeamById(teamId);
-    if (team == null) {
-      throw NotFoundException("Team with id $teamId not found in database.");
-    }
-    team.matchesIds.removeWhere((id) => id == matchId);
-    await saveTeam(team);
-  }
-
   // UTILS
 
   /// Return true if the team name given is unique across all teams stored

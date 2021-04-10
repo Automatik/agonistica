@@ -1,4 +1,3 @@
-import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/player.dart';
@@ -21,7 +20,7 @@ class PlayerRepository {
   // SET
 
   Future<void> savePlayer(Player player) async {
-    Preconditions.requireArgumentNotNull(player.id);
+    Preconditions.requireArgumentNotEmpty(player.id);
 
     await _databaseReference.child(_firebasePlayersChild).child(player.id).set(player.toJson());
   }
@@ -29,7 +28,7 @@ class PlayerRepository {
   // GET
 
   Future<Player> getPlayerById(String playerId) async {
-    Preconditions.requireArgumentNotNull(playerId);
+    Preconditions.requireArgumentNotEmpty(playerId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();
     Player player;
@@ -55,19 +54,9 @@ class PlayerRepository {
   // DELETE
 
   Future<void> deletePlayer(String playerId) async {
-    Preconditions.requireArgumentNotNull(playerId);
+    Preconditions.requireArgumentNotEmpty(playerId);
 
     await _databaseReference.child(_firebasePlayersChild).child(playerId).remove();
-  }
-
-  /// Delete a match's id from the player's matchesIds list
-  Future<void> deleteMatchFromPlayer(String playerId, String matchId) async {
-    Player player = await getPlayerById(playerId);
-    if (player == null) {
-      throw NotFoundException("Player with id $playerId not found in database.");
-    }
-    player.matchesIds.removeWhere((id) => id == matchId);
-    await savePlayer(player);
   }
 
 }

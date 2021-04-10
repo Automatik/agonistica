@@ -23,10 +23,16 @@ class DatabaseService {
   static const String firebaseUsersChild = "users";
   static const String firebasePermissionsChild = "permissions";
   static const String firebaseTeamsChild = "teams";
+  static const String firebaseMenusChild = "menus";
+  static const String firebaseSeasonsChild = "seasons";
   static const String firebaseCategoriesChild = "categories";
   static const String firebaseMatchesChild = "matches";
   static const String firebasePlayersChild = "players";
+  static const String firebaseSeasonPlayersChild = "seasonPlayers";
+  static const String firebaseSeasonTeamsChild = "seasonTeams";
   static const String firebasePlayersNotesChild = "playersNotes";
+  static const String firebaseFollowedPlayersChild = "followedPlayers";
+  static const String firebaseFollowedTeamsChild = "followedTeams";
 
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 
@@ -420,7 +426,7 @@ class DatabaseService {
     }
     
     // Delete player id from team
-    await _teamRepository.deletePlayerFromTeam(player.seasonTeamId, playerId);
+    await _teamRepository.deleteSeasonPlayerFromSeasonTeam(player.seasonTeamId, playerId);
 
     // Delete player id from the matches he has played
     player.matchesIds.forEach((id) async {
@@ -442,12 +448,12 @@ class DatabaseService {
     // Delete match id from teams
     String team1Id = match.seasonTeam1Id;
     String team2Id = match.seasonTeam2Id;
-    await _teamRepository.deleteMatchFromTeam(team1Id, matchId);
-    await _teamRepository.deleteMatchFromTeam(team2Id, matchId);
+    await _teamRepository.deleteMatchFromSeasonTeam(team1Id, matchId);
+    await _teamRepository.deleteMatchFromSeasonTeam(team2Id, matchId);
 
     // Delete match id from players
     match.playersData.map((p) => p.seasonPlayerId).forEach((id) async {
-      await _playerRepository.deleteMatchFromPlayer(id, matchId);
+      await _playerRepository.deleteMatchFromSeasonPlayer(id, matchId);
     });
 
     // Delete match
