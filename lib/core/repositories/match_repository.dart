@@ -21,7 +21,7 @@ class MatchRepository {
   // SET
 
   Future<void> saveMatch(Match match) async {
-    Preconditions.requireArgumentNotNull(match.id);
+    Preconditions.requireArgumentNotEmpty(match.id);
 
     // it's not necessary to download a full copy of the match object because
     // the match object provided contains already all the data and thus no
@@ -33,7 +33,7 @@ class MatchRepository {
   // GET
 
   Future<Match> getMatchById(String matchId) async {
-    Preconditions.requireArgumentNotNull(matchId);
+    Preconditions.requireArgumentNotEmpty(matchId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseMatchesChild).child(matchId).once();
     Match match;
@@ -59,7 +59,7 @@ class MatchRepository {
   // DELETE
 
   Future<void> deleteMatch(String matchId) async {
-    Preconditions.requireArgumentNotNull(matchId);
+    Preconditions.requireArgumentNotEmpty(matchId);
 
     await _databaseReference.child(_firebaseMatchesChild).child(matchId).remove();
   }

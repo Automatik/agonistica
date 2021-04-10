@@ -22,7 +22,7 @@ class TeamRepository {
 
   /// Upload Team data (insert)
   Future<bool> saveTeam(Team team) async {
-    Preconditions.requireArgumentNotNull(team.id);
+    Preconditions.requireArgumentNotEmpty(team.id);
 
     // check if the team exists already by using its id
     Team oldTeam = await getTeamById(team.id);
@@ -41,7 +41,7 @@ class TeamRepository {
   // CHECK
 
   Future<bool> teamExists(String teamId) async {
-    Preconditions.requireArgumentNotNull(teamId);
+    Preconditions.requireArgumentNotEmpty(teamId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     return snapshot.value != null;
@@ -51,7 +51,7 @@ class TeamRepository {
 
   /// Download Team data given its id
   Future<Team> getTeamById(String teamId) async {
-    Preconditions.requireArgumentNotNull(teamId);
+    Preconditions.requireArgumentNotEmpty(teamId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
     Team team;
@@ -114,7 +114,7 @@ class TeamRepository {
 
   /// Return true if the team name given is unique across all teams stored
   Future<bool> isTeamNameUnique(String newTeamName) async {
-    Preconditions.requireArgumentNotNull(newTeamName);
+    Preconditions.requireArgumentNotEmpty(newTeamName);
 
     List<Team> teams = await getTeams();
     bool teamNameFound = false;

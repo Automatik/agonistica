@@ -16,7 +16,7 @@ class PlayerNotesRepository {
   // SET
 
   Future<void> savePlayerMatchNotes(PlayerMatchNotes playerMatchNotes) async {
-    Preconditions.requireArgumentNotNull(playerMatchNotes.id);
+    Preconditions.requireArgumentNotEmpty(playerMatchNotes.id);
 
     await _databaseReference.child(_firebasePlayersNotesChild).child(playerMatchNotes.id).set(playerMatchNotes.toJson());
   }
@@ -24,7 +24,7 @@ class PlayerNotesRepository {
   // GET
 
   Future<PlayerMatchNotes> getPlayerNotesById(String playerNotesId) async {
-    Preconditions.requireArgumentNotNull(playerNotesId);
+    Preconditions.requireArgumentNotEmpty(playerNotesId);
 
     final DataSnapshot snapshot = await _databaseReference.child(_firebasePlayersNotesChild).child(playerNotesId).once();
     PlayerMatchNotes playerMatchNotes;
