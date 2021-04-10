@@ -10,7 +10,7 @@ class Match {
 
   String categoryId;
 
-  String team1Id, team2Id;
+  String seasonTeam1Id, seasonTeam2Id;
 
   int team1Goals, team2Goals;
 
@@ -57,13 +57,13 @@ class Match {
 
   Team getTeam1() {
     Team team = Team.name(team1Name);
-    team.id = team1Id;
+    team.id = seasonTeam1Id;
     return team;
   }
 
   Team getTeam2() {
     Team team = Team.name(team2Name);
-    team.id = team2Id;
+    team.id = seasonTeam2Id;
     return team;
   }
 
@@ -108,20 +108,20 @@ class Match {
   }
 
   List<MatchPlayerData> _getPlayers(String teamId) {
-    return playersData.where((p) => p.teamId == teamId).toList();
+    return playersData.where((p) => p.seasonTeamId == teamId).toList();
   }
 
   List<MatchPlayerData> _getLineUpPlayers(String teamId, bool isRegular) {
-    return playersData.where((p) => p.teamId == teamId && p.isRegular == isRegular).toList();
+    return playersData.where((p) => p.seasonTeamId == teamId && p.isRegular == isRegular).toList();
   }
 
   void setTeam1(Team team) {
-    team1Id = team.id;
+    seasonTeam1Id = team.id;
     team1Name = team.name;
   }
 
   void setTeam2(Team team) {
-    team2Id = team.id;
+    seasonTeam2Id = team.id;
     team2Name = team.name;
   }
 
@@ -131,8 +131,8 @@ class Match {
     return {
       'id': id,
       'categoryId': categoryId,
-      'team1Id': team1Id,
-      'team2Id': team2Id,
+      'seasonTeam1Id': seasonTeam1Id,
+      'seasonTeam2Id': seasonTeam2Id,
       'team1Goals': team1Goals,
       'team2Goals': team2Goals,
       'leagueMatch': leagueMatch,
@@ -146,8 +146,8 @@ class Match {
   Match.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
       categoryId = json['categoryId'],
-      team1Id = json['team1Id'],
-      team2Id = json['team2Id'],
+      seasonTeam1Id = json['seasonTeam1Id'],
+      seasonTeam2Id = json['seasonTeam2Id'],
       team1Goals = json['team1Goals'],
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
@@ -158,8 +158,8 @@ class Match {
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("categoryId", categoryId);
-    Preconditions.requireFieldNotEmpty("team1Id", team1Id);
-    Preconditions.requireFieldNotEmpty("team2Id", team2Id);
+    Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id);
+    Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id);
     Preconditions.requireFieldNotNull("matchDate", matchDate);
   }
 }

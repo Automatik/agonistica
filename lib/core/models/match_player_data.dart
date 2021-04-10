@@ -18,16 +18,13 @@ class MatchPlayerData {
 
   String id;
 
-  // do not use this field for non followed players -> Da rivedere: se io aggiungo un player tramite MatchPlayerData a una partita e poi in un secondo momento voglio creare un vero e proprio Player? Avere già un playerId aiuta a ricollegare tutte le partite di quel giocatore
-  String playerId;
+  String seasonPlayerId;
 
-  // the name also need to be stored for players not followed by the scouts
-  // I expect that if I edit a player's name from the match view should be propagated accordingly through playerId
-  // And I expect that if the player's name is updated elsewhere, also here the name should be updated
-  // handled this in the service
+  // the name and surname fields are updated every time the player card is
+  // modified in databaseService.savePlayer()
   String name, surname;
 
-  String teamId;
+  String seasonTeamId;
 
   bool isRegular; // is regular player or a reserve
 
@@ -42,17 +39,17 @@ class MatchPlayerData {
 
   bool isEmptyPlayer() {
     //Eventually reduce to only checking if playerId is null
-    return playerId == null && name == EMPTY_PLAYER_NAME && surname == EMPTY_PLAYER_SURNAME;
+    return seasonPlayerId == null && name == EMPTY_PLAYER_NAME && surname == EMPTY_PLAYER_SURNAME;
   }
 
   MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
     Preconditions.requireArgumentNotEmpty(teamId);
 
     id = DbUtils.newUuid();
-    playerId = null;
+    seasonPlayerId = null;
     name = EMPTY_PLAYER_NAME;
     surname = EMPTY_PLAYER_SURNAME;
-    this.teamId = teamId;
+    this.seasonTeamId = teamId;
     this.isRegular = isRegular;
     shirtNumber = 0;
     numGoals = 0;
@@ -62,10 +59,10 @@ class MatchPlayerData {
 
   MatchPlayerData.clone(MatchPlayerData data) {
     id = data.id;
-    playerId = data.playerId;
+    seasonPlayerId = data.seasonPlayerId;
     name = data.name;
     surname = data.surname;
-    teamId = data.teamId;
+    seasonTeamId = data.seasonTeamId;
     isRegular = data.isRegular;
     shirtNumber = data.shirtNumber;
     numGoals = data.numGoals;
@@ -78,10 +75,10 @@ class MatchPlayerData {
 
     return {
       'id': id,
-      'playerId': playerId,
+      'seasonPlayerId': seasonPlayerId,
       'name': name,
       'surname': surname,
-      'teamId': teamId,
+      'seasonTeamId': seasonTeamId,
       'isRegular': isRegular,
       'shirtNumber': shirtNumber,
       'numGoals': numGoals,
@@ -92,10 +89,10 @@ class MatchPlayerData {
 
   MatchPlayerData.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
-      playerId = json['playerId'],
+      seasonPlayerId = json['seasonPlayerId'],
       name = json['name'],
       surname = json['surname'],
-      teamId = json['teamId'],
+      seasonTeamId = json['seasonTeamId'],
       isRegular = json['isRegular'],
       shirtNumber = json['shirtNumber'],
       numGoals = json['numGoals'],
@@ -106,10 +103,10 @@ class MatchPlayerData {
   /// it's the player's first match
   Player toPlayer(String categoryId) {
     Player p = Player.empty();
-    p.id = playerId;
+    p.id = seasonPlayerId;
     p.name = name;
     p.surname = surname;
-    p.teamId = teamId;
+    p.teamId = seasonTeamId;
     p.categoryId = categoryId;
 
     // match data
@@ -202,10 +199,10 @@ class MatchPlayerData {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId);
     Preconditions.requireFieldNotEmpty("name", name);
     Preconditions.requireFieldNotEmpty("surname", surname);
-    Preconditions.requireFieldNotEmpty("teamId", teamId);
+    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
   }
 
 }

@@ -140,9 +140,9 @@ class DatabaseService {
     List<Match> newMatches = [];
     for(Match match in matches) {
       // Get teams' name
-      Team tempTeam = await _teamRepository.getTeamById(match.team1Id);
+      Team tempTeam = await _teamRepository.getTeamById(match.seasonTeam1Id);
       match.team1Name = tempTeam?.name;
-      tempTeam = await _teamRepository.getTeamById(match.team2Id);
+      tempTeam = await _teamRepository.getTeamById(match.seasonTeam2Id);
       match.team2Name = tempTeam?.name;
       newMatches.add(match);
     }
@@ -253,8 +253,8 @@ class DatabaseService {
     if(matchPreviouslySaved) {
       // If a team is changed, remove the match's id from the old team
 
-      await _removeOldTeamFromMatch(oldMatch.team1Id, match.team1Id, match.id);
-      await _removeOldTeamFromMatch(oldMatch.team2Id, match.team2Id, match.id);
+      await _removeOldTeamFromMatch(oldMatch.seasonTeam1Id, match.seasonTeam1Id, match.id);
+      await _removeOldTeamFromMatch(oldMatch.seasonTeam2Id, match.seasonTeam2Id, match.id);
 
       // Remove the match's id from the players that are no more in the match
       // and also remove the stats regarding this match from the player stats
@@ -262,8 +262,8 @@ class DatabaseService {
     }
 
     // Create Team objects if they do not exist yet
-    bool team1Exists = await _teamRepository.teamExists(match.team1Id);
-    bool team2Exists = await _teamRepository.teamExists(match.team2Id);
+    bool team1Exists = await _teamRepository.teamExists(match.seasonTeam1Id);
+    bool team2Exists = await _teamRepository.teamExists(match.seasonTeam2Id);
     if(!team1Exists) await saveTeam(match.getTeam1());
     if(!team2Exists) await saveTeam(match.getTeam2());
 
@@ -271,7 +271,7 @@ class DatabaseService {
     // Create Player objects from those players appearing for the first time in
     // a match, as MatchPlayerData objects, that do not exist yet
     match.playersData.forEach((p) async {
-      Player player = await _playerRepository.getPlayerById(p.playerId);
+      Player player = await _playerRepository.getPlayerById(p.seasonPlayerId);
       bool playerExists = player != null;
       if(!playerExists) {
         // The player's matchesIds is updated later
@@ -286,8 +286,8 @@ class DatabaseService {
 
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
-    List<String> team1MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team1Id).map((p) => p.playerId).toList();
-    List<String> team2MatchPlayerIds = match.playersData.where((p) => p.teamId == match.team2Id).map((p) => p.playerId).toList();
+    List<String> team1MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam1Id).map((p) => p.seasonPlayerId).toList();
+    List<String> team2MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam2Id).map((p) => p.seasonPlayerId).toList();
     List<String> matchPlayersIds = List.from(team1MatchPlayerIds);
     matchPlayersIds.addAll(team2MatchPlayerIds);
     List<Player> matchPlayers = await _playerRepository.getPlayersByIds(matchPlayersIds);
@@ -315,7 +315,7 @@ class DatabaseService {
     // Get matches in which the player has played
     List<Match> matches = await getMatchesByIds(player.matchesIds);
 
-    List<MatchPlayerData> playerDataList = matches.map((m) => m.playersData.firstWhere((p) => p.playerId == player.id)).toList();
+    List<MatchPlayerData> playerDataList = matches.map((m) => m.playersData.firstWhere((p) => p.seasonPlayerId == player.id)).toList();
 
     player.resetStats();
     for(MatchPlayerData playerData in playerDataList) {
@@ -335,12 +335,12 @@ class DatabaseService {
 
   Future<void> _removeMatchIdAndStatsFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
     // Map MatchPlayerData to a list of players ids
-    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.playerId).toList();
-    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.playerId).toList();
+    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.seasonPlayerId).toList();
+    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.seasonPlayerId).toList();
     // Keep in oldPlayerIds only the players that are now removed from the Match
     oldPlayerIds.retainWhere((op) => !currentPlayerIds.contains(op));
     // Do the same for the list of MatchPlayerData
-    oldMatchPlayersData.retainWhere((mpd) => oldPlayerIds.contains(mpd.playerId));
+    oldMatchPlayersData.retainWhere((mpd) => oldPlayerIds.contains(mpd.seasonPlayerId));
     // Update Player objects
     List<Player> players = await _playerRepository.getPlayersByIds(oldPlayerIds);
     for(Player player in players) {
@@ -377,7 +377,7 @@ class DatabaseService {
     // update for every match that the player has played the player's name
     List<Match> matches = await _matchRepository.getMatchesByIds(player.matchesIds);
     for(Match match in matches) {
-      int index = match.playersData.indexWhere((data) => data.playerId == player.id);
+      int index = match.playersData.indexWhere((data) => data.seasonPlayerId == player.id);
       if(index > -1) {
         match.playersData[index].name = player.name;
         match.playersData[index].surname = player.surname;
@@ -440,13 +440,13 @@ class DatabaseService {
     }
 
     // Delete match id from teams
-    String team1Id = match.team1Id;
-    String team2Id = match.team2Id;
+    String team1Id = match.seasonTeam1Id;
+    String team2Id = match.seasonTeam2Id;
     await _teamRepository.deleteMatchFromTeam(team1Id, matchId);
     await _teamRepository.deleteMatchFromTeam(team2Id, matchId);
 
     // Delete match id from players
-    match.playersData.map((p) => p.playerId).forEach((id) async {
+    match.playersData.map((p) => p.seasonPlayerId).forEach((id) async {
       await _playerRepository.deleteMatchFromPlayer(id, matchId);
     });
 

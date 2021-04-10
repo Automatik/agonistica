@@ -124,7 +124,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     if(areShirtNameAndSurnameValid()) {
       // the other fields (goals and dropdown) are always valid
 
-      String playerId = widget.matchPlayerData.playerId;
+      String playerId = widget.matchPlayerData.seasonPlayerId;
       String name = nameTextEditingController.text;
       String surname = surnameTextEditingController.text;
       int shirtNumber = int.tryParse(shirtTextEditingController.text);
@@ -140,7 +140,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         if(!isExistingPlayer(playerId)) {
           var uuid = Uuid();
           playerId = uuid.v4();
-          newPlayerData.playerId = playerId;
+          newPlayerData.seasonPlayerId = playerId;
         }
 
         newPlayerData.name = name;
@@ -172,7 +172,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   /// If the user write manually the name and surname of an existing player
   /// this method allows to get the player's id
   String avoidDuplicateMatchPlayer() {
-    String playerId = widget.matchPlayerData.playerId;
+    String playerId = widget.matchPlayerData.seasonPlayerId;
     if(!ALLOW_DUPLICATE_MATCH_PLAYERS || isExistingPlayer(playerId)) {
       return playerId;
     }
@@ -217,11 +217,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   /// Example: Start writing a name in the textfield, click on a suggested
   /// player and then add a letter to the name.
   void updateMatchPlayerData() {
-    widget.matchPlayerData.playerId = null;
+    widget.matchPlayerData.seasonPlayerId = null;
   }
 
   void onItemPlayerTap(Player player) {
-    widget.matchPlayerData.playerId = player.id;
+    widget.matchPlayerData.seasonPlayerId = player.id;
     this.nameTextEditingController.text = player.name;
     this.surnameTextEditingController.text = player.surname;
   }

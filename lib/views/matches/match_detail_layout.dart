@@ -176,11 +176,11 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   bool isTeam1Inserted() {
-    return tempMatch.team1Id != null;
+    return tempMatch.seasonTeam1Id != null;
   }
 
   bool isTeam2Inserted() {
-    return tempMatch.team2Id != null;
+    return tempMatch.seasonTeam2Id != null;
   }
 
   /// Check if the edited player does not contain the same shirt number of other
@@ -200,7 +200,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   Future<void> updateTeam1OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
       Team team1;
-      String oldTeam1Id = match.team1Id;
+      String oldTeam1Id = match.seasonTeam1Id;
       bool isTeamPopulated = isTeam1Populated();
       if(isTeamPopulated) {
         team1 = await updateTeamDialog(context, match.team1Name);
@@ -221,7 +221,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   Future<void> updateTeam2OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
       Team team2;
-      String oldTeam2Id = match.team2Id;
+      String oldTeam2Id = match.seasonTeam2Id;
       bool isTeamPopulated = isTeam2Populated();
       if(isTeamPopulated) {
         team2 = await updateTeamDialog(context, match.team2Name);
@@ -265,7 +265,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   void removeTeamPlayersFromMatch(Match match, String teamId) {
     List<MatchPlayerData> newPlayerDataList = List();
     match.playersData.forEach((p) {
-      if(p.teamId == teamId) {
+      if(p.seasonTeamId == teamId) {
         p = MatchPlayerData.empty(teamId, isRegular: p.isRegular);
       }
       newPlayerDataList.add(p);
@@ -553,10 +553,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               lineSeparatorWidth: _getLineSeparatorWidth(index, rowsCount),
               onPlayerValidation: (id, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(id, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
-                String teamId = isHomePlayer ? tempMatch.team1Id : tempMatch.team2Id;
+                String teamId = isHomePlayer ? tempMatch.seasonTeam1Id : tempMatch.seasonTeam2Id;
                 List<Player> players = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
                 // Remove players already in the lineup
-                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.playerId).toList();
+                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList();
                 players.removeWhere((p) => lineupPlayersIds.contains(p.id));
                 return players;
               },
@@ -565,7 +565,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                   _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
                 });
               },
-              onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.playerId),
+              onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId),
               onDeleteCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
                   tempMatch.playersData.remove(matchPlayerData);

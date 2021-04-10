@@ -72,7 +72,7 @@ class MatchRepository {
     if (match == null) {
       throw NotFoundException("Match with id $matchId not found in database.");
     }
-    match.playersData.removeWhere((mp) => mp.playerId == playerId);
+    match.playersData.removeWhere((mp) => mp.seasonPlayerId == playerId);
     await saveMatch(match);
   }
 
