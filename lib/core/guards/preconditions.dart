@@ -8,9 +8,21 @@ class Preconditions {
       throw ArgumentException("String argument is null");
   }
 
+  static void requireArgumentNotEmpty(String string) {
+    requireArgumentNotNull(string);
+    if(string.isEmpty)
+      throw ArgumentException("String argument is null");
+  }
+
   static void requireArgumentGreaterThanZero(int value) {
     if(value <= 0) {
       throw ArgumentException("Int argument is less or equal than zero");
+    }
+  }
+
+  static void requireArgumentLessThan(int value, int compare) {
+    if(value >= compare) {
+      throw ArgumentException("Int argument is greater or equal than other argument with value $compare");
     }
   }
 
@@ -26,9 +38,22 @@ class Preconditions {
     }
   }
 
+  static void requireFieldNotEmpty(String field, String value) {
+    requireFieldNotNull(field, value);
+    if(value.isEmpty) {
+      throw FieldException("The field $field is empty");
+    }
+  }
+
   static void requireFieldGreaterThanZero(String field, int value) {
     if(value <= 0) {
       throw FieldException("The field $field is less or equal than zero");
+    }
+  }
+
+  static void requireFieldLessThan(String field, int value, int compare) {
+    if(value >= compare) {
+      throw FieldException("The field $field is greater or equal than other argument with value $compare");
     }
   }
 

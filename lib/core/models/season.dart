@@ -54,10 +54,10 @@ class Season {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotNull("beginYear", beginYear);
     Preconditions.requireFieldNotNull("endYear", endYear);
-    Preconditions.requireFieldNotNull("period", period);
+    Preconditions.requireFieldNotEmpty("period", period);
     Preconditions.requireFieldGreaterThanZero("beginYear", beginYear);
     Preconditions.requireFieldGreaterThanZero("endYear", endYear);
     Preconditions.requireFieldGreaterThan("endYear", endYear, beginYear);

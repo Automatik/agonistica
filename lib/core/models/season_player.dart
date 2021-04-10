@@ -21,9 +21,9 @@ class SeasonPlayer {
   }
 
   SeasonPlayer.empty(String playerId, String seasonTeamId, String seasonId) {
-    Preconditions.requireArgumentNotNull(playerId);
-    Preconditions.requireArgumentNotNull(seasonTeamId);
-    Preconditions.requireArgumentNotNull(seasonId);
+    Preconditions.requireArgumentNotEmpty(playerId);
+    Preconditions.requireArgumentNotEmpty(seasonTeamId);
+    Preconditions.requireArgumentNotEmpty(seasonId);
 
     id = DbUtils.newUuid();
     this.playerId = playerId;
@@ -52,10 +52,10 @@ class SeasonPlayer {
       matchesIds = json['matchesIds'] == null ? List() : List<String>.from(json['matchesIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("playerId", playerId);
-    Preconditions.requireFieldNotNull("seasonTeamId", seasonTeamId);
-    Preconditions.requireFieldNotNull("seasonId", seasonId);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
   }
 
 }

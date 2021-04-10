@@ -46,6 +46,8 @@ class MatchPlayerData {
   }
 
   MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
+    Preconditions.requireArgumentNotEmpty(teamId);
+
     id = DbUtils.newUuid();
     playerId = null;
     name = EMPTY_PLAYER_NAME;
@@ -199,11 +201,11 @@ class MatchPlayerData {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("playerId", playerId);
-    Preconditions.requireFieldNotNull("name", name);
-    Preconditions.requireFieldNotNull("surname", surname);
-    Preconditions.requireFieldNotNull("teamId", teamId);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("name", name);
+    Preconditions.requireFieldNotEmpty("surname", surname);
+    Preconditions.requireFieldNotEmpty("teamId", teamId);
   }
 
 }

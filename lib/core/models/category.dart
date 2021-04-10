@@ -25,8 +25,8 @@ class Category {
       name = json['name'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("name", name);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("name", name);
   }
 
 }

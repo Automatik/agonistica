@@ -38,9 +38,9 @@ class PlayerMatchNotes {
       notes = json['notes'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("playerId", playerId);
-    Preconditions.requireFieldNotNull("matchId", matchId);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("matchId", matchId);
     Preconditions.requireFieldNotNull("notes", notes);
   }
 

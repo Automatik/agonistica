@@ -41,8 +41,8 @@ class Team {
         playersIds = json['playersIds'] == null ? List() : List<String>.from(json['playersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("name", name);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("name", name);
   }
 
 }

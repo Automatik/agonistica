@@ -156,10 +156,10 @@ class Match {
       matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("categoryId", categoryId);
-    Preconditions.requireFieldNotNull("team1Id", team1Id);
-    Preconditions.requireFieldNotNull("team2Id", team2Id);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
+    Preconditions.requireFieldNotEmpty("team1Id", team1Id);
+    Preconditions.requireFieldNotEmpty("team2Id", team2Id);
     Preconditions.requireFieldNotNull("matchDate", matchDate);
   }
 }

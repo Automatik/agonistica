@@ -261,11 +261,11 @@ class Player {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotNull("id", id);
-    Preconditions.requireFieldNotNull("name", name);
-    Preconditions.requireFieldNotNull("surname", surname);
-    Preconditions.requireFieldNotNull("teamId", teamId);
-    Preconditions.requireFieldNotNull("categoryId", categoryId);
+    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("name", name);
+    Preconditions.requireFieldNotEmpty("surname", surname);
+    Preconditions.requireFieldNotEmpty("teamId", teamId);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
   }
 
 }
