@@ -28,7 +28,7 @@ class _NotesMobileState extends State<_NotesMobile> {
     super.initState();
     tempMatch = Match.clone(widget.viewModel.match);
     tempNotes = PlayerMatchNotes.clone(widget.viewModel.notes);
-    print("player id: ${tempNotes.playerId}");
+    print("player id: ${tempNotes.seasonPlayerId}");
     isEditEnabled = false;
     notesController = TextEditingController();
     initializeState();

@@ -320,7 +320,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         // se cambia categoria serve solo aggiornare il player (ma può servire aggiungere una nuova categoria alla squadra nel caso
                         // il player ora faccia parte di una categoria di cui ancora il team non era presente) -> no non serve
                         if(isEditEnabled) {
-                          List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getTeam());
+                          List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getSeasonTeam());
                           final dialog = SelectCategoryDialog(
                               categories: categories,
                               onSelect: (newCategory) {

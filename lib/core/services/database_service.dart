@@ -158,7 +158,7 @@ class DatabaseService {
   /// Download missing info for a player (for instance after calling getPlayerId)
   /// like the team's name and the category's name
   Future<Player> completePlayerWithMissingInfo(Player player) async {
-    String teamId = player.teamId;
+    String teamId = player.seasonTeamId;
     String categoryId = player.categoryId;
 
     Category category = await getCategoryById(categoryId);
@@ -275,7 +275,7 @@ class DatabaseService {
       bool playerExists = player != null;
       if(!playerExists) {
         // The player's matchesIds is updated later
-        player = p.toPlayer(match.categoryId);
+        player = p.toSeasonPlayer(match.categoryId);
         await _playerRepository.savePlayer(player);
       }
     });
@@ -357,8 +357,8 @@ class DatabaseService {
   Future<void> savePlayer(Player player) async {
     // if the player's teamId is changed, remove the player's id from the old team's playersIds
     Player oldPlayer = await _playerRepository.getPlayerById(player.id);
-    if(oldPlayer != null && oldPlayer.teamId != player.teamId) {
-      Team oldTeam = await _teamRepository.getTeamById(oldPlayer.teamId);
+    if(oldPlayer != null && oldPlayer.seasonTeamId != player.seasonTeamId) {
+      Team oldTeam = await _teamRepository.getTeamById(oldPlayer.seasonTeamId);
       oldTeam.playersIds.removeWhere((id) => id == oldPlayer.id);
       await _teamRepository.saveTeam(oldTeam);
     }
@@ -366,7 +366,7 @@ class DatabaseService {
     await _playerRepository.savePlayer(player);
 
     // insert or update team's playerIds
-    Team team = await _teamRepository.getTeamById(player.teamId);
+    Team team = await _teamRepository.getTeamById(player.seasonTeamId);
     if(team.playersIds == null)
       team.playersIds = [];
     if(!team.playersIds.contains(player.id)) {
@@ -393,7 +393,7 @@ class DatabaseService {
   // SET PLAYER MATCH NOTES
 
   Future<void> savePlayerMatchNotes(PlayerMatchNotes playerMatchNotes) async {
-    Player player = await _playerRepository.getPlayerById(playerMatchNotes.playerId);
+    Player player = await _playerRepository.getPlayerById(playerMatchNotes.seasonPlayerId);
     if(player == null) {
       _logger.d("databaseService: player not found when saving the PlayerMatchNotes");
       return;
@@ -420,7 +420,7 @@ class DatabaseService {
     }
     
     // Delete player id from team
-    await _teamRepository.deletePlayerFromTeam(player.teamId, playerId);
+    await _teamRepository.deletePlayerFromTeam(player.seasonTeamId, playerId);
 
     // Delete player id from the matches he has played
     player.matchesIds.forEach((id) async {

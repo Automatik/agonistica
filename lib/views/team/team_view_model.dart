@@ -74,7 +74,7 @@ class TeamViewModel extends BaseViewModel {
     if(index != -1) {
 
       // check if the player's team or category has changed
-      if(player.teamId != _databaseService.selectedTeam.id || player.categoryId != _databaseService.selectedCategory.id) {
+      if(player.seasonTeamId != _databaseService.selectedTeam.id || player.categoryId != _databaseService.selectedCategory.id) {
         // remove the player from the players list
         players.removeAt(index);
       } else {

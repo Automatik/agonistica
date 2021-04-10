@@ -31,7 +31,7 @@ class RosterViewModel extends BaseViewModel {
 
     teams = await _databaseService.getTeamsWithoutOtherRequestedTeams();
     if(player != null) {
-      Team playerTeam = await _databaseService.getTeamById(player.teamId);
+      Team playerTeam = await _databaseService.getTeamById(player.seasonTeamId);
       teams.add(playerTeam);
     }
 

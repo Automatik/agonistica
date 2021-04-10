@@ -1,5 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class MatchPlayerData {
@@ -99,24 +100,25 @@ class MatchPlayerData {
       substitution = json['substitution'],
       card = json['card'];
 
-  /// Create a new Player object from this MatchPlayerData object, assuming
+  /// Create a new SeasonPlayer object from this MatchPlayerData object, assuming
   /// it's the player's first match
-  Player toPlayer(String categoryId) {
+  SeasonPlayer toSeasonPlayer(String categoryId, String seasonId) {
     Player p = Player.empty();
-    p.id = seasonPlayerId;
     p.name = name;
     p.surname = surname;
-    p.teamId = seasonTeamId;
-    p.categoryId = categoryId;
+
+    SeasonPlayer sp = SeasonPlayer.empty(p.id, seasonTeamId, seasonId, categoryId);
+    sp.id = seasonPlayerId;
+    sp.player = p;
 
     // match data
     // In databaseService.saveMatch this data is re-calculated to avoid mistakes
-    p.matches = 1;
-    p.goals = numGoals;
-    p.yellowCards = getYellowCardsCount();
-    p.redCards = getRedCardCount();
+    sp.matches = 1;
+    sp.goals = numGoals;
+    sp.yellowCards = getYellowCardsCount();
+    sp.redCards = getRedCardCount();
 
-    return p;
+    return sp;
   }
 
   int getYellowCardsCount() {

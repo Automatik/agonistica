@@ -7,11 +7,11 @@ class SeasonTeam {
   String id;
   String teamId;
   String seasonId;
-  // List<String> categoriesIds; TODO Valutare se è necessario avere questa lista solo in Team
+  List<String> categoriesIds;
   List<String> matchesIds;
   List<String> seasonPlayersIds;
 
-  // temporary
+  // temporary, do not store
   Team team;
 
   SeasonTeam() {
@@ -36,6 +36,7 @@ class SeasonTeam {
       'id': id,
       'teamId': teamId,
       'seasonId': seasonId,
+      'categoriesIds': categoriesIds,
       'matchesIds': matchesIds,
       'seasonPlayersIds': seasonPlayersIds
     };
@@ -45,6 +46,7 @@ class SeasonTeam {
     : id = json['id'],
       teamId = json['teamId'],
       seasonId = json['seasonId'],
+      categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']),
       matchesIds = json['matchesIds'] == null ? List() : List<String>.from(json['matchesIds']),
       seasonPlayersIds = json['seasonPlayersIds'] == null ? List() : List<String>.from(json['seasonPlayersIds']);
 

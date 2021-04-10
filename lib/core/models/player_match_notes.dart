@@ -4,18 +4,18 @@ import 'package:agonistica/core/utils/db_utils.dart';
 class PlayerMatchNotes {
 
   String id;
-  String playerId;
+  String seasonPlayerId;
   String matchId;
 
   String notes;
 
-  PlayerMatchNotes(this.matchId, this.playerId) {
+  PlayerMatchNotes(this.matchId, this.seasonPlayerId) {
     id = DbUtils.newUuid();
   }
 
   PlayerMatchNotes.clone(PlayerMatchNotes playerMatchNotes) {
     id = playerMatchNotes.id;
-    playerId = playerMatchNotes.playerId;
+    seasonPlayerId = playerMatchNotes.seasonPlayerId;
     matchId = playerMatchNotes.matchId;
     notes = playerMatchNotes.notes;
   }
@@ -25,7 +25,7 @@ class PlayerMatchNotes {
 
     return {
       'id': id,
-      'playerId': playerId,
+      'seasonPlayerId': seasonPlayerId,
       'matchId': matchId,
       'notes': notes
     };
@@ -33,13 +33,13 @@ class PlayerMatchNotes {
 
   PlayerMatchNotes.fromJson(Map<dynamic, dynamic> json) :
       id = json['id'],
-      playerId = json['playerId'],
+      seasonPlayerId = json['seasonPlayerId'],
       matchId = json['matchId'],
       notes = json['notes'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId);
     Preconditions.requireFieldNotEmpty("matchId", matchId);
     Preconditions.requireFieldNotNull("notes", notes);
   }
