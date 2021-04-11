@@ -11,7 +11,7 @@ class CategoryRepository extends CrudRepository<Category>{
   // SET
 
   Future<void> saveCategory(Category category) async {
-    await super.saveItem(category.id, category);
+    await super.saveItem(category);
   }
 
   // GET
@@ -39,6 +39,11 @@ class CategoryRepository extends CrudRepository<Category>{
   @override
   Category jsonToItem(Map<dynamic, dynamic> json) {
     return Category.fromJson(json);
+  }
+
+  @override
+  String getItemId(Category item) {
+    return item.id;
   }
 
 }

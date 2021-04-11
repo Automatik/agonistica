@@ -11,7 +11,7 @@ class FollowedPlayersRepository extends CrudRepository<FollowedPlayers> {
   // SET
 
   Future<void> saveFollowedPlayers(FollowedPlayers followedPlayers) async {
-    await super.saveItem(followedPlayers.id, followedPlayers);
+    await super.saveItem(followedPlayers);
   }
 
   // GET
@@ -48,6 +48,11 @@ class FollowedPlayersRepository extends CrudRepository<FollowedPlayers> {
   @override
   FollowedPlayers jsonToItem(Map<dynamic, dynamic> json) {
     return FollowedPlayers.fromJson(json);
+  }
+
+  @override
+  String getItemId(FollowedPlayers item) {
+    return item.id;
   }
 
 }

@@ -15,7 +15,7 @@ class MatchRepository extends CrudRepository<Match> {
   // update is needed
   // (could be different in case of changes to the Match's model)
   Future<void> saveMatch(Match match) async {
-    await super.saveItem(match.id, match);
+    await super.saveItem(match);
   }
 
   // GET
@@ -51,6 +51,11 @@ class MatchRepository extends CrudRepository<Match> {
   @override
   Match jsonToItem(Map<dynamic, dynamic> json) {
     return Match.fromJson(json);
+  }
+
+  @override
+  String getItemId(Match item) {
+    return item.id;
   }
 
 }

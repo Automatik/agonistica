@@ -12,7 +12,7 @@ class SeasonTeamRepository extends CrudRepository<SeasonTeam> {
 
   //TODO in databaseService quando salvo un seasonTeam assicurarsi che esista un Team, altrimenti crearlo
   Future<void> saveSeasonTeam(SeasonTeam seasonTeam) async {
-    await super.saveItem(seasonTeam.id, seasonTeam);
+    await super.saveItem(seasonTeam);
   }
 
   // GET
@@ -53,6 +53,11 @@ class SeasonTeamRepository extends CrudRepository<SeasonTeam> {
   @override
   SeasonTeam jsonToItem(Map<dynamic, dynamic> json) {
     return SeasonTeam.fromJson(json);
+  }
+
+  @override
+  String getItemId(SeasonTeam item) {
+    return item.id;
   }
 
 }

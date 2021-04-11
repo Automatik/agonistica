@@ -11,7 +11,7 @@ class SeasonRepository extends CrudRepository<Season> {
   // SET
 
   Future<void> saveSeason(Season season) async {
-    await super.saveItem(season.id, season);
+    await super.saveItem(season);
   }
 
   // GET
@@ -32,6 +32,11 @@ class SeasonRepository extends CrudRepository<Season> {
   @override
   Season jsonToItem(Map<dynamic, dynamic> json) {
     return Season.fromJson(json);
+  }
+
+  @override
+  String getItemId(Season item) {
+    return item.id;
   }
 
 }

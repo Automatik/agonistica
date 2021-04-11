@@ -9,7 +9,7 @@ abstract class CrudRepository<T> {
   DatabaseReference databaseReference;
   String firebaseChild;
 
-  static Logger _logger = getLogger('CrudRepository');
+  static Logger logger = getLogger('CrudRepository');
 
   CrudRepository(DatabaseReference databaseReference, String firebaseChild) {
     this.databaseReference = databaseReference;
@@ -19,10 +19,11 @@ abstract class CrudRepository<T> {
   // SET
 
   /// Save item object in a key with value itemId
-  Future<void> saveItem(String itemId, T t) async {
+  Future<void> saveItem(T item) async {
+    String itemId = getItemId(item);
     Preconditions.requireArgumentNotEmpty(itemId);
 
-    final json = itemToJson(t);
+    final json = itemToJson(item);
     await databaseReference.child(firebaseChild).child(itemId).set(json);
   }
 
@@ -85,8 +86,10 @@ abstract class CrudRepository<T> {
     await databaseReference.child(firebaseChild).child(itemId).remove();
   }
 
-  Map<String, dynamic> itemToJson(T t);
+  Map<String, dynamic> itemToJson(T item);
 
   T jsonToItem(Map<dynamic, dynamic> json);
+
+  String getItemId(T item);
 
 }

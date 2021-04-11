@@ -22,7 +22,7 @@ class TeamRepository extends CrudRepository<Team> {
       if(!isNameUnique)
         return false;
     }
-    await super.saveItem(team.id, team);
+    await super.saveItem(team);
     return true;
   }
 
@@ -99,6 +99,11 @@ class TeamRepository extends CrudRepository<Team> {
   @override
   Team jsonToItem(Map<dynamic, dynamic> json) {
     return Team.fromJson(json);
+  }
+
+  @override
+  String getItemId(Team item) {
+    return item.id;
   }
 
 }

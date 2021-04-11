@@ -11,7 +11,7 @@ class MenuRepository extends CrudRepository<Menu> {
   // SET
 
   Future<void> saveMenu(Menu menu) async {
-    await super.saveItem(menu.id, menu);
+    await super.saveItem(menu);
   }
 
   // GET
@@ -32,6 +32,11 @@ class MenuRepository extends CrudRepository<Menu> {
   @override
   Menu jsonToItem(Map<dynamic, dynamic> json) {
     return Menu.fromJson(json);
+  }
+
+  @override
+  String getItemId(Menu item) {
+    return item.id;
   }
 
 }

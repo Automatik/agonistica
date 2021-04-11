@@ -12,7 +12,7 @@ class SeasonPlayerRepository extends CrudRepository<SeasonPlayer> {
 
   //TODO in databaseService quando salvo un seasonPlayer assicurarsi che esista un Player, altrimenti crearlo
   Future<void> saveSeasonPlayer(SeasonPlayer seasonPlayer) async {
-    await super.saveItem(seasonPlayer.id, seasonPlayer);
+    await super.saveItem(seasonPlayer);
   }
 
   // GET
@@ -46,6 +46,11 @@ class SeasonPlayerRepository extends CrudRepository<SeasonPlayer> {
   @override
   SeasonPlayer jsonToItem(Map<dynamic, dynamic> json) {
     return SeasonPlayer.fromJson(json);
+  }
+
+  @override
+  String getItemId(SeasonPlayer item) {
+    return item.id;
   }
 
 }
