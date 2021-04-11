@@ -1,67 +1,44 @@
-import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
+import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:logger/logger.dart';
 
-class CategoryRepository {
+class CategoryRepository extends CrudRepository<Category>{
 
-  DatabaseReference _databaseReference;
-  String _firebaseCategoriesChild;
-
-  static Logger _logger = getLogger('CategoryRepository');
-
-  CategoryRepository(DatabaseReference databaseReference) {
-    this._databaseReference = databaseReference;
-    _firebaseCategoriesChild = DatabaseService.firebaseCategoriesChild;
-  }
+  CategoryRepository(DatabaseReference databaseReference)
+      : super(databaseReference, DatabaseService.firebaseCategoriesChild);
 
   // SET
 
   Future<void> saveCategory(Category category) async {
-    Preconditions.requireArgumentNotEmpty(category.id);
-
-    await _databaseReference.child(_firebaseCategoriesChild).child(category.id).set(category.toJson());
+    await super.saveItem(category.id, category);
   }
 
   // GET
 
   /// Download Category data given its id
   Future<Category> getCategoryById(String categoryId) async {
-    Preconditions.requireArgumentNotEmpty(categoryId);
-
-    final DataSnapshot snapshot = await _databaseReference.child(_firebaseCategoriesChild).child(categoryId).once();
-    Category category;
-    if(snapshot.value != null) {
-      category = Category.fromJson(snapshot.value);
-    }
-    return category;
+    return await super.getItemById(categoryId);
   }
 
   /// Download categories identified by the given ids
   Future<List<Category>> getCategoriesByIds(List<String> categoriesIds) async {
-    Preconditions.requireArgumentsNotNulls(categoriesIds);
-
-    List<Category> categories = List();
-    for(String catId in categoriesIds) {
-      final snapshot = await _databaseReference.child(_firebaseCategoriesChild).child(catId).once();
-      final catValue = snapshot.value;
-      if(catValue != null)
-        categories.add(Category.fromJson(catValue));
-    }
-    return categories;
+    return await super.getItemsByIds(categoriesIds);
   }
 
   /// Download all categories in firebase
   Future<List<Category>> getCategories() async {
-    DatabaseReference categoriesDatabaseReference = _databaseReference.child(DatabaseService.firebaseCategoriesChild);
-    final DataSnapshot snapshot = await categoriesDatabaseReference.once();
-    List<Category> categories = [];
-    Map<dynamic, dynamic> values = snapshot.value;
-    if(values != null)
-      values.forEach((key, value) => categories.add(Category.fromJson(value)));
-    return categories;
+    return await super.getAllItems();
+  }
+
+  @override
+  Map<String, dynamic> itemToJson(Category t) {
+    return t.toJson();
+  }
+
+  @override
+  Category jsonToItem(Map<dynamic, dynamic> json) {
+    return Category.fromJson(json);
   }
 
 }

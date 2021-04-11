@@ -1,62 +1,43 @@
-import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:logger/logger.dart';
 
-class PlayerRepository {
+class PlayerRepository extends CrudRepository<Player> {
 
-  DatabaseReference _databaseReference;
-  String _firebasePlayersChild;
-
-  static Logger _logger = getLogger('PlayerRepository');
-
-  PlayerRepository(DatabaseReference databaseReference) {
-    this._databaseReference = databaseReference;
-    _firebasePlayersChild = DatabaseService.firebasePlayersChild;
-  }
+  PlayerRepository(DatabaseReference databaseReference)
+    : super(databaseReference, DatabaseService.firebasePlayersChild);
 
   // SET
 
   Future<void> savePlayer(Player player) async {
-    Preconditions.requireArgumentNotEmpty(player.id);
-
-    await _databaseReference.child(_firebasePlayersChild).child(player.id).set(player.toJson());
+    await super.saveItem(player.id, player);
   }
 
   // GET
 
   Future<Player> getPlayerById(String playerId) async {
-    Preconditions.requireArgumentNotEmpty(playerId);
-
-    final DataSnapshot snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();
-    Player player;
-    if(snapshot.value != null) {
-      player = Player.fromJson(snapshot.value);
-    }
-    return player;
+    return await super.getItemById(playerId);
   }
 
   Future<List<Player>> getPlayersByIds(List<String> playersIds) async {
-    Preconditions.requireArgumentsNotNulls(playersIds);
-
-    List<Player> players = List();
-    for(String playerId in playersIds) {
-      final snapshot = await _databaseReference.child(_firebasePlayersChild).child(playerId).once();
-      final playerValue = snapshot.value;
-      if(playerValue != null)
-        players.add(Player.fromJson(playerValue));
-    }
-    return players;
+    return await super.getItemsByIds(playersIds);
   }
 
   // DELETE
 
   Future<void> deletePlayer(String playerId) async {
-    Preconditions.requireArgumentNotEmpty(playerId);
+    await super.deleteItem(playerId);
+  }
 
-    await _databaseReference.child(_firebasePlayersChild).child(playerId).remove();
+  @override
+  Map<String, dynamic> itemToJson(Player t) {
+    return t.toJson();
+  }
+
+  @override
+  Player jsonToItem(Map<dynamic, dynamic> json) {
+    return Player.fromJson(json);
   }
 
 }

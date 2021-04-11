@@ -1,29 +1,18 @@
-import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:logger/logger.dart';
 
-class TeamRepository {
+class TeamRepository extends CrudRepository<Team> {
 
-  DatabaseReference _databaseReference;
-  String _firebaseTeamsChild;
-
-  static Logger _logger = getLogger('TeamRepository');
-
-  TeamRepository(DatabaseReference databaseReference) {
-    this._databaseReference = databaseReference;
-    _firebaseTeamsChild = DatabaseService.firebaseTeamsChild;
-  }
+  TeamRepository(DatabaseReference databaseReference)
+    : super(databaseReference, DatabaseService.firebaseTeamsChild);
 
   // SET
 
   /// Upload Team data (insert)
   Future<bool> saveTeam(Team team) async {
-    Preconditions.requireArgumentNotEmpty(team.id);
-
     // check if the team exists already by using its id
     Team oldTeam = await getTeamById(team.id);
     if(oldTeam == null) {
@@ -33,32 +22,21 @@ class TeamRepository {
       if(!isNameUnique)
         return false;
     }
-    // if it exists or the name is unique just insert or update the team
-    await _databaseReference.child(_firebaseTeamsChild).child(team.id).set(team.toJson());
+    await super.saveItem(team.id, team);
     return true;
   }
 
   // CHECK
 
   Future<bool> teamExists(String teamId) async {
-    Preconditions.requireArgumentNotEmpty(teamId);
-
-    final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
-    return snapshot.value != null;
+    return await super.itemExists(teamId);
   }
 
   // GET
 
   /// Download Team data given its id
   Future<Team> getTeamById(String teamId) async {
-    Preconditions.requireArgumentNotEmpty(teamId);
-
-    final DataSnapshot snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
-    Team team;
-    if(snapshot.value != null) {
-      team = Team.fromJson(snapshot.value);
-    }
-    return team;
+    return await super.getItemById(teamId);
   }
 
   /// Download Team data given its name and searching only across the team whose id is given
@@ -78,16 +56,7 @@ class TeamRepository {
 
   /// Get List of the requested Teams
   Future<List<Team>> getTeamsByIds(List<String> teamsIds) async {
-    Preconditions.requireArgumentsNotNulls(teamsIds);
-
-    List<Team> teams = List();
-    for(String teamId in teamsIds) {
-      final snapshot = await _databaseReference.child(_firebaseTeamsChild).child(teamId).once();
-      final teamValue = snapshot.value;
-      if(teamValue != null)
-        teams.add(Team.fromJson(teamValue));
-    }
-    return teams;
+    return await super.getItemsByIds(teamsIds);
   }
 
   /// Download all teams stores excluding the teams that are referred by the given ids
@@ -101,13 +70,7 @@ class TeamRepository {
 
   /// Download all teams in firebase
   Future<List<Team>> getTeams() async {
-    DatabaseReference teamsDatabaseReference = _databaseReference.child(_firebaseTeamsChild);
-    final DataSnapshot snapshot = await teamsDatabaseReference.once();
-    List<Team> teams = [];
-    Map<dynamic, dynamic> values = snapshot.value;
-    if(values != null)
-      values.forEach((key, value) => teams.add(Team.fromJson(value)));
-    return teams;
+    return await super.getAllItems();
   }
 
   // UTILS
@@ -126,6 +89,16 @@ class TeamRepository {
       i++;
     }
     return !teamNameFound;
+  }
+
+  @override
+  Map<String, dynamic> itemToJson(Team t) {
+    return t.toJson();
+  }
+
+  @override
+  Team jsonToItem(Map<dynamic, dynamic> json) {
+    return Team.fromJson(json);
   }
 
 }
