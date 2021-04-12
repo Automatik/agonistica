@@ -7,6 +7,8 @@ class Team {
 
   String name;
 
+  List<String> seasonTeamsIds;
+
   Team() {
     id = DbUtils.newUuid();
   }
@@ -14,11 +16,13 @@ class Team {
   Team.name(String name) {
     id = DbUtils.newUuid();
     this.name = name;
+    seasonTeamsIds = List();
   }
 
   Team.nameWithNoId(String name) {
     id = null;
     this.name = name;
+    seasonTeamsIds = List();
   }
 
   Map<String, dynamic> toJson() {
@@ -27,12 +31,14 @@ class Team {
     return {
       'id': id,
       'name': name,
+      'seasonTeamsIds': seasonTeamsIds
     };
   }
 
   Team.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],
-        name = json['name'];
+        name = json['name'],
+        seasonTeamsIds = json['seasonTeamsIds'] == null ? List(): List<String>.from(json['seasonTeamsIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

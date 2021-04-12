@@ -10,6 +10,8 @@ class Player {
   DateTime birthDay;
   bool isRightHanded;
 
+  List<String> seasonPlayersIds;
+
 
   Player() {
     id = DbUtils.newUuid();
@@ -21,6 +23,7 @@ class Player {
     surname = "Cognome";
     birthDay = DateTime.utc(2020, 1, 1);
     isRightHanded = true;
+    seasonPlayersIds = List();
   }
 
   Player.clone(Player p) {
@@ -29,6 +32,7 @@ class Player {
     surname = p.surname;
     birthDay = DateUtils.fromDateTime(p.birthDay);
     isRightHanded = p.isRightHanded;
+    seasonPlayersIds = p.seasonPlayersIds;
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +44,7 @@ class Player {
       'surname': surname,
       'birthDay': birthDay.toIso8601String(),
       'isRightHanded': isRightHanded,
+      'seasonPlayersIds': seasonPlayersIds
     };
   }
 
@@ -48,7 +53,8 @@ class Player {
       name = json['name'],
       surname = json['surname'],
       birthDay = DateTime.tryParse(json['birthDay']),
-      isRightHanded = json['isRightHanded'];
+      isRightHanded = json['isRightHanded'],
+      seasonPlayersIds = json['seasonPlayersIds'] == null ? List(): List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
