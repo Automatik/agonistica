@@ -8,28 +8,6 @@ class PlayerRepository extends CrudRepository<Player> {
   PlayerRepository(DatabaseReference databaseReference)
     : super(databaseReference, DatabaseService.firebasePlayersChild);
 
-  // SET
-
-  Future<void> savePlayer(Player player) async {
-    await super.saveItem(player);
-  }
-
-  // GET
-
-  Future<Player> getPlayerById(String playerId) async {
-    return await super.getItemById(playerId);
-  }
-
-  Future<List<Player>> getPlayersByIds(List<String> playersIds) async {
-    return await super.getItemsByIds(playersIds);
-  }
-
-  // DELETE
-
-  Future<void> deletePlayer(String playerId) async {
-    await super.deleteItem(playerId);
-  }
-
   @override
   Map<String, dynamic> itemToJson(Player t) {
     return t.toJson();

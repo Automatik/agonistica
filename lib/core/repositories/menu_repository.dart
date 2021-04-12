@@ -7,22 +7,6 @@ class MenuRepository extends CrudRepository<Menu> {
 
   MenuRepository(DatabaseReference databaseReference)
     : super(databaseReference, DatabaseService.firebaseMenusChild);
-
-  // SET
-
-  Future<void> saveMenu(Menu menu) async {
-    await super.saveItem(menu);
-  }
-
-  // GET
-
-  Future<Menu> getMenuById(String menuId) async {
-    return await super.getItemById(menuId);
-  }
-
-  Future<List<Menu>> getMenusByIds(List<String> menuIds) async {
-    return await super.getItemsByIds(menuIds);
-  }
   
   @override
   Map<String, dynamic> itemToJson(Menu t) {

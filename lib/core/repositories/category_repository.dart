@@ -8,29 +8,6 @@ class CategoryRepository extends CrudRepository<Category>{
   CategoryRepository(DatabaseReference databaseReference)
       : super(databaseReference, DatabaseService.firebaseCategoriesChild);
 
-  // SET
-
-  Future<void> saveCategory(Category category) async {
-    await super.saveItem(category);
-  }
-
-  // GET
-
-  /// Download Category data given its id
-  Future<Category> getCategoryById(String categoryId) async {
-    return await super.getItemById(categoryId);
-  }
-
-  /// Download categories identified by the given ids
-  Future<List<Category>> getCategoriesByIds(List<String> categoriesIds) async {
-    return await super.getItemsByIds(categoriesIds);
-  }
-
-  /// Download all categories in firebase
-  Future<List<Category>> getCategories() async {
-    return await super.getAllItems();
-  }
-
   @override
   Map<String, dynamic> itemToJson(Category t) {
     return t.toJson();

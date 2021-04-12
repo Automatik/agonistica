@@ -1,5 +1,6 @@
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
@@ -12,13 +13,16 @@ class Match {
 
   String seasonTeam1Id, seasonTeam2Id;
 
+  String seasonId;
+
   int team1Goals, team2Goals;
 
   int leagueMatch;
   DateTime matchDate;
 
   // Leave this as temporary
-  String team1Name, team2Name;
+  // String team1Name, team2Name;
+  Team team1, team2;
 
   List<MatchPlayerData> playersData;
 
@@ -28,25 +32,27 @@ class Match {
     id = DbUtils.newUuid();
   }
 
-  Match.empty() {
+  Match.empty(String categoryId, String seasonId) {
     id = DbUtils.newUuid();
-    categoryId = DbUtils.newUuid();
+    this.categoryId = categoryId;
+    this.seasonId = seasonId;
     // team1Id = uuid.v4(); removed to allow detecting if a team is inserted or not in Match View
     // team2Id = uuid.v4();
     team1Goals = 0;
     team2Goals = 0;
     leagueMatch = 0;
     matchDate = DateTime.now();
-    team1Name = "Squadra 1";
-    team2Name = "Squadra 2";
+    team1 = Team.nameWithNoId("Squadra 1");
+    team2 = Team.nameWithNoId("Squadra 2");
     matchNotes = "";
   }
 
   Match.clone(Match match) {
     id = match.id;
     categoryId = match.categoryId;
-    setTeam1(match.getTeam1());
-    setTeam2(match.getTeam2());
+    seasonId = match.seasonId;
+    setSeasonTeam1(match.getSeasonTeam1());
+    setSeasonTeam2(match.getSeasonTeam2());
     team1Goals = match.team1Goals;
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
@@ -55,74 +61,76 @@ class Match {
     matchNotes = match.matchNotes;
   }
 
-  Team getTeam1() {
-    Team team = Team.name(team1Name);
-    team.id = seasonTeam1Id;
-    return team;
+  SeasonTeam getSeasonTeam1() {
+    SeasonTeam seasonTeam = SeasonTeam.empty(team1.id, seasonId);
+    seasonTeam.id = seasonTeam1Id;
+    seasonTeam.team = team1;
+    return seasonTeam;
   }
 
-  Team getTeam2() {
-    Team team = Team.name(team2Name);
-    team.id = seasonTeam2Id;
-    return team;
+  SeasonTeam getSeasonTeam2() {
+    SeasonTeam seasonTeam = SeasonTeam.empty(team2.id, seasonId);
+    seasonTeam.id = seasonTeam2Id;
+    seasonTeam.team = team2;
+    return seasonTeam;
   }
 
-  String getHomeTeamId() {
-    return getTeam1().id;
+  String getHomeSeasonTeamId() {
+    return getSeasonTeam1().id;
   }
 
-  String getAwayTeamId() {
-    return getTeam2().id;
+  String getAwaySeasonTeamId() {
+    return getSeasonTeam2().id;
   }
 
   List<MatchPlayerData> getHomePlayers() {
-    return _getPlayers(getHomeTeamId());
+    return _getPlayers(getHomeSeasonTeamId());
   }
 
   List<MatchPlayerData> getAwayPlayers() {
-    return _getPlayers(getAwayTeamId());
+    return _getPlayers(getAwaySeasonTeamId());
   }
 
   List<MatchPlayerData> getHomeRegularPlayers() {
-    return getRegularPlayers(getHomeTeamId());
+    return getRegularPlayers(getHomeSeasonTeamId());
   }
 
   List<MatchPlayerData> getAwayRegularPlayers() {
-    return getRegularPlayers(getAwayTeamId());
+    return getRegularPlayers(getAwaySeasonTeamId());
   }
 
   List<MatchPlayerData> getHomeReservePlayers() {
-    return getReservePlayers(getHomeTeamId());
+    return getReservePlayers(getHomeSeasonTeamId());
   }
 
   List<MatchPlayerData> getAwayReservePlayers() {
-    return getReservePlayers(getAwayTeamId());
+    return getReservePlayers(getAwaySeasonTeamId());
   }
 
-  List<MatchPlayerData> getRegularPlayers(String teamId) {
-    return _getLineUpPlayers(teamId, true);
+  List<MatchPlayerData> getRegularPlayers(String seasonTeamId) {
+    return _getLineUpPlayers(seasonTeamId, true);
   }
 
-  List<MatchPlayerData> getReservePlayers(String teamId) {
-    return _getLineUpPlayers(teamId, false);
+  List<MatchPlayerData> getReservePlayers(String seasonTeamId) {
+    return _getLineUpPlayers(seasonTeamId, false);
   }
 
-  List<MatchPlayerData> _getPlayers(String teamId) {
-    return playersData.where((p) => p.seasonTeamId == teamId).toList();
+  List<MatchPlayerData> _getPlayers(String seasonTeamId) {
+    return playersData.where((p) => p.seasonTeamId == seasonTeamId).toList();
   }
 
-  List<MatchPlayerData> _getLineUpPlayers(String teamId, bool isRegular) {
-    return playersData.where((p) => p.seasonTeamId == teamId && p.isRegular == isRegular).toList();
+  List<MatchPlayerData> _getLineUpPlayers(String seasonTeamId, bool isRegular) {
+    return playersData.where((p) => p.seasonTeamId == seasonTeamId && p.isRegular == isRegular).toList();
   }
 
-  void setTeam1(Team team) {
-    seasonTeam1Id = team.id;
-    team1Name = team.name;
+  void setSeasonTeam1(SeasonTeam seasonTeam) {
+    seasonTeam1Id = seasonTeam.id;
+    team1 = seasonTeam.team;
   }
 
-  void setTeam2(Team team) {
-    seasonTeam2Id = team.id;
-    team2Name = team.name;
+  void setSeasonTeam2(SeasonTeam seasonTeam) {
+    seasonTeam2Id = seasonTeam.id;
+    team2 = seasonTeam.team;
   }
 
   Map<String, dynamic> toJson() {
@@ -133,6 +141,7 @@ class Match {
       'categoryId': categoryId,
       'seasonTeam1Id': seasonTeam1Id,
       'seasonTeam2Id': seasonTeam2Id,
+      'seasonId': seasonId,
       'team1Goals': team1Goals,
       'team2Goals': team2Goals,
       'leagueMatch': leagueMatch,
@@ -148,6 +157,7 @@ class Match {
       categoryId = json['categoryId'],
       seasonTeam1Id = json['seasonTeam1Id'],
       seasonTeam2Id = json['seasonTeam2Id'],
+      seasonId = json['seasonId'],
       team1Goals = json['team1Goals'],
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
@@ -160,6 +170,7 @@ class Match {
     Preconditions.requireFieldNotEmpty("categoryId", categoryId);
     Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id);
     Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
     Preconditions.requireFieldNotNull("matchDate", matchDate);
   }
 }

@@ -7,14 +7,36 @@ class CrudService<T> {
 
   static Logger logger = getLogger('CrudService');
 
+  final DatabaseReference databaseReference;
+
   CrudRepository<T> repository;
 
-  CrudService(CrudRepository<T> repository) {
+  CrudService(this.databaseReference, CrudRepository<T> repository) {
     this.repository = repository;
   }
 
   Future<void> saveItem(T item) async {
-    repository.sa
+    await repository.saveItem(item);
+  }
+
+  Future<bool> itemExists(String itemId) async {
+    return await repository.itemExists(itemId);
+  }
+
+  Future<T> getItemById(String itemId) async {
+    return await repository.getItemById(itemId);
+  }
+
+  Future<List<T>> getItemsByIds(List<String> itemsIds) async {
+    return await repository.getItemsByIds(itemsIds);
+  }
+
+  Future<List<T>> getAllItems() async {
+    return await repository.getAllItems();
+  }
+
+  Future<void> deleteItem(String itemId) async {
+    await repository.deleteItem(itemId);
   }
 
 

@@ -8,36 +8,6 @@ class SeasonPlayerRepository extends CrudRepository<SeasonPlayer> {
   SeasonPlayerRepository(DatabaseReference databaseReference)
     : super(databaseReference, DatabaseService.firebaseSeasonPlayersChild);
 
-  // SET
-
-  //TODO in databaseService quando salvo un seasonPlayer assicurarsi che esista un Player, altrimenti crearlo
-  Future<void> saveSeasonPlayer(SeasonPlayer seasonPlayer) async {
-    await super.saveItem(seasonPlayer);
-  }
-
-  // GET
-
-  Future<SeasonPlayer> getSeasonPlayerById(String seasonPlayerId) async {
-    return await super.getItemById(seasonPlayerId);
-  }
-
-  Future<List<SeasonPlayer>> getSeasonPlayersByIds(List<String> seasonPlayersIds) async {
-    return await super.getItemsByIds(seasonPlayersIds);
-  }
-
-  // DELETE
-
-  Future<void> deleteSeasonPlayer(String seasonPlayerId) async {
-    await super.deleteItem(seasonPlayerId);
-  }
-
-  /// Delete a match's id from the season player's matchesIds list
-  Future<void> deleteMatchFromSeasonPlayer(String seasonPlayerId, String matchId) async {
-    SeasonPlayer seasonPlayer = await getSeasonPlayerById(seasonPlayerId);
-    seasonPlayer.matchesIds.removeWhere((id) => id == matchId);
-    await saveSeasonPlayer(seasonPlayer);
-  }
-
   @override
   Map<String, dynamic> itemToJson(SeasonPlayer t) {
     return t.toJson();

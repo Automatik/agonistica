@@ -8,22 +8,6 @@ class SeasonRepository extends CrudRepository<Season> {
   SeasonRepository(DatabaseReference databaseReference)
     : super(databaseReference, DatabaseService.firebaseSeasonsChild);
 
-  // SET
-
-  Future<void> saveSeason(Season season) async {
-    await super.saveItem(season);
-  }
-
-  // GET
-
-  Future<Season> getSeasonById(String seasonId) async {
-    return await super.getItemById(seasonId);
-  }
-
-  Future<List<Season>> getSeasonsByIds(List<String> seasonsIds) async {
-    return await super.getItemsByIds(seasonsIds);
-  }
-
   @override
   Map<String, dynamic> itemToJson(Season t) {
     return t.toJson();

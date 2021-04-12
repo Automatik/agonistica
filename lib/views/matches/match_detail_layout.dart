@@ -104,8 +104,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void preloadTeams() {
-    String homeTeamId = tempMatch.getHomeTeamId();
-    String awayTeamId = tempMatch.getAwayTeamId();
+    String homeTeamId = tempMatch.getHomeSeasonTeamId();
+    String awayTeamId = tempMatch.getAwaySeasonTeamId();
     if(homeTeamId != null)
       widget.onTeamInserted(homeTeamId);
     if(awayTeamId != null)
@@ -212,7 +212,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           removeTeamPlayersFromMatch(match, oldTeam1Id);
         }
         setState(() {
-          match.setTeam1(team1);
+          match.setSeasonTeam1(team1);
         });
       }
     }
@@ -233,7 +233,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           removeTeamPlayersFromMatch(match, oldTeam2Id);
         }
         setState(() {
-          match.setTeam2(team2);
+          match.setSeasonTeam2(team2);
         });
       }
     }
@@ -501,8 +501,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeRegularPlayers = homeRegularPlayers.length;
     int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
-    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeTeamId(), true);
-    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwayTeamId(), true);
+    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeSeasonTeamId(), true);
+    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwaySeasonTeamId(), true);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -523,8 +523,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeReservePlayers = homeReservePlayers.length;
     int numAwayReservePlayers = awayReservePlayers.length;
     int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
-    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeTeamId(), false);
-    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwayTeamId(), false);
+    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeSeasonTeamId(), false);
+    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwaySeasonTeamId(), false);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -636,14 +636,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void _addNewRowWithRegularPlayers() {
-    MatchPlayerData newHomePlayer = _addRegularPlayer(tempMatch.getHomeTeamId());
-    MatchPlayerData newAwayPlayer = _addRegularPlayer(tempMatch.getAwayTeamId());
+    MatchPlayerData newHomePlayer = _addRegularPlayer(tempMatch.getHomeSeasonTeamId());
+    MatchPlayerData newAwayPlayer = _addRegularPlayer(tempMatch.getAwaySeasonTeamId());
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
   void _addNewRowWithReservePlayers() {
-    MatchPlayerData newHomePlayer = _addReservePlayer(tempMatch.getHomeTeamId());
-    MatchPlayerData newAwayPlayer = _addReservePlayer(tempMatch.getAwayTeamId());
+    MatchPlayerData newHomePlayer = _addReservePlayer(tempMatch.getHomeSeasonTeamId());
+    MatchPlayerData newAwayPlayer = _addReservePlayer(tempMatch.getAwaySeasonTeamId());
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 

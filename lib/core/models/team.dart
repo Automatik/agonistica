@@ -16,6 +16,11 @@ class Team {
     this.name = name;
   }
 
+  Team.nameWithNoId(String name) {
+    id = null;
+    this.name = name;
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 
