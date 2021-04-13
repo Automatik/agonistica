@@ -1,6 +1,7 @@
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/repositories/match_repository.dart';
@@ -62,13 +63,25 @@ class MatchService extends CrudService<Match> {
 
     // update players's matchesIds and also implicitly the player's teamId
     for(SeasonPlayer seasonPlayer in matchPlayers) {
-      if(seasonPlayer.matchesIds == null)
-        seasonPlayer.matchesIds = [];
-      if(!seasonPlayer.matchesIds.contains(match.id)) {
-        seasonPlayer.matchesIds.add(match.id);
-      }
+      await seasonPlayerService.addMatchIdToSeasonPlayer(match.id, seasonPlayer.id);
       await _updatePlayerStatsFromMatchPlayerData(seasonPlayer);
       await seasonPlayerService.saveItem(seasonPlayer);
+    }
+  }
+
+  Future<void> updateMatchPlayersNamesFromSeasonPlayer(SeasonPlayer seasonPlayer) async {
+    List<Match> matches = await getItemsByIds(seasonPlayer.matchesIds);
+    for(Match match in matches) {
+      int index = match.playersData.indexWhere((data) => data.seasonPlayerId == seasonPlayer.id);
+      if(index > -1) {
+        Player player = seasonPlayer.player;
+        match.playersData[index].name = player.name;
+        match.playersData[index].surname = player.surname;
+        await super.saveItem(match);
+      } else {
+        CrudService.logger.d("MatchPlayerData not found from player's matchesIds."
+            " Shouldn't happen! Player id: ${seasonPlayer.id} Match id: ${match.id}");
+      }
     }
   }
 
@@ -164,6 +177,18 @@ class MatchService extends CrudService<Match> {
 
     // Delete match
     await super.deleteItem(matchId);
+  }
+
+  Future<void> deleteMatchesFromIds(List<String> matchesIds) async {
+    matchesIds.forEach((id) async {
+      await super.deleteItem(id);
+    });
+  }
+
+  Future<void> deleteSeasonPlayerFromMatchesIds(List<String> matchesIds, String seasonPlayerId) async {
+    matchesIds.forEach((id) async {
+      await deleteSeasonPlayerFromMatch(id, seasonPlayerId);
+    });
   }
 
   /// Delete a MatchPlayerData from the given Match.

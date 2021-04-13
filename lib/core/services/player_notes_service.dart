@@ -14,18 +14,10 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
 
   @override
   Future<void> saveItem(PlayerMatchNotes playerMatchNotes) async {
-    SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId);
-
     await super.saveItem(playerMatchNotes);
 
-    // update player's playerMatchNodesIds
-    if(seasonPlayer.playerMatchNotesIds == null)
-      seasonPlayer.playerMatchNotesIds = [];
-    if(!seasonPlayer.playerMatchNotesIds.contains(playerMatchNotes.id)) {
-      seasonPlayer.playerMatchNotesIds.add(playerMatchNotes.id);
-      await seasonPlayerService.saveItem(seasonPlayer);
-    }
+    SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
+    await seasonPlayerService.addPlayerMatchNotesIdToSeasonPlayer(playerMatchNotes.id, playerMatchNotes.seasonPlayerId);
   }
 
   // GET
@@ -36,6 +28,33 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
       return Future.value(List<PlayerMatchNotes>());
     List<PlayerMatchNotes> playerMatchNotes = await getItemsByIds(seasonPlayer.playerMatchNotesIds);
     return playerMatchNotes;
+  }
+
+  Future<String> findPlayerMatchNoteIdOfMatchFromList(List<String> playerMatchNotesIds, String matchId) async {
+    List<PlayerMatchNotes> playerMatchNotes = await getItemsByIds(playerMatchNotesIds);
+    int index = playerMatchNotes.indexWhere((element) => element.matchId == matchId);
+    if(index == -1) {
+      return null;
+    }
+    return playerMatchNotes[index].id;
+  }
+
+  // DELETE
+
+  @override
+  Future<void> deleteItem(String playerMatchNotesId) async {
+    PlayerMatchNotes playerMatchNotes = await getItemById(playerMatchNotesId);
+
+    SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
+    await seasonPlayerService.removePlayerMatchNotesIdFromSeasonPlayer(playerMatchNotesId, playerMatchNotes.seasonPlayerId);
+
+    await super.deleteItem(playerMatchNotesId);
+  }
+
+  Future<void> deletePlayerNotesFromIds(List<String> playerMatchNotesIds) async {
+    for(String id in playerMatchNotesIds) {
+      await super.deleteItem(id);
+    }
   }
 
 }

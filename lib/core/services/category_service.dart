@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/repositories/category_repository.dart';
@@ -18,6 +19,13 @@ class CategoryService extends CrudService<Category> {
     if(seasonTeam == null || seasonTeam.categoriesIds == null || seasonTeam.categoriesIds.isEmpty)
       return [];
     return await getItemsByIds(seasonTeam.categoriesIds);
+  }
+
+  @override
+  Future<void> deleteItem(String itemId) async {
+    throw NotImplementedYetException("Deleting a category means removing all "
+        "items that belong to this category");
+    // await super.deleteItem(itemId);
   }
 
 

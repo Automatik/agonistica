@@ -29,6 +29,18 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
     return false;
   }
 
+  Future<void> followTeam(String followedTeamsId, String teamId) async {
+    FollowedTeams followedTeams = await getItemById(followedTeamsId);
+    followedTeams.teamsIds.add(teamId);
+    await super.saveItem(followedTeams);
+  }
+
+  Future<void> unFollowTeam(String followedTeamsId, String teamId) async {
+    FollowedTeams followedTeams = await getItemById(followedTeamsId);
+    followedTeams.teamsIds.removeWhere((id) => id == teamId);
+    await super.saveItem(followedTeams);
+  }
+
   //TODO Riscrivere prendendo i team seguiti dell'utente e di una certa stagione da firebase
   Future<List<SeasonTeam>> getFollowedTeams() async {
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
