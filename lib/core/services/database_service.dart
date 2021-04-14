@@ -1,18 +1,21 @@
-import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
-import 'package:agonistica/core/models/match.dart';
-import 'package:agonistica/core/models/match_player_data.dart';
-import 'package:agonistica/core/models/player.dart';
-import 'package:agonistica/core/models/player_match_notes.dart';
+import 'package:agonistica/core/models/followed_teams.dart';
+import 'package:agonistica/core/models/menu.dart';
+import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/team.dart';
-import 'package:agonistica/core/repositories/player_notes_repository.dart';
-import 'package:agonistica/core/repositories/category_repository.dart';
-import 'package:agonistica/core/repositories/match_repository.dart';
-import 'package:agonistica/core/repositories/player_repository.dart';
-import 'package:agonistica/core/repositories/team_repository.dart';
+import 'package:agonistica/core/services/category_service.dart';
+import 'package:agonistica/core/services/followed_players_service.dart';
+import 'package:agonistica/core/services/followed_teams_service.dart';
+import 'package:agonistica/core/services/match_service.dart';
+import 'package:agonistica/core/services/menu_service.dart';
+import 'package:agonistica/core/services/player_notes_service.dart';
+import 'package:agonistica/core/services/player_service.dart';
+import 'package:agonistica/core/services/season_player_service.dart';
+import 'package:agonistica/core/services/season_service.dart';
+import 'package:agonistica/core/services/season_team_service.dart';
+import 'package:agonistica/core/services/team_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils/db_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,13 +40,20 @@ class DatabaseService {
 
   static Logger _logger = getLogger('DatabaseService');
 
-  TeamRepository _teamRepository;
-  CategoryRepository _categoryRepository;
-  MatchRepository _matchRepository;
-  PlayerRepository _playerRepository;
-  PlayerNotesRepository _playerNotesRepository;
+  CategoryService _categoryService;
+  FollowedPlayersService _followedPlayersService;
+  FollowedTeamsService _followedTeamsService;
+  MatchService _matchService;
+  MenuService _menuService;
+  PlayerNotesService _playerNotesService;
+  PlayerService _playerService;
+  SeasonPlayerService _seasonPlayerService;
+  SeasonService _seasonService;
+  SeasonTeamService _seasonTeamService;
+  TeamService _teamService;
 
 
+  CategoryService get categoryService => _categoryService;
   Team mainTeam;
   List<Team> mainTeams;
   List<Category> mainCategories;
@@ -51,112 +61,110 @@ class DatabaseService {
   Team selectedTeam;
   Category selectedCategory;
 
-  DatabaseService() {
-    _teamRepository = TeamRepository(_databaseReference);
-    _categoryRepository = CategoryRepository(_databaseReference);
-    _matchRepository = MatchRepository(_databaseReference);
-    _playerRepository = PlayerRepository(_databaseReference);
-    _playerNotesRepository = PlayerNotesRepository(_databaseReference);
+  Future<void> initialize() async {
+    await _initializeServices();
+    await _initializeData();
   }
 
-  Future<void> initialize() async {
+  Future<void> _initializeServices() async {
+    _categoryService = CategoryService(_databaseReference);
+    _followedPlayersService = FollowedPlayersService(_databaseReference);
+    _followedTeamsService = FollowedTeamsService(_databaseReference);
+    _matchService = MatchService(_databaseReference);
+    _menuService = MenuService(_databaseReference);
+    _playerNotesService = PlayerNotesService(_databaseReference);
+    _playerService = PlayerService(_databaseReference);
+    _seasonPlayerService = SeasonPlayerService(_databaseReference);
+    _seasonService = SeasonService(_databaseReference);
+    _seasonTeamService = SeasonTeamService(_databaseReference);
+    _teamService = TeamService(_databaseReference);
+  }
 
+  Future<void> _initializeData() async {
     // Initialize database if needed with requested teams and categories
     final sharedPref = await SharedPreferences.getInstance();
-    bool areTeamsAndCategoriesRequestedStored = sharedPref.getBool(areTeamsAndCategoriesRequestedStoredKey) ?? false;
-    if(!areTeamsAndCategoriesRequestedStored) {
-      await _initializeRequestedTeamsAndCategories(sharedPref);
-      sharedPref.setBool(areTeamsAndCategoriesRequestedStoredKey, true);
+    bool areItemsInitialized = sharedPref.getBool(areItemsInitializedKey) ?? false;
+    if(!areItemsInitialized) {
+      // Create categories for the main menu
+      List<Category> categories = await _initializeCategories();
+      // Create menus in HomeView
+      List<Menu> menus = await _initializeMenus(categories);
+      // Create the first season, the current one
+      Season season = await _initializeCurrentSeason();
+      // Create the main teams (currently only the Merate Team)
+      List<String> teamNames = List.of([mainRequestedTeam]);
+      List<Team> teams = await _initializeRequestedTeams(teamNames);
+      // Follow this teams
+      await _initializeFollowedTeams(teams);
+      sharedPref.setBool(areItemsInitializedKey, true);
     }
-
   }
 
-  /// Get List of the requested categories of the main team (Merate)
-  Future<List<Category>> getMainCategories() async {
-    // main categories from Merate Team
-    final sharedPref = await SharedPreferences.getInstance();
-    List<String> teamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
-
-    // Find Merate Team
-    Team merateTeam = await _teamRepository.getTeamByNameFromIds(mainRequestedTeam, teamsIds);
-    if(merateTeam != null)
-      mainTeam = merateTeam;
-    else
-      return List();
-
-    mainCategories = await _categoryRepository.getCategoriesByIds(merateTeam.categoriesIds);
-    return mainCategories;
+  Future<List<Category>> _initializeCategories() async {
+    List<Category> categories = [];
+    for(String categoryName in requestedCategories) {
+      Category category = Category.name(categoryName);
+      await categoryService.saveItem(category);
+      categories.add(category);
+    }
+    return categories;
   }
 
-  // INITIALIZE
-
-  Future<void> _initializeRequestedTeamsAndCategories(SharedPreferences sharedPreferences) async {
-    // get all stored teams
-    List<Team> teams = await _teamRepository.getTeams();
-
-    // get teams whose name is one of the requested teams
-    final Iterable<Team> currentTeamsRequested = teams.where((element) {
-      return requestedTeams.indexWhere((team) => element.name == team) != -1;
-    });
-
-    final currentTeamsNamesRequested = currentTeamsRequested.map((e) =>
-    e.name);
-
-    Team merateTeam;
-
-    List<String> teamsIds = [];
-
-    for (String teamName in requestedTeams) {
-      if (!currentTeamsNamesRequested.contains(teamName)) {
-        Team team = Team();
-        team.name = teamName;
-        team.categoriesIds = List();
-        team.matchesIds = List();
-        team.playersIds = List();
-        if(teamName == mainRequestedTeam)
-          merateTeam = team;
-        teamsIds.add(team.id);
-        _teamRepository.saveTeam(team);
+  Future<List<Menu>> _initializeMenus(List<Category> mainMenuCategories) async {
+    List<Menu> menus = [];
+    for(String menuName in requestedMenus) {
+      Menu menu;
+      if(menuName == mainRequestedTeam) {
+        menu = Menu.create(menuName, Menu.TYPE_FOLLOWED_TEAMS);
+        menu.categoriesIds = mainMenuCategories.map((e) => e.id).toList();
       } else {
-        int index = currentTeamsNamesRequested.toList().indexOf(teamName);
-        if(index > -1) {
-          teamsIds.add(currentTeamsRequested.elementAt(index).id);
-          if(teamName == mainRequestedTeam)
-            merateTeam = currentTeamsRequested.elementAt(index);
-        }
+        menu = Menu.create(menuName, Menu.TYPE_FOLLOWED_PLAYERS);
       }
+      await menuService.saveItem(menu);
+      menus.add(menu);
     }
-
-    await sharedPreferences.setStringList(requestedTeamsIdsKey, teamsIds);
-
-    List<Category> categories = await _categoryRepository.getCategories();
-    final currentCategoriesRequested = categories.where((element) {
-      return requestedCategories.indexWhere((cat) => element.name == cat) !=
-          -1;
-    });
-
-    final currentCategoriesNamesRequested = currentCategoriesRequested.map((
-        e) => e.name);
-
-    List<String> categoriesIds = [];
-
-    for (String catName in requestedCategories) {
-      if (!currentCategoriesNamesRequested.contains(catName)) {
-        Category category = Category();
-        category.name = catName;
-        categoriesIds.add(category.id);
-        _categoryRepository.saveCategory(category);
-      } else {
-        int index = currentCategoriesNamesRequested.toList().indexOf(catName);
-        if(index > -1)
-          categoriesIds.add(currentCategoriesRequested.elementAt(index).id);
-      }
-    }
-
-    // Add to the Merate team the requested categories
-    merateTeam.categoriesIds = categoriesIds;
-    // Update
-    _teamRepository.saveTeam(merateTeam);
+    return menus;
   }
 
+  Future<Season> _initializeCurrentSeason() async {
+    Season season = Season.createCurrentSeason();
+    await seasonService.saveItem(season);
+    return season;
+  }
+
+  Future<List<Team>> _initializeRequestedTeams(List<String> teamNames) async {
+    List<Team> teams = [];
+    for(String teamName in teamNames) {
+      Team team = Team.name(teamName);
+      await teamService.saveItem(team);
+      teams.add(team);
+    }
+    return teams;
+  }
+
+  Future<void> _initializeFollowedTeams(List<Team> teams) async {
+    FollowedTeams followedTeams = FollowedTeams.empty();
+    followedTeams.teamsIds = teams.map((e) => e.id).toList();
+    await followedTeamsService.saveItem(followedTeams);
+  }
+
+  FollowedPlayersService get followedPlayersService => _followedPlayersService;
+
+  FollowedTeamsService get followedTeamsService => _followedTeamsService;
+
+  MatchService get matchService => _matchService;
+
+  MenuService get menuService => _menuService;
+
+  PlayerNotesService get playerNotesService => _playerNotesService;
+
+  PlayerService get playerService => _playerService;
+
+  SeasonPlayerService get seasonPlayerService => _seasonPlayerService;
+
+  SeasonService get seasonService => _seasonService;
+
+  SeasonTeamService get seasonTeamService => _seasonTeamService;
+
+  TeamService get teamService => _teamService;
 }

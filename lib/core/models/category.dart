@@ -11,6 +11,11 @@ class Category {
     id = DbUtils.newUuid();
   }
 
+  Category.name(String name) {
+    id = DbUtils.newUuid();
+    this.name = name;
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

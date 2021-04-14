@@ -42,20 +42,20 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
   }
 
   //TODO Riscrivere prendendo i team seguiti dell'utente e di una certa stagione da firebase
-  Future<List<SeasonTeam>> getFollowedTeams() async {
-    SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    final sharedPref = await SharedPreferences.getInstance();
-    List<String> teamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
-    return await seasonTeamService.getItemsByIds(teamsIds);
-  }
+  // Future<List<SeasonTeam>> getFollowedTeams() async {
+  //   SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+  //   final sharedPref = await SharedPreferences.getInstance();
+  //   List<String> teamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
+  //   return await seasonTeamService.getItemsByIds(teamsIds);
+  // }
 
   //TODO Riscrivere usando i team seguiti dall'utente e di una certa stagione da firebase
   /// Download all teams without the other requested teams (merateTeam and other)
-  Future<List<SeasonTeam>> getAllNonFollowedTeams() async {
-    SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    final sharedPref = await SharedPreferences.getInstance();
-    List<String> requestedTeamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
-    return await seasonTeamService.getTeamsWithoutIds(requestedTeamsIds);
-  }
+  // Future<List<SeasonTeam>> getAllNonFollowedTeams() async {
+  //   SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+  //   final sharedPref = await SharedPreferences.getInstance();
+  //   List<String> requestedTeamsIds = sharedPref.getStringList(requestedTeamsIdsKey);
+  //   return await seasonTeamService.getTeamsWithoutIds(requestedTeamsIds);
+  // }
 
 }

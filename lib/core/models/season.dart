@@ -3,6 +3,9 @@ import 'package:uuid/uuid.dart';
 
 class Season {
 
+  static const int SEASON_SEPARATOR_DAY = 31;
+  static const int SEASON_SEPARATOR_MONTH = DateTime.july;
+
   String id;
 
   String period; // es. 2020/21
@@ -14,7 +17,6 @@ class Season {
     id = uuid.v4();
   }
 
-  //TODO In SeasonRepository check no other season with same beginYear and endYear exist
   Season.create(int beginYear, int endYear) {
     Preconditions.requireArgumentGreaterThanZero(beginYear);
     Preconditions.requireArgumentGreaterThanZero(endYear);
@@ -25,6 +27,23 @@ class Season {
     this.beginYear = beginYear;
     this.endYear = endYear;
     period = yearsToString(beginYear, endYear);
+  }
+
+  Season.createCurrentSeason() {
+    DateTime currentDate = DateTime.now();
+    int currentYear = currentDate.year;
+    DateTime seasonSeparatorDate = DateTime(currentYear, SEASON_SEPARATOR_MONTH, SEASON_SEPARATOR_DAY);
+    int beginYear, endYear;
+    if(currentDate.isAfter(seasonSeparatorDate)) {
+      // If it is the beginning of the new season (current date after 31 July)
+      beginYear = currentYear;
+      endYear = currentYear + 1;
+    } else {
+      // it is the ending of the current season (current date before 31 July)
+      beginYear = currentYear - 1;
+      endYear = currentYear;
+    }
+    Season.create(beginYear, endYear);
   }
 
   Map<String, dynamic> toJson() {
