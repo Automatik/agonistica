@@ -108,7 +108,7 @@ class _HomeMobile extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(left: 20),
               child: Text(
-                mainRequestedTeam,
+                viewModel.getMainMenuName(),
                 style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
@@ -151,7 +151,7 @@ class _HomeMobile extends StatelessWidget {
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
-        itemCount: viewModel.otherPlayersList.length,
+        itemCount: viewModel.getOtherMenusCount(),
         itemBuilder: (BuildContext listContext, int index) {
           return GestureDetector(
             onTap: () => viewModel.onOtherPlayersTap(listContext, index),
@@ -164,7 +164,7 @@ class _HomeMobile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                viewModel.otherPlayersList[index].name,
+                viewModel.getOtherMenuName(index),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,

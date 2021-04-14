@@ -132,6 +132,7 @@ class DatabaseService {
     return season;
   }
 
+  //TODO Initialize the SeasonTeam also!!
   Future<List<Team>> _initializeRequestedTeams(List<String> teamNames) async {
     List<Team> teams = [];
     for(String teamName in teamNames) {

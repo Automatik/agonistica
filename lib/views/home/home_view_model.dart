@@ -1,13 +1,13 @@
+import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
-import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
@@ -16,9 +16,9 @@ class HomeViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('HomeViewModel');
 
-  //final otherPlayersList = ['Prima Squadra', 'Juniores', 'Allievi', 'Giovanissimi'];
-  //final otherPlayersList = List.from(requestedTeams, growable: true);
-  List<Team> otherPlayersList = [];
+
+  Menu _mainMenu;
+  List<Menu> _otherMenus = [];
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
 
@@ -31,32 +31,43 @@ class HomeViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    List<Team> mainTeams = await _databaseService.getMainTeams();
-//    otherPlayersList = mainTeams.where((element) => element.name != mainRequestedTeam);
-    Iterable<Team> iterable = mainTeams.where((element) => element.name != mainRequestedTeam);
-    otherPlayersList = List.from(iterable);
+    _mainMenu = await _databaseService.menuService.getMainMenu();
+    _otherMenus = await _databaseService.menuService.getOtherMenus();
 
     //Let other views to render again
     setBusy(false);
     notifyListeners();
   }
 
+  String getMainMenuName() {
+    return _mainMenu == null ? "" : _mainMenu.name;
+  }
+
+  int getOtherMenusCount() {
+    return _otherMenus.length;
+  }
+
+  String getOtherMenuName(int index) {
+    if(index < getOtherMenusCount()) {
+      return _otherMenus[index].name;
+    }
+    return "";
+  }
+
   void onMainButtonTap(BuildContext context) {
-    _baseScaffoldService.teamSelected = mainRequestedTeam;
-    if(_databaseService.mainTeams == null || _databaseService.mainTeams.isEmpty)
-      _logger.d("mainTeams in databaseService is null or empty");
-    int index = _databaseService.mainTeams.indexWhere((team) => team.name == mainRequestedTeam);
-    if(index > -1)
-      _databaseService.selectedTeam = _databaseService.mainTeams[index];
-    Navigator.pushNamed(
-        context,
-        CategoriesView.routeName,
-    );
+    navigateToCategoriesView(context, _mainMenu.categoriesIds);
   }
 
   void onOtherPlayersTap(BuildContext context, int index) {
-    _baseScaffoldService.teamSelected = otherPlayersList[index].name;
-    _databaseService.selectedTeam = otherPlayersList[index];
+    navigateToCategoriesView(context, _otherMenus[index].categoriesIds);
+  }
+
+  Future<void> navigateToCategoriesView(BuildContext context, List<String> categoriesIds) async {
+    await Navigator.pushNamed(
+      context,
+      CategoriesView.routeName,
+      arguments: CategoriesViewArguments(categoriesIds),
+    );
   }
 
 }
