@@ -4,7 +4,6 @@ import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
-import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -55,11 +54,18 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void onMainButtonTap(BuildContext context) {
+    setAppBarTitle(_mainMenu.name);
     navigateToCategoriesView(context, _mainMenu.categoriesIds);
   }
 
   void onOtherPlayersTap(BuildContext context, int index) {
-    navigateToCategoriesView(context, _otherMenus[index].categoriesIds);
+    Menu menu = _otherMenus[index];
+    setAppBarTitle(menu.name);
+    navigateToCategoriesView(context, menu.categoriesIds);
+  }
+
+  void setAppBarTitle(String name) {
+    _baseScaffoldService.teamSelected = name;
   }
 
   Future<void> navigateToCategoriesView(BuildContext context, List<String> categoriesIds) async {

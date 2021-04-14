@@ -1,5 +1,6 @@
 library categories_view;
 
+import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/widgets/scaffolds/scroll_scaffold_widget.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -8,14 +9,16 @@ import 'categories_view_model.dart';
 
 part 'categories_mobile.dart';
 
-// ignore: must_be_immutable
 class CategoriesView extends StatelessWidget {
   static const routeName = '/categories';
 
   @override
   Widget build(BuildContext context) {
+
+    final CategoriesViewArguments args = ModalRoute.of(context).settings.arguments;
+
     return ViewModelBuilder<CategoriesViewModel>.reactive(
-      viewModelBuilder: () => CategoriesViewModel(),
+      viewModelBuilder: () => CategoriesViewModel(args.categoriesIds),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

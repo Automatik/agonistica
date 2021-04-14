@@ -13,19 +13,18 @@ class CategoriesViewModel extends BaseViewModel {
   final _baseScaffoldService = locator<BaseScaffoldService>();
   final _databaseService = locator<DatabaseService>();
 
-  List<Category> _followedCategories = [];
+  List<Category> _menuCategories = [];
 
-  CategoriesViewModel(){
-//    _followedCategories = List.from(requestedCategories, growable: true);
-    loadItems();
+  CategoriesViewModel(List<String> menuCategoriesIds) {
+    loadItems(menuCategoriesIds);
   }
   
   // Add ViewModel specific code here
-  Future<void> loadItems() async {
+  Future<void> loadItems(List<String> menuCategoriesIds) async {
     setBusy(true);
     //Write your models loading codes here
 
-    _followedCategories = await _databaseService.getMainCategories();
+    _menuCategories = await _databaseService.categoryService.getItemsByIds(menuCategoriesIds);
 
 
     //Let other views to render again
@@ -38,17 +37,17 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   int getFollowedCategoriesCount() {
-    return _followedCategories.length;
+    return _menuCategories.length;
   }
 
   String getFollowedCategory(int index) {
-    if(index < 0 || index >= _followedCategories.length)
+    if(index < 0 || index >= _menuCategories.length)
       return "";
-    return _followedCategories[index].name;
+    return _menuCategories[index].name;
   }
 
   void onFollowedCategoryTap(BuildContext context, int index) {
-    _databaseService.selectedCategory = _followedCategories[index];
+    _databaseService.selectedCategory = _menuCategories[index];
     Navigator.pushNamed(
       context,
       TeamView.routeName,

@@ -6,6 +6,8 @@ class BaseScaffoldService {
 
   int bottomBarSelectedIndex = 0;
 
+  String teamSelected;
+
   BaseScaffoldService();
 
 }
