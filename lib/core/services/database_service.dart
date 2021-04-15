@@ -3,6 +3,7 @@ import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/category_service.dart';
 import 'package:agonistica/core/services/followed_players_service.dart';
@@ -94,6 +95,9 @@ class DatabaseService {
       // Create the main teams (currently only the Merate Team)
       List<String> teamNames = List.of([mainRequestedTeam]);
       List<Team> teams = await _initializeRequestedTeams(teamNames);
+      // Create the season teams
+      List<List<Category>> teamsCategories = List.of([categories]);
+      await _initializeRequestedSeasonTeams(teams, teamsCategories, season);
       // Follow this teams
       await _initializeFollowedTeams(teams);
       sharedPref.setBool(areItemsInitializedKey, true);
@@ -132,7 +136,6 @@ class DatabaseService {
     return season;
   }
 
-  //TODO Initialize the SeasonTeam also!!
   Future<List<Team>> _initializeRequestedTeams(List<String> teamNames) async {
     List<Team> teams = [];
     for(String teamName in teamNames) {
@@ -141,6 +144,21 @@ class DatabaseService {
       teams.add(team);
     }
     return teams;
+  }
+
+  /// For every team in the teams list create a season team with the given categories
+  /// in the list of teamsCategories and with the season provided
+  Future<void> _initializeRequestedSeasonTeams(List<Team> teams, List<List<Category>> teamsCategories, Season season) async {
+    if(teams.length != teamsCategories.length) {
+      return;
+    }
+    for(int i=0; i<teams.length; i++) {
+      Team team = teams[i];
+      List<Category> categories = teamsCategories[i];
+      SeasonTeam seasonTeam = SeasonTeam.empty(team.id, season.id);
+      seasonTeam.categoriesIds = categories.map((e) => e.id).toList();
+      await seasonTeamService.saveItem(seasonTeam);
+    }
   }
 
   Future<void> _initializeFollowedTeams(List<Team> teams) async {
