@@ -3,6 +3,9 @@ import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
+import 'package:agonistica/views/roster/category_label.dart';
+import 'package:agonistica/views/roster/stat_row.dart';
+import 'package:agonistica/views/roster/team_label.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
@@ -293,52 +296,29 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         fontSize: playerNameTextSize,
                       ),
                     ),
-                    CustomRichText(
-                      onTap: () async {
-                        // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
-                        // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
-                        if(isEditEnabled) {
-                          SeasonTeam seasonTeam = await _showInsertTeamDialog(playerInfo.getSeasonTeam().getTeamName());
-                          if(seasonTeam != null) {
-                            setState(() {
-                              playerInfo.setSeasonTeam(seasonTeam);
-                            });
-                          }
-                          // close dialog
-                          Navigator.of(context).pop();
-                        }
+                    TeamLabel(
+                      teamName: playerInfo.getSeasonTeam().getTeamName(),
+                      seasonId: playerInfo.getSeasonTeam().seasonId,
+                      isEditEnabled: isEditEnabled,
+                      onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
+                      onTeamChange: (seasonTeam) {
+                        setState(() {
+                          playerInfo.setSeasonTeam(seasonTeam);
+                        });
                       },
-                      enabled: isEditEnabled,
-                      text: playerInfo.getSeasonTeam().getTeamName(),
-                      textAlign: TextAlign.start,
                       fontColor: playerTeamTextColor,
-                      fontSize: playerTeamTextSize,
                       fontWeight: playerTeamTextWeight,
+                      fontSize: playerTeamTextSize
                     ),
-                    CustomRichText(
-                      onTap: () async {
-                        // se cambia categoria serve solo aggiornare il player (ma può servire aggiungere una nuova categoria alla squadra nel caso
-                        // il player ora faccia parte di una categoria di cui ancora il team non era presente) -> no non serve
-                        if(isEditEnabled) {
-                          List<Category> categories = await widget.teamCategoriesCallback(playerInfo.getSeasonTeam());
-                          final dialog = SelectCategoryDialog(
-                              categories: categories,
-                              onSelect: (newCategory) {
-                                if(newCategory != null) {
-                                  setState(() {
-                                    playerInfo.setCategory(newCategory);
-                                  });
-                                }
-                                // close dialog
-                                Navigator.of(context).pop();
-                              }
-                          );
-                          dialog.showSelectCategoryDialog(context);
-                        }
+                    CategoryLabel(
+                      categoryName: playerInfo.getCategory().name,
+                      isEditEnabled: isEditEnabled,
+                      teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
+                      onCategoryChange: (category) {
+                        setState(() {
+                          playerInfo.setCategory(category);
+                        });
                       },
-                      enabled: isEditEnabled,
-                      text: playerInfo.categoryName,
-                      textAlign: TextAlign.start,
                       fontColor: playerCategoryTextColor,
                       fontSize: playerCategoryTextSize,
                       fontWeight: playerCategoryTextWeight,
@@ -575,11 +555,41 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             child: Column(
               children: [
                 statTitleAndSummary("Caratteristiche", meanCharacteristics),
-                statRow("Tecnica", playerInfo.tecnica, isEditEnabled, (newValue) => playerInfo.tecnica = newValue, circlesBarWidth),
-                statRow("Agonistica", playerInfo.agonistica, isEditEnabled, (newValue) => playerInfo.agonistica = newValue, circlesBarWidth),
-                statRow("Fisica", playerInfo.fisica, isEditEnabled, (newValue) => playerInfo.fisica = newValue, circlesBarWidth),
-                statRow("Tattica", playerInfo.tattica, isEditEnabled, (newValue) => playerInfo.tattica = newValue, circlesBarWidth),
-                statRow("Cap. Motorie", playerInfo.capMotorie, isEditEnabled, (newValue) => playerInfo.capMotorie = newValue, circlesBarWidth),
+                StatRow(
+                  statName: "Tecnica",
+                  value: playerInfo.tecnica,
+                  isEditEnabled: isEditEnabled,
+                  onChange: (newValue) => playerInfo.tecnica = newValue,
+                  width: circlesBarWidth
+                ),
+                StatRow(
+                  statName: "Agonistica",
+                  value: playerInfo.agonistica,
+                  isEditEnabled: isEditEnabled,
+                  onChange: (newValue) => playerInfo.agonistica = newValue,
+                  width: circlesBarWidth
+                ),
+                StatRow(
+                  statName: "Fisica",
+                  value: playerInfo.fisica,
+                  isEditEnabled: isEditEnabled,
+                  onChange: (newValue) => playerInfo.fisica = newValue,
+                  width: circlesBarWidth
+                ),
+                StatRow(
+                  statName: "Tattica",
+                  value: playerInfo.tattica,
+                  isEditEnabled: isEditEnabled,
+                  onChange: (newValue) => playerInfo.tattica = newValue,
+                  width: circlesBarWidth
+                ),
+                StatRow(
+                  statName: "Cap. Motorie",
+                  value: playerInfo.capMotorie,
+                  isEditEnabled: isEditEnabled,
+                  onChange: (newValue) => playerInfo.capMotorie = newValue,
+                  width: circlesBarWidth
+                ),
                 SizedBox(height: 5,) //use as margin bottom
               ],
             ),
@@ -614,14 +624,62 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
               child: Column(
                 children: [
                   statTitleAndSummary("Capacità condizionali", meanCapacities),
-                  statRow("Velocità", playerInfo.velocita, isEditEnabled, (newValue) => playerInfo.velocita = newValue, circlesBarWidth),
-                  statRow("Rapidità", playerInfo.rapidita, isEditEnabled, (newValue) => playerInfo.rapidita = newValue, circlesBarWidth),
-                  statRow("Scatto", playerInfo.scatto, isEditEnabled, (newValue) => playerInfo.scatto = newValue, circlesBarWidth),
-                  statRow("Resistenza", playerInfo.resistenza, isEditEnabled, (newValue) => playerInfo.resistenza = newValue, circlesBarWidth),
-                  statRow("Corsa", playerInfo.corsa, isEditEnabled, (newValue) => playerInfo.corsa = newValue, circlesBarWidth),
-                  statRow("Progressione", playerInfo.progressione, isEditEnabled, (newValue) => playerInfo.progressione = newValue, circlesBarWidth),
-                  statRow("Cambio passo", playerInfo.cambioPasso, isEditEnabled, (newValue) => playerInfo.cambioPasso = newValue, circlesBarWidth),
-                  statRow("Elevazione", playerInfo.elevazione, isEditEnabled, (newValue) => playerInfo.elevazione = newValue, circlesBarWidth),
+                  StatRow(
+                    statName: "Velocità",
+                    value: playerInfo.velocita,
+                    isEditEnabled: isEditEnabled,
+                    onChange: (newValue) => playerInfo.velocita = newValue,
+                    width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Rapidità",
+                      value: playerInfo.rapidita,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.rapidita = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Scatto",
+                      value: playerInfo.scatto,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.scatto = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Resistenza",
+                      value: playerInfo.resistenza,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.resistenza = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Corsa",
+                      value: playerInfo.corsa,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.corsa = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Progressione",
+                      value: playerInfo.progressione,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.progressione = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Cambio passo",
+                      value: playerInfo.cambioPasso,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.cambioPasso = newValue,
+                      width: circlesBarWidth
+                  ),
+                  StatRow(
+                      statName: "Elevazione",
+                      value: playerInfo.elevazione,
+                      isEditEnabled: isEditEnabled,
+                      onChange: (newValue) => playerInfo.elevazione = newValue,
+                      width: circlesBarWidth
+                  ),
                   SizedBox(height: 5,) //use as margin bottom
                 ],
               ),
@@ -652,81 +710,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           ),
           summaryWidget(meanValue, SeasonPlayer.MAX_VALUE)
         ],
-      ),
-    );
-  }
-
-  Widget statRow(String statName, int value, bool isEditEnabled, Function(int) onChange, double width) {
-    if(value == null)
-      value = 1;
-    double doubleValue = value.toDouble();
-
-    Widget element;
-    if(isEditEnabled) {
-      element = Slider(
-        min: SeasonPlayer.MIN_VALUE.toDouble(),
-        max: SeasonPlayer.MAX_VALUE.toDouble(),
-        divisions: SeasonPlayer.MAX_VALUE,
-        label: value.round().toString(),
-        value: doubleValue,
-        onChanged: (v) {
-          onChange(v.toInt());
-          setState(() {
-            doubleValue = v;
-          });
-        },
-        activeColor: blueAgonisticaColor,
-        inactiveColor: blueLightAgonisticaColor,
-      );
-    } else {
-      element = circlesBar(value, SeasonPlayer.MAX_VALUE, width);
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            statName,
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: blueAgonisticaColor,
-              fontSize: 16,
-              fontWeight: FontWeight.normal
-            ),
-          ),
-          element
-        ],
-      ),
-    );
-  }
-
-  Widget circlesBar(int value, int numCircles, double maxWidth) {
-    double size = 0.7 * maxWidth / SeasonPlayer.MAX_VALUE;
-    List<int> circles = List.generate(numCircles, (index) => index);
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: blueAgonisticaColor),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 7),
-//      height: 30,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: circles.map((index) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 1),
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: index < value ? blueAgonisticaColor : blueAgonisticaColor.withOpacity(0.38),
-              shape: BoxShape.circle,
-            ),
-          );
-        }).toList(),
       ),
     );
   }
@@ -941,26 +924,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       },
     );
 
-  }
-
-  Future<SeasonTeam> _showInsertTeamDialog(String tempTeamName) async {
-    SeasonTeam tempSeasonTeam;
-    InsertTeamDialog insertTeamDialog = InsertTeamDialog(
-        initialValue: tempTeamName,
-        maxHeight: MediaQuery.of(context).size.height,
-        seasonId: tempSeasonPlayer.seasonId,
-        suggestionCallback: (pattern) {
-          return widget.onSuggestionTeamCallback(pattern);
-        },
-        onSubmit: (finalTeamValue) {
-          Navigator.of(context).pop();
-          if(finalTeamValue != null) {
-            tempSeasonTeam = finalTeamValue;
-          }
-        }
-    );
-    await insertTeamDialog.showInsertTeamDialog(context);
-    return tempSeasonTeam;
   }
 
 }

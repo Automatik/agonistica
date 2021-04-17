@@ -11,7 +11,13 @@ class StatRow extends StatefulWidget {
   final Function(int) onChange;
   final double width;
 
-  StatRow({this.statName, this.value, this.isEditEnabled, this.onChange, this.width});
+  StatRow({
+    @required this.statName,
+    @required this.value,
+    @required this.isEditEnabled,
+    @required this.onChange,
+    @required this.width
+  });
 
   @override
   State<StatefulWidget> createState() => _StatRowState();

@@ -44,8 +44,6 @@ class _TeamLabelState extends State<TeamLabel> {
   Widget build(BuildContext context) {
     return CustomRichText(
       onTap: () async {
-        // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
-        // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
         if(widget.isEditEnabled) {
           SeasonTeam seasonTeam = await _showInsertTeamDialog(context, teamText);
           if(seasonTeam != null) {
@@ -53,6 +51,9 @@ class _TeamLabelState extends State<TeamLabel> {
               teamText = seasonTeam.getTeamName();
             });
             widget.onTeamChange(seasonTeam);
+            //TODO Vedere se il close dialog piazzarlo qui o nel callback in PlayerDetailLayout
+            // close dialog
+            Navigator.of(context).pop();
           }
         }
       },
