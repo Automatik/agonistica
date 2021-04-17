@@ -91,7 +91,7 @@ class _NotesMobileState extends State<_NotesMobile> {
                             margin: EdgeInsets.only(top: topMargin, right: 20),
                             alignment: Alignment.center,
                             child: Text(
-                              "${tempMatch.team1Name} ${tempMatch.team1Goals} - ${tempMatch.team2Goals} ${tempMatch.team2Name}",
+                              "${tempMatch.getHomeSeasonTeamName()} ${tempMatch.team1Goals} - ${tempMatch.team2Goals} ${tempMatch.getAwaySeasonTeamName()}",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.black,

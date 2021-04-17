@@ -33,7 +33,7 @@ class NotesViewModel extends BaseViewModel {
 
   Future<void> onNotesSave(String text) async {
     notes.notes = text;
-    await _databaseService.savePlayerMatchNotes(notes);
+    await _databaseService.playerNotesService.saveItem(notes);
   }
 
   String getAppBarTitle() {
