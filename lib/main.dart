@@ -23,7 +23,6 @@ Future<void> main() async {
     print(e);
   }
   await LocatorInjector.setupLocator();
-  //await DatabaseService.initialize();
   await locator<DatabaseService>().initialize();
   runApp(MyApp());
 }

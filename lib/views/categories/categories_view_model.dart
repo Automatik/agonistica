@@ -1,3 +1,4 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -12,6 +13,7 @@ class CategoriesViewModel extends BaseViewModel {
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
   final _databaseService = locator<DatabaseService>();
+  final _appStateService = locator<AppStateService>();
 
   List<Category> _menuCategories = [];
 
@@ -47,7 +49,7 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   void onFollowedCategoryTap(BuildContext context, int index) {
-    _databaseService.selectedCategory = _menuCategories[index];
+    _appStateService.selectedCategory = _menuCategories[index];
     Navigator.pushNamed(
       context,
       TeamView.routeName,

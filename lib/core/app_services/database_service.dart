@@ -53,16 +53,6 @@ class DatabaseService {
   SeasonTeamService _seasonTeamService;
   TeamService _teamService;
 
-
-  Team mainTeam;
-  List<Team> mainTeams;
-  List<Category> mainCategories;
-
-  Team selectedTeam;
-  Category selectedCategory;
-  SeasonTeam selectedSeasonTeam;
-  Season selectedSeason;
-
   Future<void> initialize() async {
     await _initializeServices();
     await _initializeData();

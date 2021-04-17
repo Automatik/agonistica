@@ -1,3 +1,4 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
@@ -13,15 +14,15 @@ import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
 
+  final _baseScaffoldService = locator<BaseScaffoldService>();
   final _databaseService = locator<DatabaseService>();
+  final _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('HomeViewModel');
 
 
   Menu _mainMenu;
   List<Menu> _otherMenus = [];
-
-  final _baseScaffoldService = locator<BaseScaffoldService>();
 
   HomeViewModel(){
     loadItems();
@@ -59,11 +60,11 @@ class HomeViewModel extends BaseViewModel {
     setAppBarTitle(_mainMenu.name);
     // Get the team corresponding to this menu
     Team team = await _databaseService.teamService.getItemById(_mainMenu.teamId);
-    _databaseService.selectedTeam = team;
+    _appStateService.selectedTeam = team;
     // Get the current season team
     SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
-    _databaseService.selectedSeasonTeam = seasonTeam;
-    _databaseService.selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
+    _appStateService.selectedSeasonTeam = seasonTeam;
+    _appStateService.selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
     // Get season team's categories
     List<String> categoriesIds = seasonTeam.categoriesIds;
     navigateToCategoriesView(context, categoriesIds);
