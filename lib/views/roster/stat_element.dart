@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/roster/player_detail_layout.dart';
@@ -45,9 +46,9 @@ class _StatElementState extends State<StatElement> {
   Widget build(BuildContext context) {
     String iconPath = "assets/images/${_mapStatToIcon(widget.icon)}";
 
-    List<String> positionChoices = [Player.positionToString(Player.POSITION_GOALKEEPER),
-      Player.positionToString(Player.POSITION_DEFENDER), Player.positionToString(Player.POSITION_MIDFIELDER),
-      Player.positionToString(Player.POSITION_FORWARD)];
+    List<String> positionChoices = [SeasonPlayer.positionToString(SeasonPlayer.POSITION_GOALKEEPER),
+      SeasonPlayer.positionToString(SeasonPlayer.POSITION_DEFENDER), SeasonPlayer.positionToString(SeasonPlayer.POSITION_MIDFIELDER),
+      SeasonPlayer.positionToString(SeasonPlayer.POSITION_FORWARD)];
 
     List<String> footChoices = ["Destro", "Sinistro"];
 

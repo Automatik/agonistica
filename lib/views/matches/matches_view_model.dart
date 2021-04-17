@@ -41,7 +41,7 @@ class MatchesViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    seasonTeams = await _databaseService.seasonTeamService.getCurrentSeasonTeams();
+    seasonTeams = await _databaseService.seasonTeamService.getSeasonTeamsWithSeason(match.seasonId);
     for(SeasonTeam seasonTeam in seasonTeams) {
       seasonTeam = await _databaseService.seasonTeamService.completeSeasonTeamWithMissingInfo(seasonTeam);
     }

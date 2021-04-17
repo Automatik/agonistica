@@ -1,7 +1,7 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
-import 'package:agonistica/core/models/player.dart';
-import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
@@ -26,23 +26,23 @@ class PlayerDetailLayout extends StatefulWidget {
   static const int STAT_RED_CARDS = 5;
 
 //  final bool isNewPlayer;
-  final Player player;
+  final SeasonPlayer seasonPlayer;
   final bool isEditEnabled;
   final double maxWidth;
   final PlayerDetailController controller;
-  final List<Team> Function(String) onSuggestionTeamCallback;
-  final Future<List<Category>> Function(Team) teamCategoriesCallback;
+  final List<SeasonTeam> Function(String) onSuggestionTeamCallback;
+  final Future<List<Category>> Function(SeasonTeam) teamCategoriesCallback;
 //  final Function(Player) onSave;
 
   PlayerDetailLayout({
-    @required this.player,
+    @required this.seasonPlayer,
     @required this.isEditEnabled,
     @required this.controller,
     @required this.onSuggestionTeamCallback,
     @required this.teamCategoriesCallback,
 //    @required this.onSave,
     this.maxWidth
-  }) : assert(player != null);
+  }) : assert(seasonPlayer != null);
 
   @override
   State<StatefulWidget> createState() => _PlayerDetailLayoutState(controller);
@@ -53,7 +53,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
   bool editEnabled;
 
-  Player tempPlayer;
+  SeasonPlayer tempSeasonPlayer;
 
   TextEditingController nameTextController, surnameTextController,
       heightTextController, weightTextController;
@@ -109,28 +109,28 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   void reset() {
-    nameTextController.text = tempPlayer.name;
-    surnameTextController.text = tempPlayer.surname;
-    heightTextController.text = tempPlayer.height.toString();
-    weightTextController.text = tempPlayer.weight.toString();
+    nameTextController.text = tempSeasonPlayer.getPlayerName();
+    surnameTextController.text = tempSeasonPlayer.getPlayerSurname();
+    heightTextController.text = tempSeasonPlayer.height.toString();
+    weightTextController.text = tempSeasonPlayer.weight.toString();
 
-    roleText = Player.positionToString(tempPlayer.position);
-    footText = tempPlayer.isRightHanded ? "Destro" : "Sinistro";
-    matchesTextController.text = tempPlayer.matches.toString();
-    goalsTextController.text = tempPlayer.goals.toString();
-    yellowTextController.text = tempPlayer.yellowCards.toString();
-    redTextController.text = tempPlayer.redCards.toString();
+    roleText = SeasonPlayer.positionToString(tempSeasonPlayer.position);
+    footText = tempSeasonPlayer.isRightHanded() ? "Destro" : "Sinistro";
+    matchesTextController.text = tempSeasonPlayer.matches.toString();
+    goalsTextController.text = tempSeasonPlayer.goals.toString();
+    yellowTextController.text = tempSeasonPlayer.yellowCards.toString();
+    redTextController.text = tempSeasonPlayer.redCards.toString();
 
-    morfologiaTextController.text = tempPlayer.morfologia;
-    sommatoTipoTextController.text = tempPlayer.sommatoTipo;
+    morfologiaTextController.text = tempSeasonPlayer.morfologia;
+    sommatoTipoTextController.text = tempSeasonPlayer.sommatoTipo;
 
-    attitude1TextController.text = tempPlayer.attitudine1;
-    attitude2TextController.text = tempPlayer.attitudine2;
-    attitude3TextController.text = tempPlayer.attitudine3;
+    attitude1TextController.text = tempSeasonPlayer.attitudine1;
+    attitude2TextController.text = tempSeasonPlayer.attitudine2;
+    attitude3TextController.text = tempSeasonPlayer.attitudine3;
   }
 
   void updatePlayerObject() {
-    tempPlayer = widget.player;
+    tempSeasonPlayer = widget.seasonPlayer;
   }
 
   bool savePlayerState() {
@@ -142,23 +142,23 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       return false;
     }
 
-    tempPlayer.name = nameTextController.text;
-    tempPlayer.surname = surnameTextController.text;
-    tempPlayer.height = int.tryParse(heightTextController.text);
-    tempPlayer.weight = int.tryParse(weightTextController.text);
+    tempSeasonPlayer.setPlayerName(nameTextController.text);
+    tempSeasonPlayer.setPlayerSurname(surnameTextController.text);
+    tempSeasonPlayer.height = int.tryParse(heightTextController.text);
+    tempSeasonPlayer.weight = int.tryParse(weightTextController.text);
 
-    tempPlayer.position = Player.stringToPosition(roleText);
-    tempPlayer.isRightHanded = footText == "Destro" ? true : false;
-    tempPlayer.matches = int.tryParse(matchesTextController.text);
-    tempPlayer.goals = int.tryParse(goalsTextController.text);
-    tempPlayer.yellowCards = int.tryParse(yellowTextController.text);
-    tempPlayer.redCards = int.tryParse(redTextController.text);
+    tempSeasonPlayer.position = SeasonPlayer.stringToPosition(roleText);
+    tempSeasonPlayer.setIsRightHanded(footText == "Destro" ? true : false);
+    tempSeasonPlayer.matches = int.tryParse(matchesTextController.text);
+    tempSeasonPlayer.goals = int.tryParse(goalsTextController.text);
+    tempSeasonPlayer.yellowCards = int.tryParse(yellowTextController.text);
+    tempSeasonPlayer.redCards = int.tryParse(redTextController.text);
 
-    tempPlayer.morfologia = morfologiaTextController.text;
-    tempPlayer.sommatoTipo = sommatoTipoTextController.text;
-    tempPlayer.attitudine1 = attitude1TextController.text;
-    tempPlayer.attitudine2 = attitude2TextController.text;
-    tempPlayer.attitudine3 = attitude3TextController.text;
+    tempSeasonPlayer.morfologia = morfologiaTextController.text;
+    tempSeasonPlayer.sommatoTipo = sommatoTipoTextController.text;
+    tempSeasonPlayer.attitudine1 = attitude1TextController.text;
+    tempSeasonPlayer.attitudine2 = attitude2TextController.text;
+    tempSeasonPlayer.attitudine3 = attitude3TextController.text;
 
     return true;
   }
@@ -194,8 +194,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           width: widget.maxWidth,
           child: Column(
             children: [
-              playerInfo(context, editEnabled, tempPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
-              playerCharacteristics(context, tempPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController,
+              playerInfo(context, editEnabled, tempSeasonPlayer, nameTextController, surnameTextController, heightTextController, weightTextController),
+              playerCharacteristics(context, tempSeasonPlayer, editEnabled, roleText, footText, matchesTextController, goalsTextController, yellowTextController, redTextController,
               morfologiaTextController, sommatoTipoTextController, attitude1TextController, attitude2TextController, attitude3TextController),
             ],
           ),
@@ -204,7 +204,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerInfo(BuildContext context, bool isEditEnabled, Player playerInfo, TextEditingController nameTextController,
+  Widget playerInfo(BuildContext context, bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController nameTextController,
       TextEditingController surnameTextController, TextEditingController heightTextController,
       TextEditingController weightTextController) {
 
@@ -298,10 +298,10 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
                         // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
                         if(isEditEnabled) {
-                          Team team = await _showInsertTeamDialog(playerInfo.teamName);
-                          if(team != null) {
+                          SeasonTeam seasonTeam = await _showInsertTeamDialog(playerInfo.getSeasonTeam().getTeamName());
+                          if(seasonTeam != null) {
                             setState(() {
-                              playerInfo.setSeasonTeam(team);
+                              playerInfo.setSeasonTeam(seasonTeam);
                             });
                           }
                           // close dialog
@@ -309,7 +309,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                         }
                       },
                       enabled: isEditEnabled,
-                      text: playerInfo.teamName,
+                      text: playerInfo.getSeasonTeam().getTeamName(),
                       textAlign: TextAlign.start,
                       fontColor: playerTeamTextColor,
                       fontSize: playerTeamTextSize,
@@ -361,7 +361,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                             DateTime curDate = DateTime.now();
                             await showDatePicker(
                                 context: context,
-                                initialDate: playerInfo.birthDay,
+                                initialDate: playerInfo.getPlayerBirthday(),
                                 firstDate: DateTime.utc(
                                     curDate.year - 50),
                                 lastDate: DateTime.utc(
@@ -372,16 +372,16 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                             ).then((date) {
                               if (date != null)
                                 setState(() {
-                                  playerInfo.birthDay = date;
+                                  playerInfo.setPlayerBirthday(date);
                                 });
                             });
                           }
                         },
                         child: Text(
-                          "${playerInfo.birthDay.day} ${DateUtils
+                          "${playerInfo.getPlayerBirthday().day} ${DateUtils
                               .monthToString(
-                              playerInfo.birthDay.month).substring(
-                              0, 3)} ${playerInfo.birthDay.year}",
+                              playerInfo.getPlayerBirthday().month).substring(
+                              0, 3)} ${playerInfo.getPlayerBirthday().year}",
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: playerHeightTextColor,
@@ -457,7 +457,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerCharacteristics(BuildContext context, Player playerInfo, bool isEditEnabled, String roleText, String footText,
+  Widget playerCharacteristics(BuildContext context, SeasonPlayer playerInfo, bool isEditEnabled, String roleText, String footText,
       TextEditingController matchesTextController, TextEditingController goalsTextController,
     TextEditingController yellowTextController, TextEditingController redTextController, TextEditingController morfologiaTextController,
       TextEditingController sommatoTipoTextController, TextEditingController attitude1TextController, TextEditingController attitude2TextController,
@@ -549,7 +549,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     ];
   }
 
-  Widget playerCharacteristicsBox(Player playerInfo, bool isEditEnabled) {
+  Widget playerCharacteristicsBox(SeasonPlayer playerInfo, bool isEditEnabled) {
 
     List<int> characteristics = [playerInfo.tecnica, playerInfo.agonistica, playerInfo.fisica, playerInfo.tattica, playerInfo.capMotorie];
     int sum = characteristics.reduce((a, b) => a + b);
@@ -589,7 +589,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget playerConditionalCapacitiesBox(Player playerInfo, bool isEditEnabled) {
+  Widget playerConditionalCapacitiesBox(SeasonPlayer playerInfo, bool isEditEnabled) {
 
     List<int> capacities = [playerInfo.velocita, playerInfo.rapidita, playerInfo.scatto, playerInfo.resistenza, playerInfo.corsa, playerInfo.progressione, playerInfo.cambioPasso, playerInfo.elevazione];
     int sum = capacities.reduce((a, b) => a + b);
@@ -650,7 +650,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
               ),
             ),
           ),
-          summaryWidget(meanValue, Player.MAX_VALUE)
+          summaryWidget(meanValue, SeasonPlayer.MAX_VALUE)
         ],
       ),
     );
@@ -664,9 +664,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     Widget element;
     if(isEditEnabled) {
       element = Slider(
-        min: Player.MIN_VALUE.toDouble(),
-        max: Player.MAX_VALUE.toDouble(),
-        divisions: Player.MAX_VALUE,
+        min: SeasonPlayer.MIN_VALUE.toDouble(),
+        max: SeasonPlayer.MAX_VALUE.toDouble(),
+        divisions: SeasonPlayer.MAX_VALUE,
         label: value.round().toString(),
         value: doubleValue,
         onChanged: (v) {
@@ -679,7 +679,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
         inactiveColor: blueLightAgonisticaColor,
       );
     } else {
-      element = circlesBar(value, Player.MAX_VALUE, width);
+      element = circlesBar(value, SeasonPlayer.MAX_VALUE, width);
     }
 
     return Container(
@@ -703,7 +703,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   Widget circlesBar(int value, int numCircles, double maxWidth) {
-    double size = 0.7 * maxWidth / Player.MAX_VALUE;
+    double size = 0.7 * maxWidth / SeasonPlayer.MAX_VALUE;
     List<int> circles = List.generate(numCircles, (index) => index);
     return Container(
       decoration: BoxDecoration(
@@ -943,23 +943,24 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
   }
 
-  Future<Team> _showInsertTeamDialog(String tempTeamName) async {
-    Team tempTeam;
+  Future<SeasonTeam> _showInsertTeamDialog(String tempTeamName) async {
+    SeasonTeam tempSeasonTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
+        seasonId: tempSeasonPlayer.seasonId,
         suggestionCallback: (pattern) {
           return widget.onSuggestionTeamCallback(pattern);
         },
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
           if(finalTeamValue != null) {
-            tempTeam = finalTeamValue;
+            tempSeasonTeam = finalTeamValue;
           }
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);
-    return tempTeam;
+    return tempSeasonTeam;
   }
 
 }

@@ -247,6 +247,11 @@ class SeasonPlayer {
     return player.birthDay;
   }
 
+  bool isRightHanded() {
+    _checkPlayerTempField();
+    return player.isRightHanded;
+  }
+
   SeasonTeam getSeasonTeam() {
     _checkSeasonTeamTempField();
     return seasonTeam;
@@ -267,6 +272,26 @@ class SeasonPlayer {
   void setCategory(Category category) {
     categoryId = category.id;
     categoryName = category.name;
+  }
+
+  void setPlayerName(String name) {
+    _checkPlayerTempField();
+    player.name = name;
+  }
+
+  void setPlayerSurname(String surname) {
+    _checkPlayerTempField();
+    player.surname = surname;
+  }
+
+  void setPlayerBirthday(DateTime birthday) {
+    _checkPlayerTempField();
+    player.birthDay = birthday;
+  }
+
+  void setIsRightHanded(bool isRightHanded) {
+    _checkPlayerTempField();
+    player.isRightHanded = isRightHanded;
   }
 
   void checkRequiredFields() {

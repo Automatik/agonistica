@@ -15,12 +15,12 @@ class _RosterMobileState extends State<_RosterMobile> {
 
   bool isEditEnabled;
 
-  Player tempPlayer;
+  SeasonPlayer tempSeasonPlayer;
 
   final PlayerDetailController playerDetailController = PlayerDetailController();
 
   void initializeState() {
-    tempPlayer = Player.clone(widget.viewModel.player);
+    tempSeasonPlayer = SeasonPlayer.clone(widget.viewModel.seasonPlayer);
   }
 
   @override
@@ -45,7 +45,7 @@ class _RosterMobileState extends State<_RosterMobile> {
         double width = 0.9 * sizingInformation.localWidgetSize.width;
 
         return PlayerDetailLayout(
-          player: tempPlayer,
+          seasonPlayer: tempSeasonPlayer,
           isEditEnabled: isEditEnabled,
           controller: playerDetailController,
           onSuggestionTeamCallback: (pattern) => widget.viewModel.onSuggestionTeamCallback(pattern),
@@ -88,7 +88,7 @@ class _RosterMobileState extends State<_RosterMobile> {
     if(isEditEnabled) {
       bool isValid = playerDetailController.savePlayerStatus();
       if(isValid) {
-        await widget.viewModel.onPlayerSave(context, tempPlayer);
+        await widget.viewModel.onPlayerSave(context, tempSeasonPlayer);
         setState(() {
           isEditEnabled = false;
         });

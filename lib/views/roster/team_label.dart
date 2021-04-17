@@ -1,4 +1,4 @@
-import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
 import 'package:flutter/material.dart';
@@ -6,21 +6,23 @@ import 'package:flutter/material.dart';
 class TeamLabel extends StatefulWidget {
 
   final String teamName;
+  final String seasonId;
   final bool isEditEnabled;
   final Function(String) onSuggestionTeamCallback;
-  final Function(Team) onTeamChange;
+  final Function(SeasonTeam) onTeamChange;
   final Color fontColor;
   final double fontSize;
   final FontWeight fontWeight;
 
   TeamLabel({
-    this.teamName,
-    this.isEditEnabled,
-    this.onSuggestionTeamCallback,
-    this.onTeamChange,
-    this.fontColor,
-    this.fontWeight,
-    this.fontSize,
+    @required this.teamName,
+    @required this.seasonId,
+    @required this.isEditEnabled,
+    @required this.onSuggestionTeamCallback,
+    @required this.onTeamChange,
+    @required this.fontColor,
+    @required this.fontWeight,
+    @required this.fontSize,
   });
 
   @override
@@ -45,12 +47,12 @@ class _TeamLabelState extends State<TeamLabel> {
         // se faccio cambiare squadra, fare un metodo nel team repository per rimuovere il player id dal team's playerIds
         // e poi salvare il player nella nuova squadra (fatto, gestito nel savePlayer di databaseService)
         if(widget.isEditEnabled) {
-          Team team = await _showInsertTeamDialog(context, teamText);
-          if(team != null) {
+          SeasonTeam seasonTeam = await _showInsertTeamDialog(context, teamText);
+          if(seasonTeam != null) {
             setState(() {
-              teamText = team.name;
+              teamText = seasonTeam.getTeamName();
             });
-            widget.onTeamChange(team);
+            widget.onTeamChange(seasonTeam);
           }
         }
       },
@@ -63,23 +65,24 @@ class _TeamLabelState extends State<TeamLabel> {
     );
   }
 
-  Future<Team> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
-    Team tempTeam;
+  Future<SeasonTeam> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
+    SeasonTeam tempSeasonTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
+        seasonId: widget.seasonId,
         suggestionCallback: (pattern) {
           return widget.onSuggestionTeamCallback(pattern);
         },
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
           if(finalTeamValue != null) {
-            tempTeam = finalTeamValue;
+            tempSeasonTeam = finalTeamValue;
           }
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);
-    return tempTeam;
+    return tempSeasonTeam;
   }
 
 }

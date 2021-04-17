@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
@@ -26,9 +27,9 @@ class _StatRowState extends State<StatRow> {
     Widget element;
     if(widget.isEditEnabled) {
       element = Slider(
-        min: Player.MIN_VALUE.toDouble(),
-        max: Player.MAX_VALUE.toDouble(),
-        divisions: Player.MAX_VALUE,
+        min: SeasonPlayer.MIN_VALUE.toDouble(),
+        max: SeasonPlayer.MAX_VALUE.toDouble(),
+        divisions: SeasonPlayer.MAX_VALUE,
         label: widget.value.round().toString(),
         value: doubleValue,
         onChanged: (v) {
@@ -41,7 +42,7 @@ class _StatRowState extends State<StatRow> {
         inactiveColor: blueLightAgonisticaColor,
       );
     } else {
-      element = circlesBar(widget.value, Player.MAX_VALUE, widget.width);
+      element = circlesBar(widget.value, SeasonPlayer.MAX_VALUE, widget.width);
     }
 
     return Container(
@@ -65,7 +66,7 @@ class _StatRowState extends State<StatRow> {
   }
 
   Widget circlesBar(int value, int numCircles, double maxWidth) {
-    double size = 0.7 * maxWidth / Player.MAX_VALUE;
+    double size = 0.7 * maxWidth / SeasonPlayer.MAX_VALUE;
     List<int> circles = List.generate(numCircles, (index) => index);
     return Container(
       decoration: BoxDecoration(

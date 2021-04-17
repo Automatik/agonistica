@@ -1,8 +1,8 @@
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
-import 'package:agonistica/core/models/player.dart';
-import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
@@ -13,14 +13,15 @@ import 'package:stacked/stacked.dart';
 class RosterViewModel extends BaseViewModel {
 
   final bool isNewPlayer;
-  Player player;
-  final Function(Player) onPlayerDetailUpdate;
+  SeasonPlayer seasonPlayer;
+  final Function(SeasonPlayer) onPlayerDetailUpdate;
+
   final _databaseService = locator<DatabaseService>();
 
-  List<Team> teams;
+  List<SeasonTeam> seasonTeams;
 
-  RosterViewModel(this.isNewPlayer, this.player, this.onPlayerDetailUpdate){
-    teams = [];
+  RosterViewModel(this.isNewPlayer, this.seasonPlayer, this.onPlayerDetailUpdate){
+    seasonTeams = [];
     loadItems();
   }
   
@@ -29,10 +30,9 @@ class RosterViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    teams = await _databaseService.getTeamsWithoutOtherRequestedTeams();
-    if(player != null) {
-      Team playerTeam = await _databaseService.getTeamById(player.seasonTeamId);
-      teams.add(playerTeam);
+    seasonTeams = await _databaseService.seasonTeamService.getSeasonTeamsWithSeason(seasonPlayer.seasonId);
+    for(SeasonTeam seasonTeam in seasonTeams) {
+      seasonTeam = await _databaseService.seasonTeamService.completeSeasonTeamWithMissingInfo(seasonTeam);
     }
 
     //Let other views to render again
@@ -40,15 +40,15 @@ class RosterViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<Team> onSuggestionTeamCallback(String pattern) {
+  List<SeasonTeam> onSuggestionTeamCallback(String pattern) {
     if(pattern == null || pattern.isEmpty)
-      return teams;
+      return seasonTeams;
 
-    return teams.where((team) => team.name.startsWith(pattern));
+    return seasonTeams.where((team) => team.getTeamName().startsWith(pattern));
   }
 
-  Future<List<Category>> getTeamCategories(Team team) async {
-    return await _databaseService.getTeamCategories(team.id);
+  Future<List<Category>> getTeamCategories(SeasonTeam seasonTeam) async {
+    return await _databaseService.categoryService.getTeamCategories(seasonTeam.id);
   }
 
   Future<void> onBottomBarItemChanged(BuildContext context, int index, bool isEditEnabled) async {
@@ -56,32 +56,32 @@ class RosterViewModel extends BaseViewModel {
         TabScaffoldWidget.ROSTER_VIEW_INDEX, TabScaffoldWidget.MATCHES_VIEW_INDEX);
   }
 
-  Future<void> onPlayerSave(BuildContext context, Player newPlayer) async {
+  Future<void> onPlayerSave(BuildContext context, SeasonPlayer newSeasonPlayer) async {
     //TODO Implement a check if a player with already the same name and surname exists?
     print("savePlayer");
-    await _databaseService.savePlayer(newPlayer);
+    await _databaseService.seasonPlayerService.saveItem(newSeasonPlayer);
     print("onUpdate");
     // save eventually playerMatchNotes?
 
     if(onPlayerDetailUpdate != null) {
-      onPlayerDetailUpdate(newPlayer);
+      onPlayerDetailUpdate(newSeasonPlayer);
     }
     print("clone");
     // return to TeamView
 //    Navigator.of(context).pop();
 
-    player = Player.clone(newPlayer);
+    seasonPlayer = SeasonPlayer.clone(newSeasonPlayer);
   }
 
   Future<void> navigateToPlayerMatchesNotes(BuildContext context) async {
     Navigator.of(context).pushNamed(
       PlayerMatchesView.routeName,
-      arguments: PlayerMatchesViewArguments(player.id, "${player.name} ${player.surname}"),
+      arguments: PlayerMatchesViewArguments(seasonPlayer.id, "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}"),
     );
   }
 
   String getAppBarTitle() {
-    return isNewPlayer ? "Nuovo Giocatore" : "${player.name} ${player.surname}";
+    return isNewPlayer ? "Nuovo Giocatore" : "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}";
   }
 
 }
