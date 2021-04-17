@@ -5,7 +5,7 @@ import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
-import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -62,6 +62,8 @@ class HomeViewModel extends BaseViewModel {
     _databaseService.selectedTeam = team;
     // Get the current season team
     SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+    _databaseService.selectedSeasonTeam = seasonTeam;
+    _databaseService.selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
     // Get season team's categories
     List<String> categoriesIds = seasonTeam.categoriesIds;
     navigateToCategoriesView(context, categoriesIds);

@@ -1,6 +1,6 @@
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
-import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class SeasonTeamRepository extends CrudRepository<SeasonTeam> {

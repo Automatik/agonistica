@@ -54,13 +54,14 @@ class DatabaseService {
   TeamService _teamService;
 
 
-  CategoryService get categoryService => _categoryService;
   Team mainTeam;
   List<Team> mainTeams;
   List<Category> mainCategories;
 
   Team selectedTeam;
   Category selectedCategory;
+  SeasonTeam selectedSeasonTeam;
+  Season selectedSeason;
 
   Future<void> initialize() async {
     await _initializeServices();
@@ -165,6 +166,8 @@ class DatabaseService {
     }
     return menus;
   }
+
+  CategoryService get categoryService => _categoryService;
 
   FollowedPlayersService get followedPlayersService => _followedPlayersService;
 

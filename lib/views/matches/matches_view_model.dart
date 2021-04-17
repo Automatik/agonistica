@@ -5,7 +5,7 @@ import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/team.dart';
-import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:flutter/material.dart';

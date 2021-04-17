@@ -1,5 +1,5 @@
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';

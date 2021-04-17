@@ -4,7 +4,7 @@ import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
-import 'package:agonistica/core/services/database_service.dart';
+import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';
