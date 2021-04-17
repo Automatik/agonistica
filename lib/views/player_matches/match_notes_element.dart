@@ -61,7 +61,7 @@ class MatchNotesElement extends StatelessWidget {
                     margin: EdgeInsets.only(top: topMargin),
                     alignment: Alignment.center,
                     child: Text(
-                      "${match.team1Name} ${match.team1Goals} - ${match.team2Goals} ${match.team2Name}",
+                      "${match.getHomeSeasonTeamName()} ${match.team1Goals} - ${match.team2Goals} ${match.getAwaySeasonTeamName()}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -72,8 +72,8 @@ class MatchNotesElement extends StatelessWidget {
                   ),
                 ),
                 Container(
-                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                  margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                  child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
                 )
               ],
             ),

@@ -2,9 +2,9 @@ import 'package:agonistica/core/arguments/NotesViewArguments.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';
@@ -16,13 +16,13 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   final _databaseService = locator<DatabaseService>();
 
-  final String playerId;
+  final String seasonPlayerId;
   final String playerName;
 
-  Player player;
+  SeasonPlayer seasonPlayer;
   List<MatchNotesObject> objects;
 
-  PlayerMatchesViewModel(this.playerId, this.playerName){
+  PlayerMatchesViewModel(this.seasonPlayerId, this.playerName){
     objects = [];
     loadItems();
   }
@@ -33,17 +33,17 @@ class PlayerMatchesViewModel extends BaseViewModel {
     //Write your models loading codes here
 
     // Get the player's instance
-    player = await _databaseService.getPlayerById(playerId);
+    seasonPlayer = await _databaseService.seasonPlayerService.getItemById(seasonPlayerId);
 
-    if(player != null && player.matchesIds != null) {
+    if(seasonPlayer != null && seasonPlayer.matchesIds != null) {
 
       // Get matches in which the player has played
-      List<Match> matches = await _databaseService.getMatchesByIds(player.matchesIds);
+      List<Match> matches = await _databaseService.matchService.getItemsByIds(seasonPlayer.matchesIds);
 
-      matches = await _databaseService.completeMatchesWithMissingInfo(matches);
+      matches = await _databaseService.matchService.completeMatchesWithMissingInfo(matches);
 
       // Get Player's match notes
-      final notes = await _databaseService.getPlayerNotesByPlayer(player);
+      final notes = await _databaseService.playerNotesService.getPlayerNotesByPlayer(seasonPlayer);
 
       // Combine matches with notes in the objects list
       objects = [];
@@ -58,7 +58,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
           object = MatchNotesObject(match, note);
         } else {
           // a note does not exist for this match
-          PlayerMatchNotes note = PlayerMatchNotes(match.id, playerId);
+          PlayerMatchNotes note = PlayerMatchNotes(match.id, seasonPlayerId);
           object = MatchNotesObject(match, note);
         }
         objects.add(object);
