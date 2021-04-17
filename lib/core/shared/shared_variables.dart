@@ -14,7 +14,7 @@ const String defaultAppBarTitle = "Agonistica 2.0";
 
 const String mainRequestedTeam = 'Merate';
 final List<String> requestedMenus = List.unmodifiable([mainRequestedTeam, 'Prima Squadra', 'Juniores', 'Allievi', 'Giovanissimi']);
-final List<String> requestedCategories = List.unmodifiable(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
+final List<String> requestedMainTeamCategories = List.unmodifiable(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
 
 
 const String areItemsInitializedKey = 'areItemsInitialized';

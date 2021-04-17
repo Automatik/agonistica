@@ -88,8 +88,6 @@ class DatabaseService {
     if(!areItemsInitialized) {
       // Create categories for the main menu
       List<Category> categories = await _initializeCategories();
-      // Create menus in HomeView
-      List<Menu> menus = await _initializeMenus(categories);
       // Create the first season, the current one
       Season season = await _initializeCurrentSeason();
       // Create the main teams (currently only the Merate Team)
@@ -100,34 +98,20 @@ class DatabaseService {
       await _initializeRequestedSeasonTeams(teams, teamsCategories, season);
       // Follow this teams
       await _initializeFollowedTeams(teams);
+      // Create menus in HomeView
+      List<Menu> menus = await _initializeMenus(teams[0].id);
       sharedPref.setBool(areItemsInitializedKey, true);
     }
   }
 
   Future<List<Category>> _initializeCategories() async {
     List<Category> categories = [];
-    for(String categoryName in requestedCategories) {
+    for(String categoryName in requestedMainTeamCategories) {
       Category category = Category.name(categoryName);
       await categoryService.saveItem(category);
       categories.add(category);
     }
     return categories;
-  }
-
-  Future<List<Menu>> _initializeMenus(List<Category> mainMenuCategories) async {
-    List<Menu> menus = [];
-    for(String menuName in requestedMenus) {
-      Menu menu;
-      if(menuName == mainRequestedTeam) {
-        menu = Menu.create(menuName, Menu.TYPE_FOLLOWED_TEAMS);
-        menu.categoriesIds = mainMenuCategories.map((e) => e.id).toList();
-      } else {
-        menu = Menu.create(menuName, Menu.TYPE_FOLLOWED_PLAYERS);
-      }
-      await menuService.saveItem(menu);
-      menus.add(menu);
-    }
-    return menus;
   }
 
   Future<Season> _initializeCurrentSeason() async {
@@ -165,6 +149,21 @@ class DatabaseService {
     FollowedTeams followedTeams = FollowedTeams.empty();
     followedTeams.teamsIds = teams.map((e) => e.id).toList();
     await followedTeamsService.saveItem(followedTeams);
+  }
+
+  Future<List<Menu>> _initializeMenus(String mainTeamId) async {
+    List<Menu> menus = [];
+    for(String menuName in requestedMenus) {
+      Menu menu;
+      if(menuName == mainRequestedTeam) {
+        menu = Menu.createTeamMenu(menuName, Menu.TYPE_FOLLOWED_TEAMS, mainTeamId);
+      } else {
+        menu = Menu.createPlayersMenu(menuName, Menu.TYPE_FOLLOWED_PLAYERS, List());
+      }
+      await menuService.saveItem(menu);
+      menus.add(menu);
+    }
+    return menus;
   }
 
   FollowedPlayersService get followedPlayersService => _followedPlayersService;

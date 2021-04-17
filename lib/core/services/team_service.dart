@@ -62,6 +62,8 @@ class TeamService extends CrudService<Team> {
 
     //TODO Unfollow team (get user' followedTeams and then call followedTeams.unFollow)
 
+    //TODO If it's a followed team remove the relative menu
+
     return super.deleteItem(teamId);
   }
 

@@ -1,13 +1,9 @@
 import 'package:agonistica/core/models/followed_teams.dart';
-import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/followed_teams_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
-import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
-import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FollowedTeamsService extends CrudService<FollowedTeams> {
 

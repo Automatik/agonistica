@@ -32,6 +32,14 @@ class Preconditions {
     }
   }
 
+  static void requireArgumentsNotNulls(List<String> strings) {
+    for(String s in strings) {
+      if(s == null) {
+        throw ArgumentException("One or more elements in the list, passed as argument, is null");
+      }
+    }
+  }
+
   static void requireFieldNotNull(String field, dynamic value) {
     if(value == null) {
       throw FieldException("The field $field is null");
@@ -42,6 +50,14 @@ class Preconditions {
     requireFieldNotNull(field, value);
     if(value.isEmpty) {
       throw FieldException("The field $field is empty");
+    }
+  }
+
+  static void requireFieldsNotNulls(String field, List<String> strings) {
+    for(String s in strings) {
+      if(s == null) {
+        throw FieldException("One or more elements in the list of the field $field is null");
+      }
     }
   }
 
@@ -60,14 +76,6 @@ class Preconditions {
   static void requireFieldGreaterThan(String field, int value, int compare) {
     if(value <= compare) {
       throw FieldException("The field $field is less or equal than other argument with value $compare");
-    }
-  }
-
-  static void requireArgumentsNotNulls(List<String> strings) {
-    for(String s in strings) {
-      if(s == null) {
-        throw ArgumentException("One or more elements in the list, passed as argument, is null");
-      }
     }
   }
 

@@ -12,13 +12,14 @@ class Menu {
 
   int type;
 
+  String teamId;
   List<String> categoriesIds;
 
   Menu() {
     id = DbUtils.newUuid();
   }
 
-  Menu.create(String name, int type) {
+  Menu._create(String name, int type) {
     Preconditions.requireArgumentNotEmpty(name);
     Preconditions.requireArgumentGreaterThan(type, TYPE_FOLLOWED_TEAMS - 1);
     Preconditions.requireArgumentLessThan(type, TYPE_FOLLOWED_PLAYERS + 1);
@@ -26,7 +27,20 @@ class Menu {
     id = DbUtils.newUuid();
     this.name = name;
     this.type = type;
-    categoriesIds = List();
+  }
+
+  Menu.createTeamMenu(String name, int type, String teamId) {
+    Preconditions.requireArgumentNotEmpty(teamId);
+
+    Menu._create(name, type);
+    this.teamId = teamId;
+  }
+
+  Menu.createPlayersMenu(String name, int type, List<String> categoriesIds) {
+    Preconditions.requireArgumentsNotNulls(categoriesIds);
+
+    Menu._create(name, type);
+    this.categoriesIds = categoriesIds;
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +50,7 @@ class Menu {
       'id': id,
       'name': name,
       'type': type,
+      'teamId': teamId,
       'categoriesIds': categoriesIds
     };
   }
@@ -44,6 +59,7 @@ class Menu {
     : id = json['id'],
       name = json['name'],
       type = json['type'],
+      teamId = json['teamId'],
       categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']);
 
   void checkRequiredFields() {
@@ -51,6 +67,11 @@ class Menu {
     Preconditions.requireFieldNotEmpty("name", name);
     Preconditions.requireFieldGreaterThan("type", type, TYPE_FOLLOWED_TEAMS - 1);
     Preconditions.requireFieldLessThan("type", type, TYPE_FOLLOWED_PLAYERS + 1);
+    if(type == TYPE_FOLLOWED_TEAMS) {
+      Preconditions.requireFieldNotEmpty("teamId", teamId);
+    } else {
+      Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds);
+    }
   }
 
 }
