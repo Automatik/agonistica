@@ -1,6 +1,6 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/platform_appbars.dart';
-import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';

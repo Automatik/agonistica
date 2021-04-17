@@ -1,4 +1,4 @@
-import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';

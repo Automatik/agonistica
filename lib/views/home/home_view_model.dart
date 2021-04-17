@@ -4,7 +4,7 @@ import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
-import 'package:agonistica/core/services/base_scaffold_service.dart';
+import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
