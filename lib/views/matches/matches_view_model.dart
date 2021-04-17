@@ -92,7 +92,7 @@ class MatchesViewModel extends BaseViewModel {
   }
 
   Future<void> viewPlayerCard(BuildContext context, String playerId) async {
-    Preconditions.requireArgumentNotNull(playerId);
+    Preconditions.requireArgumentStringNotNull(playerId);
 
     Player player = await _databaseService.getPlayerById(playerId);
     player = await _databaseService.completePlayerWithMissingInfo(player);

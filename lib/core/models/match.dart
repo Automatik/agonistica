@@ -83,6 +83,14 @@ class Match {
     return getSeasonTeam2().id;
   }
 
+  String getHomeSeasonTeamName() {
+    return getSeasonTeam1().team.name;
+  }
+
+  String getAwaySeasonTeamName() {
+    return getSeasonTeam2().team.name;
+  }
+
   List<MatchPlayerData> getHomePlayers() {
     return _getPlayers(getHomeSeasonTeamId());
   }

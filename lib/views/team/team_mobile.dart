@@ -81,8 +81,8 @@ class _TeamMobileState extends State<_TeamMobile> {
                       onTap: () => widget.viewModel.openMatchDetail(context, index),
                       onSettingsTap: (offset) => onMatchLongPress(context, offset, index),
                       width: itemsWidth,
-                      team1: match.team1Name,
-                      team2: match.team2Name,
+                      team1: match.getHomeSeasonTeamName(),
+                      team2: match.getAwaySeasonTeamName(),
                       result: "${match.team1Goals} - ${match.team2Goals}",
                       leagueMatch: match.leagueMatch,
                       matchDate: match.matchDate,
@@ -109,9 +109,9 @@ class _TeamMobileState extends State<_TeamMobile> {
           ),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: widget.viewModel.players.length,
+              itemCount: widget.viewModel.seasonPlayers.length,
               itemBuilder: (BuildContext listContext, int index) {
-                Player player = widget.viewModel.players[index];
+                SeasonPlayer seasonPlayer = widget.viewModel.seasonPlayers[index];
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
@@ -120,10 +120,10 @@ class _TeamMobileState extends State<_TeamMobile> {
                     child: PlayerReview(
                       onTap: () => widget.viewModel.openPlayerDetail(context, index),
                       onSettingsTap: (offset) => onRosterLongPress(context, offset, index),
-                      name: "${player.name} ${player.surname}",
-                      role: Player.positionToString(player.position),
+                      name: "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
+                      role: SeasonPlayer.positionToString(seasonPlayer.position),
                       width: itemsWidth,
-                      birthDay: player.birthDay,
+                      birthDay: seasonPlayer.getPlayerBirthday(),
                     ),
                   ),
                 );

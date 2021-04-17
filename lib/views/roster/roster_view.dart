@@ -23,7 +23,7 @@ class RosterView extends StatelessWidget {
     final RosterViewArguments args = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<RosterViewModel>.reactive(
-      viewModelBuilder: () => RosterViewModel(args.isNewPlayer, args.player, args.onPlayerDetailUpdate),
+      viewModelBuilder: () => RosterViewModel(args.isNewPlayer, args.seasonPlayer, args.onPlayerDetailUpdate),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

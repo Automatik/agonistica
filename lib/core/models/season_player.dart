@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -82,6 +83,22 @@ class SeasonPlayer {
     morfologia = sommatoTipo = "";
 
     attitudine1 = attitudine2 = attitudine3 = "";
+  }
+
+  /// Useful constructor to create both a new Player and a new SeasonPlayer
+  /// with all the temporary objects populated
+  SeasonPlayer.newPlayer(SeasonTeam seasonTeam, Category category) {
+    Preconditions.requireArgumentNotNull(seasonTeam);
+    Preconditions.requireArgumentNotNull(category);
+
+    // New Empty Player
+    Player player = Player.empty();
+    // Create new empty SeasonPlayer
+    SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId, category.id);
+    // Set temporary values
+    setCategory(category);
+    setSeasonTeam(seasonTeam);
+    this.player = player;
   }
 
   SeasonPlayer.clone(SeasonPlayer sp) {
@@ -215,11 +232,23 @@ class SeasonPlayer {
       attitudine2 = json['attitudine2'],
       attitudine3 = json['attitudine3'];
 
+  String getPlayerName() {
+    _checkPlayerTempField();
+    return player.name;
+  }
+
+  String getPlayerSurname() {
+    _checkPlayerTempField();
+    return player.surname;
+  }
+
+  DateTime getPlayerBirthday() {
+    _checkPlayerTempField();
+    return player.birthDay;
+  }
+
   SeasonTeam getSeasonTeam() {
-    if(seasonTeam == null) {
-      _logger.w("SeasonTeam temporary object is null");
-      return SeasonTeam.empty(seasonTeamId, seasonId);
-    }
+    _checkSeasonTeamTempField();
     return seasonTeam;
   }
 
@@ -230,9 +259,9 @@ class SeasonPlayer {
     return category;
   }
 
-  void setTeam(SeasonTeam team) {
-    seasonTeamId = team.id;
-    seasonTeam = team;
+  void setSeasonTeam(SeasonTeam seasonTeam) {
+    seasonTeamId = seasonTeam.id;
+    this.seasonTeam = seasonTeam;
   }
 
   void setCategory(Category category) {
@@ -246,6 +275,14 @@ class SeasonPlayer {
     Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
     Preconditions.requireFieldNotEmpty("seasonId", seasonId);
     Preconditions.requireFieldNotEmpty("categoryId", categoryId);
+  }
+
+  void _checkPlayerTempField() {
+    Preconditions.requireFieldNotNull("player", player);
+  }
+
+  void _checkSeasonTeamTempField() {
+    Preconditions.requireFieldNotNull("seasonTeam", seasonTeam);
   }
 
   static String positionToString(int position) {

@@ -1,11 +1,11 @@
-import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 
 class RosterViewArguments {
 
   bool isNewPlayer;
-  Player player;
-  Function(Player) onPlayerDetailUpdate;
+  SeasonPlayer seasonPlayer;
+  Function(SeasonPlayer) onPlayerDetailUpdate;
 
-  RosterViewArguments(this.isNewPlayer, this.player, this.onPlayerDetailUpdate);
+  RosterViewArguments(this.isNewPlayer, this.seasonPlayer, this.onPlayerDetailUpdate);
 
 }

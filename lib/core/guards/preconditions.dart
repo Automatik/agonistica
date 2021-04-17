@@ -3,13 +3,18 @@ import 'package:agonistica/core/exceptions/field_exception.dart';
 
 class Preconditions {
 
-  static void requireArgumentNotNull(String string) {
+  static void requireArgumentStringNotNull(String string) {
     if(string == null)
       throw ArgumentException("String argument is null");
   }
 
+  static void requireArgumentNotNull(dynamic value) {
+    if(value == null)
+      throw ArgumentException("Argument is null");
+  }
+
   static void requireArgumentNotEmpty(String string) {
-    requireArgumentNotNull(string);
+    requireArgumentStringNotNull(string);
     if(string.isEmpty)
       throw ArgumentException("String argument is null");
   }

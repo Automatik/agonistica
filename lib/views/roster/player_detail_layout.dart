@@ -301,7 +301,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                           Team team = await _showInsertTeamDialog(playerInfo.teamName);
                           if(team != null) {
                             setState(() {
-                              playerInfo.setTeam(team);
+                              playerInfo.setSeasonTeam(team);
                             });
                           }
                           // close dialog
