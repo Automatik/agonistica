@@ -2,6 +2,8 @@ import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/menu.dart';
+import 'package:agonistica/core/models/season_team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/services/base_scaffold_service.dart';
 import 'package:agonistica/core/services/database_service.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
@@ -53,12 +55,19 @@ class HomeViewModel extends BaseViewModel {
     return "";
   }
 
-  void onMainButtonTap(BuildContext context) {
+  Future<void> onMainButtonTap(BuildContext context) async {
     setAppBarTitle(_mainMenu.name);
-    navigateToCategoriesView(context, _mainMenu.categoriesIds);
+    // Get the team corresponding to this menu
+    Team team = await _databaseService.teamService.getItemById(_mainMenu.teamId);
+    _databaseService.selectedTeam = team;
+    // Get the current season team
+    SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+    // Get season team's categories
+    List<String> categoriesIds = seasonTeam.categoriesIds;
+    navigateToCategoriesView(context, categoriesIds);
   }
 
-  void onOtherPlayersTap(BuildContext context, int index) {
+  Future<void> onOtherPlayersTap(BuildContext context, int index) async {
     Menu menu = _otherMenus[index];
     setAppBarTitle(menu.name);
     navigateToCategoriesView(context, menu.categoriesIds);

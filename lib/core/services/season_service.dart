@@ -1,4 +1,5 @@
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/repositories/season_repository.dart';
@@ -18,6 +19,16 @@ class SeasonService extends CrudService<Season> {
           "endYear ${item.endYear} already exists");
     }
     await super.saveItem(item);
+  }
+
+  Future<Season> getCurrentSeason() async {
+    Season currentSeason = Season.createCurrentSeason();
+    List<Season> seasons = await getAllItems();
+    int index = seasons.indexWhere((s) => s.beginYear == currentSeason.beginYear && s.endYear == currentSeason.endYear);
+    if(index == -1) {
+      throw NotFoundException("No current season created.");
+    }
+    return seasons[index];
   }
 
   Future<bool> itemWithGivenYearsExists(int beginYear, int endYear) async {

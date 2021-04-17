@@ -1,3 +1,5 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
+import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -5,6 +7,7 @@ import 'package:agonistica/core/repositories/season_team_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
 import 'package:agonistica/core/services/match_service.dart';
 import 'package:agonistica/core/services/season_player_service.dart';
+import 'package:agonistica/core/services/season_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -80,6 +83,17 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     Team team = await teamService.getItemById(seasonTeam.teamId);
     seasonTeam.team = team;
     return seasonTeam;
+  }
+
+  Future<SeasonTeam> getCurrentSeasonTeamFromIds(List<String> seasonTeamsIds) async {
+    SeasonService seasonService = SeasonService(databaseReference);
+    Season currentSeason = await seasonService.getCurrentSeason();
+    List<SeasonTeam> seasonTeams = await getItemsByIds(seasonTeamsIds);
+    int index = seasonTeams.indexWhere((st) => st.seasonId == currentSeason.id);
+    if(index == -1) {
+      throw NotFoundException("No seasonTeam found in those provided belonging to the current season");
+    }
+    return seasonTeams[index];
   }
 
   /// Download all teams stores excluding the teams that are referred by the given ids
