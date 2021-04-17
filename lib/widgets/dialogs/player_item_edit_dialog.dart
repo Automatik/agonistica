@@ -1,5 +1,6 @@
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/text/player_text_form_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
@@ -13,7 +14,7 @@ class PlayerItemEditDialog {
   final MatchPlayerData matchPlayerData;
   final bool Function(String, int) onPlayerValidation;
   final Function(MatchPlayerData) onSaveCallback;
-  final List<Player> Function(String, String) suggestionCallback;
+  final List<SeasonPlayer> Function(String, String) suggestionCallback;
 
   PlayerItemEditDialog({
     @required this.matchPlayerData,
@@ -58,7 +59,7 @@ class _PlayerItemDialogForm extends StatefulWidget {
   final MatchPlayerData matchPlayerData;
   final bool Function(String, int) onPlayerValidation;
   final Function onSaveCallback;
-  final List<Player> Function(String, String) suggestionCallback;
+  final List<SeasonPlayer> Function(String, String) suggestionCallback;
 
   _PlayerItemDialogForm({
     @required this.matchPlayerData,
@@ -86,7 +87,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
   bool _isFormError;
   bool _isLoadingPlayersSuggestions;
   bool _isTextFocused;
-  List<Player> _playersSuggestionsList;
+  List<SeasonPlayer> _playersSuggestionsList;
 
   final TextEditingController shirtTextEditingController = TextEditingController();
   final TextEditingController nameTextEditingController = TextEditingController();
@@ -124,7 +125,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     if(areShirtNameAndSurnameValid()) {
       // the other fields (goals and dropdown) are always valid
 
-      String playerId = widget.matchPlayerData.seasonPlayerId;
+      String seasonPlayerId = widget.matchPlayerData.seasonPlayerId;
       String name = nameTextEditingController.text;
       String surname = surnameTextEditingController.text;
       int shirtNumber = int.tryParse(shirtTextEditingController.text);
@@ -137,10 +138,10 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
 
         // If matchPlayerData.playerId is not set by onItemPlayerTap method
         // then it's a new player
-        if(!isExistingPlayer(playerId)) {
+        if(!isExistingPlayer(seasonPlayerId)) {
           var uuid = Uuid();
-          playerId = uuid.v4();
-          newPlayerData.seasonPlayerId = playerId;
+          seasonPlayerId = uuid.v4();
+          newPlayerData.seasonPlayerId = seasonPlayerId;
         }
 
         newPlayerData.name = name;
@@ -165,22 +166,22 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     }
   }
 
-  bool isExistingPlayer(String playerId) {
-    return playerId != null;
+  bool isExistingPlayer(String seasonPlayerId) {
+    return seasonPlayerId != null;
   }
   
   /// If the user write manually the name and surname of an existing player
   /// this method allows to get the player's id
   String avoidDuplicateMatchPlayer() {
-    String playerId = widget.matchPlayerData.seasonPlayerId;
-    if(!ALLOW_DUPLICATE_MATCH_PLAYERS || isExistingPlayer(playerId)) {
-      return playerId;
+    String seasonPlayerId = widget.matchPlayerData.seasonPlayerId;
+    if(!ALLOW_DUPLICATE_MATCH_PLAYERS || isExistingPlayer(seasonPlayerId)) {
+      return seasonPlayerId;
     }
     String name = nameTextEditingController.text;
     String surname = surnameTextEditingController.text;
     loadPlayersSuggestions(MatchPlayerData.EMPTY_PLAYER_NAME, MatchPlayerData.EMPTY_PLAYER_SURNAME);
-    int index = _playersSuggestionsList.indexWhere((p) => p.name == name && p.surname == surname);
-    return index == -1 ? playerId : _playersSuggestionsList[index].id;
+    int index = _playersSuggestionsList.indexWhere((p) => p.getPlayerName() == name && p.getPlayerSurname() == surname);
+    return index == -1 ? seasonPlayerId : _playersSuggestionsList[index].id;
   }
 
   bool areShirtNameAndSurnameValid() {
@@ -220,10 +221,10 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     widget.matchPlayerData.seasonPlayerId = null;
   }
 
-  void onItemPlayerTap(Player player) {
-    widget.matchPlayerData.seasonPlayerId = player.id;
-    this.nameTextEditingController.text = player.name;
-    this.surnameTextEditingController.text = player.surname;
+  void onItemPlayerTap(SeasonPlayer seasonPlayer) {
+    widget.matchPlayerData.seasonPlayerId = seasonPlayer.id;
+    this.nameTextEditingController.text = seasonPlayer.getPlayerName();
+    this.surnameTextEditingController.text = seasonPlayer.getPlayerSurname();
   }
 
   @override
@@ -617,7 +618,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
     );
   }
 
-  Widget playersListView(List<Player> players) {
+  Widget playersListView(List<SeasonPlayer> seasonPlayers) {
     return Expanded(
       child: Column(
         children: [
@@ -646,12 +647,12 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
             ),
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: players.length,
+                itemCount: seasonPlayers.length,
                 itemBuilder: (context, index) {
-                  String playerName = players[index].name;
-                  String playerSurname = players[index].surname;
+                  String playerName = seasonPlayers[index].getPlayerName();
+                  String playerSurname = seasonPlayers[index].getPlayerSurname();
                   return ListTile(
-                    onTap: () => onItemPlayerTap(players[index]),
+                    onTap: () => onItemPlayerTap(seasonPlayers[index]),
                     title: Text(
                       "$playerName $playerSurname",
                       style: TextStyle(

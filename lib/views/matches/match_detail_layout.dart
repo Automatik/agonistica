@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
-import 'package:agonistica/core/models/player.dart';
-import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
@@ -31,7 +31,7 @@ class MatchDetailLayout extends StatefulWidget {
   final bool isEditEnabled;
   final double maxWidth;
   final MatchDetailController controller;
-  final List<Team> Function(String) onTeamSuggestionCallback;
+  final List<SeasonTeam> Function(String) onTeamSuggestionCallback;
   final Function(String) onTeamInserted;
   final Function(String, String, String) onPlayersSuggestionCallback;
   final Function(String) onViewPlayerCardCallback;
@@ -145,9 +145,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   String validateTextFields() {
-    String errorMessage = InputValidation.validateTeamName(tempMatch.team1Name);
+    String errorMessage = InputValidation.validateTeamName(tempMatch.getHomeSeasonTeamName());
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateTeamName(tempMatch.team2Name);
+    errorMessage = InputValidation.validateTeamName(tempMatch.getAwaySeasonTeamName());
     if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validateResultGoal(resultTextEditingController1.text);
     if(errorMessage != null) return errorMessage;
@@ -199,20 +199,20 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   Future<void> updateTeam1OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
-      Team team1;
+      SeasonTeam seasonTeam1;
       String oldTeam1Id = match.seasonTeam1Id;
       bool isTeamPopulated = isTeam1Populated();
       if(isTeamPopulated) {
-        team1 = await updateTeamDialog(context, match.team1Name);
+        seasonTeam1 = await updateTeamDialog(context, match.getHomeSeasonTeamName());
       } else {
-        team1 = await updateTeamOnInsert(context, match.team1Name);
+        seasonTeam1 = await updateTeamOnInsert(context, match.getHomeSeasonTeamName());
       }
-      if(team1 != null) {
+      if(seasonTeam1 != null) {
         if(isTeamPopulated) {
           removeTeamPlayersFromMatch(match, oldTeam1Id);
         }
         setState(() {
-          match.setSeasonTeam1(team1);
+          match.setSeasonTeam1(seasonTeam1);
         });
       }
     }
@@ -220,53 +220,53 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   Future<void> updateTeam2OnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
-      Team team2;
+      SeasonTeam seasonTeam2;
       String oldTeam2Id = match.seasonTeam2Id;
       bool isTeamPopulated = isTeam2Populated();
       if(isTeamPopulated) {
-        team2 = await updateTeamDialog(context, match.team2Name);
+        seasonTeam2 = await updateTeamDialog(context, match.getAwaySeasonTeamName());
       } else {
-        team2 = await updateTeamOnInsert(context, match.team2Name);
+        seasonTeam2 = await updateTeamOnInsert(context, match.getAwaySeasonTeamName());
       }
-      if(team2 != null) {
+      if(seasonTeam2 != null) {
         if(isTeamPopulated) {
           removeTeamPlayersFromMatch(match, oldTeam2Id);
         }
         setState(() {
-          match.setSeasonTeam2(team2);
+          match.setSeasonTeam2(seasonTeam2);
         });
       }
     }
   }
 
-  Future<Team> updateTeamDialog(BuildContext context, String teamName) async {
-    Team team;
+  Future<SeasonTeam> updateTeamDialog(BuildContext context, String teamName) async {
+    SeasonTeam seasonTeam;
     final dialog = ChangeTeamDialog(
       onConfirm: () async {
         print("onConfirm");
-        team = await updateTeamOnInsert(context, teamName);
+        seasonTeam = await updateTeamOnInsert(context, teamName);
         Navigator.of(context).pop();
       },
       onCancel: () => Navigator.of(context).pop(),
     );
     await dialog.showChangeTeamDialog(context);
-    return team;
+    return seasonTeam;
   }
 
-  Future<Team> updateTeamOnInsert(BuildContext context, String teamName) async {
-    Team team = await _showInsertTeamDialog(context, teamName);
-    if(team != null) {
-      widget.onTeamInserted(team.id);
+  Future<SeasonTeam> updateTeamOnInsert(BuildContext context, String teamName) async {
+    SeasonTeam seasonTeam = await _showInsertTeamDialog(context, teamName);
+    if(seasonTeam != null) {
+      widget.onTeamInserted(seasonTeam.id);
     }
-    return team;
+    return seasonTeam;
   }
 
   /// Replace team players with an empty player
-  void removeTeamPlayersFromMatch(Match match, String teamId) {
+  void removeTeamPlayersFromMatch(Match match, String seasonTeamId) {
     List<MatchPlayerData> newPlayerDataList = List();
     match.playersData.forEach((p) {
-      if(p.seasonTeamId == teamId) {
-        p = MatchPlayerData.empty(teamId, isRegular: p.isRegular);
+      if(p.seasonTeamId == seasonTeamId) {
+        p = MatchPlayerData.empty(seasonTeamId, isRegular: p.isRegular);
       }
       newPlayerDataList.add(p);
     });
@@ -332,7 +332,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                           child: CustomRichText(
                             onTap: () => updateTeam1OnInsert(context, isEditEnabled, matchInfo),
                             enabled: isEditEnabled,
-                            text: matchInfo.team1Name,
+                            text: matchInfo.getHomeSeasonTeamName(),
                             textAlign: TextAlign.center,
                             fontColor: teamsColor,
                             fontWeight: teamsFontWeight,
@@ -348,7 +348,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                           child: CustomRichText(
                             onTap: () => updateTeam2OnInsert(context, isEditEnabled, matchInfo),
                             enabled: isEditEnabled,
-                            text: matchInfo.team2Name,
+                            text: matchInfo.getAwaySeasonTeamName(),
                             textAlign: TextAlign.center,
                             fontColor: teamsColor,
                             fontWeight: teamsFontWeight,
@@ -553,12 +553,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               lineSeparatorWidth: _getLineSeparatorWidth(index, rowsCount),
               onPlayerValidation: (id, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(id, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
-                String teamId = isHomePlayer ? tempMatch.seasonTeam1Id : tempMatch.seasonTeam2Id;
-                List<Player> players = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, teamId);
+                String seasonTeamId = isHomePlayer ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
+                List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId);
                 // Remove players already in the lineup
                 List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList();
-                players.removeWhere((p) => lineupPlayersIds.contains(p.id));
-                return players;
+                seasonPlayers.removeWhere((p) => lineupPlayersIds.contains(p.id));
+                return seasonPlayers;
               },
               onSaveCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
@@ -647,12 +647,12 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
-  MatchPlayerData _addRegularPlayer(String teamId) {
-    return MatchPlayerData.empty(teamId, isRegular: true);
+  MatchPlayerData _addRegularPlayer(String seasonTeamId) {
+    return MatchPlayerData.empty(seasonTeamId, isRegular: true);
   }
 
-  MatchPlayerData _addReservePlayer(String teamId) {
-    return MatchPlayerData.empty(teamId, isRegular: false);
+  MatchPlayerData _addReservePlayer(String seasonTeamId) {
+    return MatchPlayerData.empty(seasonTeamId, isRegular: false);
   }
 
   void _addNewRow(MatchPlayerData newHomePlayer, MatchPlayerData newAwayPlayer) {
@@ -666,24 +666,25 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return index == 0 || index == rowsCount - 1 ? 0 : 0.5;
   }
 
-  Future<Team> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
-    Team tempTeam;
+  Future<SeasonTeam> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
+    SeasonTeam tempSeasonTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
+        seasonId: tempMatch.seasonId,
         suggestionCallback: (pattern) {
           return widget.onTeamSuggestionCallback(pattern);
         },
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
           if(finalTeamValue != null) {
-            tempTeam = finalTeamValue;
+            tempSeasonTeam = finalTeamValue;
           }
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);
 //    return tempTeamName;
-    return tempTeam;
+    return tempSeasonTeam;
   }
 
   Widget resultWidget(TextEditingController controller1, TextEditingController controller2, Color fontColor, double fontSize, FontWeight fontWeight, bool enabled) {

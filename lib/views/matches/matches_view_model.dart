@@ -1,9 +1,12 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
@@ -21,13 +24,14 @@ class MatchesViewModel extends BaseViewModel {
   final Function(Match) onMatchDetailUpdate;
 
   final _databaseService = locator<DatabaseService>();
+  final _appStateService = locator<AppStateService>();
 
-  List<Team> teams;
+  List<SeasonTeam> seasonTeams;
 
-  Map<String, List<Player>> teamsPlayersMap;
+  Map<String, List<SeasonPlayer>> teamsPlayersMap;
 
   MatchesViewModel(this.isNewMatch, this.match, this.onMatchDetailUpdate){
-    teams = [];
+    seasonTeams = [];
     teamsPlayersMap = Map();
     loadItems();
   }
@@ -37,41 +41,43 @@ class MatchesViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    teams = await _databaseService.getTeamsWithoutOtherRequestedTeams();
-    teams.add(_databaseService.selectedTeam);
+    seasonTeams = await _databaseService.seasonTeamService.getCurrentSeasonTeams();
+    for(SeasonTeam seasonTeam in seasonTeams) {
+      seasonTeam = await _databaseService.seasonTeamService.completeSeasonTeamWithMissingInfo(seasonTeam);
+    }
 
     //Let other views to render again
     setBusy(false);
     notifyListeners();
   }
 
-  List<Team> suggestTeamsByPattern(String pattern) {
+  List<SeasonTeam> suggestTeamsByPattern(String pattern) {
     if(pattern == null || pattern.isEmpty)
-      return teams;
-    return teams.where((team) => team.name.startsWith(pattern));
+      return seasonTeams;
+    return seasonTeams.where((st) => st.getTeamName().startsWith(pattern));
   }
 
-  Future<void> loadTeamPlayers(String teamId) async {
-    String categoryId = _databaseService.selectedCategory.id;
-    List<Player> teamPlayers = await _databaseService.getPlayersByTeamAndCategory(teamId, categoryId);
-    if(!teamsPlayersMap.containsKey(teamId))
-      teamsPlayersMap.putIfAbsent(teamId, () => teamPlayers);
+  Future<void> loadTeamPlayers(String seasonTeamId) async {
+    String categoryId = _appStateService.selectedCategory.id;
+    List<SeasonPlayer> teamSeasonPlayers = await _databaseService.seasonPlayerService.getSeasonPlayersByTeamAndCategory(seasonTeamId, categoryId);
+    if(!teamsPlayersMap.containsKey(seasonTeamId))
+      teamsPlayersMap.putIfAbsent(seasonTeamId, () => teamSeasonPlayers);
     else
-      teamsPlayersMap.update(teamId, (_) => teamPlayers);
+      teamsPlayersMap.update(seasonTeamId, (_) => teamSeasonPlayers);
   }
 
-  List<Player> suggestPlayersByPattern(String namePattern, String surnamePattern, String teamId) {
-    List<Player> teamPlayers = teamsPlayersMap[teamId];
-    if(teamPlayers == null)
+  List<SeasonPlayer> suggestPlayersByPattern(String namePattern, String surnamePattern, String seasonTeamId) {
+    List<SeasonPlayer> teamSeasonPlayers = teamsPlayersMap[seasonTeamId];
+    if(teamSeasonPlayers == null)
       return [];
     if(namePattern.isEmpty) {
-      return teamPlayers.where((player) => player.surname.startsWith(surnamePattern)).toList();
+      return teamSeasonPlayers.where((sp) => sp.getPlayerSurname().startsWith(surnamePattern)).toList();
     }
     if(surnamePattern.isEmpty) {
-      return teamPlayers.where((player) => player.name.startsWith(namePattern)).toList();
+      return teamSeasonPlayers.where((sp) => sp.getPlayerName().startsWith(namePattern)).toList();
     }
-    return teamPlayers.where((player) {
-      return player.name.startsWith(namePattern) && player.surname.startsWith(surnamePattern);
+    return teamSeasonPlayers.where((sp) {
+      return sp.getPlayerName().startsWith(namePattern) && sp.getPlayerSurname().startsWith(surnamePattern);
     }).toList();
   }
 
@@ -81,7 +87,7 @@ class MatchesViewModel extends BaseViewModel {
   }
 
   Future<void> onMatchSave(BuildContext context, Match newMatch) async {
-    await _databaseService.saveMatch(newMatch);
+    await _databaseService.matchService.saveItem(newMatch);
 
     onMatchDetailUpdate(newMatch);
 
@@ -91,20 +97,20 @@ class MatchesViewModel extends BaseViewModel {
     match = Match.clone(newMatch);
   }
 
-  Future<void> viewPlayerCard(BuildContext context, String playerId) async {
-    Preconditions.requireArgumentStringNotNull(playerId);
+  Future<void> viewPlayerCard(BuildContext context, String seasonPlayerId) async {
+    Preconditions.requireArgumentStringNotNull(seasonPlayerId);
 
-    Player player = await _databaseService.getPlayerById(playerId);
-    player = await _databaseService.completePlayerWithMissingInfo(player);
-    bool playerExists = player != null;
+    SeasonPlayer seasonPlayer = await _databaseService.seasonPlayerService.getItemById(seasonPlayerId);
+    seasonPlayer = await _databaseService.seasonPlayerService.completeSeasonPlayerWithMissingInfo(seasonPlayer);
+    bool playerExists = seasonPlayer != null;
     if(playerExists) {
       bool isNewPlayer = false;
-      NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, player, null));
+      NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, null));
     }
   }
 
   String getAppBarTitle() {
-    return isNewMatch ? "Nuova Partita" : _databaseService.selectedTeam.name;
+    return isNewMatch ? "Nuova Partita" : _appStateService.selectedTeam.name;
   }
 
 }

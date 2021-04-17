@@ -96,6 +96,16 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     return seasonTeams[index];
   }
 
+  /// Get all the season teams in the current season.
+  Future<List<SeasonTeam>> getCurrentSeasonTeams() async {
+    SeasonService seasonService = SeasonService(databaseReference);
+    Season currentSeason = await seasonService.getCurrentSeason();
+    List<SeasonTeam> seasonTeams = await getAllItems();
+    // keep only seasonTeams within current season
+    seasonTeams.retainWhere((st) => st.seasonId == currentSeason.id);
+    return seasonTeams;
+  }
+
   /// Download all teams stores excluding the teams that are referred by the given ids
   Future<List<SeasonTeam>> getTeamsWithoutIds(List<String> seasonTeamsIds) async {
     List<SeasonTeam> allTeams = await getAllItems();

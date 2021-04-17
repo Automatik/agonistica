@@ -29,6 +29,24 @@ class SeasonTeam {
     seasonPlayersIds = List();
   }
 
+  /// Useful constructor to create both a new Team and a new SeasonTeam
+  /// with all the temporary objects populated
+  SeasonTeam.newTeam(String teamName, String seasonId) {
+    Preconditions.requireArgumentNotEmpty(seasonId);
+
+    // New Empty Team
+    Team team = Team.name(teamName);
+    // Create new empty SeasonTeam
+    SeasonTeam.empty(team.id, seasonId);
+    // Set temporary values
+    this.team = team;
+  }
+
+  String getTeamName() {
+    _checkTeamTempField();
+    return team.name;
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 
@@ -54,6 +72,10 @@ class SeasonTeam {
     Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("teamId", teamId);
     Preconditions.requireFieldNotEmpty("seasonId", seasonId);
+  }
+
+  void _checkTeamTempField() {
+    Preconditions.requireFieldNotNull("team", team);
   }
 
 }

@@ -1,5 +1,6 @@
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/player_item_edit_dialog.dart';
@@ -19,7 +20,7 @@ class PlayerItem extends StatelessWidget {
   final bool isLeftOrientation;
   final bool isEditEnabled;
   final bool Function(String, int) onPlayerValidation;
-  final List<Player> Function(String, String) onPlayersSuggestionCallback;
+  final List<SeasonPlayer> Function(String, String) onPlayersSuggestionCallback;
   final void Function(MatchPlayerData) onSaveCallback;
   final void Function(MatchPlayerData) onViewPlayerCardCallback;
   final void Function(MatchPlayerData) onDeleteCallback;

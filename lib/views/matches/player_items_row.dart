@@ -1,5 +1,6 @@
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class PlayerItemsRow extends StatelessWidget {
   final double lineSeparatorWidth;
   final bool isEditEnabled;
   final bool Function(String, int, bool) onPlayerValidation;
-  final List<Player> Function(String, String, bool) onPlayerSuggestionCallback;
+  final List<SeasonPlayer> Function(String, String, bool) onPlayerSuggestionCallback;
   final void Function(MatchPlayerData, bool) onSaveCallback;
   final void Function(MatchPlayerData) onViewPlayerCardCallback;
   final void Function(MatchPlayerData, bool) onDeleteCallback;

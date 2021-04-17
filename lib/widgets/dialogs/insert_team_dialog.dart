@@ -1,3 +1,4 @@
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
@@ -8,12 +9,14 @@ class InsertTeamDialog {
 
   final String initialValue;
   final double maxHeight;
-  final List<Team> Function(String) suggestionCallback;
-  final Function(Team) onSubmit;
+  final String seasonId;
+  final List<SeasonTeam> Function(String) suggestionCallback;
+  final Function(SeasonTeam) onSubmit;
 
   InsertTeamDialog({
     this.initialValue,
     @required this.maxHeight,
+    @required this.seasonId,
     @required this.suggestionCallback,
     @required this.onSubmit,
   });
@@ -41,6 +44,7 @@ class InsertTeamDialog {
         content: _InsertTeamForm(
           initialValue: initialValue,
           maxHeight: maxHeight,
+          seasonId: seasonId,
           suggestionCallback: suggestionCallback,
           onSubmit: onSubmit,
         ),
@@ -54,14 +58,16 @@ class _InsertTeamForm extends StatefulWidget {
 
   final String initialValue;
   final double maxHeight;
-  final List<Team> Function(String) suggestionCallback;
-  final Function(Team) onSubmit;
+  final String seasonId;
+  final List<SeasonTeam> Function(String) suggestionCallback;
+  final Function(SeasonTeam) onSubmit;
 
   _InsertTeamForm({
-    this.initialValue,
-    this.maxHeight,
-    this.suggestionCallback,
-    this.onSubmit,
+    @required this.initialValue,
+    @required this.maxHeight,
+    @required this.seasonId,
+    @required this.suggestionCallback,
+    @required this.onSubmit,
   });
 
   @override
@@ -75,7 +81,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
   final TextEditingController textEditingController = TextEditingController();
 
   bool _isLoadingSuggestions = true;
-  List<Team> suggestionsList;
+  List<SeasonTeam> suggestionsList;
 
   @override
   void initState() {
@@ -145,8 +151,8 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                     onPressed: () {
                       if(_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        Team team = submitFinalValue();
-                        widget.onSubmit.call(team);
+                        SeasonTeam seasonTeam = submitFinalValue();
+                        widget.onSubmit(seasonTeam);
                       }
                     },
                     material: (_, __) => MaterialRaisedButtonData(
@@ -172,12 +178,12 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
     });
   }
 
-  Team submitFinalValue() {
+  SeasonTeam submitFinalValue() {
     //textEditingController.text is already validated
 
     // team's name should be unique to use this comparison in order to find which team is selected
     String text = textEditingController.text;
-    Team team = suggestionsList.firstWhere((element) => element.name == text, orElse: () => Team.name(text));
+    SeasonTeam team = suggestionsList.firstWhere((element) => element.getTeamName() == text, orElse: () => SeasonTeam.newTeam(text, widget.seasonId));
     return team;
   }
 
@@ -201,7 +207,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
     );
   }
 
-  Widget listView(List<Team> elements) {
+  Widget listView(List<SeasonTeam> elements) {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(top: 20),
@@ -212,7 +218,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
             scrollDirection: Axis.vertical,
             itemCount: elements.length,
             itemBuilder: (context, index) {
-              String suggestion = elements[index].name;
+              String suggestion = elements[index].getTeamName();
               return ListTile(
                 onTap: () => this.textEditingController.text = suggestion,
                 dense: true,
