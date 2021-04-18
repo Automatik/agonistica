@@ -103,7 +103,7 @@ class MatchService extends CrudService<Match> {
     if(oldMatchSeasonTeamId != currentMatchSeasonTeamId) {
       SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
       SeasonTeam seasonTeam = await seasonTeamService.getItemById(oldMatchSeasonTeamId);
-      seasonTeam.matchesIds.remove(matchId);
+      seasonTeam.removeMatch(matchId);
       await seasonTeamService.saveItem(seasonTeam);
     }
   }
@@ -121,7 +121,7 @@ class MatchService extends CrudService<Match> {
     List<SeasonPlayer> seasonPlayers = await seasonPlayerService.getItemsByIds(oldPlayerIds);
     for(SeasonPlayer seasonPlayer in seasonPlayers) {
       // Remove this match id from the matchesIds of the removed player
-      seasonPlayer.matchesIds.removeWhere((id) => matchId == id);
+      seasonPlayer.removeMatch(matchId);
       // Update the player stats (remove this match from the matches count and eventually goals and cards)
       await _updatePlayerStatsFromMatchPlayerData(seasonPlayer);
       await seasonPlayerService.saveItem(seasonPlayer);

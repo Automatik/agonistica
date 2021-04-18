@@ -26,11 +26,15 @@ class TeamService extends CrudService<Team> {
         throw IntegrityException("seasonTeam.team.id must be equal to seasonTeam.teamId");
       }
       Team team = seasonTeam.team;
-      if(!team.seasonTeamsIds.contains(seasonTeam.id)) {
-        team.seasonTeamsIds.add(seasonTeam.id);
-      }
+      team.addSeasonTeam(seasonTeam.id);
       await super.saveItem(team);
     }
+  }
+
+  Future<void> addSeasonTeamToTeam(String seasonTeamId, String teamId) async {
+    Team team = await getItemById(teamId);
+    team.addSeasonTeam(seasonTeamId);
+    await super.saveItem(team);
   }
 
   // GET

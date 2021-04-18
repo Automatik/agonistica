@@ -22,8 +22,12 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   Future<void> saveItem(SeasonTeam seasonTeam) async {
     // Before creating a seasonTeam be sure that a Team exists
 
+    // if team does not exist
     TeamService teamService = TeamService(databaseReference);
     await teamService.createTeamFromSeasonTeam(seasonTeam);
+
+    // if team does already exist, add seasonTeamId to the list
+    await teamService.addSeasonTeamToTeam(seasonTeam.id, seasonTeam.teamId);
 
     await super.saveItem(seasonTeam);
   }
@@ -40,21 +44,12 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     SeasonTeam latestVersion = await repository.getItemById(seasonTeam.id);
     seasonTeam = latestVersion;
     // update the categories in which the team appears
-    if(seasonTeam.categoriesIds == null)
-      seasonTeam.categoriesIds = [];
-    if(!seasonTeam.categoriesIds.contains(match.categoryId))
-      seasonTeam.categoriesIds.add(match.categoryId);
+    seasonTeam.addCategory(match.categoryId);
     // update the matches in which the team plays
-    if(seasonTeam.matchesIds == null)
-      seasonTeam.matchesIds = [];
-    if(!seasonTeam.matchesIds.contains(match.id))
-      seasonTeam.matchesIds.add(match.id);
+    seasonTeam.addMatch(match.id);
     // update the team's players
-    if(seasonTeam.seasonPlayersIds == null)
-      seasonTeam.seasonPlayersIds = [];
     for(String seasonPlayerId in matchSeasonPlayersIds) {
-      if(!seasonTeam.seasonPlayersIds.contains(seasonPlayerId))
-        seasonTeam.seasonPlayersIds.add(seasonPlayerId);
+      seasonTeam.addSeasonPlayer(seasonPlayerId);
     }
 
     await super.saveItem(seasonTeam);
@@ -63,12 +58,8 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   /// Update the SeasonTeam seasonPlayersIds
   Future<void> addSeasonPlayerToSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
-    if(seasonTeam.seasonPlayersIds == null)
-      seasonTeam.seasonPlayersIds = [];
-    if(!seasonTeam.seasonPlayersIds.contains(seasonPlayerId)) {
-      seasonTeam.seasonPlayersIds.add(seasonPlayerId);
-      await super.saveItem(seasonTeam);
-    }
+    seasonTeam.addSeasonPlayer(seasonPlayerId);
+    await super.saveItem(seasonTeam);
   }
 
   // GET
@@ -141,14 +132,14 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   /// Delete a player id from the team's playerIds list
   Future<void> deleteSeasonPlayerFromSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
-    seasonTeam.seasonPlayersIds.removeWhere((id) => id == seasonPlayerId);
+    seasonTeam.removeSeasonPlayer(seasonPlayerId);
     await super.saveItem(seasonTeam);
   }
 
   /// Delete a match id from the team's matchesIds list
   Future<void> deleteMatchFromSeasonTeam(String seasonTeamId, String matchId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
-    seasonTeam.matchesIds.removeWhere((id) => id == matchId);
+    seasonTeam.removeMatch(matchId);
     await super.saveItem(seasonTeam);
   }
 

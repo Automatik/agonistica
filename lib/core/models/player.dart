@@ -35,6 +35,14 @@ class Player {
     seasonPlayersIds = p.seasonPlayersIds;
   }
 
+  void addSeasonPlayer(String seasonPlayerId) async {
+    seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
+  }
+
+  void removeSeasonPlayer(String seasonPlayerId) async {
+    seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

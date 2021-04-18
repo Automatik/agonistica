@@ -48,6 +48,30 @@ class SeasonTeam {
     return team.name;
   }
 
+  void addMatch(String matchId) {
+    matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
+  }
+
+  void addCategory(String categoryId) {
+    categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
+  }
+
+  void addSeasonPlayer(String seasonPlayerId) {
+    seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
+  }
+
+  void removeMatch(String matchId) {
+    matchesIds = DbUtils.removeFromList(matchesIds, matchId);
+  }
+
+  void removeCategory(String categoryId) {
+    categoriesIds = DbUtils.removeFromList(categoriesIds, categoryId);
+  }
+
+  void removeSeasonPlayer(String seasonPlayerId) {
+    seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

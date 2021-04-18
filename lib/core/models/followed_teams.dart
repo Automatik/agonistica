@@ -16,6 +16,14 @@ class FollowedTeams {
     teamsIds = List();
   }
 
+  void addTeam(String teamId) {
+    teamsIds = DbUtils.addToListIfAbsent(teamsIds, teamId);
+  }
+
+  void removeTeam(String teamId) {
+    teamsIds = DbUtils.removeFromList(teamsIds, teamId);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

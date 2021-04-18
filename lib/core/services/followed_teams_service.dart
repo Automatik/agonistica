@@ -29,13 +29,13 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
 
   Future<void> followTeam(String followedTeamsId, String teamId) async {
     FollowedTeams followedTeams = await getItemById(followedTeamsId);
-    followedTeams.teamsIds.add(teamId);
+    followedTeams.addTeam(teamId);
     await super.saveItem(followedTeams);
   }
 
   Future<void> unFollowTeam(String followedTeamsId, String teamId) async {
     FollowedTeams followedTeams = await getItemById(followedTeamsId);
-    followedTeams.teamsIds.removeWhere((id) => id == teamId);
+    followedTeams.removeTeam(teamId);
     await super.saveItem(followedTeams);
   }
 

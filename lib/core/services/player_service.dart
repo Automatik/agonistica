@@ -24,9 +24,7 @@ class PlayerService extends CrudService<Player> {
         throw IntegrityException("seasonPlayer.player.id must be equal to seasonPlayer.playerId");
       }
       Player player = seasonPlayer.player;
-      if(!player.seasonPlayersIds.contains(seasonPlayer.id)) {
-        player.seasonPlayersIds.add(seasonPlayer.id);
-      }
+      player.addSeasonPlayer(seasonPlayer.id);
       await super.saveItem(player);
     }
   }
@@ -46,9 +44,15 @@ class PlayerService extends CrudService<Player> {
     await super.deleteItem(playerId);
   }
 
+  Future<void> addSeasonPlayerToPlayer(String seasonPlayerId, String playerId) async {
+    Player player = await getItemById(playerId);
+    player.addSeasonPlayer(seasonPlayerId);
+    await super.saveItem(player);
+  }
+
   Future<void> deleteSeasonPlayerFromPlayer(String seasonPlayerId, String playerId) async {
     Player player = await getItemById(playerId);
-    player.seasonPlayersIds.removeWhere((id) => id == seasonPlayerId);
+    player.removeSeasonPlayer(seasonPlayerId);
     await super.saveItem(player);
   }
 

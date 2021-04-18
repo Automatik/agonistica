@@ -25,6 +25,14 @@ class Team {
     seasonTeamsIds = List();
   }
 
+  void addSeasonTeam(String seasonTeamId) {
+    seasonTeamsIds = DbUtils.addToListIfAbsent(seasonTeamsIds, seasonTeamId);
+  }
+
+  void removeSeasonTeam(String seasonTeamId) {
+    seasonTeamsIds = DbUtils.removeFromList(seasonTeamsIds, seasonTeamId);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

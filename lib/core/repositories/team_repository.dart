@@ -15,9 +15,9 @@ class TeamRepository extends CrudRepository<Team> {
   @override
   Future<void> saveItem(Team team) async {
     // check if the team exists already by using its id
-    Team oldTeam = await getItemById(team.id);
-    if(oldTeam == null) {
-      // if the is not found, check first if the team's name is unique, so that
+    bool teamAlreadyExists = await itemExists(team.id);
+    if(!teamAlreadyExists) {
+      // if the team is not found, check first if the team's name is unique, so that
       // no other team is stored with the same name
       bool isNameUnique = await isTeamNameUnique(team.name);
       if(!isNameUnique)

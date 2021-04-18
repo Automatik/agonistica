@@ -160,6 +160,22 @@ class SeasonPlayer {
     redCards += playerData.getRedCardCount();
   }
 
+  void addMatch(String matchId) {
+    matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
+  }
+
+  void addPlayerMatchNotesId(String playerMatchNotesId) {
+    playerMatchNotesIds = DbUtils.addToListIfAbsent(playerMatchNotesIds, playerMatchNotesId);
+  }
+
+  void removeMatch(String matchId) {
+    matchesIds = DbUtils.removeFromList(matchesIds, matchId);
+  }
+
+  void removePlayerMatchNotesId(String playerMatchNotesId) {
+    playerMatchNotesIds = DbUtils.removeFromList(playerMatchNotesIds, playerMatchNotesId);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

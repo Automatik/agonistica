@@ -27,6 +27,9 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     PlayerService playerService = PlayerService(databaseReference);
     await playerService.createPlayerFromSeasonPlayer(seasonPlayer);
 
+    // add seasonPlayerId to player's seasonPlayerIds
+    await playerService.addSeasonPlayerToPlayer(seasonPlayer.id, seasonPlayer.playerId);
+
     // if the player's teamId is changed, remove the player's id from the old team's playersIds
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
     SeasonPlayer oldSeasonPlayer = await getItemById(seasonPlayer.id);
@@ -55,12 +58,7 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
 
   Future<void> addMatchIdToSeasonPlayer(String matchId, String seasonPlayerId) async {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
-
-    if(seasonPlayer.matchesIds == null)
-      seasonPlayer.matchesIds = [];
-    if(!seasonPlayer.matchesIds.contains(matchId)) {
-      seasonPlayer.matchesIds.add(matchId);
-    }
+    seasonPlayer.addMatch(matchId);
     await super.saveItem(seasonPlayer);
   }
 
@@ -68,12 +66,8 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
 
     // update player's playerMatchNodesIds
-    if(seasonPlayer.playerMatchNotesIds == null)
-      seasonPlayer.playerMatchNotesIds = [];
-    if(!seasonPlayer.playerMatchNotesIds.contains(playerMatchNotesId)) {
-      seasonPlayer.playerMatchNotesIds.add(playerMatchNotesId);
-      await super.saveItem(seasonPlayer);
-    }
+    seasonPlayer.addPlayerMatchNotesId(playerMatchNotesId);
+    await super.saveItem(seasonPlayer);
   }
 
   // GET
@@ -151,7 +145,7 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
 
     // Remove match id from matchesIds
-    seasonPlayer.matchesIds.removeWhere((id) => id == matchId);
+    seasonPlayer.removeMatch(matchId);
 
     // Remove player match notes id from playerMatchNotesIds
     PlayerNotesService playerNotesService = PlayerNotesService(databaseReference);
@@ -169,7 +163,7 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
 
   Future<void> removePlayerMatchNotesIdFromSeasonPlayer(String playerMatchNotesId, String seasonPlayerId) async {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
-    seasonPlayer.playerMatchNotesIds.removeWhere((id) => id == playerMatchNotesId);
+    seasonPlayer.removePlayerMatchNotesId(playerMatchNotesId);
     await super.saveItem(seasonPlayer);
   }
 
