@@ -4,6 +4,7 @@ import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/views/roster/category_label.dart';
+import 'package:agonistica/views/roster/name_label.dart';
 import 'package:agonistica/views/roster/stat_row.dart';
 import 'package:agonistica/views/roster/team_label.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
@@ -234,204 +235,181 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      height: 90,
+      constraints: BoxConstraints(
+        minHeight: 90,
+        // maxHeight: 90,
+      ),
       margin: EdgeInsets.only(top: 20),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: SvgPicture.asset(
-                  'assets/images/male.svg',
-                  height: 50,
-                  width: 50,
-                  color: blueAgonisticaColor,
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                  child: SvgPicture.asset(
+                    'assets/images/male.svg',
+                    height: 50,
+                    width: 50,
+                    color: blueAgonisticaColor,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                margin: EdgeInsets.only(left: 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    isEditEnabled ?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CustomTextField(
-                          enabled: isEditEnabled,
-                          controller: nameTextController,
-                          textAlign: TextAlign.start,
-                          maxLines: 1,
-                          textInputType: TextInputType.text,
-                          textColor: playerNameTextColor,
-                          textFontSize: playerNameTextSize,
-                          textFontWeight: playerNameTextWeight,
-                        ),
-                        SizedBox(width: 5,),
-                        CustomTextField(
-                          enabled: isEditEnabled,
-                          controller: surnameTextController,
-                          textAlign: TextAlign.start,
-                          maxLines: 1,
-                          textInputType: TextInputType.text,
-                          textColor: playerNameTextColor,
-                          textFontSize: playerNameTextSize,
-                          textFontWeight: playerNameTextWeight,
-                        ),
-                      ],
-                    )
-                        : Text(
-                      "${nameTextController.text} ${surnameTextController.text}",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: playerNameTextColor,
-                        fontWeight: playerNameTextWeight,
+              Expanded(
+                flex: 4,
+                child: Container(
+                  margin: EdgeInsets.only(left: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NameLabel(
+                        nameTextController: nameTextController,
+                        surnameTextController: surnameTextController,
+                        isEditEnabled: isEditEnabled,
+                        fontColor: playerNameTextColor,
                         fontSize: playerNameTextSize,
+                        fontWeight: playerNameTextWeight,
                       ),
-                    ),
-                    TeamLabel(
-                      teamName: playerInfo.getSeasonTeam().getTeamName(),
-                      seasonId: playerInfo.getSeasonTeam().seasonId,
-                      isEditEnabled: isEditEnabled,
-                      onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
-                      onTeamChange: (seasonTeam) {
-                        setState(() {
-                          playerInfo.setSeasonTeam(seasonTeam);
-                        });
-                      },
-                      fontColor: playerTeamTextColor,
-                      fontWeight: playerTeamTextWeight,
-                      fontSize: playerTeamTextSize
-                    ),
-                    CategoryLabel(
-                      categoryName: playerInfo.getCategory().name,
-                      isEditEnabled: isEditEnabled,
-                      teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
-                      onCategoryChange: (category) {
-                        setState(() {
-                          playerInfo.setCategory(category);
-                        });
-                      },
-                      fontColor: playerCategoryTextColor,
-                      fontSize: playerCategoryTextSize,
-                      fontWeight: playerCategoryTextWeight,
-                    ),
-                  ],
+                      TeamLabel(
+                          teamName: playerInfo.getSeasonTeam().getTeamName(),
+                          seasonId: playerInfo.getSeasonTeam().seasonId,
+                          isEditEnabled: isEditEnabled,
+                          onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
+                          onTeamChange: (seasonTeam) {
+                            setState(() {
+                              playerInfo.setSeasonTeam(seasonTeam);
+                            });
+                          },
+                          fontColor: playerTeamTextColor,
+                          fontWeight: playerTeamTextWeight,
+                          fontSize: playerTeamTextSize
+                      ),
+                      CategoryLabel(
+                        categoryName: playerInfo.getCategory().name,
+                        isEditEnabled: isEditEnabled,
+                        teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
+                        onCategoryChange: (category) {
+                          setState(() {
+                            playerInfo.setCategory(category);
+                          });
+                        },
+                        fontColor: playerCategoryTextColor,
+                        fontSize: playerCategoryTextSize,
+                        fontWeight: playerCategoryTextWeight,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () async {
-                          if (isEditEnabled) {
-                            DateTime curDate = DateTime.now();
-                            await showDatePicker(
-                                context: context,
-                                initialDate: playerInfo.getPlayerBirthday(),
-                                firstDate: DateTime.utc(
-                                    curDate.year - 50),
-                                lastDate: DateTime.utc(
-                                    curDate.year + 1),
-                                initialDatePickerMode: DatePickerMode
-                                    .day,
-                                helpText: "Seleziona la data di nascita"
-                            ).then((date) {
-                              if (date != null)
-                                setState(() {
-                                  playerInfo.setPlayerBirthday(date);
-                                });
-                            });
-                          }
-                        },
-                        child: Text(
-                          "${playerInfo.getPlayerBirthday().day} ${DateUtils
-                              .monthToString(
-                              playerInfo.getPlayerBirthday().month).substring(
-                              0, 3)} ${playerInfo.getPlayerBirthday().year}",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: playerHeightTextColor,
-                            fontSize: playerHeightTextSize,
-                            fontWeight: playerHeightTextWeight,
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (isEditEnabled) {
+                              DateTime curDate = DateTime.now();
+                              await showDatePicker(
+                                  context: context,
+                                  initialDate: playerInfo.getPlayerBirthday(),
+                                  firstDate: DateTime.utc(
+                                      curDate.year - 50),
+                                  lastDate: DateTime.utc(
+                                      curDate.year + 1),
+                                  initialDatePickerMode: DatePickerMode
+                                      .day,
+                                  helpText: "Seleziona la data di nascita"
+                              ).then((date) {
+                                if (date != null)
+                                  setState(() {
+                                    playerInfo.setPlayerBirthday(date);
+                                  });
+                              });
+                            }
+                          },
+                          child: Text(
+                            "${playerInfo.getPlayerBirthday().day} ${DateUtils
+                                .monthToString(
+                                playerInfo.getPlayerBirthday().month).substring(
+                                0, 3)} ${playerInfo.getPlayerBirthday().year}",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              color: playerHeightTextColor,
+                              fontSize: playerHeightTextSize,
+                              fontWeight: playerHeightTextWeight,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CustomTextField(
-                            width: heightWidth,
-                            enabled: isEditEnabled,
-                            controller: heightTextController,
-                            textAlign: TextAlign.end,
-                            maxLines: 1,
-                            textInputType: TextInputType.number,
-                            textColor: playerHeightTextColor,
-                            textFontSize: playerHeightTextSize,
-                            textFontWeight: playerHeightTextWeight,
-                          ),
-                          SizedBox(width: 5,),
-                          Text(
-                            "cm",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              color: playerHeightTextColor,
-                              fontSize: playerHeightTextSize,
-                              fontWeight: playerHeightTextWeight,
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomTextField(
+                              width: heightWidth,
+                              enabled: isEditEnabled,
+                              controller: heightTextController,
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              textInputType: TextInputType.number,
+                              textColor: playerHeightTextColor,
+                              textFontSize: playerHeightTextSize,
+                              textFontWeight: playerHeightTextWeight,
                             ),
-                          )
-                        ],
+                            SizedBox(width: 5,),
+                            Text(
+                              "cm",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: playerHeightTextColor,
+                                fontSize: playerHeightTextSize,
+                                fontWeight: playerHeightTextWeight,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CustomTextField(
-                            width: heightWidth,
-                            enabled: isEditEnabled,
-                            controller: weightTextController,
-                            textAlign: TextAlign.end,
-                            maxLines: 1,
-                            textInputType: TextInputType.number,
-                            textColor: playerHeightTextColor,
-                            textFontSize: playerHeightTextSize,
-                            textFontWeight: playerHeightTextWeight,
-                          ),
-                          SizedBox(width: 5,),
-                          Text(
-                            "kg",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              color: playerHeightTextColor,
-                              fontSize: playerHeightTextSize,
-                              fontWeight: playerHeightTextWeight,
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CustomTextField(
+                              width: heightWidth,
+                              enabled: isEditEnabled,
+                              controller: weightTextController,
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              textInputType: TextInputType.number,
+                              textColor: playerHeightTextColor,
+                              textFontSize: playerHeightTextSize,
+                              textFontWeight: playerHeightTextWeight,
                             ),
-                          )
-                        ],
+                            SizedBox(width: 5,),
+                            Text(
+                              "kg",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: playerHeightTextColor,
+                                fontSize: playerHeightTextSize,
+                                fontWeight: playerHeightTextWeight,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

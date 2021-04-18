@@ -63,6 +63,7 @@ class HomeViewModel extends BaseViewModel {
     _appStateService.selectedTeam = team;
     // Get the current season team
     SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+    seasonTeam.team = team;
     _appStateService.selectedSeasonTeam = seasonTeam;
     _appStateService.selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
     // Get season team's categories

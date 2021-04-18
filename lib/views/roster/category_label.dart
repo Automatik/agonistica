@@ -53,12 +53,11 @@ class _CategoryLabelState extends State<CategoryLabel> {
                   });
                   widget.onCategoryChange(newCategory);
                 }
-                //TODO Vedere se il close dialog piazzarlo qui o nel callback in PlayerDetailLayout
                 // close dialog
                 Navigator.of(context).pop();
               }
           );
-          dialog.showSelectCategoryDialog(context);
+          await dialog.showSelectCategoryDialog(context);
         }
       },
       enabled: widget.isEditEnabled,
