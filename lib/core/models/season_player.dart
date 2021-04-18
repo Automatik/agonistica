@@ -87,18 +87,19 @@ class SeasonPlayer {
 
   /// Useful constructor to create both a new Player and a new SeasonPlayer
   /// with all the temporary objects populated
-  SeasonPlayer.newPlayer(SeasonTeam seasonTeam, Category category) {
+  factory SeasonPlayer.newPlayer(SeasonTeam seasonTeam, Category category) {
     Preconditions.requireArgumentNotNull(seasonTeam);
     Preconditions.requireArgumentNotNull(category);
 
     // New Empty Player
     Player player = Player.empty();
     // Create new empty SeasonPlayer
-    SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId, category.id);
+    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId, category.id);
     // Set temporary values
-    setCategory(category);
-    setSeasonTeam(seasonTeam);
-    this.player = player;
+    seasonPlayer.setCategory(category);
+    seasonPlayer.setSeasonTeam(seasonTeam);
+    seasonPlayer.player = player;
+    return seasonPlayer;
   }
 
   SeasonPlayer.clone(SeasonPlayer sp) {

@@ -6,6 +6,9 @@ class Season {
   static const int SEASON_SEPARATOR_DAY = 31;
   static const int SEASON_SEPARATOR_MONTH = DateTime.july;
 
+  static const String _MAP_BEGIN_YEAR = "beginYear";
+  static const String _MAP_END_YEAR = "endYear";
+
   String id;
 
   String period; // es. 2020/21
@@ -29,10 +32,18 @@ class Season {
     period = yearsToString(beginYear, endYear);
   }
 
-  Season.createCurrentSeason() {
+  factory Season.createCurrentSeason() {
+    Map<String, int> yearsMap = getCurrentBeginAndEndYears();
+    int beginYear = yearsMap[_MAP_BEGIN_YEAR];
+    int endYear = yearsMap[_MAP_END_YEAR];
+    return Season.create(beginYear, endYear);
+  }
+
+  static Map<String, int> getCurrentBeginAndEndYears() {
     DateTime currentDate = DateTime.now();
     int currentYear = currentDate.year;
     DateTime seasonSeparatorDate = DateTime(currentYear, SEASON_SEPARATOR_MONTH, SEASON_SEPARATOR_DAY);
+    Map<String, int> map = Map();
     int beginYear, endYear;
     if(currentDate.isAfter(seasonSeparatorDate)) {
       // If it is the beginning of the new season (current date after 31 July)
@@ -43,7 +54,9 @@ class Season {
       beginYear = currentYear - 1;
       endYear = currentYear;
     }
-    Season.create(beginYear, endYear);
+    map.putIfAbsent(_MAP_BEGIN_YEAR, () => beginYear);
+    map.putIfAbsent(_MAP_END_YEAR, () => endYear);
+    return map;
   }
 
   Map<String, dynamic> toJson() {

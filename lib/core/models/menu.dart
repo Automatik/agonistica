@@ -29,18 +29,20 @@ class Menu {
     this.type = type;
   }
 
-  Menu.createTeamMenu(String name, int type, String teamId) {
+  factory Menu.createTeamMenu(String name, int type, String teamId) {
     Preconditions.requireArgumentNotEmpty(teamId);
 
-    Menu._create(name, type);
-    this.teamId = teamId;
+    Menu menu = Menu._create(name, type);
+    menu.teamId = teamId;
+    return menu;
   }
 
-  Menu.createPlayersMenu(String name, int type, List<String> categoriesIds) {
+  factory Menu.createPlayersMenu(String name, int type, List<String> categoriesIds) {
     Preconditions.requireArgumentsNotNulls(categoriesIds);
 
-    Menu._create(name, type);
-    this.categoriesIds = categoriesIds;
+    Menu menu = Menu._create(name, type);
+    menu.categoriesIds = categoriesIds;
+    return menu;
   }
 
   Map<String, dynamic> toJson() {
