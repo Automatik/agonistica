@@ -1,4 +1,3 @@
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
@@ -26,23 +25,32 @@ class StatRow extends StatefulWidget {
 
 class _StatRowState extends State<StatRow> {
 
+  double doubleValue;
+
+  @override
+  void initState() {
+    super.initState();
+    doubleValue = widget.value.toDouble();
+    if(doubleValue == null) {
+      doubleValue = 1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double doubleValue = widget.value.toDouble();
-
     Widget element;
     if(widget.isEditEnabled) {
       element = Slider(
         min: SeasonPlayer.MIN_VALUE.toDouble(),
         max: SeasonPlayer.MAX_VALUE.toDouble(),
         divisions: SeasonPlayer.MAX_VALUE,
-        label: widget.value.round().toString(),
+        label: doubleValue.round().toString(),
         value: doubleValue,
         onChanged: (v) {
-          widget.onChange(v.toInt());
           setState(() {
             doubleValue = v;
           });
+          widget.onChange(v.toInt());
         },
         activeColor: blueAgonisticaColor,
         inactiveColor: blueLightAgonisticaColor,
