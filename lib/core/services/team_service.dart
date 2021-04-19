@@ -73,7 +73,7 @@ class TeamService extends CrudService<Team> {
 
   Future<void> deleteSeasonTeamFromTeam(String seasonTeamId, String teamId) async {
     Team team = await getItemById(teamId);
-    team.seasonTeamsIds.removeWhere((id) => id == seasonTeamId);
+    team.removeSeasonTeam(seasonTeamId);
     await super.saveItem(team);
   }
 

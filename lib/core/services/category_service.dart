@@ -15,8 +15,12 @@ class CategoryService extends CrudService<Category> {
   /// Get the team's categories
   Future<List<Category>> getTeamCategories(String seasonTeamId) async {
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+    bool seasonTeamExists = await seasonTeamService.itemExists(seasonTeamId);
+    if(!seasonTeamExists) {
+      return [];
+    }
     SeasonTeam seasonTeam = await seasonTeamService.getItemById(seasonTeamId);
-    if(seasonTeam == null || seasonTeam.categoriesIds == null || seasonTeam.categoriesIds.isEmpty)
+    if(seasonTeam.categoriesIds == null || seasonTeam.categoriesIds.isEmpty)
       return [];
     return await getItemsByIds(seasonTeam.categoriesIds);
   }

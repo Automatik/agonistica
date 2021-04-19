@@ -82,8 +82,12 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
   /// Download players of the given team and category
   Future<List<SeasonPlayer>> getSeasonPlayersByTeamAndCategory(String seasonTeamId, String categoryId) async {
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+    bool seasonTeamExists = await seasonTeamService.itemExists(seasonTeamId);
+    if(!seasonTeamExists) {
+      return Future.value(List<SeasonPlayer>());
+    }
     SeasonTeam seasonTeam = await seasonTeamService.getItemById(seasonTeamId);
-    if(seasonTeam == null || seasonTeam.seasonPlayersIds == null || seasonTeam.seasonPlayersIds.isEmpty)
+    if(seasonTeam.seasonPlayersIds == null || seasonTeam.seasonPlayersIds.isEmpty)
       return Future.value(List<SeasonPlayer>());
     if (DbUtils.listContainsNulls(seasonTeam.seasonPlayersIds)) {
       CrudService.logger.w("The seasonTeam with id $seasonTeamId contains null values in seasonPlayersIds");

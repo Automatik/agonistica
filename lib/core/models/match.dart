@@ -62,14 +62,24 @@ class Match {
   }
 
   SeasonTeam getSeasonTeam1() {
-    SeasonTeam seasonTeam = SeasonTeam.empty(team1.id, seasonId);
+    SeasonTeam seasonTeam;
+    if(team1.id == null) {
+      seasonTeam = SeasonTeam();
+    } else {
+      seasonTeam = SeasonTeam.empty(team1.id, seasonId);
+    }
     seasonTeam.id = seasonTeam1Id;
     seasonTeam.team = team1;
     return seasonTeam;
   }
 
   SeasonTeam getSeasonTeam2() {
-    SeasonTeam seasonTeam = SeasonTeam.empty(team2.id, seasonId);
+    SeasonTeam seasonTeam;
+    if(team2.id == null) {
+      seasonTeam = SeasonTeam();
+    } else {
+      seasonTeam = SeasonTeam.empty(team2.id, seasonId);
+    }
     seasonTeam.id = seasonTeam2Id;
     seasonTeam.team = team2;
     return seasonTeam;

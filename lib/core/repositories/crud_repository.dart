@@ -35,11 +35,7 @@ abstract class CrudRepository<T> {
     Preconditions.requireArgumentNotEmpty(itemId);
 
     final DataSnapshot snapshot = await databaseReference.child(firebaseChild).child(itemId).once();
-    // bool keyExists = snapshot != null;
     bool itemExists = snapshot.value != null;
-    // if(keyExists && !itemExists) {
-    //   throw IntegrityException("Key $itemId exists but has no value");
-    // }
     return itemExists;
   }
 

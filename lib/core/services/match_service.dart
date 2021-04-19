@@ -19,9 +19,9 @@ class MatchService extends CrudService<Match> {
 
   @override
   Future<void> saveItem(Match match) async {
-    Match oldMatch = await getItemById(match.id);
-    bool matchPreviouslySaved = oldMatch != null;
+    bool matchPreviouslySaved = await itemExists(match.id);
     if(matchPreviouslySaved) {
+      Match oldMatch = await getItemById(match.id);
       // If a team is changed, remove the match's id from the old team
 
       await _removeOldTeamFromMatch(oldMatch.seasonTeam1Id, match.seasonTeam1Id, match.id);
