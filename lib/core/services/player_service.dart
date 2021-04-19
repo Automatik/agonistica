@@ -13,7 +13,9 @@ class PlayerService extends CrudService<Player> {
     : super(databaseReference, PlayerRepository(databaseReference));
 
   Future<void> createPlayerFromSeasonPlayer(SeasonPlayer seasonPlayer) async {
+    CrudService.logger.d("createPlayer");
     bool playerExists = await itemExists(seasonPlayer.playerId);
+    CrudService.logger.d("playerExists");
     if(!playerExists) {
       if(seasonPlayer.player == null) {
         throw NotFoundException("Player with id ${seasonPlayer.playerId} does not "
@@ -45,6 +47,10 @@ class PlayerService extends CrudService<Player> {
   }
 
   Future<void> addSeasonPlayerToPlayer(String seasonPlayerId, String playerId) async {
+    CrudService.logger.d("addSeasonPlayer");
+    bool playerExists = await itemExists(playerId);
+    if(!playerExists)
+      throw Exception("non esisteeeee");
     Player player = await getItemById(playerId);
     player.addSeasonPlayer(seasonPlayerId);
     await super.saveItem(player);

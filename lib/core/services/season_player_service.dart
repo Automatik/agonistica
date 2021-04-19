@@ -28,13 +28,20 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     await playerService.createPlayerFromSeasonPlayer(seasonPlayer);
 
     // add seasonPlayerId to player's seasonPlayerIds
+    bool playerExists = await playerService.itemExists(seasonPlayer.playerId);
+    if(!playerExists) {
+      throw Exception("Non esiste!");
+    }
     await playerService.addSeasonPlayerToPlayer(seasonPlayer.id, seasonPlayer.playerId);
 
     // if the player's teamId is changed, remove the player's id from the old team's playersIds
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    SeasonPlayer oldSeasonPlayer = await getItemById(seasonPlayer.id);
-    if(oldSeasonPlayer != null && oldSeasonPlayer.seasonTeamId != seasonPlayer.seasonTeamId) {
-      await seasonTeamService.deleteSeasonPlayerFromSeasonTeam(oldSeasonPlayer.seasonTeamId, oldSeasonPlayer.id);
+    bool seasonPlayerAlreadyExists = await itemExists(seasonPlayer.id);
+    if(seasonPlayerAlreadyExists) {
+      SeasonPlayer oldSeasonPlayer = await getItemById(seasonPlayer.id);
+      if(oldSeasonPlayer != null && oldSeasonPlayer.seasonTeamId != seasonPlayer.seasonTeamId) {
+        await seasonTeamService.deleteSeasonPlayerFromSeasonTeam(oldSeasonPlayer.seasonTeamId, oldSeasonPlayer.id);
+      }
     }
 
     await super.saveItem(seasonPlayer);

@@ -1,3 +1,4 @@
+import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
@@ -34,7 +35,11 @@ abstract class CrudRepository<T> {
     Preconditions.requireArgumentNotEmpty(itemId);
 
     final DataSnapshot snapshot = await databaseReference.child(firebaseChild).child(itemId).once();
-    bool itemExists = snapshot != null;
+    // bool keyExists = snapshot != null;
+    bool itemExists = snapshot.value != null;
+    // if(keyExists && !itemExists) {
+    //   throw IntegrityException("Key $itemId exists but has no value");
+    // }
     return itemExists;
   }
 
