@@ -48,9 +48,7 @@ class TeamViewModel extends BaseViewModel {
 
       seasonPlayers = await _databaseService.seasonPlayerService.getSeasonPlayersByTeamAndCategory(seasonTeam.id, category.id);
       // set player's team name and category name
-      for(SeasonPlayer seasonPlayer in seasonPlayers) {
-        seasonPlayer = await _databaseService.seasonPlayerService.completeSeasonPlayerWithMissingInfo(seasonPlayer);
-      }
+      seasonPlayers = await _databaseService.seasonPlayerService.completeSeasonPlayersWithMissingInfo(seasonPlayers);
 
     }
 

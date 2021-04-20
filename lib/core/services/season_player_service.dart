@@ -1,5 +1,4 @@
 import 'package:agonistica/core/models/category.dart';
-import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
@@ -53,9 +52,9 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
   }
 
   Future<void> saveSeasonPlayerIfNotExists(SeasonPlayer seasonPlayer) async {
-    bool seasonPlayerExists = await super.itemExists(seasonPlayer.id);
+    bool seasonPlayerExists = await itemExists(seasonPlayer.id);
     if(!seasonPlayerExists) {
-      saveItem(seasonPlayer);
+      await saveItem(seasonPlayer);
     }
   }
 
@@ -92,6 +91,13 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     List<SeasonPlayer> players = await getItemsByIds(seasonTeam.seasonPlayersIds);
     players.removeWhere((player) => player.categoryId != categoryId);
     return players;
+  }
+
+  Future<List<SeasonPlayer>> completeSeasonPlayersWithMissingInfo(List<SeasonPlayer> seasonPlayers) async {
+    for(SeasonPlayer seasonPlayer in seasonPlayers) {
+      seasonPlayer = await completeSeasonPlayerWithMissingInfo(seasonPlayer);
+    }
+    return seasonPlayers;
   }
 
   /// Download missing info for a player (for instance after calling getPlayerId)

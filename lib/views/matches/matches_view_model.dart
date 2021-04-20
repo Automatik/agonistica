@@ -60,6 +60,7 @@ class MatchesViewModel extends BaseViewModel {
   Future<void> loadTeamPlayers(String seasonTeamId) async {
     String categoryId = _appStateService.selectedCategory.id;
     List<SeasonPlayer> teamSeasonPlayers = await _databaseService.seasonPlayerService.getSeasonPlayersByTeamAndCategory(seasonTeamId, categoryId);
+    teamSeasonPlayers = await _databaseService.seasonPlayerService.completeSeasonPlayersWithMissingInfo(teamSeasonPlayers);
     if(!teamsPlayersMap.containsKey(seasonTeamId))
       teamsPlayersMap.putIfAbsent(seasonTeamId, () => teamSeasonPlayers);
     else
