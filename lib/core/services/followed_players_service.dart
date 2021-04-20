@@ -22,16 +22,18 @@ class FollowedPlayersService extends CrudService<FollowedPlayers> {
     return false;
   }
 
-  Future<void> followPlayer(String followedPlayersId, String playerId) async {
+  Future<FollowedPlayers> followPlayer(String followedPlayersId, String playerId) async {
     FollowedPlayers followedPlayers = await getItemById(followedPlayersId);
     followedPlayers.addPlayer(playerId);
     await super.saveItem(followedPlayers);
+    return followedPlayers;
   }
 
-  Future<void> unFollowPlayer(String followedPlayersId, String playerId) async {
+  Future<FollowedPlayers> unFollowPlayer(String followedPlayersId, String playerId) async {
     FollowedPlayers followedPlayers = await getItemById(followedPlayersId);
     followedPlayers.removePlayer(playerId);
     await super.saveItem(followedPlayers);
+    return followedPlayers;
   }
 
 }

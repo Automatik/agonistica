@@ -56,10 +56,11 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   }
 
   /// Update the SeasonTeam seasonPlayersIds
-  Future<void> addSeasonPlayerToSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
+  Future<SeasonTeam> addSeasonPlayerToSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
     seasonTeam.addSeasonPlayer(seasonPlayerId);
     await super.saveItem(seasonTeam);
+    return seasonTeam;
   }
 
   // GET
@@ -130,17 +131,19 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   }
 
   /// Delete a player id from the team's playerIds list
-  Future<void> deleteSeasonPlayerFromSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
+  Future<SeasonTeam> deleteSeasonPlayerFromSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
     seasonTeam.removeSeasonPlayer(seasonPlayerId);
     await super.saveItem(seasonTeam);
+    return seasonTeam;
   }
 
   /// Delete a match id from the team's matchesIds list
-  Future<void> deleteMatchFromSeasonTeam(String seasonTeamId, String matchId) async {
+  Future<SeasonTeam> deleteMatchFromSeasonTeam(String seasonTeamId, String matchId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
     seasonTeam.removeMatch(matchId);
     await super.saveItem(seasonTeam);
+    return seasonTeam;
   }
 
 }

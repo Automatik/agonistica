@@ -44,16 +44,18 @@ class PlayerService extends CrudService<Player> {
     await super.deleteItem(playerId);
   }
 
-  Future<void> addSeasonPlayerToPlayer(String seasonPlayerId, String playerId) async {
+  Future<Player> addSeasonPlayerToPlayer(String seasonPlayerId, String playerId) async {
     Player player = await getItemById(playerId);
     player.addSeasonPlayer(seasonPlayerId);
     await super.saveItem(player);
+    return player;
   }
 
-  Future<void> deleteSeasonPlayerFromPlayer(String seasonPlayerId, String playerId) async {
+  Future<Player> deleteSeasonPlayerFromPlayer(String seasonPlayerId, String playerId) async {
     Player player = await getItemById(playerId);
     player.removeSeasonPlayer(seasonPlayerId);
     await super.saveItem(player);
+    return player;
   }
 
 }

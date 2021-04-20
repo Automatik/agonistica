@@ -185,19 +185,23 @@ class MatchService extends CrudService<Match> {
     });
   }
 
-  Future<void> deleteSeasonPlayerFromMatchesIds(List<String> matchesIds, String seasonPlayerId) async {
+  Future<List<Match>> deleteSeasonPlayerFromMatchesIds(List<String> matchesIds, String seasonPlayerId) async {
+    List<Match> matches = [];
     matchesIds.forEach((id) async {
-      await deleteSeasonPlayerFromMatch(id, seasonPlayerId);
+      Match match = await deleteSeasonPlayerFromMatch(id, seasonPlayerId);
+      matches.add(match);
     });
+    return matches;
   }
 
   /// Delete a MatchPlayerData from the given Match.
   /// It doesn't remove the goal scored by the player removed (not enforcing
   /// this constraint)
-  Future<void> deleteSeasonPlayerFromMatch(String matchId, String seasonPlayerId) async {
+  Future<Match> deleteSeasonPlayerFromMatch(String matchId, String seasonPlayerId) async {
     Match match = await getItemById(matchId);
     match.playersData.removeWhere((mp) => mp.seasonPlayerId == seasonPlayerId);
     await super.saveItem(match);
+    return match;
   }
 
 }

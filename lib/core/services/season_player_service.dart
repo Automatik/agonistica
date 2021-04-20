@@ -58,18 +58,20 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     }
   }
 
-  Future<void> addMatchIdToSeasonPlayer(String matchId, String seasonPlayerId) async {
+  Future<SeasonPlayer> addMatchIdToSeasonPlayer(String matchId, String seasonPlayerId) async {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
     seasonPlayer.addMatch(matchId);
     await super.saveItem(seasonPlayer);
+    return seasonPlayer;
   }
 
-  Future<void> addPlayerMatchNotesIdToSeasonPlayer(String playerMatchNotesId, String seasonPlayerId) async {
+  Future<SeasonPlayer> addPlayerMatchNotesIdToSeasonPlayer(String playerMatchNotesId, String seasonPlayerId) async {
     SeasonPlayer seasonPlayer = await getItemById(seasonPlayerId);
 
     // update player's playerMatchNodesIds
     seasonPlayer.addPlayerMatchNotesId(playerMatchNotesId);
     await super.saveItem(seasonPlayer);
+    return seasonPlayer;
   }
 
   // GET
