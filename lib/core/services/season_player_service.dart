@@ -28,10 +28,6 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     await playerService.createPlayerFromSeasonPlayer(seasonPlayer);
 
     // add seasonPlayerId to player's seasonPlayerIds
-    bool playerExists = await playerService.itemExists(seasonPlayer.playerId);
-    if(!playerExists) {
-      throw Exception("Non esiste!");
-    }
     await playerService.addSeasonPlayerToPlayer(seasonPlayer.id, seasonPlayer.playerId);
 
     // if the player's teamId is changed, remove the player's id from the old team's playersIds

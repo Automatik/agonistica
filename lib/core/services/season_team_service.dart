@@ -33,15 +33,15 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   }
 
   Future<void> saveSeasonTeamIfNotExists(SeasonTeam seasonTeam) async {
-    bool seasonTeamExists = await repository.itemExists(seasonTeam.id);
+    bool seasonTeamExists = await itemExists(seasonTeam.id);
     if(!seasonTeamExists) {
-      saveItem(seasonTeam);
+      await saveItem(seasonTeam);
     }
   }
 
   /// Upload Team data (update)
   Future<void> updateSeasonTeamFromMatch(Match match, SeasonTeam seasonTeam, List<String> matchSeasonPlayersIds) async {
-    SeasonTeam latestVersion = await repository.getItemById(seasonTeam.id);
+    SeasonTeam latestVersion = await getItemById(seasonTeam.id);
     seasonTeam = latestVersion;
     // update the categories in which the team appears
     seasonTeam.addCategory(match.categoryId);
