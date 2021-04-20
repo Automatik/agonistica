@@ -29,6 +29,7 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
 
     // add seasonPlayerId to player's seasonPlayerIds
     Player player = await playerService.getItemById(seasonPlayer.playerId);
+    seasonPlayer.player = player;
     await playerService.addSeasonPlayerToPlayer(seasonPlayer.id, player);
 
     // if the player's teamId is changed, remove the player's id from the old team's playersIds
