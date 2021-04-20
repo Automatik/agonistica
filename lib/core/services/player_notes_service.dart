@@ -17,7 +17,8 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
     await super.saveItem(playerMatchNotes);
 
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    await seasonPlayerService.addPlayerMatchNotesIdToSeasonPlayer(playerMatchNotes.id, playerMatchNotes.seasonPlayerId);
+    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId);
+    await seasonPlayerService.addPlayerMatchNotesIdToSeasonPlayer(playerMatchNotes.id, seasonPlayer);
   }
 
   // GET
@@ -46,7 +47,8 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
     PlayerMatchNotes playerMatchNotes = await getItemById(playerMatchNotesId);
 
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    await seasonPlayerService.removePlayerMatchNotesIdFromSeasonPlayer(playerMatchNotesId, playerMatchNotes.seasonPlayerId);
+    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId);
+    await seasonPlayerService.removePlayerMatchNotesIdFromSeasonPlayer(playerMatchNotesId, seasonPlayer);
 
     await super.deleteItem(playerMatchNotesId);
   }

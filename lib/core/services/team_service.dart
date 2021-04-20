@@ -31,11 +31,9 @@ class TeamService extends CrudService<Team> {
     }
   }
 
-  Future<Team> addSeasonTeamToTeam(String seasonTeamId, String teamId) async {
-    Team team = await getItemById(teamId);
+  Future<void> addSeasonTeamToTeam(String seasonTeamId, Team team) async {
     team.addSeasonTeam(seasonTeamId);
     await super.saveItem(team);
-    return team;
   }
 
   // GET
@@ -72,11 +70,9 @@ class TeamService extends CrudService<Team> {
     return super.deleteItem(teamId);
   }
 
-  Future<Team> deleteSeasonTeamFromTeam(String seasonTeamId, String teamId) async {
-    Team team = await getItemById(teamId);
+  Future<void> deleteSeasonTeamFromTeam(String seasonTeamId, Team team) async {
     team.removeSeasonTeam(seasonTeamId);
     await super.saveItem(team);
-    return team;
   }
 
 }

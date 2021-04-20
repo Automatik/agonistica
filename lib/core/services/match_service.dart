@@ -63,7 +63,7 @@ class MatchService extends CrudService<Match> {
 
     // update players's matchesIds and also implicitly the player's teamId
     for(SeasonPlayer seasonPlayer in matchPlayers) {
-      await seasonPlayerService.addMatchIdToSeasonPlayer(match.id, seasonPlayer.id);
+      await seasonPlayerService.addMatchIdToSeasonPlayer(match.id, seasonPlayer);
       await _updatePlayerStatsFromMatchPlayerData(seasonPlayer);
       await seasonPlayerService.saveItem(seasonPlayer);
     }
@@ -166,13 +166,16 @@ class MatchService extends CrudService<Match> {
     String seasonTeam1Id = match.seasonTeam1Id;
     String seasonTeam2Id = match.seasonTeam2Id;
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    await seasonTeamService.deleteMatchFromSeasonTeam(seasonTeam1Id, matchId);
-    await seasonTeamService.deleteMatchFromSeasonTeam(seasonTeam2Id, matchId);
+    SeasonTeam seasonTeam1 = await seasonTeamService.getItemById(seasonTeam1Id);
+    SeasonTeam seasonTeam2 = await seasonTeamService.getItemById(seasonTeam2Id);
+    await seasonTeamService.deleteMatchFromSeasonTeam(seasonTeam1, matchId);
+    await seasonTeamService.deleteMatchFromSeasonTeam(seasonTeam2, matchId);
 
     // Delete match id from players
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
     match.playersData.map((p) => p.seasonPlayerId).forEach((id) async {
-      await seasonPlayerService.deleteMatchFromSeasonPlayer(id, matchId);
+      SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(id);
+      await seasonPlayerService.deleteMatchFromSeasonPlayer(seasonPlayer, matchId);
     });
 
     // Delete match
@@ -185,23 +188,18 @@ class MatchService extends CrudService<Match> {
     });
   }
 
-  Future<List<Match>> deleteSeasonPlayerFromMatchesIds(List<String> matchesIds, String seasonPlayerId) async {
-    List<Match> matches = [];
-    matchesIds.forEach((id) async {
-      Match match = await deleteSeasonPlayerFromMatch(id, seasonPlayerId);
-      matches.add(match);
+  Future<void> deleteSeasonPlayerFromMatchesIds(List<Match> matches, String seasonPlayerId) async {
+    matches.forEach((match) async {
+      await deleteSeasonPlayerFromMatch(match, seasonPlayerId);
     });
-    return matches;
   }
 
   /// Delete a MatchPlayerData from the given Match.
   /// It doesn't remove the goal scored by the player removed (not enforcing
   /// this constraint)
-  Future<Match> deleteSeasonPlayerFromMatch(String matchId, String seasonPlayerId) async {
-    Match match = await getItemById(matchId);
+  Future<void> deleteSeasonPlayerFromMatch(Match match, String seasonPlayerId) async {
     match.playersData.removeWhere((mp) => mp.seasonPlayerId == seasonPlayerId);
     await super.saveItem(match);
-    return match;
   }
 
 }

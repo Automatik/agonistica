@@ -27,18 +27,14 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
     return false;
   }
 
-  Future<FollowedTeams> followTeam(String followedTeamsId, String teamId) async {
-    FollowedTeams followedTeams = await getItemById(followedTeamsId);
+  Future<void> followTeam(FollowedTeams followedTeams, String teamId) async {
     followedTeams.addTeam(teamId);
     await super.saveItem(followedTeams);
-    return followedTeams;
   }
 
-  Future<FollowedTeams> unFollowTeam(String followedTeamsId, String teamId) async {
-    FollowedTeams followedTeams = await getItemById(followedTeamsId);
+  Future<void> unFollowTeam(FollowedTeams followedTeams, String teamId) async {
     followedTeams.removeTeam(teamId);
     await super.saveItem(followedTeams);
-    return followedTeams;
   }
 
   //TODO Riscrivere prendendo i team seguiti dell'utente da firebase

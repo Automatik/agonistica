@@ -27,7 +27,8 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     await teamService.createTeamFromSeasonTeam(seasonTeam);
 
     // if team does already exist, add seasonTeamId to the list
-    await teamService.addSeasonTeamToTeam(seasonTeam.id, seasonTeam.teamId);
+    Team team = await teamService.getItemById(seasonTeam.teamId);
+    await teamService.addSeasonTeamToTeam(seasonTeam.id, team);
 
     await super.saveItem(seasonTeam);
   }
@@ -56,11 +57,9 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   }
 
   /// Update the SeasonTeam seasonPlayersIds
-  Future<SeasonTeam> addSeasonPlayerToSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
-    SeasonTeam seasonTeam = await getItemById(seasonTeamId);
+  Future<void> addSeasonPlayerToSeasonTeam(SeasonTeam seasonTeam, String seasonPlayerId) async {
     seasonTeam.addSeasonPlayer(seasonPlayerId);
     await super.saveItem(seasonTeam);
-    return seasonTeam;
   }
 
   // GET
@@ -117,7 +116,8 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
     // Delete season team id from team
     TeamService teamService = TeamService(databaseReference);
-    await teamService.deleteSeasonTeamFromTeam(seasonTeamId, seasonTeam.teamId);
+    Team team = await teamService.getItemById(seasonTeam.teamId);
+    await teamService.deleteSeasonTeamFromTeam(seasonTeamId, team);
 
     // Delete season players that belong to this season team
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
@@ -131,19 +131,15 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   }
 
   /// Delete a player id from the team's playerIds list
-  Future<SeasonTeam> deleteSeasonPlayerFromSeasonTeam(String seasonTeamId, String seasonPlayerId) async {
-    SeasonTeam seasonTeam = await getItemById(seasonTeamId);
+  Future<void> deleteSeasonPlayerFromSeasonTeam(SeasonTeam seasonTeam, String seasonPlayerId) async {
     seasonTeam.removeSeasonPlayer(seasonPlayerId);
     await super.saveItem(seasonTeam);
-    return seasonTeam;
   }
 
   /// Delete a match id from the team's matchesIds list
-  Future<SeasonTeam> deleteMatchFromSeasonTeam(String seasonTeamId, String matchId) async {
-    SeasonTeam seasonTeam = await getItemById(seasonTeamId);
+  Future<void> deleteMatchFromSeasonTeam(SeasonTeam seasonTeam, String matchId) async {
     seasonTeam.removeMatch(matchId);
     await super.saveItem(seasonTeam);
-    return seasonTeam;
   }
 
 }
