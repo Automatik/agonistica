@@ -53,7 +53,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
     if(isEditEnabled) {
       return EditModeMatchesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionCancel: onActionCancel, onActionConfirm: () => onActionConfirm(context));
     } else {
-      return PlatformAppBars.getPlatformAppBarForMatchesViewInViewMode(title, () => onActionBack(context), onActionEditPress);
+      return ViewModeMatchesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionEditPress: onActionEditPress);
     }
   }
   

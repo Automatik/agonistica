@@ -1,8 +1,8 @@
 import 'package:agonistica/core/locator.dart';
-import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
+import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +75,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
       return widget.platformAppBar;
     }
     if(widget.title != null) {
-      return PlatformAppBars.getPlatformAppBar(widget.title);
+      return BasePlatformAppBar(title: widget.title);
     }
     return null;
   }

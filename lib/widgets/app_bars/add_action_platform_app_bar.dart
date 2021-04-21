@@ -2,34 +2,25 @@ import 'package:agonistica/widgets/app_bar_actions/app_bar_action.dart';
 import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class AddActionPlatformAppBar extends StatelessWidget {
+class AddActionPlatformAppBar extends BasePlatformAppBar {
 
-  final String title;
   final Function onActionTap;
 
   AddActionPlatformAppBar({
-    @required this.title,
+    @required title,
     this.onActionTap,
-  });
+  }) : super(title: title, actions: composeActions(onActionTap));
 
-  @override
-  Widget build(BuildContext context) {
-    return BasePlatformAppBar(
-      title: title,
-      actions: composeActions(),
-    );
-  }
-
-  List<Widget> composeActions() {
+  static List<Widget> composeActions(Function onActionTap) {
     return [
-      addAction(),
+      addAction(onActionTap),
     ];
   }
 
-  Widget addAction() {
+  static Widget addAction(Function onActionTap) {
     return AppBarAction(
       icon: Icons.add,
-      onActionTap: this.onActionTap,
+      onActionTap: onActionTap,
     );
   }
 

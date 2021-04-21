@@ -2,12 +2,11 @@ library team_view;
 
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/exceptions/argument_exception.dart';
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
+import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
-import 'package:agonistica/core/platform_appbars.dart';
 import 'package:agonistica/views/teams/match_review.dart';
 import 'package:agonistica/views/teams/player_review.dart';
 import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';

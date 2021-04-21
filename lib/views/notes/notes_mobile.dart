@@ -161,9 +161,9 @@ class _NotesMobileState extends State<_NotesMobile> {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
     if(isEditEnabled) {
-      return PlatformAppBars.getPlatformAppBarForNotesViewInEditMode(title, () => onActionBack(context), onActionCancel, onActionConfirm);
+      return EditModeNotesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionCancel: onActionCancel, onActionConfirm: onActionConfirm);
     } else {
-      return PlatformAppBars.getPlatformAppBarForNotesViewInViewMode(title, () => onActionBack(context), onActionEditPress);
+      return ViewModeNotesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionEditPress: onActionEditPress);
     }
   }
 

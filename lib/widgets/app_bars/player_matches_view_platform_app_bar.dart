@@ -2,23 +2,18 @@ import 'package:agonistica/widgets/app_bar_actions/back_arrow_app_bar_leading.da
 import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class PlayerMatchesViewPlatformAppBar extends StatelessWidget {
+class PlayerMatchesViewPlatformAppBar extends BasePlatformAppBar {
 
-  final String title;
   final Function onActionBack;
 
   PlayerMatchesViewPlatformAppBar({
-    @required this.title,
+    @required title,
     this.onActionBack,
-  });
+  }) : super(title: title, leading: composeLeading(onActionBack));
 
-  @override
-  Widget build(BuildContext context) {
-    return BasePlatformAppBar(
-      title: title,
-      leading: BackArrowAppBarLeading(
-        onLeadingTap: this.onActionBack,
-      ),
+  static Widget composeLeading(Function onActionBack) {
+    return BackArrowAppBarLeading(
+      onLeadingTap: onActionBack,
     );
   }
 

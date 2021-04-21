@@ -1,9 +1,9 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
+import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/platform_appbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,7 +55,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
     return PlatformTabScaffold(
       tabController: _tabController,
       currentIndex: _tabController.index(context),
-      appBarBuilder: (_, index) => widget.platformAppBar ?? PlatformAppBars.getPlatformAppBar(widget.title),
+      appBarBuilder: (_, index) => widget.platformAppBar ?? BasePlatformAppBar(title: widget.title),
       bodyBuilder: (_, index) {
         // Use a nested builder to get a context inside the Scaffold used then by the snackBars
         return Builder(

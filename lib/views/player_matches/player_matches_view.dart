@@ -1,7 +1,7 @@
 library player_matches_view;
 
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
-import 'package:agonistica/core/platform_appbars.dart';
+import 'package:agonistica/widgets/app_bars/player_matches_view_platform_app_bar.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/player_matches/match_notes_element.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';

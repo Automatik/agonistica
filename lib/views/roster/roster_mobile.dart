@@ -58,9 +58,9 @@ class _RosterMobileState extends State<_RosterMobile> {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
     if(isEditEnabled) {
-      return PlatformAppBars.getPlatformAppBarForRosterViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
+      return EditModeRosterViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionCancel: onActionCancel, onActionConfirm: () => onActionConfirm(context));
     } else {
-      return PlatformAppBars.getPlatformAppBarForRosterViewInViewMode(title, () => onActionBack(context), onActionEditPress, () => onActionNotesPress(context));
+      return ViewModeRosterViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionEditPress: onActionEditPress, onActionNotesPress: () => onActionNotesPress(context));
     }
   }
 

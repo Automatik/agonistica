@@ -3,38 +3,36 @@ import 'package:agonistica/widgets/app_bar_actions/back_arrow_app_bar_leading.da
 import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class EditModeNotesViewPlatformAppBar extends StatelessWidget {
+class EditModeNotesViewPlatformAppBar extends BasePlatformAppBar {
 
-  final String title;
   final Function onActionBack;
   final Function onActionCancel;
   final Function onActionConfirm;
 
   EditModeNotesViewPlatformAppBar({
-    @required this.title,
+    @required title,
     this.onActionBack,
     this.onActionCancel,
     this.onActionConfirm,
-  });
+  }) : super(title: title, leading: composeLeading(onActionBack), actions: composeActions(onActionCancel, onActionConfirm));
 
-  @override
-  Widget build(BuildContext context) {
-    return BasePlatformAppBar(
-      title: title,
-      leading: BackArrowAppBarLeading(
-        onLeadingTap: this.onActionBack,
-      ),
-      actions: [
-        AppBarAction(
-          icon: Icons.close,
-          onActionTap: onActionCancel,
-        ),
-        AppBarAction(
-          icon: Icons.done,
-          onActionTap: onActionConfirm,
-        ),
-      ],
+  static Widget composeLeading(Function onActionBack) {
+    return BackArrowAppBarLeading(
+      onLeadingTap: onActionBack,
     );
+  }
+
+  static List<Widget> composeActions(Function onActionCancel, Function onActionConfirm) {
+    return [
+      AppBarAction(
+        icon: Icons.close,
+        onActionTap: onActionCancel,
+      ),
+      AppBarAction(
+        icon: Icons.done,
+        onActionTap: onActionConfirm,
+      ),
+    ];
   }
 
 }
