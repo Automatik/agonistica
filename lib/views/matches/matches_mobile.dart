@@ -51,7 +51,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = widget.viewModel.getAppBarTitle();
     if(isEditEnabled) {
-      return PlatformAppBars.getPlatformAppBarForMatchesViewInEditMode(title, () => onActionBack(context), onActionCancel, () => onActionConfirm(context));
+      return EditModeMatchesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context), onActionCancel: onActionCancel, onActionConfirm: () => onActionConfirm(context));
     } else {
       return PlatformAppBars.getPlatformAppBarForMatchesViewInViewMode(title, () => onActionBack(context), onActionEditPress);
     }
