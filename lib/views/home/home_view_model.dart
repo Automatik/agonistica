@@ -74,6 +74,9 @@ class HomeViewModel extends BaseViewModel {
   Future<void> onOtherPlayersTap(BuildContext context, int index) async {
     Menu menu = _otherMenus[index];
     setAppBarTitle(menu.name);
+
+    // Get the current season
+    _appStateService.selectedSeason = await _databaseService.seasonService.getCurrentSeason();
     navigateToCategoriesView(context, menu.categoriesIds);
   }
 
