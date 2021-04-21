@@ -51,9 +51,6 @@ class _TeamLabelState extends State<TeamLabel> {
               teamText = seasonTeam.getTeamName();
             });
             widget.onTeamChange(seasonTeam);
-            //TODO Vedere se il close dialog piazzarlo qui o nel callback in PlayerDetailLayout
-            // close dialog
-            // Navigator.of(context).pop();
           }
         }
       },
