@@ -12,14 +12,15 @@ class ScrollScaffoldWidget extends StatefulWidget {
 
   final _baseScaffoldService = locator<BaseScaffoldService>();
   final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) childBuilder;
-  final String title, previousWidgetTitle;
+  final String title;
+  final PlatformAppBar platformAppBar;
   final bool showAppBar;
   final bool showBottomBar;
 
   ScrollScaffoldWidget({
     this.childBuilder,
     this.title = defaultAppBarTitle,
-    this.previousWidgetTitle,
+    this.platformAppBar,
     this.showAppBar = true,
     this.showBottomBar = true,
   });
@@ -35,7 +36,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
   Widget build(BuildContext context) {
 
     return PlatformScaffold(
-      appBar: widget.showAppBar ? PlatformAppBars.getPlatformAppBar(widget.title) : null,
+      appBar: chooseAppBar(),
       body: Builder(
           builder: (BuildContext innerContext) {
             widget._baseScaffoldService.scaffoldContext = innerContext;
@@ -64,6 +65,19 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
           }
       ),
     );
+  }
+
+  Widget chooseAppBar() {
+    if(!widget.showAppBar) {
+      return null;
+    }
+    if(widget.platformAppBar != null) {
+      return widget.platformAppBar;
+    }
+    if(widget.title != null) {
+      return PlatformAppBars.getPlatformAppBar(widget.title);
+    }
+    return null;
   }
 
 }

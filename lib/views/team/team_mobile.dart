@@ -31,7 +31,6 @@ class _TeamMobileState extends State<_TeamMobile> {
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
-      showAppBar: true,
       initialIndex: _tabIndex,
       platformAppBar: PlatformAppBars.getPlatformAppBarWithAddAction(widget.viewModel.getWidgetTitle(), () {
         // on add action pressed

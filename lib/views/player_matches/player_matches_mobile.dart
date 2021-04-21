@@ -8,7 +8,6 @@ class _PlayerMatchesMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
-      showAppBar: true,
       initialIndex: TabScaffoldWidget.ROSTER_VIEW_INDEX,
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => viewModel.onBottomBarItemChanged(context, index),

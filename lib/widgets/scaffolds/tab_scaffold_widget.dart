@@ -17,7 +17,6 @@ class TabScaffoldWidget extends StatefulWidget {
 
   final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) childBuilder;
   final String title;
-  final bool showAppBar;
   final int initialIndex;
   final PlatformAppBar platformAppBar;
   final Function(int) onBottomItemChanged;
@@ -26,7 +25,6 @@ class TabScaffoldWidget extends StatefulWidget {
 
   TabScaffoldWidget({
     this.title,
-    this.showAppBar,
     this.initialIndex,
     this.platformAppBar,
     this.childBuilder,

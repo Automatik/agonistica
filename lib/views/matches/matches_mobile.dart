@@ -35,7 +35,6 @@ class _MatchesMobileState extends State<_MatchesMobile> {
   @override
   Widget build(BuildContext context) {
     return TabScaffoldWidget(
-      showAppBar: true,
       initialIndex: TabScaffoldWidget.MATCHES_VIEW_INDEX,
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) {
