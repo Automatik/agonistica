@@ -26,9 +26,10 @@ class _CategoriesMobile extends StatelessWidget {
             minWidth: sizingInformation.screenSize.width,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
+                margin: EdgeInsets.only(top: marginTop),
                 alignment: Alignment.center,
                 child: Text(
                   'Categorie seguite',
