@@ -11,6 +11,9 @@ class InputValidation {
   static const String MESSAGE_TEAM_EMPTY = "Inserire un nome di squadra";
   static const String MESSAGE_TEAM_TOO_LONG = "Nome di squadra troppo lungo";
   static const String MESSAGE_TEAM_NOT_VALID = "Inserire un nome di squadra valido";
+  static const String MESSAGE_CATEGORY_EMPTY = "Inserire un nome di categoria";
+  static const String MESSAGE_CATEGORY_TOO_LONG = "Nome di categoria troppo lungo";
+  static const String MESSAGE_CATEGORY_NOT_VALID = "Inserire un nome di categoria valido";
   static const String MESSAGE_RESULT_EMPTY = "Inserire un risultato";
   static const String MESSAGE_RESULT_NOT_VALID = "Inserire un risultato valido";
   static const String MESSAGE_LEAGUE_MATCH_EMPTY = "Inserire una giornata";
@@ -47,6 +50,16 @@ class InputValidation {
     if(isPersonSurname(value))
       return null; //Everything is ok
     return MESSAGE_SURNAME_NOT_VALID;
+  }
+
+  static String validateCategoryName(String value) {
+    if(value.isEmpty)
+      return MESSAGE_CATEGORY_EMPTY;
+    if(value.length > _MAX_CHARS)
+      return MESSAGE_CATEGORY_TOO_LONG;
+    if(isCategoryName(value))
+      return null; //Everything is ok
+    return MESSAGE_CATEGORY_NOT_VALID;
   }
 
   static String validateTeamName(String value) {
@@ -116,6 +129,26 @@ class InputValidation {
       multiLine: false,
     );
     return regExp.hasMatch(surname);
+  }
+
+  /// Valid for categories like
+  /// Juniores
+  /// Juniores Regionali
+  /// Juniores Regionali A
+  /// Juniores Regionali A Girone B
+  /// Jun
+  /// Juni Re
+  /// But not for categories like
+  /// Ju
+  /// J
+  /// Ju Re
+  static bool isCategoryName(String category) {
+    RegExp regExp = RegExp(
+      r"^([a-zòàèé]{3,30})(\s?'?-?[a-zòàèé]{1,30}){0,6}?$",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return regExp.hasMatch(category);
   }
 
   static bool isTeamName(String team) {

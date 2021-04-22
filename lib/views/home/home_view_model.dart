@@ -58,6 +58,8 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> onMainButtonTap(BuildContext context) async {
     setAppBarTitle(_mainMenu.name);
+    // Set menu selected
+    _appStateService.selectedMenu = _mainMenu;
     // Get the team corresponding to this menu
     Team team = await _databaseService.teamService.getItemById(_mainMenu.teamId);
     _appStateService.selectedTeam = team;
@@ -73,6 +75,7 @@ class HomeViewModel extends BaseViewModel {
 
   Future<void> onOtherPlayersTap(BuildContext context, int index) async {
     Menu menu = _otherMenus[index];
+    _appStateService.selectedMenu = menu;
     setAppBarTitle(menu.name);
 
     // Get the current season

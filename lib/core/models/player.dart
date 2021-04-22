@@ -35,11 +35,11 @@ class Player {
     seasonPlayersIds = p.seasonPlayersIds;
   }
 
-  void addSeasonPlayer(String seasonPlayerId) async {
+  void addSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
   }
 
-  void removeSeasonPlayer(String seasonPlayerId) async {
+  void removeSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
   }
 

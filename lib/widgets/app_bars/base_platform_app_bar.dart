@@ -1,3 +1,4 @@
+import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/app_bar_actions/app_bar_leading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -11,7 +12,20 @@ class BasePlatformAppBar extends PlatformAppBar {
     @required title,
     this.leading,
     this.actions,
-  }) : super(title: title, material: (_, __) => composeMaterialData(leading, actions) );
+  }) : super(
+      backgroundColor: appBarBackgroundColor,
+      title: composeTitle(title),
+      material: (_, __) => composeMaterialData(leading, actions)
+  );
+
+  static Widget composeTitle(String title) {
+    return Text(
+      title,
+      style: TextStyle(
+        color: blueAgonisticaColor,
+      ),
+    );
+  }
 
   static Widget chooseLeading(Widget leading) {
     return leading == null ? defaultLeading() : leading;

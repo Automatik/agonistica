@@ -10,7 +10,7 @@ class _CategoriesMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScrollScaffoldWidget(
       showAppBar: true,
-      title: viewModel.getAppBarTitle(),
+      platformAppBar: getPlatformAppBar(context),
       childBuilder: (context, sizingInformation, parentSizingInformation) {
 
         double titleFontSize = sizingInformation.isPortrait() ? 24 : 20;
@@ -82,4 +82,26 @@ class _CategoriesMobile extends StatelessWidget {
       },
     );
   }
+
+  PlatformAppBar getPlatformAppBar(BuildContext context) {
+    return AddActionPlatformAppBar(
+      title: viewModel.getAppBarTitle(),
+      onActionTap: () => onActionAdd(context),
+    );
+  }
+
+  void onActionAdd(BuildContext context) {
+    final dialog = InsertCategoryDialog(
+      validateCategoryName: (categoryName) async {
+        return await viewModel.validateNewCategory(categoryName);
+        },
+      onSubmit: (categoryName)  {
+        viewModel.createNewCategory(categoryName);
+        // close dialog
+        Navigator.of(context).pop();
+      }
+    );
+    dialog.showInsertCategoryDialog(context);
+  }
+
 }

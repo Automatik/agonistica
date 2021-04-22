@@ -57,4 +57,22 @@ class CategoriesViewModel extends BaseViewModel {
     );
   }
 
+  Future<void> onFollowedCategoryLongTap(int index) {
+    Category category = _menuCategories[index];
+
+  }
+
+  /// Check if no other category exist with this name (within that menu)
+  Future<bool> validateNewCategory(String categoryName) async {
+    List<String> categories = _menuCategories.map((e) => e.name);
+    return categories.contains(categoryName);
+  }
+
+  Future<void> createNewCategory(String categoryName) async {
+    Category category = Category.name(categoryName);
+    await _databaseService.menuService.addCategoryToMenu(category, _appStateService.selectedMenu);
+    _menuCategories.add(category);
+    notifyListeners();
+  }
+
 }

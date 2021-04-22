@@ -1,4 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
+import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class Menu {
@@ -43,6 +44,14 @@ class Menu {
     Menu menu = Menu._create(name, type);
     menu.categoriesIds = categoriesIds;
     return menu;
+  }
+
+  void addCategory(String categoryId) {
+    categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
+  }
+
+  void removeCategory(String categoryId) {
+    categoriesIds = DbUtils.removeFromList(categoriesIds, categoryId);
   }
 
   Map<String, dynamic> toJson() {
