@@ -1,6 +1,7 @@
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/widgets/popups/player_item_popup_menu.dart';
 import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/player_item_edit_dialog.dart';
@@ -12,9 +13,6 @@ const double ICON_SIZE = 20;
 const double ICON_HORIZ_MARGIN = 2.5;
 
 class PlayerItem extends StatelessWidget {
-
-  static const int VIEW_PLAYER_CARD = 1;
-  static const int DELETE_PLAYER = 2;
 
   final MatchPlayerData matchPlayer;
   final bool isLeftOrientation;
@@ -71,29 +69,8 @@ class PlayerItem extends StatelessWidget {
     if(!shouldShowMenu()) {
       return;
     }
-    double left = offset.dx;
-    double top = offset.dy;
-    int value = await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(left, top, left+1, top+1),
-      elevation: 8.0,
-      items: [
-        PopupMenuItem(
-          value: VIEW_PLAYER_CARD,
-          child: PopupMenuItemTile(
-            text: "Scheda Giocatore",
-            iconData: PlatformIcons(context).person,
-          ),
-        ),
-        PopupMenuItem(
-          value: DELETE_PLAYER,
-          child: PopupMenuItemTile(
-            text: "Elimina",
-            iconData: PlatformIcons(context).delete,
-          ),
-        ),
-      ]
-    );
+    final playerItemPopupMenu = PlayerItemPopupMenu(offset: offset);
+    int value = await playerItemPopupMenu.showPopupMenu(context);
     selectLongClickAction(value);
   }
 
@@ -103,8 +80,8 @@ class PlayerItem extends StatelessWidget {
 
   void selectLongClickAction(int value) {
     switch(value) {
-      case VIEW_PLAYER_CARD: onViewPlayerCardCallback(matchPlayer); break;
-      case DELETE_PLAYER: onDeleteCallback(matchPlayer); break;
+      case PlayerItemPopupMenu.VIEW_PLAYER_CARD: onViewPlayerCardCallback(matchPlayer); break;
+      case PlayerItemPopupMenu.DELETE_PLAYER: onDeleteCallback(matchPlayer); break;
       default: return;
     }
   }

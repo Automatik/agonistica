@@ -15,10 +15,7 @@ class _TeamMobile extends StatefulWidget {
 
 class _TeamMobileState extends State<_TeamMobile> {
 
-  static const int VIEW_MATCH_CARD = 0;
-  static const int VIEW_PLAYER_CARD = 1;
-  static const int DELETE_MATCH_CARD = 2;
-  static const int DELETE_PLAYER_CARD = 3;
+
 
   int _tabIndex;
 
@@ -134,58 +131,30 @@ class _TeamMobileState extends State<_TeamMobile> {
   }
 
   Future<void> onMatchLongPress(BuildContext context, Offset offset, int index) async {
-    await onItemLongPress(context, offset, index, VIEW_MATCH_CARD, DELETE_MATCH_CARD);
+    await onItemLongPress(context, offset, index, TeamViewPopupMenu.VIEW_MATCH_CARD, TeamViewPopupMenu.DELETE_MATCH_CARD);
   }
 
   Future<void> onRosterLongPress(BuildContext context, Offset offset, int index) async {
-    await onItemLongPress(context, offset, index, VIEW_PLAYER_CARD, DELETE_PLAYER_CARD);
+    await onItemLongPress(context, offset, index, TeamViewPopupMenu.VIEW_PLAYER_CARD, TeamViewPopupMenu.DELETE_PLAYER_CARD);
   }
 
   Future<void> onItemLongPress(BuildContext context, Offset offset, int index, int viewItemValue, int deleteItemValue) async {
-    double left = offset.dx;
-    double top = offset.dy;
-    _ItemTileObject viewTileObject = selectItemTileObject(viewItemValue);
-    _ItemTileObject deleteTileObject = selectItemTileObject(deleteItemValue);
-    int value = await showMenu(
-        context: context,
-        position: RelativeRect.fromLTRB(left, top, left+1, top+1),
-        items: [
-          PopupMenuItem(
-              value: viewItemValue,
-              child: PopupMenuItemTile(
-                text: viewTileObject.text,
-                iconData: viewTileObject.icon,
-              )
-          ),
-          PopupMenuItem(
-              value: deleteItemValue,
-              child: PopupMenuItemTile(
-                text: deleteTileObject.text,
-                iconData: deleteTileObject.icon,
-              )
-          ),
-        ]
+    final popupMenu = TeamViewPopupMenu(
+      offset: offset,
+      itemValues: [viewItemValue, deleteItemValue]
     );
+
+    int value = await popupMenu.showPopupMenu(context);
     selectLongClickAction(context, value, index);
   }
 
   void selectLongClickAction(BuildContext context, int choice, int index) {
     switch(choice) {
-      case VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index); break;
-      case VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index); break;
-      case DELETE_MATCH_CARD: widget.viewModel.deleteMatch(index); break;
-      case DELETE_PLAYER_CARD: widget.viewModel.deletePlayer(index); break;
+      case TeamViewPopupMenu.VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index); break;
+      case TeamViewPopupMenu.VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index); break;
+      case TeamViewPopupMenu.DELETE_MATCH_CARD: widget.viewModel.deleteMatch(index); break;
+      case TeamViewPopupMenu.DELETE_PLAYER_CARD: widget.viewModel.deletePlayer(index); break;
       default: return;
-    }
-  }
-
-  _ItemTileObject selectItemTileObject(int value) {
-    switch(value) {
-      case VIEW_MATCH_CARD: return _ItemTileObject("Scheda Partita", PlatformIcons(context).forward);
-      case VIEW_PLAYER_CARD: return _ItemTileObject("Scheda Giocatore", PlatformIcons(context).person);
-      case DELETE_MATCH_CARD:
-      case DELETE_PLAYER_CARD: return _ItemTileObject("Elimina", PlatformIcons(context).delete);
-      default: throw ArgumentException("Value not found");
     }
   }
 

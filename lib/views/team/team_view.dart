@@ -10,6 +10,7 @@ import 'package:agonistica/widgets/base/base_widget.dart';
 import 'package:agonistica/views/teams/match_review.dart';
 import 'package:agonistica/views/teams/player_review.dart';
 import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
+import 'package:agonistica/widgets/popups/team_view_popup_menu.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
