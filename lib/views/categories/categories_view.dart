@@ -3,6 +3,7 @@ library categories_view;
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
 import 'package:agonistica/widgets/dialogs/insert_category_dialog.dart';
+import 'package:agonistica/widgets/popups/category_view_popup_menu.dart';
 import 'package:agonistica/widgets/scaffolds/scroll_scaffold_widget.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';

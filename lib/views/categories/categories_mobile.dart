@@ -51,6 +51,7 @@ class _CategoriesMobile extends StatelessWidget {
                   itemBuilder: (BuildContext listContext, int index) {
                     return GestureDetector(
                       onTap: () => viewModel.onFollowedCategoryTap(context, index),
+                      onLongPressStart: (longPressDetails) => onItemLongPress(context, longPressDetails.globalPosition, index),
                       child: Container(
                         margin: EdgeInsets.only(top: 30),
 //                          height: 35,
@@ -102,6 +103,19 @@ class _CategoriesMobile extends StatelessWidget {
       }
     );
     dialog.showInsertCategoryDialog(context);
+  }
+
+  Future<void> onItemLongPress(BuildContext context, Offset offset, int index) async {
+    final popupMenu = CategoryViewPopupMenu(offset: offset);
+    int value = await popupMenu.showPopupMenu(context);
+    selectLongClickAction(value, index);
+  }
+
+  void selectLongClickAction(int value, int index) {
+    switch(value) {
+      case CategoryViewPopupMenu.DELETE_CATEGORY: viewModel.onFollowedCategoryLongTap(index); break;
+      default: return;
+    }
   }
 
 }
