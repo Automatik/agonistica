@@ -9,17 +9,26 @@ class FollowedPlayersService extends CrudService<FollowedPlayers> {
       : super(databaseReference, FollowedPlayersRepository(databaseReference));
 
   Future<bool> isPlayerFollowed(String playerId, {String followedPlayersId}) async {
-    if(followedPlayersId == null || followedPlayersId.isEmpty) {
+    if(followedPlayersId != null && followedPlayersId.isNotEmpty) {
       FollowedPlayers followedPlayers = await getItemById(followedPlayersId);
       return followedPlayers.playersIds.contains(playerId);
     }
+    String followedPlayersIdTemp = await findPlayerIdInFollowedPlayers(playerId);
+    bool isPlayerFollowed = followedPlayersIdTemp != null;
+    return isPlayerFollowed;
+  }
+
+  Future<String> findPlayerIdInFollowedPlayers(String playerId) async {
     List<FollowedPlayers> followedPlayersList = await getAllItems();
-    for(FollowedPlayers followedTeams in followedPlayersList) {
-      if(followedTeams.playersIds.contains(playerId)) {
-        return true;
+    int i = 0;
+    while(i < followedPlayersList.length) {
+      FollowedPlayers followedPlayers = followedPlayersList[i];
+      if(followedPlayers.playersIds.contains(playerId)) {
+        return followedPlayers.id;
       }
+      i++;
     }
-    return false;
+    return null;
   }
 
   Future<void> followPlayer(FollowedPlayers followedPlayers, String playerId) async {

@@ -1,9 +1,11 @@
-import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/repositories/category_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
+import 'package:agonistica/core/services/match_service.dart';
+import 'package:agonistica/core/services/player_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
+import 'package:agonistica/core/services/team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class CategoryService extends CrudService<Category> {
@@ -26,11 +28,19 @@ class CategoryService extends CrudService<Category> {
   }
 
   @override
-  Future<void> deleteItem(String itemId) async {
-    throw NotImplementedYetException("Deleting a category means removing all "
-        "items that belong to this category");
-    // await super.deleteItem(itemId);
-  }
+  Future<void> deleteItem(String categoryId) async {
+    // Delete players in this category
+    PlayerService playerService = PlayerService(databaseReference);
+    await playerService.deletePlayersInCategory(categoryId);
+    // Delete matches in this category
+    MatchService matchService = MatchService(databaseReference);
+    await matchService.deleteMatchesInCategory(categoryId);
+    // Delete teams in this category
+    TeamService teamService = TeamService(databaseReference);
+    await teamService.deleteTeamsInCategory(categoryId);
 
+    // Delete category
+    await super.deleteItem(categoryId);
+  }
 
 }

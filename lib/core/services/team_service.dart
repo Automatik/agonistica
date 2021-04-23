@@ -1,9 +1,11 @@
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
+import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/team_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
+import 'package:agonistica/core/services/followed_teams_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -64,10 +66,30 @@ class TeamService extends CrudService<Team> {
     }
 
     //TODO Unfollow team (get user' followedTeams and then call followedTeams.unFollow)
+    FollowedTeamsService followedTeamsService = FollowedTeamsService(databaseReference);
+    String followedTeamsId = await followedTeamsService.findTeamIdInFollowedTeams(teamId);
+    bool isPlayerFollowed = followedTeamsId != null;
+    if(isPlayerFollowed) {
+      FollowedTeams followedTeams = await followedTeamsService.getItemById(followedTeamsId);
+      await followedTeamsService.unFollowTeam(followedTeams, teamId);
+    }
 
     //TODO If it's a followed team remove the relative menu
 
     return super.deleteItem(teamId);
+  }
+
+  Future<void> deleteTeamsInCategory(String categoryId) async {
+    List<Team> teams = await getAllItems();
+    SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+    teams.forEach((t) async {
+      List<SeasonTeam> seasonTeams = await seasonTeamService.getItemsByIds(t.seasonTeamsIds);
+      await seasonTeamService.deleteSeasonTeamsInCategory(seasonTeams, categoryId);
+      // TODO Delete team if there are no more seasonTeams?
+      // if(seasonTeams.length <= 1) {
+      //   await deleteItem(t.id);
+      // }
+    });
   }
 
   Future<void> deleteSeasonTeamFromTeam(String seasonTeamId, Team team) async {

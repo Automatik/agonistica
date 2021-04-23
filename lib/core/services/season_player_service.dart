@@ -161,6 +161,14 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     });
   }
 
+  Future<void> deleteSeasonPlayersInCategory(List<SeasonPlayer> seasonPlayers, String categoryId) async {
+    seasonPlayers.forEach((sp) async {
+      if(sp.categoryId == categoryId) {
+        await deleteItem(sp.id);
+      }
+    });
+  }
+
   /// Delete a match's id from the season player's matchesIds list
   Future<void> deleteMatchFromSeasonPlayer(SeasonPlayer seasonPlayer, String matchId) async {
     // Remove match id from matchesIds

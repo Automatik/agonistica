@@ -174,8 +174,11 @@ class MatchService extends CrudService<Match> {
     // Delete match id from players
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
     match.playersData.map((p) => p.seasonPlayerId).forEach((id) async {
-      SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(id);
-      await seasonPlayerService.deleteMatchFromSeasonPlayer(seasonPlayer, matchId);
+      bool seasonPlayerExists = await seasonPlayerService.itemExists(id);
+      if(seasonPlayerExists) {
+        SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(id);
+        await seasonPlayerService.deleteMatchFromSeasonPlayer(seasonPlayer, matchId);
+      }
     });
 
     // Delete match
@@ -200,6 +203,13 @@ class MatchService extends CrudService<Match> {
   Future<void> deleteSeasonPlayerFromMatch(Match match, String seasonPlayerId) async {
     match.playersData.removeWhere((mp) => mp.seasonPlayerId == seasonPlayerId);
     await super.saveItem(match);
+  }
+
+  Future<void> deleteMatchesInCategory(String categoryId) async {
+    List<Match> matches = await getAllItems();
+    matches.forEach((m) async {
+      await deleteItem(m.id);
+    });
   }
 
 }

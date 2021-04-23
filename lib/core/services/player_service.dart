@@ -1,9 +1,11 @@
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
+import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/repositories/player_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
+import 'package:agonistica/core/services/followed_players_service.dart';
 import 'package:agonistica/core/services/season_player_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -40,8 +42,28 @@ class PlayerService extends CrudService<Player> {
     }
 
     //TODO Unfollow player (get user' followedPlayers and then call followedPlayers.unFollow)
+    FollowedPlayersService followedPlayersService = FollowedPlayersService(databaseReference);
+    String followedPlayersId = await followedPlayersService.findPlayerIdInFollowedPlayers(playerId);
+    bool isPlayerFollowed = followedPlayersId != null;
+    if(isPlayerFollowed) {
+      FollowedPlayers followedPlayers = await followedPlayersService.getItemById(followedPlayersId);
+      await followedPlayersService.unFollowPlayer(followedPlayers, playerId);
+    }
 
     await super.deleteItem(playerId);
+  }
+
+  Future<void> deletePlayersInCategory(String categoryId) async {
+    List<Player> players = await getAllItems();
+    SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
+    players.forEach((p) async {
+      List<SeasonPlayer> seasonPlayers = await seasonPlayerService.getItemsByIds(p.seasonPlayersIds);
+      await seasonPlayerService.deleteSeasonPlayersInCategory(seasonPlayers, categoryId);
+      // TODO Delete player if there are no more seasonPlayers?
+      // if(seasonPlayers.length <= 1) {
+      //   await deleteItem(p.id);
+      // }
+    });
   }
 
   Future<void> addSeasonPlayerToPlayer(String seasonPlayerId, Player player) async {

@@ -130,6 +130,19 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     await super.deleteItem(seasonTeamId);
   }
 
+  Future<void> deleteSeasonTeamsInCategory(List<SeasonTeam> seasonTeams, String categoryId) async {
+    seasonTeams.forEach((st) async {
+          if(st.categoriesIds.contains(categoryId)) {
+            st.categoriesIds.remove(categoryId);
+            if(st.categoriesIds.length > 0) {
+              await super.saveItem(st);
+              return;
+            }
+            await deleteItem(st.id);
+          }
+    });
+  }
+
   /// Delete a player id from the team's playerIds list
   Future<void> deleteSeasonPlayerFromSeasonTeam(SeasonTeam seasonTeam, String seasonPlayerId) async {
     seasonTeam.removeSeasonPlayer(seasonPlayerId);

@@ -57,9 +57,11 @@ class CategoriesViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> onFollowedCategoryLongTap(int index) {
+  Future<void> onFollowedCategoryLongTap(int index) async {
     Category category = _menuCategories[index];
-
+    await _databaseService.categoryService.deleteItem(category.id);
+    // update view
+    notifyListeners();
   }
 
   /// Check if no other category exist with this name (within that menu)

@@ -14,17 +14,26 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
   // GET
 
   Future<bool> isTeamFollowed(String teamId, {String followedTeamsId}) async {
-    if(followedTeamsId == null || followedTeamsId.isEmpty) {
+    if(followedTeamsId != null && followedTeamsId.isNotEmpty) {
       FollowedTeams followedTeams = await getItemById(followedTeamsId);
       return followedTeams.teamsIds.contains(teamId);
     }
+    String followedTeamsIdTemp = await findTeamIdInFollowedTeams(teamId);
+    bool isTeamFollowed = followedTeamsIdTemp != null;
+    return isTeamFollowed;
+  }
+
+  Future<String> findTeamIdInFollowedTeams(String teamId) async {
     List<FollowedTeams> followedTeamsList = await getAllItems();
-    for(FollowedTeams followedTeams in followedTeamsList) {
+    int i = 0;
+    while(i < followedTeamsList.length) {
+      FollowedTeams followedTeams = followedTeamsList[i];
       if(followedTeams.teamsIds.contains(teamId)) {
-        return true;
+        return followedTeams.id;
       }
+      i++;
     }
-    return false;
+    return null;
   }
 
   Future<void> followTeam(FollowedTeams followedTeams, String teamId) async {
