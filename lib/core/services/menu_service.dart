@@ -22,8 +22,8 @@ class MenuService extends CrudService<Menu> {
     await saveItem(menu);
   }
 
-  Future<void> removeCategoryFromMenu(Category category, Menu menu) async {
-    menu.removeCategory(category.id);
+  Future<void> removeCategoryFromMenu(String categoryId, Menu menu) async {
+    menu.removeCategory(categoryId);
     await saveItem(menu);
   }
 
@@ -37,6 +37,15 @@ class MenuService extends CrudService<Menu> {
     List<Menu> menus = await getAllItems();
     menus.removeWhere((element) => element.name == mainRequestedTeam);
     return menus;
+  }
+
+  Future<Menu> findMenuWithCategory(String categoryId) async {
+    List<Menu> menus = await getAllItems();
+    int index = menus.indexWhere((element) => element.categoriesIds.contains(categoryId));
+    if(index != -1) {
+      return menus[index];
+    }
+    return null;
   }
 
   @override
