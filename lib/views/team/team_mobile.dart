@@ -159,12 +159,3 @@ class _TeamMobileState extends State<_TeamMobile> {
   }
 
 }
-
-class _ItemTileObject {
-
-  final String text;
-  final IconData icon;
-
-  _ItemTileObject(this.text, this.icon);
-
-}
