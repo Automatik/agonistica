@@ -6,6 +6,8 @@ import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -102,7 +104,8 @@ class PlayersViewModel extends BaseViewModel {
 
   Future<void> addNewPlayer(BuildContext context) async {
     bool isNewPlayer = true;
-    SeasonPlayer seasonPlayer = SeasonPlayer.newPlayer(_appStateService.selectedSeasonTeam, _appStateService.selectedCategory);
+    SeasonTeam seasonTeam = SeasonTeam.newTeam(Team.EMPTY_TEAM_NAME, _appStateService.selectedSeason.id);
+    SeasonPlayer seasonPlayer = SeasonPlayer.newPlayer(seasonTeam, _appStateService.selectedCategory);
     NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, _onPlayerDetailUpdate));
   }
 

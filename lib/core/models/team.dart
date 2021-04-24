@@ -3,6 +3,8 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class Team {
 
+  static const String EMPTY_TEAM_NAME = "Squadra";
+
   String id;
 
   String name;
