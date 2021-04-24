@@ -15,14 +15,12 @@ class ScrollScaffoldWidget extends StatefulWidget {
   final String title;
   final PlatformAppBar platformAppBar;
   final bool showAppBar;
-  final bool showBottomBar;
 
   ScrollScaffoldWidget({
     this.childBuilder,
     this.title = defaultAppBarTitle,
     this.platformAppBar,
     this.showAppBar = true,
-    this.showBottomBar = true,
   });
 
   @override
