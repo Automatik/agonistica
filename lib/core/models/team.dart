@@ -35,6 +35,14 @@ class Team {
     seasonTeamsIds = DbUtils.removeFromList(seasonTeamsIds, seasonTeamId);
   }
 
+  bool hasEmptyName() {
+    return isEmptyName(name);
+  }
+
+  static bool isEmptyName(String name) {
+    return name == EMPTY_TEAM_NAME;
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

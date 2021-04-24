@@ -4,6 +4,9 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class Player {
 
+  static const String EMPTY_PLAYER_NAME = "Nome";
+  static const String EMPTY_PLAYER_SURNAME = "Surname";
+
   String id;
   String name, surname;
 
@@ -19,8 +22,8 @@ class Player {
 
   Player.empty() {
     id = DbUtils.newUuid();
-    name = "Nome";
-    surname = "Cognome";
+    name = EMPTY_PLAYER_NAME;
+    surname = EMPTY_PLAYER_SURNAME;
     birthDay = DateTime.utc(2020, 1, 1);
     isRightHanded = true;
     seasonPlayersIds = List();
@@ -41,6 +44,22 @@ class Player {
 
   void removeSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
+  }
+
+  bool hasEmptyName() {
+    return isEmptyName(name);
+  }
+
+  bool hasEmptySurname() {
+    return isEmptySurname(surname);
+  }
+
+  static bool isEmptyName(String name) {
+    return name == EMPTY_PLAYER_NAME;
+  }
+
+  static bool isEmptySurname(String surname) {
+    return surname == EMPTY_PLAYER_SURNAME;
   }
 
   Map<String, dynamic> toJson() {

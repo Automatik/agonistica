@@ -1,3 +1,6 @@
+import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/team.dart';
+
 class InputValidation {
 
   static const String MESSAGE_SHIRT_EMPTY = "Inserire un numero di maglia";
@@ -33,7 +36,7 @@ class InputValidation {
   }
 
   static String validatePlayerName(String value) {
-    if(value.isEmpty)
+    if(value.isEmpty || Player.isEmptyName(value))
       return MESSAGE_NAME_EMPTY;
     if(value.length > _MAX_CHARS)
       return MESSAGE_NAME_TOO_LONG;
@@ -43,7 +46,7 @@ class InputValidation {
   }
 
   static String validatePlayerSurname(String value) {
-    if(value.isEmpty)
+    if(value.isEmpty || Player.isEmptySurname(value))
       return MESSAGE_SURNAME_EMPTY;
     if(value.length > _MAX_CHARS)
       return MESSAGE_SURNAME_TOO_LONG;
@@ -63,7 +66,7 @@ class InputValidation {
   }
 
   static String validateTeamName(String value) {
-    if(value.isEmpty)
+    if(value.isEmpty || Team.isEmptyName(value))
       return MESSAGE_TEAM_EMPTY;
     if(value.length > _MAX_CHARS)
       return MESSAGE_TEAM_TOO_LONG;

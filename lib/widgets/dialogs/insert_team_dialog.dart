@@ -1,4 +1,5 @@
 import 'package:agonistica/core/models/season_team.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
@@ -85,9 +86,19 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
   @override
   void initState() {
     super.initState();
-    textEditingController.text = widget.initialValue ?? "";
+    textEditingController.text = getTeamInitialValue();
     String pattern = "";
     loadSuggestions(pattern);
+  }
+
+  String getTeamInitialValue() {
+    if(widget.initialValue == null) {
+      return "";
+    }
+    if(widget.initialValue == Team.EMPTY_TEAM_NAME) {
+      return "";
+    }
+    return widget.initialValue;
   }
 
   @override
