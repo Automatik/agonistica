@@ -21,6 +21,7 @@ class PlayersViewModel extends BaseViewModel {
   List<SeasonPlayer> seasonPlayers;
 
   PlayersViewModel() {
+    seasonPlayers = [];
     loadItems();
   }
 
@@ -31,6 +32,12 @@ class PlayersViewModel extends BaseViewModel {
     // TODO replace with getting the user's followedPlayers
     // FollowedPlayers followedPlayers = _databaseService.followedPlayersService.getItemById();
     List<FollowedPlayers> followedPlayersList = await _databaseService.followedPlayersService.getAllItems();
+    if(followedPlayersList.isEmpty) {
+      // Do this because of missing initializer (remove when implementing user)
+      FollowedPlayers followedPlayers = FollowedPlayers.empty();
+      await _databaseService.followedPlayersService.saveItem(followedPlayers);
+      followedPlayersList.add(followedPlayers);
+    }
     FollowedPlayers followedPlayers = followedPlayersList[0];
 
     String categoryId = _appStateService.selectedCategory.id;

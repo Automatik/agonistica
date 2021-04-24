@@ -6,6 +6,7 @@ import 'package:agonistica/views/home/home_view.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/views/player_matches/player_matches_view.dart';
+import 'package:agonistica/views/players/players_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
               MatchesView.routeName: (context) => MatchesView(),
               RosterView.routeName: (context) => RosterView(),
               TeamView.routeName: (context) => TeamView(),
+              PlayersView.routeName: (context) => PlayersView(),
               PlayerMatchesView.routeName: (context) => PlayerMatchesView(),
               NotesView.routeName : (context) => NotesView(),
             },

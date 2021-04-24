@@ -1,5 +1,6 @@
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
+import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
@@ -89,6 +90,8 @@ class DatabaseService {
       await _initializeRequestedSeasonTeams(teams, teamsCategories, season);
       // Follow this teams
       await _initializeFollowedTeams(teams);
+      // Initialize FollowedPlayers (it will be empty)
+      await _initializeFollowedPlayers();
       // Create menus in HomeView
       List<Menu> menus = await _initializeMenus(teams[0].id);
       sharedPref.setBool(areItemsInitializedKey, true);
@@ -140,6 +143,11 @@ class DatabaseService {
     FollowedTeams followedTeams = FollowedTeams.empty();
     followedTeams.teamsIds = teams.map((e) => e.id).toList();
     await followedTeamsService.saveItem(followedTeams);
+  }
+
+  Future<void> _initializeFollowedPlayers() async {
+    FollowedPlayers followedPlayers = FollowedPlayers.empty();
+    await followedPlayersService.saveItem(followedPlayers);
   }
 
   Future<List<Menu>> _initializeMenus(String mainTeamId) async {
