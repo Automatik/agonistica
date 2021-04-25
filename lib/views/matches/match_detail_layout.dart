@@ -35,6 +35,7 @@ class MatchDetailLayout extends StatefulWidget {
   final Function(String) onTeamInserted;
   final Function(String, String, String) onPlayersSuggestionCallback;
   final Function(String) onViewPlayerCardCallback;
+  final Function(Match, MatchPlayerData) onInsertNotesCallback;
 
   MatchDetailLayout({
     @required this.match,
@@ -44,6 +45,7 @@ class MatchDetailLayout extends StatefulWidget {
     @required this.onTeamInserted,
     @required this.onPlayersSuggestionCallback,
     @required this.onViewPlayerCardCallback,
+    @required this.onInsertNotesCallback,
     this.maxWidth,
   }) : assert(match != null);
 
@@ -571,6 +573,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                   tempMatch.playersData.remove(matchPlayerData);
                 });
               },
+              onInsertNotesCallback: (matchPlayerData) =>  widget.onInsertNotesCallback(tempMatch, matchPlayerData),
             );
           } else {
             return PlayerItemsEmptyRow(

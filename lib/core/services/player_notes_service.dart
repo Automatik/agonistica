@@ -31,13 +31,31 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
     return playerMatchNotes;
   }
 
-  Future<String> findPlayerMatchNoteIdOfMatchFromList(List<String> playerMatchNotesIds, String matchId) async {
+  Future<PlayerMatchNotes> getPlayerMatchNotesByPlayer(String seasonPlayerId, String matchId) async {
+    // Get SeasonPlayer
+    SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
+    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(seasonPlayerId);
+
+    // Get season player's notes
+    List<PlayerMatchNotes> playerMatchNotes = await getPlayerNotesByPlayer(seasonPlayer);
+
+    // Find the notes corresponding to the given match
+    PlayerMatchNotes notes = findPlayerMatchNoteIdOfMatchFromNotes(playerMatchNotes, matchId);
+    return notes;
+  }
+
+  Future<String> findPlayerMatchNoteIdOfMatchFromIds(List<String> playerMatchNotesIds, String matchId) async {
     List<PlayerMatchNotes> playerMatchNotes = await getItemsByIds(playerMatchNotesIds);
+    PlayerMatchNotes notes = findPlayerMatchNoteIdOfMatchFromNotes(playerMatchNotes, matchId);
+    return notes.id;
+  }
+
+  PlayerMatchNotes findPlayerMatchNoteIdOfMatchFromNotes(List<PlayerMatchNotes> playerMatchNotes, String matchId) {
     int index = playerMatchNotes.indexWhere((element) => element.matchId == matchId);
     if(index == -1) {
       return null;
     }
-    return playerMatchNotes[index].id;
+    return playerMatchNotes[index];
   }
 
   // DELETE

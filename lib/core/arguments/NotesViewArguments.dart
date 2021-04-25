@@ -6,7 +6,8 @@ class NotesViewArguments {
   final PlayerMatchNotes notes;
   final Match match;
   final String playerName;
+  final String playerSurname;
 
-  NotesViewArguments(this.notes, this.match, this.playerName);
+  NotesViewArguments(this.notes, this.match, this.playerName, this.playerSurname);
 
 }

@@ -26,7 +26,7 @@ class PlayerMatchesView extends StatelessWidget {
     final PlayerMatchesViewArguments args = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<PlayerMatchesViewModel>.reactive(
-      viewModelBuilder: () => PlayerMatchesViewModel(args.playerId, args.playerName, args.addAction),
+      viewModelBuilder: () => PlayerMatchesViewModel(args.playerId, args.playerName, args.playerSurname, args.addAction),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

@@ -1,12 +1,9 @@
 import 'package:agonistica/core/models/match_player_data.dart';
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/popups/player_item_popup_menu.dart';
-import 'package:agonistica/widgets/popups/popup_menu_item_tile.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/player_item_edit_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const double ICON_SIZE = 20;
@@ -19,9 +16,10 @@ class PlayerItem extends StatelessWidget {
   final bool isEditEnabled;
   final bool Function(String, int) onPlayerValidation;
   final List<SeasonPlayer> Function(String, String) onPlayersSuggestionCallback;
-  final void Function(MatchPlayerData) onSaveCallback;
-  final void Function(MatchPlayerData) onViewPlayerCardCallback;
-  final void Function(MatchPlayerData) onDeleteCallback;
+  final Function(MatchPlayerData) onSaveCallback;
+  final Function(MatchPlayerData) onViewPlayerCardCallback;
+  final Function(MatchPlayerData) onDeleteCallback;
+  final Function(MatchPlayerData) onInsertNotesCallback;
 
   PlayerItem({
     @required this.matchPlayer,
@@ -32,6 +30,7 @@ class PlayerItem extends StatelessWidget {
     @required this.onSaveCallback,
     @required this.onViewPlayerCardCallback,
     @required this.onDeleteCallback,
+    @required this.onInsertNotesCallback,
   });
 
   @override
@@ -78,7 +77,7 @@ class PlayerItem extends StatelessWidget {
   }
 
   bool shouldShowMenu() {
-    return isEditEnabled && !matchPlayer.isEmptyPlayer();
+    return !matchPlayer.isEmptyPlayer();
   }
 
   List<int> getPopupMenuItemValues() {
@@ -87,6 +86,7 @@ class PlayerItem extends StatelessWidget {
       itemValues.add(PlayerItemPopupMenu.DELETE_PLAYER);
     } else {
       itemValues.add(PlayerItemPopupMenu.VIEW_PLAYER_CARD);
+      itemValues.add(PlayerItemPopupMenu.VIEW_NOTES_CARD);
     }
     return itemValues;
   }
@@ -95,6 +95,7 @@ class PlayerItem extends StatelessWidget {
     switch(value) {
       case PlayerItemPopupMenu.VIEW_PLAYER_CARD: onViewPlayerCardCallback(matchPlayer); break;
       case PlayerItemPopupMenu.DELETE_PLAYER: onDeleteCallback(matchPlayer); break;
+      case PlayerItemPopupMenu.VIEW_NOTES_CARD: onInsertNotesCallback(matchPlayer); break;
       default: return;
     }
   }

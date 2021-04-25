@@ -197,7 +197,7 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
     // Remove player match notes id from playerMatchNotesIds
     PlayerNotesService playerNotesService = PlayerNotesService(databaseReference);
     String playerMatchNotesId = await playerNotesService
-        .findPlayerMatchNoteIdOfMatchFromList(seasonPlayer.playerMatchNotesIds, matchId);
+        .findPlayerMatchNoteIdOfMatchFromIds(seasonPlayer.playerMatchNotesIds, matchId);
     if(playerMatchNotesId == null) {
       CrudService.logger.d("Should be ok if no playerMatchNote is found for the given match with id $matchId");
     } else {

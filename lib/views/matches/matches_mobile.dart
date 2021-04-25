@@ -66,6 +66,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       onTeamInserted: (teamId) => widget.viewModel.loadTeamPlayers(teamId),
       onPlayersSuggestionCallback: (namePattern, surnamePattern, teamId) => widget.viewModel.suggestPlayersByPattern(namePattern, surnamePattern, teamId),
       onViewPlayerCardCallback: (playerId) => widget.viewModel.viewPlayerCard(context, playerId),
+      onInsertNotesCallback: (match, matchPlayerData) => widget.viewModel.viewNotesCard(context, match, matchPlayerData),
       maxWidth: maxWidth,
     );
   }

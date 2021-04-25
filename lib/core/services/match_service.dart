@@ -40,10 +40,10 @@ class MatchService extends CrudService<Match> {
     // Create SeasonPlayer and Player objects from those players appearing for the first time in
     // a match, as MatchPlayerData objects, that do not exist yet
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    match.playersData.forEach((p) async {
+    for(MatchPlayerData p in match.playersData) {
       SeasonPlayer seasonPlayer = p.toSeasonPlayer(match.categoryId, match.seasonId);
       await seasonPlayerService.saveSeasonPlayerIfNotExists(seasonPlayer);
-    });
+    }
 
     await super.saveItem(match);
 

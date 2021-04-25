@@ -29,12 +29,13 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   final String seasonPlayerId;
   final String playerName;
+  final String playerSurname;
   final int addAction;
 
   SeasonPlayer seasonPlayer;
   List<MatchNotesObject> objects;
 
-  PlayerMatchesViewModel(this.seasonPlayerId, this.playerName, this.addAction){
+  PlayerMatchesViewModel(this.seasonPlayerId, this.playerName, this.playerSurname, this.addAction){
     objects = [];
     loadItems();
   }
@@ -117,7 +118,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
   Future<void> onPlayerMatchNotesClick(BuildContext context, MatchNotesObject object) async {
     Navigator.of(context).pushNamed(
       NotesView.routeName,
-      arguments: NotesViewArguments(object.notes, object.match, playerName),
+      arguments: NotesViewArguments(object.notes, object.match, playerName, playerSurname),
     );
   }
 
@@ -162,7 +163,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
   }
 
   String getAppBarTitle() {
-    return "Partite di $playerName";
+    return "Partite di $playerName $playerSurname";
   }
 
   bool showAddAction() {

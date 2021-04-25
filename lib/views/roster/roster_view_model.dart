@@ -81,7 +81,8 @@ class RosterViewModel extends BaseViewModel {
       PlayerMatchesView.routeName,
       arguments: PlayerMatchesViewArguments(
         seasonPlayer.id,
-        "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
+        seasonPlayer.getPlayerName(),
+        seasonPlayer.getPlayerSurname(),
         choosePlayerMatchesViewAddAction(),
       ),
     );

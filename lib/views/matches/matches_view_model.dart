@@ -1,14 +1,16 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/arguments/NotesViewArguments.dart';
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
-import 'package:agonistica/core/models/player.dart';
+import 'package:agonistica/core/models/match_player_data.dart';
+import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
-import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
+import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +110,17 @@ class MatchesViewModel extends BaseViewModel {
       bool isNewPlayer = false;
       NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, null));
     }
+  }
+
+  Future<void> viewNotesCard(BuildContext context, Match match, MatchPlayerData matchPlayerData) async {
+    PlayerMatchNotes notes = await _databaseService.playerNotesService.getPlayerMatchNotesByPlayer(matchPlayerData.seasonPlayerId, match.id);
+    if(notes == null) {
+      notes = PlayerMatchNotes(match.id, matchPlayerData.seasonPlayerId);
+    }
+    Navigator.of(context).pushNamed(
+      NotesView.routeName,
+      arguments: NotesViewArguments(notes, match, matchPlayerData.name, matchPlayerData.surname),
+    );
   }
 
   String getAppBarTitle() {

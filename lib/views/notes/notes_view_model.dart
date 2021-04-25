@@ -15,8 +15,9 @@ class NotesViewModel extends BaseViewModel {
   final PlayerMatchNotes notes;
   final Match match;
   final String playerName;
+  final String playerSurname;
 
-  NotesViewModel(this.notes, this.match, this.playerName);
+  NotesViewModel(this.notes, this.match, this.playerName, this.playerSurname);
 
   void onBottomBarItemChanged(BuildContext context, int index) {
 
@@ -37,7 +38,7 @@ class NotesViewModel extends BaseViewModel {
   }
 
   String getAppBarTitle() {
-    return "Note di $playerName";
+    return "Note di $playerName $playerSurname";
   }
 
 }

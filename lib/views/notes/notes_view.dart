@@ -27,7 +27,7 @@ class NotesView extends StatelessWidget {
     final NotesViewArguments args = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<NotesViewModel>.reactive(
-      viewModelBuilder: () => NotesViewModel(args.notes, args.match, args.playerName),
+      viewModelBuilder: () => NotesViewModel(args.notes, args.match, args.playerName, args.playerSurname),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

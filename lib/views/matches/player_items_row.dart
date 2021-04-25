@@ -1,5 +1,4 @@
 import 'package:agonistica/core/models/match_player_data.dart';
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/matches/player_item.dart';
@@ -13,9 +12,10 @@ class PlayerItemsRow extends StatelessWidget {
   final bool isEditEnabled;
   final bool Function(String, int, bool) onPlayerValidation;
   final List<SeasonPlayer> Function(String, String, bool) onPlayerSuggestionCallback;
-  final void Function(MatchPlayerData, bool) onSaveCallback;
-  final void Function(MatchPlayerData) onViewPlayerCardCallback;
-  final void Function(MatchPlayerData, bool) onDeleteCallback;
+  final Function(MatchPlayerData, bool) onSaveCallback;
+  final Function(MatchPlayerData) onViewPlayerCardCallback;
+  final Function(MatchPlayerData, bool) onDeleteCallback;
+  final Function(MatchPlayerData) onInsertNotesCallback;
 
   PlayerItemsRow({
     @required this.homePlayer,
@@ -27,6 +27,7 @@ class PlayerItemsRow extends StatelessWidget {
     @required this.onSaveCallback,
     @required this.onViewPlayerCardCallback,
     @required this.onDeleteCallback,
+    @required this.onInsertNotesCallback,
   });
 
   @override
@@ -61,6 +62,7 @@ class PlayerItemsRow extends StatelessWidget {
                 bool isHomePlayer = true;
                 onDeleteCallback(matchPlayerData, isHomePlayer);
               },
+              onInsertNotesCallback: onInsertNotesCallback,
             ),
           ),
           Expanded(
@@ -83,6 +85,7 @@ class PlayerItemsRow extends StatelessWidget {
                 bool isHomePlayer = false;
                 onDeleteCallback(matchPlayerData, isHomePlayer);
               },
+              onInsertNotesCallback: onInsertNotesCallback,
             ),
           )
         ],

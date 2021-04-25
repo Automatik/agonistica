@@ -8,6 +8,7 @@ class PlayerItemPopupMenu extends PopupMenu {
 
   static const int VIEW_PLAYER_CARD = 1;
   static const int DELETE_PLAYER = 2;
+  static const int VIEW_NOTES_CARD = 3;
 
   PlayerItemPopupMenu({offset, itemValues})
       : super(offset: offset, itemValues: itemValues);
@@ -17,6 +18,7 @@ class PlayerItemPopupMenu extends PopupMenu {
     switch(value) {
       case VIEW_PLAYER_CARD: return ItemTileObject("Scheda Giocatore", PlatformIcons(context).person);
       case DELETE_PLAYER: return ItemTileObject("Elimina", PlatformIcons(context).delete);
+      case VIEW_NOTES_CARD: return ItemTileObject("Inserisci note", Icons.assignment_rounded);
       default: throw ArgumentException("Value not found");
     }
   }
