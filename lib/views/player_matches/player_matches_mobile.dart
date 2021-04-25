@@ -33,6 +33,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
                   child: MatchNotesElement(
                     object: object,
                     onTap: () => viewModel.onPlayerMatchNotesClick(context, object),
+                    onSettingsTap: (tapDownDetails) => onPlayerMatchNotesSettingsClick(context, object, tapDownDetails.globalPosition),
                     width: itemsWidth,
                     minHeight: 50,
                   ),
@@ -66,6 +67,15 @@ class _PlayerMatchesMobile extends StatelessWidget {
 
   void onActionAdd(BuildContext context) {
     viewModel.addNewMatch(context);
+  }
+
+  Future<void> onPlayerMatchNotesSettingsClick(BuildContext context, MatchNotesObject object, Offset offset) async {
+    final popupMenu = PlayerMatchesViewPopupMenu(
+      offset: offset,
+      itemValues: viewModel.getPopupMenuItemValues()
+    );
+    int value = await popupMenu.showPopupMenu(context);
+    await viewModel.onPopupMenuItemSelected(context, value, object);
   }
 
 }

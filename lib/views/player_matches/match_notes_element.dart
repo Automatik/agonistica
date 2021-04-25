@@ -10,6 +10,7 @@ class MatchNotesElement extends StatelessWidget {
 
   final MatchNotesObject object;
   final Function onTap;
+  final Function(TapDownDetails) onSettingsTap;
   final double minHeight;
   final double width;
 
@@ -20,6 +21,7 @@ class MatchNotesElement extends StatelessWidget {
   MatchNotesElement({
     this.object,
     this.onTap,
+    this.onSettingsTap,
     this.minHeight,
     this.width,
   });
@@ -71,9 +73,12 @@ class MatchNotesElement extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                  child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                GestureDetector(
+                  onTapDown: onSettingsTap,
+                  child: Container(
+                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
+                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+                  ),
                 )
               ],
             ),
