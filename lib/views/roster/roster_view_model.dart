@@ -1,9 +1,11 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
+import 'package:agonistica/views/player_matches/player_matches_view_model.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/views/player_matches/player_matches_view.dart';
@@ -16,6 +18,7 @@ class RosterViewModel extends BaseViewModel {
   SeasonPlayer seasonPlayer;
   final Function(SeasonPlayer) onPlayerDetailUpdate;
 
+  final _appStateService = locator<AppStateService>();
   final _databaseService = locator<DatabaseService>();
 
   List<SeasonTeam> seasonTeams;
@@ -76,8 +79,20 @@ class RosterViewModel extends BaseViewModel {
   Future<void> navigateToPlayerMatchesNotes(BuildContext context) async {
     Navigator.of(context).pushNamed(
       PlayerMatchesView.routeName,
-      arguments: PlayerMatchesViewArguments(seasonPlayer.id, "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}"),
+      arguments: PlayerMatchesViewArguments(
+        seasonPlayer.id,
+        "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
+        choosePlayerMatchesViewAddAction(),
+      ),
     );
+  }
+
+  int choosePlayerMatchesViewAddAction() {
+    if(_appStateService.isTeamMenu()) {
+      return PlayerMatchesViewModel.HIDE_ADD_ACTION;
+    }
+    // is players menu
+    return PlayerMatchesViewModel.SHOW_ADD_ACTION;
   }
 
   String getAppBarTitle() {

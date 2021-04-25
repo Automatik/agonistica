@@ -1,6 +1,8 @@
 library player_matches_view;
 
 import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
+import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
+import 'package:agonistica/widgets/app_bars/player_matches_view_actions_plaftorm_app_bar.dart';
 import 'package:agonistica/widgets/app_bars/player_matches_view_platform_app_bar.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/player_matches/match_notes_element.dart';
@@ -23,7 +25,7 @@ class PlayerMatchesView extends StatelessWidget {
     final PlayerMatchesViewArguments args = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<PlayerMatchesViewModel>.reactive(
-      viewModelBuilder: () => PlayerMatchesViewModel(args.playerId, args.playerName),
+      viewModelBuilder: () => PlayerMatchesViewModel(args.playerId, args.playerName, args.addAction),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

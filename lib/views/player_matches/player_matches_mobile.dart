@@ -47,11 +47,24 @@ class _PlayerMatchesMobile extends StatelessWidget {
 
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     String title = viewModel.getAppBarTitle();
-    return PlayerMatchesViewPlatformAppBar(title: title, onActionBack: () => onActionBack(context));
+    if(viewModel.showAddAction()) {
+      return PlayerMatchesViewActionsPlatformAppBar(
+        title: title,
+        onActionBack: () => onActionBack(context),
+        onActionTap: onActionTap,);
+    }
+    return PlayerMatchesViewPlatformAppBar(
+        title: title,
+        onActionBack: () => onActionBack(context)
+    );
   }
 
   void onActionBack(BuildContext context) {
     Navigator.of(context).pop();
+  }
+
+  void onActionTap() {
+
   }
 
 }

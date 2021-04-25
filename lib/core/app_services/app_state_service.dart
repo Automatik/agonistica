@@ -12,4 +12,12 @@ class AppStateService {
   SeasonTeam selectedSeasonTeam;
   Season selectedSeason;
 
+  bool isTeamMenu() {
+    return selectedMenu.type == Menu.TYPE_FOLLOWED_TEAMS;
+  }
+
+  bool isPlayersMenu() {
+    return selectedMenu.type == Menu.TYPE_FOLLOWED_PLAYERS;
+  }
+
 }

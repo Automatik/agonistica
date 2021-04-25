@@ -14,15 +14,19 @@ import 'package:stacked/stacked.dart';
 
 class PlayerMatchesViewModel extends BaseViewModel {
 
+  static const int SHOW_ADD_ACTION = 0;
+  static const int HIDE_ADD_ACTION = 1;
+
   final _databaseService = locator<DatabaseService>();
 
   final String seasonPlayerId;
   final String playerName;
+  final int addAction;
 
   SeasonPlayer seasonPlayer;
   List<MatchNotesObject> objects;
 
-  PlayerMatchesViewModel(this.seasonPlayerId, this.playerName){
+  PlayerMatchesViewModel(this.seasonPlayerId, this.playerName, this.addAction){
     objects = [];
     loadItems();
   }
@@ -93,6 +97,10 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   String getAppBarTitle() {
     return "Partite di $playerName";
+  }
+
+  bool showAddAction() {
+    return addAction == SHOW_ADD_ACTION;
   }
 
 }
