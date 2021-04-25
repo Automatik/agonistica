@@ -116,8 +116,7 @@ class TeamViewModel extends BaseViewModel {
       return;
     }
     Match match = matches[index];
-    bool isNewMatch = false;
-    NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
+    NavUtils.navToMatchDetail(context, match, _onMatchDetailUpdate);
   }
 
   Future<void> openPlayerDetail(BuildContext context, int index) async {
@@ -126,22 +125,19 @@ class TeamViewModel extends BaseViewModel {
       return;
     }
     SeasonPlayer seasonPlayer = seasonPlayers[index];
-    bool isNewPlayer = false;
-    NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, _onPlayerDetailUpdate));
+    NavUtils.navToPlayerDetail(context, seasonPlayer, _onPlayerDetailUpdate);
   }
 
   Future<void> addNewMatch(BuildContext context) async {
-    bool isNewMatch = true;
     String categoryId = _appStateService.selectedCategory.id;
     String seasonId = _appStateService.selectedSeason.id;
-    Match match = Match.empty(categoryId, seasonId);
-    NavUtils.navToMatchesView(context, MatchesViewArguments(isNewMatch, match, _onMatchDetailUpdate));
+    NavUtils.navToNewMatch(context, categoryId, seasonId, _onMatchDetailUpdate);
   }
 
   Future<void> addNewPlayer(BuildContext context) async {
-    bool isNewPlayer = true;
-    SeasonPlayer seasonPlayer = SeasonPlayer.newPlayer(_appStateService.selectedSeasonTeam, _appStateService.selectedCategory);
-    NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, _onPlayerDetailUpdate));
+    SeasonTeam seasonTeam = _appStateService.selectedSeasonTeam;
+    Category category = _appStateService.selectedCategory;
+    NavUtils.navToNewPlayer(context, seasonTeam, category, _onPlayerDetailUpdate);
   }
 
   Future<void> deleteMatch(int index) async {

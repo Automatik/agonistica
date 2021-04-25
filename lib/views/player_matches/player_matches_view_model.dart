@@ -1,15 +1,19 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/NotesViewArguments.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
 import 'package:agonistica/core/locator.dart';
+import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/views/player_matches/match_notes_object.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class PlayerMatchesViewModel extends BaseViewModel {
@@ -17,6 +21,9 @@ class PlayerMatchesViewModel extends BaseViewModel {
   static const int SHOW_ADD_ACTION = 0;
   static const int HIDE_ADD_ACTION = 1;
 
+  static Logger _logger = getLogger('PlayerMatchesViewModel');
+
+  final _appStateService = locator<AppStateService>();
   final _databaseService = locator<DatabaseService>();
 
   final String seasonPlayerId;
@@ -50,28 +57,43 @@ class PlayerMatchesViewModel extends BaseViewModel {
       final notes = await _databaseService.playerNotesService.getPlayerNotesByPlayer(seasonPlayer);
 
       // Combine matches with notes in the objects list
-      objects = [];
-      for(Match match in matches) {
-
-        MatchNotesObject object;
-
-        int index = notes.indexWhere((n) => n.matchId == match.id);
-        if(index != -1) {
-          // a note exists for this match
-          PlayerMatchNotes note = notes.removeAt(index);
-          object = MatchNotesObject(match, note);
-        } else {
-          // a note does not exist for this match
-          PlayerMatchNotes note = PlayerMatchNotes(match.id, seasonPlayerId);
-          object = MatchNotesObject(match, note);
-        }
-        objects.add(object);
-      }
+      objects = createObjects(matches, notes);
 
     }
 
     //Let other views to render again
     setBusy(false);
+    notifyListeners();
+  }
+
+  List<MatchNotesObject> createObjects(List<Match> matches, List<PlayerMatchNotes> notes) {
+    List<MatchNotesObject> objs = [];
+    matches.forEach((match) {
+      MatchNotesObject object;
+
+      int index = notes.indexWhere((n) => n.matchId == match.id);
+      if(index != -1) {
+        // a note exists for this match
+        PlayerMatchNotes note = notes.removeAt(index);
+        object = MatchNotesObject(match, note);
+      } else {
+        // a note does not exist for this match
+        PlayerMatchNotes note = PlayerMatchNotes(match.id, seasonPlayerId);
+        object = MatchNotesObject(match, note);
+      }
+      objs.add(object);
+    });
+    return objs;
+  }
+
+  void _onPlayerMatchesDetailUpdate(Match match) {
+    _logger.d("PlayerMatchesModel/onMatchDetailUpdate");
+    List<MatchNotesObject> newObjects = createObjects([match], []);
+    objects.addAll(newObjects);
+    _updateView();
+  }
+
+  void _updateView() {
     notifyListeners();
   }
 
@@ -93,6 +115,12 @@ class PlayerMatchesViewModel extends BaseViewModel {
       NotesView.routeName,
       arguments: NotesViewArguments(object.notes, object.match, playerName),
     );
+  }
+
+  Future<void> addNewMatch(BuildContext context) async {
+    String categoryId = _appStateService.selectedCategory.id;
+    String seasonId = _appStateService.selectedSeason.id;
+    NavUtils.navToNewMatch(context, categoryId, seasonId, _onPlayerMatchesDetailUpdate);
   }
 
   String getAppBarTitle() {

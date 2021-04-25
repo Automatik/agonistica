@@ -1,6 +1,10 @@
 import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
 import 'package:agonistica/core/arguments/RosterViewArguments.dart';
 import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/models/category.dart';
+import 'package:agonistica/core/models/match.dart';
+import 'package:agonistica/core/models/season_player.dart';
+import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
@@ -8,6 +12,28 @@ import 'package:agonistica/widgets/dialogs/tab_leaving_dialog.dart';
 import 'package:flutter/material.dart';
 
 class NavUtils {
+
+  static Future<void> navToNewMatch(BuildContext context, String categoryId, String seasonId, Function(Match) onMatchDetailUpdate) async {
+    bool isNewMatch = true;
+    Match match = Match.empty(categoryId, seasonId);
+    navToMatchesView(context, MatchesViewArguments(isNewMatch, match, onMatchDetailUpdate));
+  }
+
+  static Future<void> navToNewPlayer(BuildContext context, SeasonTeam seasonTeam, Category category, Function(SeasonPlayer) onPlayerDetailUpdate) async {
+    bool isNewPlayer = true;
+    SeasonPlayer seasonPlayer = SeasonPlayer.newPlayer(seasonTeam, category);
+    navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, onPlayerDetailUpdate));
+  }
+
+  static Future<void> navToMatchDetail(BuildContext context, Match match, Function(Match) onMatchDetailUpdate) async {
+    bool isNewMatch = false;
+    navToMatchesView(context, MatchesViewArguments(isNewMatch, match, onMatchDetailUpdate));
+  }
+
+  static Future<void> navToPlayerDetail(BuildContext context, SeasonPlayer seasonPlayer, Function(SeasonPlayer) onPlayerDetailUpdate) async {
+    bool isNewPlayer = false;
+    navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, onPlayerDetailUpdate));
+  }
 
   static Future<void> navToRosterView(BuildContext context, RosterViewArguments args) async {
     await Navigator.pushNamed(

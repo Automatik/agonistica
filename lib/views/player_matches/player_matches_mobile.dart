@@ -51,7 +51,8 @@ class _PlayerMatchesMobile extends StatelessWidget {
       return PlayerMatchesViewActionsPlatformAppBar(
         title: title,
         onActionBack: () => onActionBack(context),
-        onActionTap: onActionTap,);
+        onActionTap: () => onActionAdd(context),
+      );
     }
     return PlayerMatchesViewPlatformAppBar(
         title: title,
@@ -63,8 +64,8 @@ class _PlayerMatchesMobile extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
-  void onActionTap() {
-
+  void onActionAdd(BuildContext context) {
+    viewModel.addNewMatch(context);
   }
 
 }
