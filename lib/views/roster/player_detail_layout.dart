@@ -171,6 +171,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validatePlayerSurname(surnameTextController.text);
     if(errorMessage != null) return errorMessage;
+    errorMessage = InputValidation.validateTeamName(tempSeasonPlayer.getSeasonTeam().getTeamName());
+    if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validateInteger(heightTextController.text);
     if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validateInteger(weightTextController.text);

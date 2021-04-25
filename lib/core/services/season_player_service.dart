@@ -46,6 +46,13 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
       }
     }
 
+    // if the player's team doesn't exist, create it
+    bool teamExists = await seasonTeamService.itemExists(seasonPlayer.seasonTeamId);
+    if(!teamExists) {
+      SeasonTeam seasonTeam = seasonPlayer.getSeasonTeam();
+      await seasonTeamService.saveItem(seasonTeam);
+    }
+
     await super.saveItem(seasonPlayer);
 
     // insert or update team's playerIds
