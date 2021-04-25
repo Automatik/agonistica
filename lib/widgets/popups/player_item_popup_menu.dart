@@ -10,7 +10,7 @@ class PlayerItemPopupMenu extends PopupMenu {
   static const int DELETE_PLAYER = 2;
 
   PlayerItemPopupMenu({offset, itemValues})
-      : super(offset: offset, itemValues: [VIEW_PLAYER_CARD, DELETE_PLAYER]);
+      : super(offset: offset, itemValues: itemValues);
 
   @override
   ItemTileObject selectItemTileObject(BuildContext context, int value) {

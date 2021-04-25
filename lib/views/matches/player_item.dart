@@ -69,13 +69,26 @@ class PlayerItem extends StatelessWidget {
     if(!shouldShowMenu()) {
       return;
     }
-    final playerItemPopupMenu = PlayerItemPopupMenu(offset: offset);
+    final playerItemPopupMenu = PlayerItemPopupMenu(
+      offset: offset,
+      itemValues: getPopupMenuItemValues()
+    );
     int value = await playerItemPopupMenu.showPopupMenu(context);
     selectLongClickAction(value);
   }
 
   bool shouldShowMenu() {
     return isEditEnabled && !matchPlayer.isEmptyPlayer();
+  }
+
+  List<int> getPopupMenuItemValues() {
+    List<int> itemValues = [];
+    if(isEditEnabled) {
+      itemValues.add(PlayerItemPopupMenu.DELETE_PLAYER);
+    } else {
+      itemValues.add(PlayerItemPopupMenu.VIEW_PLAYER_CARD);
+    }
+    return itemValues;
   }
 
   void selectLongClickAction(int value) {
