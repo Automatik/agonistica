@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/models/followed_players.dart';
@@ -12,7 +14,7 @@ import 'package:firebase_database/firebase_database.dart';
 class PlayerService extends CrudService<Player> {
 
   PlayerService(DatabaseReference databaseReference)
-    : super(databaseReference, PlayerRepository(databaseReference));
+    : super(databaseReference, PlayerRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<void> createPlayerFromSeasonPlayer(SeasonPlayer seasonPlayer) async {
     bool playerExists = await itemExists(seasonPlayer.playerId);

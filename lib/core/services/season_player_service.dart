@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -16,7 +18,7 @@ import 'package:firebase_database/firebase_database.dart';
 class SeasonPlayerService extends CrudService<SeasonPlayer> {
 
   SeasonPlayerService(DatabaseReference databaseReference)
-    : super(databaseReference, SeasonPlayerRepository(databaseReference));
+    : super(databaseReference, SeasonPlayerRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 

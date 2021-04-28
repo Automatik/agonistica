@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class PlayerRepository extends CrudRepository<Player> {
 
-  PlayerRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebasePlayersChild);
+  PlayerRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebasePlayersChild, firebaseUserId: firebaseUserId);
 
   @override
   Map<String, dynamic> itemToJson(Player t) {

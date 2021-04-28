@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/followed_teams_repository.dart';
@@ -8,7 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 class FollowedTeamsService extends CrudService<FollowedTeams> {
 
   FollowedTeamsService(DatabaseReference databaseReference)
-    : super(databaseReference, FollowedTeamsRepository(databaseReference));
+    : super(databaseReference, FollowedTeamsRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
 
   // GET

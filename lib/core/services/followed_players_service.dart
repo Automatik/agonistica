@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/repositories/followed_players_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
@@ -6,7 +8,7 @@ import 'package:firebase_database/firebase_database.dart';
 class FollowedPlayersService extends CrudService<FollowedPlayers> {
 
   FollowedPlayersService(DatabaseReference databaseReference)
-      : super(databaseReference, FollowedPlayersRepository(databaseReference));
+      : super(databaseReference, FollowedPlayersRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<bool> isPlayerFollowed(String playerId, {String followedPlayersId}) async {
     if(followedPlayersId != null && followedPlayersId.isNotEmpty) {

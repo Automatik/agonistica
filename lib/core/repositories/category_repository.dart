@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class CategoryRepository extends CrudRepository<Category>{
 
-  CategoryRepository(DatabaseReference databaseReference)
-      : super(databaseReference, DatabaseService.firebaseCategoriesChild);
+  CategoryRepository(DatabaseReference databaseReference, String firebaseUserId)
+      : super(databaseReference, DatabaseService.firebaseCategoriesChild, firebaseUserId: firebaseUserId);
 
   @override
   Map<String, dynamic> itemToJson(Category t) {

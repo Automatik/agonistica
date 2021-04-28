@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season_team.dart';
@@ -13,7 +15,7 @@ import 'package:firebase_database/firebase_database.dart';
 class CategoryService extends CrudService<Category> {
 
   CategoryService(DatabaseReference databaseReference)
-      : super(databaseReference, CategoryRepository(databaseReference));
+      : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
 
   /// Get the team's categories

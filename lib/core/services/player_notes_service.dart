@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/repositories/player_notes_repository.dart';
@@ -8,7 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 class PlayerNotesService extends CrudService<PlayerMatchNotes> {
 
   PlayerNotesService(DatabaseReference databaseReference)
-    : super(databaseReference, PlayerNotesRepository(databaseReference));
+    : super(databaseReference, PlayerNotesRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 

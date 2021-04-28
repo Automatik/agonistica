@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
@@ -12,7 +14,7 @@ import 'package:firebase_database/firebase_database.dart';
 class TeamService extends CrudService<Team> {
 
   TeamService(DatabaseReference databaseReference)
-    : super(databaseReference, TeamRepository(databaseReference));
+    : super(databaseReference, TeamRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 

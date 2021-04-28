@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/menu.dart';
@@ -10,7 +12,7 @@ import 'package:firebase_database/firebase_database.dart';
 class MenuService extends CrudService<Menu> {
 
   MenuService(DatabaseReference databaseReference)
-    : super(databaseReference, MenuRepository(databaseReference));
+    : super(databaseReference, MenuRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<void> addCategoryToMenu(Category category, Menu menu) async {
 

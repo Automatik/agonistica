@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class SeasonTeamRepository extends CrudRepository<SeasonTeam> {
 
-  SeasonTeamRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebaseSeasonTeamsChild);
+  SeasonTeamRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebaseSeasonTeamsChild, firebaseUserId: firebaseUserId);
 
 
 

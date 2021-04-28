@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
@@ -13,7 +15,7 @@ import 'package:firebase_database/firebase_database.dart';
 class MatchService extends CrudService<Match> {
 
   MatchService(DatabaseReference databaseReference)
-    : super(databaseReference, MatchRepository(databaseReference));
+    : super(databaseReference, MatchRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 

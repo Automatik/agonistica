@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_team.dart';
@@ -14,7 +16,7 @@ import 'package:firebase_database/firebase_database.dart';
 class SeasonTeamService extends CrudService<SeasonTeam> {
 
   SeasonTeamService(DatabaseReference databaseReference)
-    : super(databaseReference, SeasonTeamRepository(databaseReference));
+    : super(databaseReference, SeasonTeamRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 

@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class SeasonPlayerRepository extends CrudRepository<SeasonPlayer> {
 
-  SeasonPlayerRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebaseSeasonPlayersChild);
+  SeasonPlayerRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebaseSeasonPlayersChild, firebaseUserId: firebaseUserId);
 
   @override
   Map<String, dynamic> itemToJson(SeasonPlayer t) {

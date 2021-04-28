@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class MenuRepository extends CrudRepository<Menu> {
 
-  MenuRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebaseMenusChild);
+  MenuRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebaseMenusChild, firebaseUserId: firebaseUserId);
   
   @override
   Map<String, dynamic> itemToJson(Menu t) {

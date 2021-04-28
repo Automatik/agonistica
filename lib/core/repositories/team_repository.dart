@@ -6,8 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class TeamRepository extends CrudRepository<Team> {
 
-  TeamRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebaseTeamsChild);
+  TeamRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebaseTeamsChild, firebaseUserId: firebaseUserId);
 
   // SET
 

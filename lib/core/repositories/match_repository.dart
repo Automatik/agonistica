@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class MatchRepository extends CrudRepository<Match> {
 
-  MatchRepository(DatabaseReference databaseReference)
-    : super(databaseReference, DatabaseService.firebaseMatchesChild);
+  MatchRepository(DatabaseReference databaseReference, String firebaseUserId)
+    : super(databaseReference, DatabaseService.firebaseMatchesChild, firebaseUserId: firebaseUserId);
 
   @override
   Map<String, dynamic> itemToJson(Match t) {

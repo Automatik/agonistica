@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
@@ -9,7 +11,7 @@ import 'package:firebase_database/firebase_database.dart';
 class SeasonService extends CrudService<Season> {
 
   SeasonService(DatabaseReference databaseReference)
-    : super(databaseReference, SeasonRepository(databaseReference));
+    : super(databaseReference, SeasonRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   @override
   Future<void> saveItem(Season item) async {

@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 
 class FollowedTeamsRepository extends CrudRepository<FollowedTeams> {
 
-  FollowedTeamsRepository(DatabaseReference databaseReference)
-      : super(databaseReference, DatabaseService.firebaseFollowedTeamsChild);
+  FollowedTeamsRepository(DatabaseReference databaseReference, String firebaseUserId)
+      : super(databaseReference, DatabaseService.firebaseFollowedTeamsChild, firebaseUserId: firebaseUserId);
 
   @override
   Map<String, dynamic> itemToJson(FollowedTeams t) {
