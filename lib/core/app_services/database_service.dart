@@ -25,7 +25,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DatabaseService {
 
   static const String firebaseUsersChild = "users";
-  static const String firebasePermissionsChild = "permissions";
   static const String firebaseTeamsChild = "teams";
   static const String firebaseMenusChild = "menus";
   static const String firebaseSeasonsChild = "seasons";
@@ -37,6 +36,9 @@ class DatabaseService {
   static const String firebasePlayersNotesChild = "playersNotes";
   static const String firebaseFollowedPlayersChild = "followedPlayers";
   static const String firebaseFollowedTeamsChild = "followedTeams";
+  // store here the app users ids to avoid granting users full access to "users" directory
+  // users_ids has as keys the firebase auth user id and as value the app user id
+  static const String firebaseUsersIdsChild = "users_ids";
 
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 

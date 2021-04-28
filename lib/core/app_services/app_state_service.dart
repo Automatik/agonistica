@@ -1,3 +1,4 @@
+import 'package:agonistica/core/models/app_user.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
@@ -11,6 +12,7 @@ class AppStateService {
   Category selectedCategory;
   SeasonTeam selectedSeasonTeam;
   Season selectedSeason;
+  AppUser selectedAppUser;
 
   bool isTeamMenu() {
     return selectedMenu.type == Menu.TYPE_FOLLOWED_TEAMS;
