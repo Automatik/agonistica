@@ -1,6 +1,6 @@
 library team_view;
 
-import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';

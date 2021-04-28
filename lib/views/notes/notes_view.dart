@@ -1,6 +1,6 @@
 library notes_view;
 
-import 'package:agonistica/core/arguments/NotesViewArguments.dart';
+import 'package:agonistica/core/arguments/notes_view_arguments.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';

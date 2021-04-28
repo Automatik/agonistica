@@ -1,4 +1,4 @@
-import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';

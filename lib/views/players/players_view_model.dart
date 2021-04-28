@@ -1,6 +1,6 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
-import 'package:agonistica/core/arguments/RosterViewArguments.dart';
+import 'package:agonistica/core/arguments/roster_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';

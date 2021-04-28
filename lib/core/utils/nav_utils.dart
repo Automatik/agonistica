@@ -1,6 +1,6 @@
-import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
-import 'package:agonistica/core/arguments/RosterViewArguments.dart';
-import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/arguments/matches_view_arguments.dart';
+import 'package:agonistica/core/arguments/roster_view_arguments.dart';
+import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/season_player.dart';

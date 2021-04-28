@@ -1,5 +1,5 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
-import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
+import 'package:agonistica/core/arguments/player_matches_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_player.dart';

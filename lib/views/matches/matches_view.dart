@@ -1,6 +1,6 @@
 library matches_view;
 
-import 'package:agonistica/core/arguments/MatchesViewArguments.dart';
+import 'package:agonistica/core/arguments/matches_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';

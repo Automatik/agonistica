@@ -1,6 +1,6 @@
 library player_matches_view;
 
-import 'package:agonistica/core/arguments/PlayerMatchesViewArguments.dart';
+import 'package:agonistica/core/arguments/player_matches_view_arguments.dart';
 import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
 import 'package:agonistica/widgets/app_bars/player_matches_view_actions_plaftorm_app_bar.dart';
 import 'package:agonistica/widgets/app_bars/player_matches_view_platform_app_bar.dart';

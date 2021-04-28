@@ -1,6 +1,6 @@
 library roster_view;
 
-import 'package:agonistica/core/arguments/RosterViewArguments.dart';
+import 'package:agonistica/core/arguments/roster_view_arguments.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:agonistica/widgets/app_bars/edit_mode_roster_view_platform_app_bar.dart';

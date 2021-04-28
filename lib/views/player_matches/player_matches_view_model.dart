@@ -1,6 +1,6 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
-import 'package:agonistica/core/arguments/NotesViewArguments.dart';
-import 'package:agonistica/core/arguments/TeamViewArguments.dart';
+import 'package:agonistica/core/arguments/notes_view_arguments.dart';
+import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
