@@ -6,7 +6,9 @@ import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/services/app_user_service.dart';
 import 'package:agonistica/core/services/category_service.dart';
+import 'package:agonistica/core/services/firebase_auth_user_service.dart';
 import 'package:agonistica/core/services/followed_players_service.dart';
 import 'package:agonistica/core/services/followed_teams_service.dart';
 import 'package:agonistica/core/services/match_service.dart';
@@ -18,6 +20,7 @@ import 'package:agonistica/core/services/season_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,10 +43,16 @@ class DatabaseService {
   // users_ids has as keys the firebase auth user id and as value the app user id
   static const String firebaseUsersIdsChild = "users_ids";
 
+  static const bool REQUIRE_EMAIL_VERIFICATION = true;
+
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
+
+  final _firebaseAuth = FirebaseAuth.instance;
 
   static Logger _logger = getLogger('DatabaseService');
 
+  AppUserService _appUserService;
+  FirebaseAuthUserService _firebaseAuthUserService;
   CategoryService _categoryService;
   FollowedPlayersService _followedPlayersService;
   FollowedTeamsService _followedTeamsService;
@@ -57,11 +66,17 @@ class DatabaseService {
   TeamService _teamService;
 
   Future<void> initialize() async {
-    await _initializeServices();
+    await _initializeAuthServices();
+    // await _initializeDataServices(); do it after login or if the selectedAppUser.id is known
     await _initializeData();
   }
 
-  Future<void> _initializeServices() async {
+  Future<void> _initializeAuthServices() async {
+    _appUserService = AppUserService(_databaseReference);
+    _firebaseAuthUserService = FirebaseAuthUserService(_firebaseAuth, _databaseReference);
+  }
+
+  Future<void> _initializeDataServices() async {
     _categoryService = CategoryService(_databaseReference);
     _followedPlayersService = FollowedPlayersService(_databaseReference);
     _followedTeamsService = FollowedTeamsService(_databaseReference);
@@ -188,4 +203,9 @@ class DatabaseService {
   SeasonTeamService get seasonTeamService => _seasonTeamService;
 
   TeamService get teamService => _teamService;
+
+  AppUserService get appUserService => _appUserService;
+
+  FirebaseAuthUserService get firebaseAuthUserService => _firebaseAuthUserService;
+
 }

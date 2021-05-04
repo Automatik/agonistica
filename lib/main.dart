@@ -3,6 +3,7 @@ import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';
+import 'package:agonistica/views/login/login_view.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
 import 'package:agonistica/views/player_matches/player_matches_view.dart';
@@ -49,8 +50,9 @@ class MyApp extends StatelessWidget {
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               )
             ),
-            initialRoute: '/home',
+            initialRoute: navigateToFirstRoute(),
             routes: {
+              LoginView.routeName: (context) => LoginView(),
               HomeView.routeName: (context) => HomeView(),
               CategoriesView.routeName: (context) => CategoriesView(),
               MatchesView.routeName: (context) => MatchesView(),
@@ -65,4 +67,9 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+  String navigateToFirstRoute() {
+    return LoginView.routeName;
+  }
+
 }

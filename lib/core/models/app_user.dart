@@ -9,10 +9,12 @@ class AppUser {
   String email;
   bool isEmailVerified;
 
-  AppUser() {
-    id = DbUtils.newUuid();
-  }
+  AppUser._() {} // private constructor
 
+  /// The id is generated from the FirebaseAuthUser because the latter is created first
+  AppUser(String id) {
+    this.id = id;
+  }
 
   Map<String, dynamic> toJson()  {
     checkRequiredFields();

@@ -40,4 +40,13 @@ class DbUtils {
     return values;
   }
 
+  static String getDisplayNameFromEmail(String email) {
+    String sep = "@";
+    if(email.contains(sep)) {
+      List<String> splits = email.split(sep);
+      return splits[0];
+    }
+    return email;
+  }
+
 }
