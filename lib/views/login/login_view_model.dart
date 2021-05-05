@@ -97,7 +97,7 @@ class LoginViewModel extends BaseViewModel {
   Future<void> onSubmitAnimationCompleted(BuildContext context) async {
     switch(currentAction) {
       case SIGN_UP_ACTION:
-        // Reload LoginView to wait for email validation
+        // Reload LoginView to wait for email validation (NON NECESSARIO CON NUOVA VERSIONE DI flutter_login utilizzando parametro loginAfterSignUp)
         await Navigator.of(context).pushReplacementNamed(LoginView.routeName);
         break;
       case LOGIN_ACTION:

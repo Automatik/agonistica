@@ -14,6 +14,29 @@ class _LoginMobile extends StatelessWidget {
       onLogin: (data) => viewModel.loginUser(data),
       onRecoverPassword: (name) => viewModel.recoverPassword(name),
       onSubmitAnimationCompleted: () => viewModel.onSubmitAnimationCompleted(context),
+      emailValidator: (email) => InputValidation.validateEmail(email),
+      passwordValidator: (psw) => InputValidation.validatePassword(psw),
+      messages: LoginMessages(
+        usernameHint: "Email",
+        passwordHint: "Password",
+        confirmPasswordHint: "Conferma",
+        loginButton: "ACCEDI",
+        signupButton: "REGISTRATI",
+        forgotPasswordButton: "Password dimenticata?",
+        recoverPasswordButton: "RIPRISTINA",
+        goBackButton: "INDIETRO",
+        confirmPasswordError: "Non uguali!",
+        recoverPasswordIntro: "Ripristina qui la tua password",
+        recoverPasswordDescription: "Sarà inviata una email contenente un link per il ripristino della password di questo account",
+        recoverPasswordSuccess: "Email inviata con successo",
+      ),
+      theme: LoginTheme(
+        primaryColor: blueAgonisticaColor,
+        accentColor: blueLightAgonisticaColor,
+        titleStyle: TextStyle(
+          color: Colors.white
+        )
+      ),
     );
   }
 

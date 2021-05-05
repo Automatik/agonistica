@@ -1,4 +1,6 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/app_user.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -51,6 +53,7 @@ class DatabaseService {
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 
   final _firebaseAuth = FirebaseAuth.instance;
+  final _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('DatabaseService');
 
@@ -79,13 +82,25 @@ class DatabaseService {
 
   /// Call this after the user has logged in or if the user is already signed in
   Future<void> initializeUser() async {
+    AppUser appUser = await fetchAppUser();
+    _appStateService.selectedAppUser = appUser;
     await _initializeDataServices();
-    await _initializeData();
+    await _initializeData(appUser);
   }
 
   Future<void> _initializeAuthServices() async {
     _appUserService = AppUserService(_databaseReference);
     _firebaseAuthUserService = FirebaseAuthUserService(_firebaseAuth, _databaseReference);
+  }
+
+  Future<AppUser> fetchAppUser() async {
+    String userId = await PrefsUtils.getUserId();
+    bool userExists = await _appUserService.itemExists(userId);
+    if(!userExists) {
+      throw NotFoundException("User with id $userId not found in database.");
+    }
+    AppUser appUser = await _appUserService.getItemById(userId);
+    return appUser;
   }
 
   Future<void> _initializeDataServices() async {
@@ -102,14 +117,8 @@ class DatabaseService {
     _teamService = TeamService(_databaseReference);
   }
 
-  Future<void> _initializeData() async {
+  Future<void> _initializeData(AppUser appUser) async {
     // Initialize database if needed with requested teams and categories
-    String userId = await PrefsUtils.getUserId();
-    bool userExists = await _appUserService.itemExists(userId);
-    if(!userExists) {
-      throw NotFoundException("User with id $userId not found in database.");
-    }
-    AppUser appUser = await _appUserService.getItemById(userId);
     if(!appUser.areItemsInitialized) {
       // Create categories for the main menu
       List<Category> categories = await _initializeCategories();

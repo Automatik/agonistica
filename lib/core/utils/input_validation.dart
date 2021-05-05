@@ -22,9 +22,36 @@ class InputValidation {
   static const String MESSAGE_LEAGUE_MATCH_EMPTY = "Inserire una giornata";
   static const String MESSAGE_LEAGUE_MATCH_NOT_VALID = "Inserire una giornata valida";
   static const String MESSAGE_INTEGERS_NOT_VALID = "Inserire valori interi validi";
+  static const String MESSAGE_EMAIL_EMPTY = "Inserire una email";
+  static const String MESSAGE_EMAIL_TOO_LONG = "Email troppo lunga";
+  static const String MESSAGE_EMAIL_NOT_VALID = "Inserire una email valida";
+  static const String MESSAGE_PASSWORD_EMPTY = "Inserire una password";
+  static const String MESSAGE_PASSWORD_TOO_LONG = "Password troppo lunga";
+  static const String MESSAGE_PASSWORD_NOT_VALID = "Password deve essere almeno di 8 caratteri";
 
 
   static const int _MAX_CHARS = 50;
+  static const int _MIN_PSW_LEN = 8;
+
+  static String validateEmail(String value) {
+    if(value.isEmpty)
+      return MESSAGE_EMAIL_EMPTY;
+    if(value.length > _MAX_CHARS)
+      return MESSAGE_EMAIL_TOO_LONG;
+    if(isEmailCorrect(value))
+      return null;
+    return MESSAGE_EMAIL_NOT_VALID;
+  }
+
+  static String validatePassword(String value) {
+    if(value.isEmpty)
+      return MESSAGE_PASSWORD_EMPTY;
+    if(value.length > _MAX_CHARS)
+      return MESSAGE_PASSWORD_TOO_LONG;
+    if(value.length < _MIN_PSW_LEN)
+      return MESSAGE_PASSWORD_NOT_VALID;
+    return null;
+  }
 
   static String validatePlayerShirtNumber(String value) {
     if(value.isEmpty)
@@ -98,6 +125,15 @@ class InputValidation {
     if(value.isEmpty || isInteger(value))
       return null; //Everything ok
     return MESSAGE_INTEGERS_NOT_VALID;
+  }
+
+  static bool isEmailCorrect(String email) {
+    RegExp regExp = new RegExp(
+      r"^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    return regExp.hasMatch(email);
   }
 
   static bool isPersonName(String name) {
