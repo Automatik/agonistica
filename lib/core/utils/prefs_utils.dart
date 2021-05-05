@@ -29,4 +29,14 @@ class PrefsUtils {
     });
   }
 
+  static Future<bool> isUserSignedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(isLoggedKey) ?? false;
+  }
+
+  static Future<String> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(loginUserIdKey);
+  }
+
 }

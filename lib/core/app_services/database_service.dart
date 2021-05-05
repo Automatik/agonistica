@@ -1,4 +1,6 @@
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/logger.dart';
+import 'package:agonistica/core/models/app_user.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
@@ -20,6 +22,7 @@ import 'package:agonistica/core/services/season_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils/prefs_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:logger/logger.dart';
@@ -43,7 +46,7 @@ class DatabaseService {
   // users_ids has as keys the firebase auth user id and as value the app user id
   static const String firebaseUsersIdsChild = "users_ids";
 
-  static const bool REQUIRE_EMAIL_VERIFICATION = true;
+  static const bool REQUIRE_EMAIL_VERIFICATION = false; //TODO Set to true
 
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 
@@ -65,9 +68,18 @@ class DatabaseService {
   SeasonTeamService _seasonTeamService;
   TeamService _teamService;
 
+  /// Call this when opening the app
   Future<void> initialize() async {
     await _initializeAuthServices();
-    // await _initializeDataServices(); do it after login or if the selectedAppUser.id is known
+    bool isUserSignedIn = await PrefsUtils.isUserSignedIn();
+    if(isUserSignedIn) {
+      await initializeUser();
+    }
+  }
+
+  /// Call this after the user has logged in or if the user is already signed in
+  Future<void> initializeUser() async {
+    await _initializeDataServices();
     await _initializeData();
   }
 
@@ -92,9 +104,13 @@ class DatabaseService {
 
   Future<void> _initializeData() async {
     // Initialize database if needed with requested teams and categories
-    final sharedPref = await SharedPreferences.getInstance();
-    bool areItemsInitialized = sharedPref.getBool(areItemsInitializedKey) ?? false;
-    if(!areItemsInitialized) {
+    String userId = await PrefsUtils.getUserId();
+    bool userExists = await _appUserService.itemExists(userId);
+    if(!userExists) {
+      throw NotFoundException("User with id $userId not found in database.");
+    }
+    AppUser appUser = await _appUserService.getItemById(userId);
+    if(!appUser.areItemsInitialized) {
       // Create categories for the main menu
       List<Category> categories = await _initializeCategories();
       // Create the first season, the current one
@@ -111,7 +127,10 @@ class DatabaseService {
       await _initializeFollowedPlayers();
       // Create menus in HomeView
       List<Menu> menus = await _initializeMenus(teams[0].id);
-      sharedPref.setBool(areItemsInitializedKey, true);
+
+      // Set that items are initialized
+      appUser.areItemsInitialized = true;
+      await _appUserService.saveItem(appUser);
     }
   }
 

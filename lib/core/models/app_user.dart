@@ -9,11 +9,17 @@ class AppUser {
   String email;
   bool isEmailVerified;
 
+  // App Data
+  bool areItemsInitialized; // true if the requested items are created
+
   AppUser._() {} // private constructor
 
   /// The id is generated from the FirebaseAuthUser because the latter is created first
-  AppUser(String id) {
+  AppUser(String id, String email) {
     this.id = id;
+    this.email = email;
+    isEmailVerified = false;
+    areItemsInitialized = false;
   }
 
   Map<String, dynamic> toJson()  {
@@ -22,14 +28,16 @@ class AppUser {
     return {
       'id': id,
       'email': email,
-      'emailVerified': isEmailVerified
+      'emailVerified': isEmailVerified,
+      'areItemsInitialized': areItemsInitialized
     };
   }
 
   AppUser.fromJson(Map<dynamic, dynamic> json)
    : id = json['id'],
      email = json['email'],
-     isEmailVerified = json['emailVerified'] == null ? false : json['emailVerified'];
+     isEmailVerified = json['emailVerified'] == null ? false : json['emailVerified'],
+     areItemsInitialized = json['areItemsInitialized'] == null ? false : json['areItemsInitialized'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

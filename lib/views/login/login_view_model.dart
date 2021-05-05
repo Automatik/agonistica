@@ -55,7 +55,7 @@ class LoginViewModel extends BaseViewModel {
     _appStateService.selectedAppUser = appUser;
 
     //TODO Download user data
-    // chiamare qui i metodi initializeDataServices e initializeData nel databaseService
+    await _databaseService.initializeUser();
 
     _logger.d("Sign in complete");
     return null;
@@ -73,9 +73,7 @@ class LoginViewModel extends BaseViewModel {
       _logger.d('User is signed in and waiting for email verification!');
       FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser;
 
-      AppUser appUser = AppUser(firebaseAuthUser.appUserId);
-      appUser.email = loginData.name;
-      appUser.isEmailVerified = false;
+      AppUser appUser = AppUser(firebaseAuthUser.appUserId, loginData.name);
 
       await PrefsUtils.saveSignUpUserInfo(appUser);
 
