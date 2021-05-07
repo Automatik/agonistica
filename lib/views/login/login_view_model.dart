@@ -54,7 +54,6 @@ class LoginViewModel extends BaseViewModel {
 
     _appStateService.selectedAppUser = appUser;
 
-    //TODO Download user data
     await _databaseService.initializeUser();
 
     _logger.d("Sign in complete");
@@ -91,7 +90,14 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<String> recoverPassword(String name) async {
+    AuthResult authResult = await _databaseService.firebaseAuthUserService.resetUserPassword(name);
+    if(!authResult.isOk) {
+      return authResult.errorMessage;
+    }
 
+    _logger.d("Email with password rest sent for the user $name");
+
+    return null;
   }
 
   Future<void> onSubmitAnimationCompleted(BuildContext context) async {

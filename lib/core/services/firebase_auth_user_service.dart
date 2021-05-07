@@ -84,6 +84,27 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
     return AuthResult(isOk: true, firebaseAuthUser: firebaseAuthUser); // Everything is ok
   }
 
+  Future<AuthResult> resetUserPassword(String email) async {
+    AuthError authError = await _sendPasswordResetEmail(email);
+
+    User user = await _getFirebaseAuthStateChanges().first;
+
+    if(user == null) {
+      _logger.d('User is currently signed out');
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      return AuthResult(isOk: false, errorMessage: errorMessage);
+    }
+    if(authError.isError) {
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      return AuthResult(isOk: false, errorMessage: errorMessage);
+    }
+
+    // get firebaseAuthUser
+    FirebaseAuthUser firebaseAuthUser = await getItemById(user.uid);
+
+    return AuthResult(isOk: true, firebaseAuthUser: firebaseAuthUser);
+  }
+
   Future<AuthError> _startLoginOperation(String email, String password) async {
     try {
       UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(
@@ -131,6 +152,22 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
         _logger.d('The password provided is too weak');
       else if(e.code == AuthError.FIREBASE_ERROR_EMAIL_ALREADY_IN_USE)
         _logger.d('The account already exists for that email');
+      return AuthError(isError: true, errorCode: e.code);
+    } catch (e) {
+      _logger.d(e.toString());
+      return AuthError(isError: true, errorCode: AuthError.MY_FIREBASE_ERROR_GENERAL_ERROR);
+    }
+  }
+
+  Future<AuthError> _sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+
+      return AuthError(isError: false);
+    } on FirebaseAuthException catch (e) {
+      if(e.code == AuthError.FIREBASE_ERROR_USER_NOT_FOUND) {
+        _logger.d('No user found for that email');
+      }
       return AuthError(isError: true, errorCode: e.code);
     } catch (e) {
       _logger.d(e.toString());
