@@ -1,6 +1,8 @@
+import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/core/utils/prefs_utils.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:agonistica/views/home/home_view.dart';
 import 'package:agonistica/views/login/login_view.dart';
@@ -15,8 +17,21 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+bool _isRegistered, _isLogged;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initialize();
+  await startAppBasedOnPrefs();
+  runApp(MyApp());
+}
+
+Future<void> initialize() async {
+  await initializeFirebase();
+  await initializeServices();
+}
+
+Future<void> initializeFirebase() async {
   try {
     await Firebase.initializeApp();
     // set persistence here, before getting any database reference, otherwise persistence will not be enabled
@@ -24,9 +39,31 @@ Future<void> main() async {
   } catch(e) {
     print(e);
   }
+}
+
+Future<void> initializeServices() async {
   await LocatorInjector.setupLocator();
   await locator<DatabaseService>().initialize();
-  runApp(MyApp());
+}
+
+Future<void> startAppBasedOnPrefs() async {
+  await getUserState();
+}
+
+Future<void> getUserState() async {
+  _isRegistered = await PrefsUtils.isUserSignedUp();
+  _isLogged = await PrefsUtils.isUserSignedIn();
+  if(_isLogged) {
+    // if the email is not verified, login again
+    bool isEmailVerified = await PrefsUtils.isEmailVerified();
+    if(!isEmailVerified) {
+      _isLogged = false;
+    } else {
+      String appUserId = await PrefsUtils.getUserId();
+      final appUser = await locator<DatabaseService>().appUserService.getItemById(appUserId);
+      locator<AppStateService>().selectedAppUser = appUser;
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -69,6 +106,9 @@ class MyApp extends StatelessWidget {
   }
 
   String navigateToFirstRoute() {
+    if(_isLogged) {
+      return HomeView.routeName;
+    }
     return LoginView.routeName;
   }
 

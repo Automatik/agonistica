@@ -34,6 +34,16 @@ class PrefsUtils {
     return prefs.getBool(isLoggedKey) ?? false;
   }
 
+  static Future<bool> isUserSignedUp() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(isRegisteredKey) ?? false;
+  }
+
+  static Future<bool> isEmailVerified() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(isVerifiedKey) ?? false;
+  }
+
   static Future<String> getUserId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(loginUserIdKey);

@@ -10,6 +10,7 @@ class _LoginMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterLogin(
       title: defaultAppBarTitle.toUpperCase(),
+      logo: 'assets/images/ic_launcher.png',
       onSignup: (data) => viewModel.signUpUser(data),
       onLogin: (data) => viewModel.loginUser(data),
       onRecoverPassword: (name) => viewModel.recoverPassword(name),
@@ -35,7 +36,7 @@ class _LoginMobile extends StatelessWidget {
         accentColor: blueLightAgonisticaColor,
         titleStyle: TextStyle(
           color: Colors.white
-        )
+        ),
       ),
     );
   }
