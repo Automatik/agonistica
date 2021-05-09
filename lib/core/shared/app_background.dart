@@ -1,0 +1,18 @@
+import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:flutter/material.dart';
+
+class AppBackground {
+
+  static LinearGradient getBackground() {
+    return LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [blueLightAgonisticaColor, blueAgonisticaColor]
+    );
+  }
+
+  static Color getScaffoldBackground() {
+    return blueLightAgonisticaColor;
+  }
+
+}

@@ -1,5 +1,6 @@
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
+import 'package:agonistica/core/shared/app_background.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
@@ -35,6 +36,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
 
     return PlatformScaffold(
       appBar: chooseAppBar(),
+      backgroundColor: AppBackground.getScaffoldBackground(),
       body: Builder(
           builder: (BuildContext innerContext) {
             widget._baseScaffoldService.scaffoldContext = innerContext;
@@ -43,11 +45,7 @@ class _ScrollScaffoldWidgetState extends State<ScrollScaffoldWidget> {
                   return SingleChildScrollView(
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [blueLightAgonisticaColor, blueAgonisticaColor]
-                        )
+                        gradient: AppBackground.getBackground(),
                       ),
                       constraints: BoxConstraints(
                         minHeight: sizingInfo.localWidgetSize.height,
