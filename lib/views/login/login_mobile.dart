@@ -8,6 +8,22 @@ class _LoginMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return ScrollScaffoldWidget(
+    //   showAppBar: false,
+    //   childBuilder: (childContext, sizingInformation, parentSizingInformation) {
+    //     return Container(
+    //       constraints: BoxConstraints(
+    //         minHeight: parentSizingInformation.localWidgetSize.height,
+    //         minWidth: sizingInformation.screenSize.width
+    //       ),
+    //       child: flutterLogin(childContext),
+    //     );
+    //   },
+    // );
+    return flutterLogin(context);
+  }
+
+  Widget flutterLogin(BuildContext context) {
     return FlutterLogin(
       title: defaultAppBarTitle.toUpperCase(),
       logo: 'assets/images/ic_launcher.png',
@@ -35,12 +51,10 @@ class _LoginMobile extends StatelessWidget {
         primaryColor: blueAgonisticaColor,
         accentColor: blueLightAgonisticaColor,
         titleStyle: TextStyle(
-          color: Colors.white
+            color: Colors.white
         ),
       ),
     );
   }
-
-
 
 }

@@ -106,9 +106,9 @@ class MyApp extends StatelessWidget {
   }
 
   String navigateToFirstRoute() {
-    if(_isLogged) {
-      return HomeView.routeName;
-    }
+    // if(_isLogged) {
+    //   return HomeView.routeName;
+    // }
     return LoginView.routeName;
   }
 

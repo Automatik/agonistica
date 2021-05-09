@@ -32,32 +32,40 @@ class LoginViewModel extends BaseViewModel {
 
   Future<String> loginUser(LoginData loginData) async {
     currentAction = LOGIN_ACTION;
+    try {
+      AuthResult authResult = await _databaseService.firebaseAuthUserService
+          .loginUser(loginData.name, loginData.password);
+      if (!authResult.isOk) {
+        return authResult.errorMessage;
+      }
+      // Everything is ok
+      _logger.d('User is signed in and email is verified!');
+      FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser;
 
-    AuthResult authResult = await _databaseService.firebaseAuthUserService.loginUser(loginData.name, loginData.password);
-    if(!authResult.isOk) {
-      return authResult.errorMessage;
+      bool appUserExists = await _databaseService.appUserService.itemExists(
+          firebaseAuthUser.appUserId);
+      if (!appUserExists) {
+        String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(
+            AuthError.FIREBASE_ERROR_USER_NOT_FOUND);
+        return errorMessage;
+      }
+      AppUser appUser = await _databaseService.appUserService.getItemById(
+          firebaseAuthUser.appUserId);
+      appUser.isEmailVerified = true;
+      await _databaseService.appUserService.saveItem(appUser);
+
+      await PrefsUtils.saveLoginUserInfo(appUser);
+
+      _appStateService.selectedAppUser = appUser;
+
+      await _databaseService.initializeUser();
+
+      _logger.d("Sign in complete");
+      return null;
+    } catch (e) {
+      _logger.e(e.toString());
+      return "General error";
     }
-    // Everything is ok
-    _logger.d('User is signed in and email is verified!');
-    FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser;
-
-    bool appUserExists = await _databaseService.appUserService.itemExists(firebaseAuthUser.appUserId);
-    if(!appUserExists) {
-      String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(AuthError.FIREBASE_ERROR_USER_NOT_FOUND);
-      return errorMessage;
-    }
-    AppUser appUser = await _databaseService.appUserService.getItemById(firebaseAuthUser.appUserId);
-    appUser.isEmailVerified = true;
-    await _databaseService.appUserService.saveItem(appUser);
-
-    await PrefsUtils.saveLoginUserInfo(appUser);
-
-    _appStateService.selectedAppUser = appUser;
-
-    await _databaseService.initializeUser();
-
-    _logger.d("Sign in complete");
-    return null;
   }
 
   Future<String> signUpUser(LoginData loginData) async {
