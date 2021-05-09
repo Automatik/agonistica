@@ -11,6 +11,7 @@ class InsertTeamDialog {
   final double maxHeight;
   final String seasonId;
   final List<SeasonTeam> Function(String) suggestionCallback;
+  final String Function(String) isInsertedTeamValid;
   final Function(SeasonTeam) onSubmit;
 
   InsertTeamDialog({
@@ -19,6 +20,7 @@ class InsertTeamDialog {
     @required this.seasonId,
     @required this.suggestionCallback,
     @required this.onSubmit,
+    this.isInsertedTeamValid,
   });
 
   Future<void> showInsertTeamDialog(BuildContext context) async {
@@ -47,6 +49,7 @@ class InsertTeamDialog {
           seasonId: seasonId,
           suggestionCallback: suggestionCallback,
           onSubmit: onSubmit,
+          isInsertedTeamValid: isInsertedTeamValid,
         ),
       )
     );
@@ -60,6 +63,7 @@ class _InsertTeamForm extends StatefulWidget {
   final double maxHeight;
   final String seasonId;
   final List<SeasonTeam> Function(String) suggestionCallback;
+  final String Function(String) isInsertedTeamValid;
   final Function(SeasonTeam) onSubmit;
 
   _InsertTeamForm({
@@ -68,6 +72,7 @@ class _InsertTeamForm extends StatefulWidget {
     @required this.seasonId,
     @required this.suggestionCallback,
     @required this.onSubmit,
+    this.isInsertedTeamValid,
   });
 
   @override
@@ -144,7 +149,19 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                           loadSuggestions(value);
                       },
                       validator: (value) {
-                        return InputValidation.validateTeamName(value);
+                        String nameValidationResult = InputValidation.validateTeamName(value);
+                        bool isNameValid = nameValidationResult == null;
+                        if(!isNameValid) {
+                          return nameValidationResult;
+                        }
+                        if(widget.isInsertedTeamValid != null) {
+                          String insertedTeamValidationResult = widget.isInsertedTeamValid(value);
+                          bool isInsertedTeamValid = insertedTeamValidationResult == null;
+                          if(!isInsertedTeamValid) {
+                            return insertedTeamValidationResult;
+                          }
+                        }
+                        return null;
                       },
                     ),
                   ),
