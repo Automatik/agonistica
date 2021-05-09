@@ -30,9 +30,9 @@ class _PlayersMobile extends StatelessWidget {
       ),
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: viewModel.seasonPlayers.length,
+          itemCount: viewModel.getSeasonPlayersSize(),
           itemBuilder: (BuildContext listContext, int index) {
-            SeasonPlayer seasonPlayer = viewModel.seasonPlayers[index];
+            SeasonPlayer seasonPlayer = viewModel.getSeasonPlayers(index);
             return Align(
               alignment: Alignment.center,
               child: Container(

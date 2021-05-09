@@ -61,6 +61,19 @@ class Match {
     matchNotes = match.matchNotes;
   }
 
+  /// If leagueMatch is null consider it as zero
+  static int compare(Match m1, Match m2) {
+    int leagueMatch1 = m1.leagueMatch;
+    int leagueMatch2 = m2.leagueMatch;
+    if(leagueMatch1 == null) {
+      leagueMatch1 = 0;
+    }
+    if(leagueMatch2 == null) {
+      leagueMatch2 = 0;
+    }
+    return leagueMatch1.compareTo(leagueMatch2);
+  }
+
   SeasonTeam getSeasonTeam1() {
     SeasonTeam seasonTeam;
     if(team1.id == null) {

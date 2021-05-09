@@ -1,4 +1,3 @@
-import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -146,6 +145,12 @@ class SeasonPlayer {
     seasonTeam = sp.seasonTeam;
     categoryName = sp.categoryName;
     player = sp.player;
+  }
+
+  static int compare(SeasonPlayer sp1, SeasonPlayer sp2) {
+    String nm1 = sp1.player.name + " " + sp1.player.surname;
+    String nm2 = sp2.player.name + " " + sp2.player.surname;
+    return nm1.compareTo(nm2);
   }
 
   /// Reset stats before updating them by summing all the match player data

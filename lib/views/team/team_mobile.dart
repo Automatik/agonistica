@@ -65,9 +65,9 @@ class _TeamMobileState extends State<_TeamMobile> {
           ),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: widget.viewModel.matches.length,
+              itemCount: widget.viewModel.getMatchesSize(),
               itemBuilder: (BuildContext listContext, int index) {
-                Match match = widget.viewModel.matches[index];
+                Match match = widget.viewModel.getMatch(index);
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
@@ -105,9 +105,9 @@ class _TeamMobileState extends State<_TeamMobile> {
           ),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: widget.viewModel.seasonPlayers.length,
+              itemCount: widget.viewModel.getSeasonPlayersSize(),
               itemBuilder: (BuildContext listContext, int index) {
-                SeasonPlayer seasonPlayer = widget.viewModel.seasonPlayers[index];
+                SeasonPlayer seasonPlayer = widget.viewModel.getSeasonPlayers(index);
                 return Align(
                   alignment: Alignment.center,
                   child: Container(

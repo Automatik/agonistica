@@ -1,6 +1,6 @@
+import 'dart:collection';
+
 import 'package:agonistica/core/app_services/app_state_service.dart';
-import 'package:agonistica/core/arguments/matches_view_arguments.dart';
-import 'package:agonistica/core/arguments/roster_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -20,17 +20,16 @@ class TeamViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('TeamViewModel');
 
-  List<Match> matches;
-  List<SeasonPlayer> seasonPlayers;
+  SplayTreeSet<Match> _sortedMatches;
+  SplayTreeSet<SeasonPlayer> _sortedSeasonPlayers;
 
   TeamViewModel(){
-    matches = [];
-    seasonPlayers = [];
+    _sortedMatches = SplayTreeSet((m1, m2) => Match.compare(m1, m2));
+    _sortedSeasonPlayers = SplayTreeSet((sp1, sp2) => SeasonPlayer.compare(sp1, sp2));
 
     loadItems();
   }
-  
-  // Add ViewModel specific code here
+
   Future<void> loadItems() async {
     setBusy(true);
     //Write your models loading codes here
@@ -42,14 +41,16 @@ class TeamViewModel extends BaseViewModel {
       _logger.d("selectedSeasonTeam or selectedCategory is null");
     else {
       _logger.d("Loading matches and players...");
-      matches = await _databaseService.matchService.getTeamMatchesByCategory(seasonTeam, category);
+      List<Match> matches = await _databaseService.matchService.getTeamMatchesByCategory(seasonTeam, category);
       matches = await _databaseService.matchService.completeMatchesWithMissingInfo(matches);
       _logger.d("matches size: ${matches.length}");
 
-      seasonPlayers = await _databaseService.seasonPlayerService.getSeasonPlayersByTeamAndCategory(seasonTeam.id, category.id);
+      List<SeasonPlayer> seasonPlayers = await _databaseService.seasonPlayerService.getSeasonPlayersByTeamAndCategory(seasonTeam.id, category.id);
       // set player's team name and category name
       seasonPlayers = await _databaseService.seasonPlayerService.completeSeasonPlayersWithMissingInfo(seasonPlayers);
 
+      _sortedMatches.addAll(matches);
+      _sortedSeasonPlayers.addAll(seasonPlayers);
     }
 
     //Let other views to render again
@@ -64,45 +65,44 @@ class TeamViewModel extends BaseViewModel {
   /// Use this callback to update the players listView. When this method is
   /// executed, the player has been already saved
   void _onPlayerDetailUpdate(SeasonPlayer seasonPlayer) {
-    if(seasonPlayers == null) {
+    if(_sortedSeasonPlayers == null) {
       _logger.d("players list is null");
       return;
     }
 
     // check if player's id is already in players list
     // meaning the player is updated
-    int index = seasonPlayers.indexWhere((p) => p.id == seasonPlayer.id);
-    if(index != -1) {
-
+    SeasonPlayer player = _sortedSeasonPlayers.firstWhere((sp) => sp.id == seasonPlayer.id, orElse: () => null);
+    if(player != null) {
       // check if the player's team or category has changed
       if(seasonPlayer.seasonTeamId != _appStateService.selectedTeam.id || seasonPlayer.categoryId != _appStateService.selectedCategory.id) {
         // remove the player from the players list
-        seasonPlayers.removeAt(index);
+        _sortedSeasonPlayers.removeWhere((sp) => sp.id == seasonPlayer.id);
       } else {
         // otherwise update the players list
-        seasonPlayers[index] = seasonPlayer;
+        _sortedSeasonPlayers.removeWhere((sp) => sp.id == seasonPlayer.id);
+        _sortedSeasonPlayers.add(seasonPlayer);
       }
       _logger.d("player updated in list");
     } else {
       // otherwise it's a new player
-      seasonPlayers.add(seasonPlayer);
+      _sortedSeasonPlayers.add(seasonPlayer);
       _logger.d("new player added to list");
     }
+
+
+
     _updateView();
   }
 
   void _onMatchDetailUpdate(Match match) {
     _logger.d("TeamViewModel/onMatchDetailUpdate");
-    if(matches == null) {
+    if(_sortedMatches == null) {
       _logger.d("matches list is null");
       return;
     }
-    int index = matches.indexWhere((m) => m.id == match.id);
-    if(index != -1) {
-      matches[index] = match;
-    } else {
-      matches.add(match);
-    }
+    _sortedMatches.removeWhere((m) => m.id == match.id);
+    _sortedMatches.add(match);
     _updateView();
   }
 
@@ -110,21 +110,37 @@ class TeamViewModel extends BaseViewModel {
     return _appStateService.selectedCategory.name;
   }
 
+  int getMatchesSize() {
+    return _sortedMatches.length;
+  }
+
+  int getSeasonPlayersSize() {
+    return _sortedSeasonPlayers.length;
+  }
+
+  Match getMatch(int index) {
+    return _sortedMatches.elementAt(index);
+  }
+
+  SeasonPlayer getSeasonPlayers(int index) {
+    return _sortedSeasonPlayers.elementAt(index);
+  }
+
   Future<void> openMatchDetail(BuildContext context, int index) async {
-    if(matches == null || matches.isEmpty) {
+    if(_sortedMatches == null || _sortedMatches.isEmpty) {
       _logger.d("Matches is null or empty when calling deleteMatch");
       return;
     }
-    Match match = matches[index];
+    Match match = _sortedMatches.elementAt(index);
     NavUtils.navToMatchDetail(context, match, _onMatchDetailUpdate);
   }
 
   Future<void> openPlayerDetail(BuildContext context, int index) async {
-    if(seasonPlayers == null || seasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }
-    SeasonPlayer seasonPlayer = seasonPlayers[index];
+    SeasonPlayer seasonPlayer = _sortedSeasonPlayers.elementAt(index);
     NavUtils.navToPlayerDetail(context, seasonPlayer, _onPlayerDetailUpdate);
   }
 
@@ -141,21 +157,23 @@ class TeamViewModel extends BaseViewModel {
   }
 
   Future<void> deleteMatch(int index) async {
-    if(matches == null || matches.isEmpty) {
+    if(_sortedMatches == null || _sortedMatches.isEmpty) {
       _logger.d("Matches is null or empty when calling deleteMatch");
       return;
     }
-    Match match = matches.removeAt(index);
+    Match match = _sortedMatches.elementAt(index);
+    _sortedMatches.removeWhere((element) => element.id == match.id);
     await _databaseService.matchService.deleteItem(match.id);
     _updateView();
   }
 
   Future<void> deletePlayer(int index) async {
-    if(seasonPlayers == null || seasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }
-    SeasonPlayer seasonPlayer = seasonPlayers.removeAt(index);
+    SeasonPlayer seasonPlayer = _sortedSeasonPlayers.elementAt(index);
+    _sortedSeasonPlayers.removeWhere((element) => element.id == seasonPlayer.id);
     await _databaseService.seasonPlayerService.deleteItem(seasonPlayer.id);
     _updateView();
   }
