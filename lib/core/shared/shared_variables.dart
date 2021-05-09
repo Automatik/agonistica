@@ -17,4 +17,4 @@ final List<String> requestedMenus = List.unmodifiable([mainRequestedTeam, 'Prima
 final List<String> requestedMainTeamCategories = List.unmodifiable(['Juniores Regionali A', 'Allievi Regionali A', 'Giovanissimi Regionali A']);
 
 
-const String areItemsInitializedKey = 'areItemsInitialized';
+const String appIconPath = 'assets/images/ic_launcher.png';
