@@ -32,6 +32,10 @@ class DbUtils {
     return values;
   }
 
+  static List<dynamic> mergeLists(List<dynamic> list1, List<dynamic> list2) {
+    return [...list1, ...list2].toSet().toList();
+  }
+
   static List<dynamic> removeFromList(List<dynamic> values, dynamic value) {
     if(values == null) {
       return [];

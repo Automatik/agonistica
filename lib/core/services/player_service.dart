@@ -2,7 +2,6 @@ import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
-import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/repositories/player_repository.dart';
@@ -43,13 +42,11 @@ class PlayerService extends CrudService<Player> {
       await seasonPlayerService.deleteItem(seasonPlayerId);
     }
 
-    //TODO Unfollow player (get user' followedPlayers and then call followedPlayers.unFollow)
+    // Unfollow player
     FollowedPlayersService followedPlayersService = FollowedPlayersService(databaseReference);
-    String followedPlayersId = await followedPlayersService.findPlayerIdInFollowedPlayers(playerId);
-    bool isPlayerFollowed = followedPlayersId != null;
+    bool isPlayerFollowed = await followedPlayersService.isPlayerFollowed(playerId);
     if(isPlayerFollowed) {
-      FollowedPlayers followedPlayers = await followedPlayersService.getItemById(followedPlayersId);
-      await followedPlayersService.unFollowPlayer(followedPlayers, playerId);
+      await followedPlayersService.unFollowPlayer(playerId);
     }
 
     await super.deleteItem(playerId);

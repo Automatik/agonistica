@@ -3,6 +3,7 @@ import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/followed_players.dart';
 import 'package:agonistica/core/repositories/followed_players_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FollowedPlayersService extends CrudService<FollowedPlayers> {
@@ -10,37 +11,49 @@ class FollowedPlayersService extends CrudService<FollowedPlayers> {
   FollowedPlayersService(DatabaseReference databaseReference)
       : super(databaseReference, FollowedPlayersRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
-  Future<bool> isPlayerFollowed(String playerId, {String followedPlayersId}) async {
-    if(followedPlayersId != null && followedPlayersId.isNotEmpty) {
-      FollowedPlayers followedPlayers = await getItemById(followedPlayersId);
-      return followedPlayers.playersIds.contains(playerId);
+  @override
+  Future<void> saveItem(FollowedPlayers followedPlayers) async {
+    FollowedPlayers existingFollowedPlayers = await getFollowedPlayers();
+    bool isSameObject = existingFollowedPlayers.id == followedPlayers.id;
+    if(isSameObject) {
+      await super.saveItem(followedPlayers);
+    } else {
+      List<String> mergedPlayersIds = DbUtils.mergeLists(existingFollowedPlayers.playersIds, followedPlayers.playersIds);
+      existingFollowedPlayers.playersIds = mergedPlayersIds;
+      await super.saveItem(existingFollowedPlayers);
     }
-    String followedPlayersIdTemp = await findPlayerIdInFollowedPlayers(playerId);
-    bool isPlayerFollowed = followedPlayersIdTemp != null;
-    return isPlayerFollowed;
   }
 
-  Future<String> findPlayerIdInFollowedPlayers(String playerId) async {
-    List<FollowedPlayers> followedPlayersList = await getAllItems();
-    int i = 0;
-    while(i < followedPlayersList.length) {
-      FollowedPlayers followedPlayers = followedPlayersList[i];
-      if(followedPlayers.playersIds.contains(playerId)) {
-        return followedPlayers.id;
-      }
-      i++;
-    }
-    return null;
+  Future<bool> isPlayerFollowed(String playerId) async {
+    FollowedPlayers followedPlayers = await getFollowedPlayers();
+    return followedPlayers.playersIds.contains(playerId);
   }
 
-  Future<void> followPlayer(FollowedPlayers followedPlayers, String playerId) async {
+  Future<void> followPlayer(String playerId) async {
+    FollowedPlayers followedPlayers = await getFollowedPlayers();
     followedPlayers.addPlayer(playerId);
     await super.saveItem(followedPlayers);
   }
 
-  Future<void> unFollowPlayer(FollowedPlayers followedPlayers, String playerId) async {
+  Future<void> unFollowPlayer(String playerId) async {
+    FollowedPlayers followedPlayers = await getFollowedPlayers();
     followedPlayers.removePlayer(playerId);
     await super.saveItem(followedPlayers);
+  }
+
+  /// Get the user's FollowedPlayers object. Assume there is only one FollowedPlayers
+  /// object. Return a new object if there are no followed players yet
+  Future<FollowedPlayers> getFollowedPlayers() async {
+    // get user FollowedTeams objects
+    List<FollowedPlayers> followedPlayersList = await getAllItems();
+    // Assume there is only one FollowedTeams object
+    FollowedPlayers followedPlayers;
+    if(followedPlayersList.isEmpty) {
+      followedPlayers = FollowedPlayers.empty();
+    } else {
+      followedPlayers = followedPlayersList[0];
+    }
+    return followedPlayers;
   }
 
 }

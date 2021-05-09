@@ -3,11 +3,13 @@ import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
+import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/team_repository.dart';
 import 'package:agonistica/core/services/crud_service.dart';
 import 'package:agonistica/core/services/followed_teams_service.dart';
+import 'package:agonistica/core/services/menu_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -67,16 +69,21 @@ class TeamService extends CrudService<Team> {
       await seasonTeamService.deleteItem(seasonTeamId);
     }
 
-    //TODO Unfollow team (get user' followedTeams and then call followedTeams.unFollow)
+    // Unfollow team (get user' followedTeams and then call followedTeams.unFollow)
     FollowedTeamsService followedTeamsService = FollowedTeamsService(databaseReference);
-    String followedTeamsId = await followedTeamsService.findTeamIdInFollowedTeams(teamId);
-    bool isPlayerFollowed = followedTeamsId != null;
-    if(isPlayerFollowed) {
-      FollowedTeams followedTeams = await followedTeamsService.getItemById(followedTeamsId);
-      await followedTeamsService.unFollowTeam(followedTeams, teamId);
+    bool isTeamFollowed = await followedTeamsService.isTeamFollowed(teamId);
+    if(isTeamFollowed) {
+      await followedTeamsService.unFollowTeam(teamId);
+
+      //If it's a followed team remove the relative menu
+      MenuService menuService = MenuService(databaseReference);
+      Menu menu = await menuService.findMenuWithTeam(teamId);
+      bool menuExists = menu != null;
+      if(menuExists) {
+        await menuService.deleteItem(menu.id);
+      }
     }
 
-    //TODO If it's a followed team remove the relative menu
 
     return super.deleteItem(teamId);
   }

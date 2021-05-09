@@ -32,16 +32,7 @@ class PlayersViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    // TODO replace with getting the user's followedPlayers
-    // FollowedPlayers followedPlayers = _databaseService.followedPlayersService.getItemById();
-    List<FollowedPlayers> followedPlayersList = await _databaseService.followedPlayersService.getAllItems();
-    if(followedPlayersList.isEmpty) {
-      // Do this because of missing initializer (remove when implementing user)
-      FollowedPlayers followedPlayers = FollowedPlayers.empty();
-      await _databaseService.followedPlayersService.saveItem(followedPlayers);
-      followedPlayersList.add(followedPlayers);
-    }
-    FollowedPlayers followedPlayers = followedPlayersList[0];
+    FollowedPlayers followedPlayers = await _databaseService.followedPlayersService.getFollowedPlayers();
 
     String categoryId = _appStateService.selectedCategory.id;
     String seasonId = _appStateService.selectedSeason.id;

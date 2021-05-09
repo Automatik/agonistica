@@ -41,6 +41,15 @@ class MenuService extends CrudService<Menu> {
     return menus;
   }
 
+  Future<Menu> findMenuWithTeam(String teamId) async {
+    List<Menu> menus = await getAllItems();
+    int index = menus.indexWhere((element) => element.type == Menu.TYPE_FOLLOWED_TEAMS && element.teamId == teamId);
+    if(index != -1) {
+      return menus[index];
+    }
+    return null;
+  }
+
   Future<Menu> findMenuWithCategory(String categoryId) async {
     List<Menu> menus = await getAllItems();
     int index = menus.indexWhere((element) => element.categoriesIds.contains(categoryId));
