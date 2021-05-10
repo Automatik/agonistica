@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
@@ -336,7 +337,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               Container(
                 margin: EdgeInsets.only(left: 12, right: 5, top: 10),
                 child: SvgPicture.asset(
-                  'assets/images/010-football.svg',
+                  IconAssets.ICON_FOOTBALL_BALL,
                   width: 24,
                   height: 24,
                   color: blueAgonisticaColor,

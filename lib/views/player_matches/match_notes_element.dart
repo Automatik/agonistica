@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
@@ -53,7 +54,7 @@ class MatchNotesElement extends StatelessWidget {
                   width: iconsSize,
                   height: iconsSize,
                   child: SvgPicture.asset(
-                    'assets/images/010-football.svg',
+                    IconAssets.ICON_FOOTBALL_BALL,
                     excludeFromSemantics: true,
                     color: blueAgonisticaColor,
                   ),

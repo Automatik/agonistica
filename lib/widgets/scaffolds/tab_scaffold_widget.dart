@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/shared/app_background.dart';
@@ -85,7 +86,7 @@ class _TabScaffoldWidgetState extends State<TabScaffoldWidget> {
           BottomNavigationBarItem(
             label: 'Partite',
             icon: SvgPicture.asset(
-              'assets/images/010-football.svg',
+              IconAssets.ICON_FOOTBALL_BALL,
               color: isMatchesViewSelected(context) ? blueAgonisticaColor : textDisabledColor,
               width: widget.iconsSize,
               height: widget.iconsSize,

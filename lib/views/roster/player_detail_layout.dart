@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/season_player.dart';
@@ -249,7 +250,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                 flex: 1,
                 child: Container(
                   child: SvgPicture.asset(
-                    'assets/images/male.svg',
+                    IconAssets.ICON_PERSON,
                     height: 50,
                     width: 50,
                     color: blueAgonisticaColor,

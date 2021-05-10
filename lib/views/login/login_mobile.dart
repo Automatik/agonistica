@@ -26,7 +26,7 @@ class _LoginMobile extends StatelessWidget {
   Widget flutterLogin(BuildContext context) {
     return FlutterLogin(
       title: defaultAppBarTitle.toUpperCase(),
-      logo: appIconPath,
+      logo: ImageAssets.IMAGE_IC_LAUNCHER,
       onSignup: (data) => viewModel.signUpUser(data),
       onLogin: (data) => viewModel.loginUser(data),
       onRecoverPassword: (name) => viewModel.recoverPassword(name),

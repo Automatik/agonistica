@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class MatchReview extends StatelessWidget {
                   width: iconsSize,
                   height: iconsSize,
                   child: SvgPicture.asset(
-                    'assets/images/010-football.svg',
+                    IconAssets.ICON_FOOTBALL_BALL,
                     width: iconsSize,
                     height: iconsSize,
                     excludeFromSemantics: true,

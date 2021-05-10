@@ -100,7 +100,7 @@ class _HomeMobile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/prinetti.png',
+              ImageAssets.IMAGE_PRINETTI,
               height: mainButtonHeight,
             ),
             Container(

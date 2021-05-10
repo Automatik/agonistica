@@ -80,7 +80,7 @@ class _NotesMobileState extends State<_NotesMobile> {
                           width: iconsSize,
                           height: iconsSize,
                           child: SvgPicture.asset(
-                            'assets/images/010-football.svg',
+                            IconAssets.ICON_FOOTBALL_BALL,
                             excludeFromSemantics: true,
                             color: blueAgonisticaColor,
                           ),

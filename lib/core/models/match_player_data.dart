@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
@@ -164,9 +165,9 @@ class MatchPlayerData {
   static String getCardAsset(int card) {
     String assetName;
     switch(card) {
-      case CARD_YELLOW: assetName = "assets/images/018-yellow-card.svg"; break;
-      case CARD_DOUBLE_YELLOW: assetName = "assets/images/039-amonestation.svg"; break;
-      case CARD_RED: assetName = "assets/images/026-red-card.svg"; break;
+      case CARD_YELLOW: assetName = IconAssets.ICON_YELLOW_CARD; break;
+      case CARD_DOUBLE_YELLOW: assetName = IconAssets.ICON_DOUBLE_YELLOW_CARD; break;
+      case CARD_RED: assetName = IconAssets.ICON_RED_CARD; break;
       default: assetName = "";
     }
     return assetName;
@@ -175,8 +176,8 @@ class MatchPlayerData {
   static String getSubstitutionAsset(int substitution) {
     String assetName;
     switch(substitution) {
-      case SUBSTITUTION_EXITED: assetName = "assets/images/008-change-1.svg"; break;
-      case SUBSTITUTION_ENTERED: assetName = "assets/images/009-change.svg"; break;
+      case SUBSTITUTION_EXITED: assetName = IconAssets.ICON_SUBSTITUTION_EXIT; break;
+      case SUBSTITUTION_ENTERED: assetName = IconAssets.ICON_SUBSTITUTION_ENTER; break;
       default: assetName = "";
     }
     return assetName;

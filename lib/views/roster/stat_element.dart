@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
@@ -44,7 +45,7 @@ class _StatElementState extends State<StatElement> {
 
   @override
   Widget build(BuildContext context) {
-    String iconPath = "assets/images/${_mapStatToIcon(widget.icon)}";
+    String iconPath = _mapStatToIcon(widget.icon);
 
     List<String> positionChoices = [SeasonPlayer.positionToString(SeasonPlayer.POSITION_GOALKEEPER),
       SeasonPlayer.positionToString(SeasonPlayer.POSITION_DEFENDER), SeasonPlayer.positionToString(SeasonPlayer.POSITION_MIDFIELDER),
@@ -188,12 +189,12 @@ class _StatElementState extends State<StatElement> {
 
   static String _mapStatToIcon(int icon) {
     switch(icon) {
-      case PlayerDetailLayout.STAT_ROLE: return '013-football-1.svg';
-      case PlayerDetailLayout.STAT_FOOT: return '006-footwear.svg';
-      case PlayerDetailLayout.STAT_MATCHES: return '027-match.svg';
-      case PlayerDetailLayout.STAT_GOALS: return '050-soccer-ball.svg';
-      case PlayerDetailLayout.STAT_YELLOW_CARDS: return '018-yellow-card.svg';
-      case PlayerDetailLayout.STAT_RED_CARDS: return '026-red-card.svg';
+      case PlayerDetailLayout.STAT_ROLE: return IconAssets.ICON_KICKING_BALL;
+      case PlayerDetailLayout.STAT_FOOT: return IconAssets.ICON_FOOTWEAR;
+      case PlayerDetailLayout.STAT_MATCHES: return IconAssets.ICON_MATCH_CALENDAR;
+      case PlayerDetailLayout.STAT_GOALS: return IconAssets.ICON_FOOTBALL_BALL_OUTLINED;
+      case PlayerDetailLayout.STAT_YELLOW_CARDS: return IconAssets.ICON_YELLOW_CARD;
+      case PlayerDetailLayout.STAT_RED_CARDS: return IconAssets.ICON_RED_CARD;
       default: return "";
     }
   }

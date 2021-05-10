@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
@@ -379,7 +380,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
       margin: const EdgeInsets.only(right: 5),
       child: PlayerTextFormField(
         controller: shirtTextEditingController,
-        labelSvgIconPath: "assets/images/029-football-jersey.svg",
+        labelSvgIconPath: IconAssets.ICON_FOOTBALL_JERSEY,
         fontSize: formFontSize,
         fontWeight: formFontWeight,
         fontColor: formFontColor,

@@ -1,3 +1,4 @@
+import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/popups/player_item_popup_menu.dart';
@@ -279,7 +280,7 @@ class _GoalItem extends StatelessWidget {
         width: size,
         height: size,
         child: SvgPicture.asset(
-          'assets/images/010-football.svg', color: blueAgonisticaColor,),
+          IconAssets.ICON_FOOTBALL_BALL, color: blueAgonisticaColor,),
       );
     } else {
       return SizedBox();
