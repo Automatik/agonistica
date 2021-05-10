@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppBarAction extends StatelessWidget {
 
-  static const double actionIconsMargin = 12;
+  static const double actionIconsMargin = 20;
 
   final IconData icon;
   final Function onActionTap;

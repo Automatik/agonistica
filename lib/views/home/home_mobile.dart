@@ -3,7 +3,7 @@ part of home_view;
 class _HomeMobile extends StatelessWidget {
 
   final HomeViewModel viewModel;
-  final double merateButtonHeight = 110;
+  final double mainButtonHeight = 150;
 
   _HomeMobile(this.viewModel);
 
@@ -33,9 +33,9 @@ class _HomeMobile extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        mainTitleWidget(100),
+        mainTitleWidget(context, 100),
         mainButtonWidget(context, sizingInformation),
-        otherPlayersText(50, 24),
+        otherPlayersText(context, 50, 24),
         otherPlayersListWidget(sizingInformation),
       ],
     );
@@ -45,7 +45,7 @@ class _HomeMobile extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        mainTitleWidget(50),
+        mainTitleWidget(context, 50),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,7 +54,7 @@ class _HomeMobile extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                otherPlayersText(20, 20),
+                otherPlayersText(context, 20, 20),
                 otherPlayersListWidget(sizingInformation),
               ],
             )
@@ -64,25 +64,23 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget mainTitleWidget(double marginTop) {
+  Widget mainTitleWidget(BuildContext context, double marginTop) {
+    var textStyle = Theme.of(context).textTheme.bodyText2;
+    textStyle = textStyle.merge(TextStyle(color: Colors.white, fontSize: 48));
     return Container(
       margin: EdgeInsets.only(top: marginTop),
       alignment: Alignment.center,
       child: Text(
         defaultAppBarTitle.toUpperCase(),
         textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.w900,
-          color: Colors.white,
-        ),
+        style: textStyle
       ),
     );
   }
 
   Widget mainButtonWidget(BuildContext context, MySizingInformation sizingInformation) {
 
-    double widthFactor = sizingInformation.isPortrait() ? 0.6 : 0.35;
+    double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.35;
     double width = widthFactor * sizingInformation.screenSize.width;
 
     double marginTop = sizingInformation.isPortrait() ? 50 : 0;
@@ -96,14 +94,14 @@ class _HomeMobile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         width: width,
-        height: merateButtonHeight,
+        height: mainButtonHeight,
         alignment: Alignment.center,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
               'assets/images/prinetti.png',
-              height: merateButtonHeight,
+              height: mainButtonHeight,
             ),
             Container(
               margin: EdgeInsets.only(left: 20),
@@ -122,30 +120,28 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget otherPlayersText(double marginTop, double fontSize) {
+  Widget otherPlayersText(BuildContext context, double marginTop, double fontSize) {
+    var textStyle = Theme.of(context).textTheme.bodyText2.merge(TextStyle(color: Colors.white, fontSize: 32));
     return Container(
       margin: EdgeInsets.only(top: marginTop),
       alignment: Alignment.center,
       child: Text(
         'Altri giocatori seguiti',
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: fontSize,
-          fontWeight: FontWeight.w900,
-        ),
+        style: textStyle
       ),
     );
   }
 
   Widget otherPlayersListWidget(MySizingInformation sizingInformation) {
 
-    double widthFactor = sizingInformation.isPortrait() ? 0.6 : 0.3;
+    double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.3;
     double width = widthFactor * sizingInformation.screenSize.width;
 
     double marginTopFactor = sizingInformation.isPortrait() ? 20 : 10;
 
     return Container(
+      margin: const EdgeInsets.only(bottom: 20),
       width: width,
       child: ListView.builder(
         shrinkWrap: true,
@@ -153,11 +149,12 @@ class _HomeMobile extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: viewModel.getOtherMenusCount(),
         itemBuilder: (BuildContext listContext, int index) {
+          double itemTopMargin = index == 0 ? 0 : marginTopFactor;
           return GestureDetector(
             onTap: () => viewModel.onOtherPlayersTap(listContext, index),
             child: Container(
-              margin: EdgeInsets.only(top: marginTopFactor),
-              height: 35,
+              margin: EdgeInsets.only(top: itemTopMargin),
+              height: 65, //35
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: Colors.white,
