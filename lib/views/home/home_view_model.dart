@@ -7,6 +7,7 @@ import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
+import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -43,7 +44,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   String getAppBarTitle() {
-    return "Home";
+    return MyStrings.HOME_VIEW_APP_BAR_TITLE;
   }
 
   int getFollowedTeamsMenusSize() {

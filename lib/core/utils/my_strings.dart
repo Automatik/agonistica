@@ -14,4 +14,9 @@ class MyStrings {
   static const String FIREBASE_ERROR_DEFAULT = "Assicurati di avere connessione";
   static const String FIREBASE_ERROR_USER_NOT_EXISTS = "Utente non esistente";
 
+  // Home
+  static const String HOME_VIEW_APP_BAR_TITLE = "Home";
+  static const String HOME_VIEW_TITLE_FOLLOWED_TEAMS = "Squadre seguite";
+  static const String HOME_VIEW_TITLE_FOLLOWED_PLAYERS = "Altri giocatori seguiti";
+
 }

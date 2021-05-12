@@ -38,52 +38,45 @@ class _HomeMobile extends StatelessWidget {
   }
 
   Widget homePortraitLayout(BuildContext context, MySizingInformation sizingInformation) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        followedTeamsMenusTitle(context),
-        followedTeamsMenusWidget(sizingInformation, Axis.vertical),
-        followedPlayersMenusTitle(context),
-        followedPlayersMenusWidget(sizingInformation, Axis.vertical),
-      ],
-    );
+    return homeWidgets(context, sizingInformation, Axis.vertical);
   }
 
   Widget homeLandscapeLayout(BuildContext context, MySizingInformation sizingInformation) {
+    return homeWidgets(context, sizingInformation, Axis.horizontal);
+  }
+
+  Widget homeWidgets(BuildContext context, MySizingInformation sizingInformation, Axis axis) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         followedTeamsMenusTitle(context),
-        followedTeamsMenusWidget(sizingInformation, Axis.horizontal),
+        followedTeamsMenusWidget(sizingInformation, axis),
         followedPlayersMenusTitle(context),
-        followedPlayersMenusWidget(sizingInformation, Axis.horizontal),
+        followedPlayersMenusWidget(sizingInformation, axis),
       ],
     );
   }
 
   Widget followedTeamsMenusTitle(BuildContext context) {
-    var textStyle = Theme.of(context).textTheme.bodyText2;
-    textStyle = textStyle.merge(TextStyle(color: Colors.white, fontSize: 32));
     return Container(
       margin: EdgeInsets.only(top: 20),
       alignment: Alignment.center,
       child: Text(
-          "Squadre seguite",
+          MyStrings.HOME_VIEW_TITLE_FOLLOWED_TEAMS,
           textAlign: TextAlign.center,
-          style: textStyle
+          style: TitleTextStyle(context: context).compose()
       ),
     );
   }
 
   Widget followedPlayersMenusTitle(BuildContext context) {
-    var textStyle = Theme.of(context).textTheme.bodyText2.merge(TextStyle(color: Colors.white, fontSize: 32));
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 0),
       alignment: Alignment.center,
       child: Text(
-          'Altri giocatori seguiti',
+          MyStrings.HOME_VIEW_TITLE_FOLLOWED_PLAYERS,
           textAlign: TextAlign.center,
-          style: textStyle
+          style: TitleTextStyle(context: context).compose()
       ),
     );
   }
@@ -135,7 +128,7 @@ class _HomeMobile extends StatelessWidget {
     bool isPortrait = sizingInformation.isPortrait();
     double imageWidth = isPortrait ? listWidth : 0.55 * sizingInformation.screenSize.width;
     return Container(
-      margin: getListMargin(isPortrait),
+      margin: const EdgeInsets.symmetric(vertical: 20),
       width: listWidth,
       height: isPortrait ? null : imageMenuCardHeight,
       alignment: Alignment.center,
@@ -147,13 +140,6 @@ class _HomeMobile extends StatelessWidget {
         itemBuilder: (BuildContext listContext, int index) => itemBuilder(listContext, index, imageWidth),
       ),
     );
-  }
-
-  EdgeInsets getListMargin(bool isPortrait) {
-    if(isPortrait) {
-      return const EdgeInsets.symmetric(vertical: 20);
-    }
-    return EdgeInsets.symmetric(vertical: 20);
   }
 
 }
