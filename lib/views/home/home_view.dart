@@ -9,6 +9,7 @@ import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
 import 'package:agonistica/widgets/cards/image_menu_card.dart';
 import 'package:agonistica/widgets/scaffolds/scroll_scaffold_widget.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';

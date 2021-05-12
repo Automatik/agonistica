@@ -42,9 +42,9 @@ class _HomeMobile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         followedTeamsMenusTitle(context),
-        followedTeamsMenusWidget(sizingInformation),
+        followedTeamsMenusWidget(sizingInformation, Axis.vertical),
         followedPlayersMenusTitle(context),
-        followedPlayersMenusWidget(sizingInformation),
+        followedPlayersMenusWidget(sizingInformation, Axis.vertical),
       ],
     );
   }
@@ -54,20 +54,9 @@ class _HomeMobile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         followedTeamsMenusTitle(context),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            followedTeamsMenusWidget(sizingInformation),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                followedPlayersMenusTitle(context),
-                followedPlayersMenusWidget(sizingInformation),
-              ],
-            )
-          ],
-        )
+        followedTeamsMenusWidget(sizingInformation, Axis.horizontal),
+        followedPlayersMenusTitle(context),
+        followedPlayersMenusWidget(sizingInformation, Axis.horizontal),
       ],
     );
   }
@@ -99,61 +88,72 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget followedTeamsMenusWidget(MySizingInformation sizingInformation) {
-    double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.3;
-    double width = widthFactor * sizingInformation.screenSize.width;
+  Widget followedTeamsMenusWidget(MySizingInformation sizingInformation, Axis axis) {
+    return listMenusWidget(
+      sizingInformation: sizingInformation,
+      axis: axis,
+      itemCount: viewModel.getFollowedTeamsMenusSize(),
+      itemBuilder: (context, index, width) => followedTeamsMenusBuilder(context, index, width, axis),
+    );
+  }
 
-    double marginTopFactor = sizingInformation.isPortrait() ? 20 : 10;
+  Widget followedPlayersMenusWidget(MySizingInformation sizingInformation, Axis axis) {
+    return listMenusWidget(
+      sizingInformation: sizingInformation,
+      axis: axis,
+      itemCount: viewModel.getFollowedPlayersMenusSize(),
+      itemBuilder: (context, index, width) => followedPlayersMenusBuilder(context, index, width, axis),
+    );
+  }
 
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
+  Widget followedTeamsMenusBuilder(BuildContext context, int index, double width, Axis axis) {
+    Menu menu = viewModel.getFollowedTeamMenu(index);
+    return menuBuilder(menu.name, width, () => viewModel.onFollowedTeamMenuTap(context, index), axis);
+  }
+
+  Widget followedPlayersMenusBuilder(BuildContext context, int index, double width, Axis axis) {
+    Menu menu = viewModel.getFollowedPlayerMenu(index);
+    return menuBuilder(menu.name, width, () => viewModel.onFollowedPlayerMenuTap(context, index), axis);
+  }
+
+  Widget menuBuilder(String title, double width, Function onTap, Axis axis) {
+    bool isPortrait = axis == Axis.vertical;
+    return ImageMenuCard(
+      onTap: onTap,
+      imageAsset: MenuAssets.getRandomImage(),
+      title: title,
       width: width,
+      height: imageMenuCardHeight,
+      useWhiteBackground: true,
+      useVerticalMargin: isPortrait,
+    );
+  }
+
+  Widget listMenusWidget({MySizingInformation sizingInformation, Axis axis, int itemCount, Widget Function(BuildContext, int, double) itemBuilder}) {
+    double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.95;
+    double listWidth = widthFactor * sizingInformation.screenSize.width;
+    bool isPortrait = sizingInformation.isPortrait();
+    double imageWidth = isPortrait ? listWidth : 0.55 * sizingInformation.screenSize.width;
+    return Container(
+      margin: getListMargin(isPortrait),
+      width: listWidth,
+      height: isPortrait ? null : imageMenuCardHeight,
+      alignment: Alignment.center,
       child: ListView.builder(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: viewModel.getFollowedTeamsMenusSize(),
-        itemBuilder: (BuildContext listContext, int index) {
-          Menu menu = viewModel.getFollowedTeamMenu(index);
-          double itemTopMargin = index == 0 ? 0 : marginTopFactor;
-          return ImageMenuCard(
-            onTap: () => viewModel.onFollowedTeamMenuTap(listContext, index),
-            imageAsset: MenuAssets.getRandomImage(),
-            title: menu.name,
-            width: width,
-            height: imageMenuCardHeight
-          );
-        },
+        physics: isPortrait ? NeverScrollableScrollPhysics() : null,
+        scrollDirection: axis,
+        itemCount: itemCount,
+        itemBuilder: (BuildContext listContext, int index) => itemBuilder(listContext, index, imageWidth),
       ),
     );
   }
 
-  Widget followedPlayersMenusWidget(MySizingInformation sizingInformation) {
-    double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.3;
-    double width = widthFactor * sizingInformation.screenSize.width;
-
-    double marginTopFactor = sizingInformation.isPortrait() ? 20 : 10;
-
-    return Container(
-      margin: const EdgeInsets.only(top: 20, bottom: 20),
-      width: width,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: viewModel.getFollowedPlayersMenusSize(),
-        itemBuilder: (BuildContext listContext, int index) {
-          Menu menu = viewModel.getFollowedPlayerMenu(index);
-          double itemTopMargin = index == 0 ? 0 : marginTopFactor;
-          return ImageMenuCard(
-              onTap: () => viewModel.onFollowedPlayerMenuTap(listContext, index),
-              imageAsset: MenuAssets.getRandomImage(),
-              title: menu.name,
-              width: width,
-              height: imageMenuCardHeight
-          );
-        },
-      ),
-    );
+  EdgeInsets getListMargin(bool isPortrait) {
+    if(isPortrait) {
+      return const EdgeInsets.symmetric(vertical: 20);
+    }
+    return EdgeInsets.symmetric(vertical: 20);
   }
+
 }

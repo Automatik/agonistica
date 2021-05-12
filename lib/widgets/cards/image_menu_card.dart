@@ -8,6 +8,7 @@ class ImageMenuCard extends StatelessWidget {
   final double width;
   final double height;
   final bool useWhiteBackground;
+  final bool useVerticalMargin;
 
   ImageMenuCard({
     @required this.imageAsset,
@@ -16,6 +17,7 @@ class ImageMenuCard extends StatelessWidget {
     @required this.height,
     this.onTap,
     this.useWhiteBackground = true,
+    this.useVerticalMargin = true,
   });
 
   @override
@@ -23,14 +25,11 @@ class ImageMenuCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(top: 5, bottom: 5),
+        margin: getMargin(),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
         ),
-        // width: width,
-        // height: height,
-        // alignment: Alignment.center,
         child: Stack(
           children: [
             imageBackground(),
@@ -39,6 +38,13 @@ class ImageMenuCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  EdgeInsets getMargin() {
+    if(useVerticalMargin) {
+      return EdgeInsets.symmetric(vertical: 5, horizontal: 0);
+    }
+    return EdgeInsets.symmetric(vertical: 0, horizontal: 5);
   }
 
   Widget imageBackground() {
