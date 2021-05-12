@@ -1,3 +1,4 @@
+import 'package:agonistica/widgets/text_styles/image_menu_card_text_style.dart';
 import 'package:flutter/material.dart';
 
 class ImageMenuCard extends StatelessWidget {
@@ -90,11 +91,7 @@ class ImageMenuCard extends StatelessWidget {
   Widget titleText(Color textColor, double fontSize) {
     return Text(
       title,
-      style: TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: FontWeight.bold,
-      ),
+      style: ImageMenuCardTextStyle(fontSize: fontSize)
     );
   }
 
