@@ -29,6 +29,16 @@ class MenuService extends CrudService<Menu> {
     await saveItem(menu);
   }
 
+  Future<List<Menu>> getFollowedTeamsMenus() async {
+    List<Menu> menus = await getAllItems();
+    return menus.where((element) => element.type == Menu.TYPE_FOLLOWED_TEAMS).toList();
+  }
+
+  Future<List<Menu>> getFollowedPlayersMenus() async {
+    List<Menu> menus = await getAllItems();
+    return menus.where((element) => element.type == Menu.TYPE_FOLLOWED_PLAYERS).toList();
+  }
+
   Future<Menu> getMainMenu() async {
     List<Menu> menus = await getAllItems();
     int index = menus.indexWhere((element) => element.name == mainRequestedTeam);

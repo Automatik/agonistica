@@ -20,11 +20,12 @@ class HomeViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('HomeViewModel');
 
-
-  Menu _mainMenu;
-  List<Menu> _otherMenus = [];
+  List<Menu> _followedTeamsMenus;
+  List<Menu> _followedPlayersMenus;
 
   HomeViewModel(){
+    _followedTeamsMenus = [];
+    _followedPlayersMenus = [];
     loadItems();
   }
   
@@ -33,35 +34,41 @@ class HomeViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    _mainMenu = await _databaseService.menuService.getMainMenu();
-    _otherMenus = await _databaseService.menuService.getOtherMenus();
+    _followedTeamsMenus = await _databaseService.menuService.getFollowedTeamsMenus();
+    _followedPlayersMenus = await _databaseService.menuService.getFollowedPlayersMenus();
 
     //Let other views to render again
     setBusy(false);
     notifyListeners();
   }
 
-  String getMainMenuName() {
-    return _mainMenu == null ? "" : _mainMenu.name;
+  String getAppBarTitle() {
+    return "Home";
   }
 
-  int getOtherMenusCount() {
-    return _otherMenus.length;
+  int getFollowedTeamsMenusSize() {
+    return _followedTeamsMenus.length;
   }
 
-  String getOtherMenuName(int index) {
-    if(index < getOtherMenusCount()) {
-      return _otherMenus[index].name;
-    }
-    return "";
+  int getFollowedPlayersMenusSize() {
+    return _followedPlayersMenus.length;
   }
 
-  Future<void> onMainButtonTap(BuildContext context) async {
-    setAppBarTitle(_mainMenu.name);
+  Menu getFollowedTeamMenu(int index) {
+    return _followedTeamsMenus[index];
+  }
+
+  Menu getFollowedPlayerMenu(int index) {
+    return _followedPlayersMenus[index];
+  }
+
+  Future<void> onFollowedTeamMenuTap(BuildContext context, int index) async {
+    Menu menu = _followedTeamsMenus[index];
+    setAppBarTitle(menu.name);
     // Set menu selected
-    _appStateService.selectedMenu = _mainMenu;
+    _appStateService.selectedMenu = menu;
     // Get the team corresponding to this menu
-    Team team = await _databaseService.teamService.getItemById(_mainMenu.teamId);
+    Team team = await _databaseService.teamService.getItemById(menu.teamId);
     _appStateService.selectedTeam = team;
     // Get the current season team
     SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
@@ -73,10 +80,11 @@ class HomeViewModel extends BaseViewModel {
     navigateToCategoriesView(context, categoriesIds);
   }
 
-  Future<void> onOtherPlayersTap(BuildContext context, int index) async {
-    Menu menu = _otherMenus[index];
-    _appStateService.selectedMenu = menu;
+  Future<void> onFollowedPlayerMenuTap(BuildContext context, int index) async {
+    Menu menu = _followedPlayersMenus[index];
     setAppBarTitle(menu.name);
+    // Set menu selected
+    _appStateService.selectedMenu = menu;
 
     // Get the current season
     _appStateService.selectedSeason = await _databaseService.seasonService.getCurrentSeason();
