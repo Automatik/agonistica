@@ -1,7 +1,6 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
-import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/repositories/season_repository.dart';
@@ -28,7 +27,10 @@ class SeasonService extends CrudService<Season> {
     List<Season> seasons = await getAllItems();
     int index = seasons.indexWhere((s) => s.beginYear == currentSeason.beginYear && s.endYear == currentSeason.endYear);
     if(index == -1) {
-      throw NotFoundException("No current season created.");
+      CrudService.logger.d("No current season created yet.");
+      // Save current season
+      await saveItem(currentSeason);
+      return currentSeason;
     }
     return seasons[index];
   }
@@ -36,6 +38,11 @@ class SeasonService extends CrudService<Season> {
   Future<bool> itemWithGivenYearsExists(int beginYear, int endYear) async {
     List<Season> seasons = await getAllItems();
     return seasons.any((s) => s.beginYear == beginYear && s.endYear == endYear);
+  }
+
+  Future<List<Season>> getUniqueSeasonsFromIds(List<String> seasonsIds) async {
+    Set<String> uniqueSeasonsIds = Set.of(seasonsIds);
+    return await getItemsByIds(uniqueSeasonsIds.toList());
   }
 
   @override

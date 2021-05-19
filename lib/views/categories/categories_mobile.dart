@@ -2,11 +2,6 @@ part of categories_view;
 
 class _CategoriesMobile extends StatelessWidget {
 
-  static const String DIALOG_TITLE = "Elimina Categoria";
-  static const String DIALOG_MESSAGE = "Sei sicuro di volere eliminare la categoria e tutti i giocatori e le partite che appartengono a questa?";
-  static const String DIALOG_CONFIRM = "Conferma";
-  static const String DIALOG_CANCEL = "Annulla";
-
   final CategoriesViewModel viewModel;
 
   _CategoriesMobile(this.viewModel);
@@ -18,12 +13,8 @@ class _CategoriesMobile extends StatelessWidget {
       platformAppBar: getPlatformAppBar(context),
       childBuilder: (context, sizingInformation, parentSizingInformation) {
 
-        double titleFontSize = sizingInformation.isPortrait() ? 24 : 20;
-
-        double widthFactor = sizingInformation.isPortrait() ? 0.65 : 0.35;
+        double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.95;
         double width = widthFactor * sizingInformation.screenSize.width;
-
-        double marginTop = sizingInformation.isPortrait() ? 50 : 0;
 
         return Container(
             constraints: BoxConstraints(
@@ -33,59 +24,84 @@ class _CategoriesMobile extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                margin: EdgeInsets.only(top: marginTop),
-                alignment: Alignment.center,
-                child: Text(
-                  'Categorie seguite',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: titleFontSize,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: marginTop),
-                width: width,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: viewModel.getFollowedCategoriesCount(),
-                  itemBuilder: (BuildContext listContext, int index) {
-                    return GestureDetector(
-                      onTap: () => viewModel.onFollowedCategoryTap(context, index),
-                      onLongPressStart: (longPressDetails) => onItemLongPress(context, longPressDetails.globalPosition, index),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 30),
-//                          height: 35,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        constraints: BoxConstraints(
-                          minHeight: 35,
-                        ),
-                        child: Text(
-                          viewModel.getFollowedCategory(index),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              titleWidget(context),
+              seasonsListWidget(context, width),
+              categoriesListWidget(context, width),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget titleWidget(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      alignment: Alignment.center,
+      child: Text(
+          MyStrings.CATEGORY_VIEW_TITLE,
+          textAlign: TextAlign.center,
+          style: TitleTextStyle(context: context).compose()
+      ),
+    );
+  }
+
+  Widget seasonsListWidget(BuildContext context, double listWidth) {
+    List<Widget> seasonsList = seasonsListChildren();
+    // check if empty because ListWheelScrollView currently has bug of not
+    // re-rendering when child count changes
+    // https://github.com/flutter/flutter/issues/58144
+    if(seasonsList.isEmpty) {
+      return SizedBox();
+    }
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      width: listWidth,
+      height: 100,
+      alignment: Alignment.center,
+      child: RotatedListWheel(
+        children: seasonsList,
+        itemExtent: 250,
+        onSelectedItemChanged: (index) => viewModel.onSeasonItemChanged(index),
+      )
+    );
+  }
+
+  List<Widget> seasonsListChildren() {
+    // List<String> seasonPeriods = ["2017/18","2018/19", "2019/20", "2020/21"];
+    List<String> seasonPeriods = viewModel.getSeasonPeriods();
+    List<Widget> children = [];
+    seasonPeriods.forEach((element) {
+      Widget widget = SeasonCard(title: element, height: 100);
+      children.add(widget);
+    });
+    return children;
+  }
+
+  Widget categoriesListWidget(BuildContext context, double width) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 20),
+      width: width,
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: viewModel.getCategoriesCount(),
+        itemBuilder: (BuildContext listContext, int index) => categoryBuilder(context, index, width),
+      ),
+    );
+  }
+
+  Widget categoryBuilder(BuildContext context, int index, double width) {
+    return ImageMenuCard(
+      onTap: () => viewModel.onCategoryTap(context, index),
+      onLongTap: (longPressDetails) => onItemLongPress(context, longPressDetails.globalPosition, index),
+      imageAsset: MenuAssets.getRandomImage(),
+      title: viewModel.getCategory(index),
+      width: width,
+      height: 150,
+      useWhiteBackground: true,
+      useVerticalMargin: true,
     );
   }
 
@@ -126,12 +142,17 @@ class _CategoriesMobile extends StatelessWidget {
   void askConfirmDialog(BuildContext context, int index) {
     final dialog = ConfirmDialog(
       onConfirm: () {
-        viewModel.onFollowedCategoryLongTap(index);
+        viewModel.onCategoryLongTap(index);
         NavUtils.closeView(context);
         },
       onCancel: () => NavUtils.closeView(context),
     );
-    dialog.showDialog(context, DIALOG_TITLE, DIALOG_MESSAGE, DIALOG_CONFIRM, DIALOG_CANCEL);
+    dialog.showDialog(context,
+        MyStrings.CATEGORY_VIEW_DIALOG_TITLE,
+        MyStrings.CATEGORY_VIEW_DIALOG_MESSAGE,
+        MyStrings.CATEGORY_VIEW_DIALOG_CONFIRM,
+        MyStrings.CATEGORY_VIEW_DIALOG_CANCEL
+    );
   }
 
 }

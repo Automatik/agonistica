@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
@@ -21,12 +23,12 @@ class HomeViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('HomeViewModel');
 
-  List<Menu> _followedTeamsMenus;
-  List<Menu> _followedPlayersMenus;
+  SplayTreeSet<Menu> _sortedFollowedTeamsMenus;
+  SplayTreeSet<Menu> _sortedFollowedPlayersMenus;
 
   HomeViewModel(){
-    _followedTeamsMenus = [];
-    _followedPlayersMenus = [];
+    _sortedFollowedTeamsMenus = SplayTreeSet((m1, m2) => Menu.compare(m1, m2));
+    _sortedFollowedPlayersMenus = SplayTreeSet((m1, m2) => Menu.compare(m1, m2));
     loadItems();
   }
   
@@ -35,8 +37,11 @@ class HomeViewModel extends BaseViewModel {
     setBusy(true);
     //Write your models loading codes here
 
-    _followedTeamsMenus = await _databaseService.menuService.getFollowedTeamsMenus();
-    _followedPlayersMenus = await _databaseService.menuService.getFollowedPlayersMenus();
+    List<Menu> followedTeamsMenus = await _databaseService.menuService.getFollowedTeamsMenus();
+    List<Menu> followedPlayersMenus = await _databaseService.menuService.getFollowedPlayersMenus();
+
+    _sortedFollowedTeamsMenus.addAll(followedTeamsMenus);
+    _sortedFollowedPlayersMenus.addAll(followedPlayersMenus);
 
     //Let other views to render again
     setBusy(false);
@@ -48,23 +53,23 @@ class HomeViewModel extends BaseViewModel {
   }
 
   int getFollowedTeamsMenusSize() {
-    return _followedTeamsMenus.length;
+    return _sortedFollowedTeamsMenus.length;
   }
 
   int getFollowedPlayersMenusSize() {
-    return _followedPlayersMenus.length;
+    return _sortedFollowedPlayersMenus.length;
   }
 
   Menu getFollowedTeamMenu(int index) {
-    return _followedTeamsMenus[index];
+    return _sortedFollowedTeamsMenus.elementAt(index);
   }
 
   Menu getFollowedPlayerMenu(int index) {
-    return _followedPlayersMenus[index];
+    return _sortedFollowedPlayersMenus.elementAt(index);
   }
 
   Future<void> onFollowedTeamMenuTap(BuildContext context, int index) async {
-    Menu menu = _followedTeamsMenus[index];
+    Menu menu = getFollowedTeamMenu(index);
     setAppBarTitle(menu.name);
     // Set menu selected
     _appStateService.selectedMenu = menu;
@@ -82,7 +87,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> onFollowedPlayerMenuTap(BuildContext context, int index) async {
-    Menu menu = _followedPlayersMenus[index];
+    Menu menu = getFollowedPlayerMenu(index);
     setAppBarTitle(menu.name);
     // Set menu selected
     _appStateService.selectedMenu = menu;

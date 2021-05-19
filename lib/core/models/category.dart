@@ -16,6 +16,10 @@ class Category {
     this.name = name;
   }
 
+  static int compare(Category c1, Category c2) {
+    return c1.name.compareTo(c2.name);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 

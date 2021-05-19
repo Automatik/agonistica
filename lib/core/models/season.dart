@@ -1,4 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
+import 'package:agonistica/core/utils/db_utils.dart';
 import 'package:uuid/uuid.dart';
 
 class Season {
@@ -16,8 +17,7 @@ class Season {
   int endYear; // es. 2021
 
   Season() {
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
   }
 
   Season.create(int beginYear, int endYear) {
@@ -25,8 +25,7 @@ class Season {
     Preconditions.requireArgumentGreaterThanZero(endYear);
     Preconditions.requireArgumentGreaterThan(endYear, beginYear);
 
-    var uuid = Uuid();
-    id = uuid.v4();
+    id = DbUtils.newUuid();
     this.beginYear = beginYear;
     this.endYear = endYear;
     period = yearsToString(beginYear, endYear);
@@ -57,6 +56,10 @@ class Season {
     map.putIfAbsent(_MAP_BEGIN_YEAR, () => beginYear);
     map.putIfAbsent(_MAP_END_YEAR, () => endYear);
     return map;
+  }
+
+  static int compare(Season s1, Season s2) {
+    return s1.beginYear.compareTo(s2.beginYear);
   }
 
   Map<String, dynamic> toJson() {

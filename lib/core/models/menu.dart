@@ -54,6 +54,18 @@ class Menu {
     categoriesIds = DbUtils.removeFromList(categoriesIds, categoryId);
   }
 
+  bool isTeamMenu() {
+    return type == TYPE_FOLLOWED_TEAMS;
+  }
+
+  bool isPlayersMenu() {
+    return type == TYPE_FOLLOWED_PLAYERS;
+  }
+
+  static int compare(Menu m1, Menu m2) {
+    return m1.name.compareTo(m2.name);
+  }
+
   Map<String, dynamic> toJson() {
     checkRequiredFields();
 
@@ -78,7 +90,7 @@ class Menu {
     Preconditions.requireFieldNotEmpty("name", name);
     Preconditions.requireFieldGreaterThan("type", type, TYPE_FOLLOWED_TEAMS - 1);
     Preconditions.requireFieldLessThan("type", type, TYPE_FOLLOWED_PLAYERS + 1);
-    if(type == TYPE_FOLLOWED_TEAMS) {
+    if(isTeamMenu()) {
       Preconditions.requireFieldNotEmpty("teamId", teamId);
     } else {
       Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds);

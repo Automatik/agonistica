@@ -6,6 +6,7 @@ class ImageMenuCard extends StatelessWidget {
   final String imageAsset;
   final String title;
   final Function onTap;
+  final Function onLongTap;
   final double width;
   final double height;
   final bool useWhiteBackground;
@@ -17,6 +18,7 @@ class ImageMenuCard extends StatelessWidget {
     @required this.width,
     @required this.height,
     this.onTap,
+    this.onLongTap,
     this.useWhiteBackground = true,
     this.useVerticalMargin = true,
   });
@@ -25,6 +27,7 @@ class ImageMenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPressStart: onLongTap,
       child: Container(
         margin: getMargin(),
         decoration: BoxDecoration(
