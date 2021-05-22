@@ -4,8 +4,8 @@ abstract class BaseReview extends StatelessWidget {
 
   final double iconsSize = 24;
   final double avatarSize = 40;
-  final double topMargin = 10;
-  final double bottomMargin = 10;
+  final double verticalMargin = 10;
+  final double horizontalMargin = 15;
 
   final double width;
   final double minHeight;
@@ -31,6 +31,7 @@ abstract class BaseReview extends StatelessWidget {
           maxWidth: width,
           minHeight: minHeight,
         ),
+        padding: EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: verticalMargin),
         child: content(),
       ),
     );

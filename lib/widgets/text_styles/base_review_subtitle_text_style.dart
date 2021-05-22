@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MatchReviewSubtitleTextStyle extends TextStyle {
+class BaseReviewSubtitleTextStyle extends TextStyle {
 
-  MatchReviewSubtitleTextStyle()
+  BaseReviewSubtitleTextStyle()
       : super(fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal);
 
 }

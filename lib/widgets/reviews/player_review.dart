@@ -1,68 +1,43 @@
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
-import 'package:agonistica/widgets/text_styles/match_review_subtitle_text_style.dart';
-import 'package:agonistica/widgets/text_styles/match_review_team_text_style.dart';
+import 'package:agonistica/widgets/reviews/base_review.dart';
+import 'package:agonistica/widgets/text_styles/base_review_subtitle_text_style.dart';
+import 'package:agonistica/widgets/text_styles/base_review_team_text_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/utils/date_utils.dart';
 
-class PlayerReview extends StatelessWidget{
+class PlayerReview extends BaseReview{
 
   final String name, role;
   final DateTime birthDay;
-  final double width, minHeight;
-  final Function onTap, onSettingsTap;
-
-  final double iconsSize = 24;
-  final double playerIconSize = 40;
-  final double topMargin = 10;
-  final double bottomMargin = 10;
 
   PlayerReview({
     this.name,
     this.role,
     this.birthDay,
-    this.width,
-    this.minHeight = 50,
-    this.onTap,
-    this.onSettingsTap
-  });
-
+    width,
+    minHeight = 50.0,
+    onTap,
+    onSettingsTap
+  }) : assert(name != null),
+        assert(role != null),
+        assert(birthDay != null),
+        super(width: width, minHeight: minHeight, onTap: onTap, onSettingsTap: onSettingsTap);
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        constraints: BoxConstraints(
-          maxWidth: width,
-          minHeight: minHeight,
-        ),
-        child: Row(
-          children: [
-            playerImage(),
-            Expanded(
-              child: Column(
-                children: [
-                  topRow(),
-                  bottomRow()
-                ],
-              ),
-            )
-          ],
-        )
-      ),
+  Widget content() {
+    return Row(
+      children: [
+        playerImage(),
+        playerData(),
+      ],
     );
   }
 
   Widget playerImage() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.grey.withAlpha(200),
@@ -71,15 +46,28 @@ class PlayerReview extends StatelessWidget{
       alignment: Alignment.center,
       child: SvgImage(
         imageAsset: IconAssets.ICON_FOOTBALL_PLAYER,
-        width: playerIconSize,
-        height: playerIconSize,
+        width: avatarSize,
+        height: avatarSize,
+      ),
+    );
+  }
+
+  Widget playerData() {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(left: 10, right: 5),
+        child: Column(
+          children: [
+            topRow(),
+            bottomRow()
+          ],
+        ),
       ),
     );
   }
 
   Widget topRow() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -88,7 +76,7 @@ class PlayerReview extends StatelessWidget{
               child: Text(
                 name,
                 textAlign: TextAlign.start,
-                style: MatchReviewTeamTextStyle(),
+                style: BaseReviewTeamTextStyle(),
               ),
             ),
           ),
@@ -105,22 +93,20 @@ class PlayerReview extends StatelessWidget{
 
   Widget bottomRow() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      margin: EdgeInsets.only(top: verticalMargin),
       child: Row(
         children: [
           Expanded(
             child: Container(
-              // margin: EdgeInsets.only(left: 12, top: topMargin, bottom: bottomMargin),
               child: Text(
                 role,
                 textAlign: TextAlign.start,
-                style: MatchReviewSubtitleTextStyle(),
+                style: BaseReviewSubtitleTextStyle(),
               ),
             ),
           ),
           Expanded(
             child: Container(
-              // margin: EdgeInsets.only(right: 15, top: topMargin, bottom: bottomMargin),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -129,7 +115,7 @@ class PlayerReview extends StatelessWidget{
                   Text(
                     "${birthDay.day} " + DateUtils.monthToString(birthDay.month).substring(0, 3) + " ${birthDay.year}",
                     textAlign: TextAlign.end,
-                    style: MatchReviewSubtitleTextStyle(),
+                    style: BaseReviewSubtitleTextStyle(),
                   )
                 ],
               ),

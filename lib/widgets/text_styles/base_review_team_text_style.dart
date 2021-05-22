@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class MatchReviewTeamTextStyle extends TextStyle {
+class BaseReviewTeamTextStyle extends TextStyle {
 
-  MatchReviewTeamTextStyle()
+  BaseReviewTeamTextStyle()
     : super(fontSize: 20, color: Colors.black, fontWeight: FontWeight.normal);
 
 }
