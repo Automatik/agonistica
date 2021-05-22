@@ -14,5 +14,6 @@ class IconAssets {
   static const String ICON_DOWN_ARROW = "assets/icons/down-arrow.svg";
   static const String ICON_PERSON = "assets/icons/male.svg";
   static const String ICON_UP_ARROW = "assets/icons/up-arrow.svg";
+  static const String ICON_FOOTBALL_PLAYER = "assets/icons/football-player.svg";
 
 }

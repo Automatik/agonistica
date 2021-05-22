@@ -15,8 +15,6 @@ class _TeamMobile extends StatefulWidget {
 
 class _TeamMobileState extends State<_TeamMobile> {
 
-
-
   int _tabIndex;
 
   @override
@@ -56,13 +54,14 @@ class _TeamMobileState extends State<_TeamMobile> {
     return BaseWidget(
       builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
-        double itemsWidth = 0.7 * sizingInformation.screenSize.width;
+        double itemsWidth = 0.95 * sizingInformation.screenSize.width;
 
         return Container(
           constraints: BoxConstraints(
             maxHeight: sizingInformation.screenSize.height,
             maxWidth: sizingInformation.screenSize.width,
           ),
+          margin: const EdgeInsets.symmetric(vertical: 20),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
               itemCount: widget.viewModel.getMatchesSize(),
@@ -71,7 +70,7 @@ class _TeamMobileState extends State<_TeamMobile> {
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
+                    margin: EdgeInsets.only(top: 5, bottom: 5),
                     width: itemsWidth,
                     child: MatchReview(
                       onTap: () => widget.viewModel.openMatchDetail(context, index),
@@ -96,7 +95,7 @@ class _TeamMobileState extends State<_TeamMobile> {
     return BaseWidget(
       builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
-        double itemsWidth = 0.7 * sizingInformation.screenSize.width;
+        double itemsWidth = 0.95 * sizingInformation.screenSize.width;
 
         return Container(
           constraints: BoxConstraints(

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:agonistica/core/utils/random_utils.dart';
+
 class MenuAssets {
 
   static const String MENU_IMAGE1 = "assets/menus/menu1.jpg";
@@ -22,8 +24,7 @@ class MenuAssets {
 
   static String getRandomImage() {
     List<String> images = getImagesArray();
-    final random = Random();
-    int number = random.nextInt(images.length);
+    int number = RandomUtils.randomInt(images.length);
     return images[number];
   }
 

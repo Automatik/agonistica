@@ -1,8 +1,11 @@
-import 'package:agonistica/core/assets/icon_assets.dart';
+import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/widgets/images/svg_image.dart';
+import 'package:agonistica/widgets/text_styles/match_review_result_text_style.dart';
+import 'package:agonistica/widgets/text_styles/match_review_subtitle_text_style.dart';
+import 'package:agonistica/widgets/text_styles/match_review_team_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MatchReview extends StatelessWidget {
 
@@ -12,7 +15,8 @@ class MatchReview extends StatelessWidget {
   final double width, minHeight;
   final Function onTap, onSettingsTap;
 
-  final double iconsSize = 20;
+  final double iconsSize = 24;
+  final double teamImageSize = 40;
   final double topMargin = 10;
   final double bottomMargin = 10;
 
@@ -49,84 +53,127 @@ class MatchReview extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(left: 12, right: 5, top: topMargin),
-                  width: iconsSize,
-                  height: iconsSize,
-                  child: SvgPicture.asset(
-                    IconAssets.ICON_FOOTBALL_BALL,
-                    width: iconsSize,
-                    height: iconsSize,
-                    excludeFromSemantics: true,
-                    color: blueAgonisticaColor,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(top: topMargin),
-                    alignment: Alignment.center,
-                    child: Text(
-                      team1 + " " + result + " " + team2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5, right: 12, top: topMargin),
-                    child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(left: 12, top: topMargin, bottom: bottomMargin),
-                    child: Text(
-                      "Giornata $leagueMatch",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.only(right: 15, top: topMargin, bottom: bottomMargin),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
-                        SizedBox(width: 5,),
-                        Text(
-                          "${matchDate.day} " + DateUtils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            mainRow(),
+            secondRow(),
           ],
         ),
       ),
     );
   }
+
+  Widget mainRow() {
+    return Row(
+      children: [
+        homeTeamWidget(),
+        teamNameWidget(team1),
+        resultWidget(result),
+        teamNameWidget(team2),
+        awayTeamWidget(),
+      ],
+    );
+  }
+
+  Widget secondRow() {
+    return Row(
+      children: [
+        leagueMatchWidget(),
+        matchDateWidget(),
+        settingsWidget(),
+      ],
+    );
+  }
+
+  Widget homeTeamWidget() {
+    return Container(
+      margin: EdgeInsets.only(left: 15, right: 5, top: topMargin),
+      child: SvgImage(
+        imageAsset: TeamAssets.getRandomImage(),
+        width: teamImageSize,
+        height: teamImageSize,
+      ),
+    );
+  }
+
+  Widget teamNameWidget(String teamName) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(left: 5, top: topMargin, right: 5),
+        alignment: Alignment.center,
+        child: Text(
+          teamName,
+          textAlign: TextAlign.center,
+          style: MatchReviewTeamTextStyle(),
+        ),
+      ),
+    );
+  }
+
+  Widget resultWidget(String result) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(left: 5, top: topMargin, right: 5),
+        alignment: Alignment.center,
+        child: Text(
+          result,
+          textAlign: TextAlign.center,
+          style: MatchReviewResultTextStyle(),
+        ),
+      )
+    );
+  }
+
+  Widget awayTeamWidget() {
+    return Container(
+      margin: EdgeInsets.only(left: 5, right: 15, top: topMargin),
+      child: SvgImage(
+        imageAsset: TeamAssets.getRandomImage(),
+        width: teamImageSize,
+        height: teamImageSize,
+      ),
+    );
+  }
+
+  Widget leagueMatchWidget() {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(left: 15, top: topMargin, bottom: bottomMargin),
+        child: Text(
+          "Giornata $leagueMatch",
+          textAlign: TextAlign.start,
+          style: MatchReviewSubtitleTextStyle(),
+        ),
+      ),
+    );
+  }
+
+  Widget matchDateWidget() {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 5, top: topMargin, bottom: bottomMargin),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
+            SizedBox(width: 5,),
+            Text(
+              "${matchDate.day} " + DateUtils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
+              textAlign: TextAlign.center,
+              style: MatchReviewSubtitleTextStyle(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget settingsWidget() {
+    return GestureDetector(
+      onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
+      child: Container(
+          margin: EdgeInsets.only(left: 5, right: 15, top: topMargin, bottom: bottomMargin),
+          child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
+      ),
+    );
+  }
+
 }
