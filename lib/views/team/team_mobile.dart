@@ -50,7 +50,7 @@ class _TeamMobileState extends State<_TeamMobile> {
     );
   }
 
-  Widget _getMatchesLayout() {
+  Widget _getBaseLayout(Widget Function(int, double) getItem, int itemCount) {
     return BaseWidget(
       builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
 
@@ -64,24 +64,14 @@ class _TeamMobileState extends State<_TeamMobile> {
           margin: const EdgeInsets.symmetric(vertical: 20),
           child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: widget.viewModel.getMatchesSize(),
+              itemCount: itemCount,
               itemBuilder: (BuildContext listContext, int index) {
-                Match match = widget.viewModel.getMatch(index);
                 return Align(
                   alignment: Alignment.center,
                   child: Container(
                     margin: EdgeInsets.only(top: 5, bottom: 5),
                     width: itemsWidth,
-                    child: MatchReview(
-                      onTap: () => widget.viewModel.openMatchDetail(context, index),
-                      onSettingsTap: (offset) => onMatchLongPress(context, offset, index),
-                      width: itemsWidth,
-                      team1: match.getHomeSeasonTeamName(),
-                      team2: match.getAwaySeasonTeamName(),
-                      result: "${match.team1Goals} - ${match.team2Goals}",
-                      leagueMatch: match.leagueMatch,
-                      matchDate: match.matchDate,
-                    ),
+                    child: getItem(index, itemsWidth),
                   ),
                 );
               }
@@ -91,41 +81,37 @@ class _TeamMobileState extends State<_TeamMobile> {
     );
   }
 
+  Widget _getMatchesLayout() {
+    return _getBaseLayout((index, itemsWidth) => _getMatchReview(index, itemsWidth), widget.viewModel.getMatchesSize());
+  }
+
   Widget _getRosterLayout() {
-    return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+    return _getBaseLayout((index, itemsWidth) => _getPlayerReview(index, itemsWidth), widget.viewModel.getSeasonPlayersSize());
+  }
 
-        double itemsWidth = 0.95 * sizingInformation.screenSize.width;
+  Widget _getMatchReview(int index, double itemsWidth) {
+    Match match = widget.viewModel.getMatch(index);
+    return MatchReview(
+      onTap: () => widget.viewModel.openMatchDetail(context, index),
+      onSettingsTap: (offset) => onMatchLongPress(context, offset, index),
+      width: itemsWidth,
+      team1: match.getHomeSeasonTeamName(),
+      team2: match.getAwaySeasonTeamName(),
+      result: "${match.team1Goals} - ${match.team2Goals}",
+      leagueMatch: match.leagueMatch,
+      matchDate: match.matchDate,
+    );
+  }
 
-        return Container(
-          constraints: BoxConstraints(
-            maxHeight: sizingInformation.screenSize.height,
-            maxWidth: sizingInformation.screenSize.width,
-          ),
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: widget.viewModel.getSeasonPlayersSize(),
-              itemBuilder: (BuildContext listContext, int index) {
-                SeasonPlayer seasonPlayer = widget.viewModel.getSeasonPlayers(index);
-                return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    width: itemsWidth,
-                    child: PlayerReview(
-                      onTap: () => widget.viewModel.openPlayerDetail(context, index),
-                      onSettingsTap: (offset) => onRosterLongPress(context, offset, index),
-                      name: "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
-                      role: SeasonPlayer.positionToString(seasonPlayer.position),
-                      width: itemsWidth,
-                      birthDay: seasonPlayer.getPlayerBirthday(),
-                    ),
-                  ),
-                );
-              }
-          ),
-        );
-      },
+  Widget _getPlayerReview(int index, double itemsWidth) {
+    SeasonPlayer seasonPlayer = widget.viewModel.getSeasonPlayers(index);
+    return PlayerReview(
+      onTap: () => widget.viewModel.openPlayerDetail(context, index),
+      onSettingsTap: (offset) => onRosterLongPress(context, offset, index),
+      name: "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
+      role: SeasonPlayer.positionToString(seasonPlayer.position),
+      width: itemsWidth,
+      birthDay: seasonPlayer.getPlayerBirthday(),
     );
   }
 
