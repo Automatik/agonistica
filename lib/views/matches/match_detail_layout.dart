@@ -1,12 +1,15 @@
 import 'dart:math';
 
 import 'package:agonistica/core/assets/icon_assets.dart';
+import 'package:agonistica/core/assets/image_assets.dart';
+import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
+import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
@@ -18,9 +21,9 @@ import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/widgets/dialogs/change_team_dialog.dart';
 import 'package:agonistica/views/matches/player_items_empty_row.dart';
 import 'package:agonistica/views/matches/player_items_row.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_subtitle_text_style.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_title_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 const int MAX_REGULARS_PLAYERS = 11;
 
@@ -28,6 +31,8 @@ class MatchDetailLayout extends StatefulWidget {
 
   static const String SNACKBAR_TEXT_SELECT_TEAMS = "Seleziona le squadre prima di modificare i giocatori";
   static const String INSERTED_TEAM_ERROR_ALREADY_INSERTED = "Squadra già inserita nella partita";
+
+  static const double MATCH_INFO_HEIGHT = 250;
 
   final Match match;
   final bool isEditEnabled;
@@ -315,154 +320,224 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   Widget matchInfo(BuildContext context, Match matchInfo, bool isEditEnabled) {
-
-    final double teamsFontSize = 18;
-    final FontWeight teamsFontWeight = FontWeight.bold;
-    final Color teamsColor = Colors.black;
-
-    final double matchFontSize = 16;
-    final FontWeight matchFontWeight = FontWeight.normal;
-    final Color matchFontColor = Colors.black;
-
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+      margin: const EdgeInsets.only(top: 0, bottom: 0),
+      child: Stack(
+        children: [
+          matchInfoBackground(),
+          matchInfoForeground(context, matchInfo, isEditEnabled),
+        ],
       ),
-      margin: EdgeInsets.only(top: 20, bottom: 10),
+    );
+  }
+
+  Widget matchInfoBackground() {
+    return Container(
+      child: ClipRect(
+        child: Image.asset(
+          ImageAssets.IMAGE_MATCH_DETAIL_BACKGROUND,
+          width: widget.maxWidth,
+          height: MatchDetailLayout.MATCH_INFO_HEIGHT,
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+  Widget matchInfoForeground(BuildContext context, Match matchInfo, bool isEditEnabled) {
+    double matchInfoHeight = MatchDetailLayout.MATCH_INFO_HEIGHT;
+    return Container(
+      width: widget.maxWidth,
+      height: matchInfoHeight,
       child: Column(
         children: [
-          Row(
+          matchInfoTopRow(context, matchInfo, isEditEnabled, matchInfoHeight),
+          matchInfoBottomRow(context, matchInfo, isEditEnabled, matchInfoHeight),
+        ],
+      ),
+    );
+  }
+
+  Widget matchInfoTopRow(BuildContext context, Match matchInfo, bool isEditEnabled, double matchInfoHeight) {
+    double height = 0.75 * matchInfoHeight;
+    print("$height");
+    double topMargin = 0.24 * matchInfoHeight;
+    TextStyle textStyle = DetailViewTitleTextStyle();
+    double avatarSize = 60;
+    return Container(
+      height: height,
+      padding: EdgeInsets.only(top: topMargin),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          homeTeamColumn(context, matchInfo, isEditEnabled, textStyle, avatarSize),
+          matchResult(isEditEnabled, textStyle),
+          awayTeamColumn(context, matchInfo, isEditEnabled, textStyle, avatarSize),
+        ],
+      ),
+    );
+  }
+
+  Widget matchInfoBottomRow(BuildContext context, Match matchInfo, bool isEditEnabled, double matchInfoHeight) {
+    double height = 0.25 * matchInfoHeight;
+    TextStyle textStyle = DetailViewSubtitleTextStyle();
+    return Container(
+      height: height,
+      margin: const EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          leagueMatchWidget(isEditEnabled, textStyle),
+          matchDateWidget(context, matchInfo, isEditEnabled, textStyle),
+        ],
+      ),
+    );
+  }
+
+  Widget homeTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
+    final widgets = [
+      teamImageWidget(TeamAssets.getRandomImage(), avatarSize),
+      CustomRichText(
+        onTap: () => updateHomeTeamOnInsert(context, isEditEnabled, matchInfo),
+        enabled: isEditEnabled,
+        text: matchInfo.getHomeSeasonTeamName(),
+        textAlign: TextAlign.center,
+        fontColor: textStyle.color,
+        fontWeight: textStyle.fontWeight,
+        fontSize: textStyle.fontSize,
+      ),
+    ];
+    return teamColumn(widgets);
+  }
+
+  Widget awayTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
+    final widgets = [
+      teamImageWidget(TeamAssets.getRandomImage(), avatarSize),
+      CustomRichText(
+        onTap: () => updateAwayTeamOnInsert(context, isEditEnabled, matchInfo),
+        enabled: isEditEnabled,
+        text: matchInfo.getAwaySeasonTeamName(),
+        textAlign: TextAlign.center,
+        fontColor: textStyle.color,
+        fontWeight: textStyle.fontWeight,
+        fontSize: textStyle.fontSize,
+      ),
+    ];
+    return teamColumn(widgets);
+  }
+
+  Widget teamImageWidget(String imageAsset, double avatarSize) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(100),
+        borderRadius: BorderRadius.circular(48),
+      ),
+      width: avatarSize,
+      height: avatarSize,
+      child: SvgImage(
+        imageAsset: imageAsset,
+        width: avatarSize,
+        height: avatarSize,
+      ),
+    );
+  }
+
+  Widget teamColumn(List<Widget> children) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+
+  Widget matchResult(bool isEditEnabled, TextStyle textStyle) {
+    return Expanded(
+      child: Container(
+        child: resultWidget(resultTextEditingController1, resultTextEditingController2, textStyle.color, 32, textStyle.fontWeight, isEditEnabled),
+      ),
+    );
+  }
+
+  Widget leagueMatchWidget(bool isEditEnabled, TextStyle textStyle) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        // margin: EdgeInsets.only(left: 12, top: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Giornata',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                color: textStyle.color,
+                fontWeight: textStyle.fontWeight,
+                fontSize: textStyle.fontSize,
+              ),
+            ),
+            // SizedBox(width: 2,),
+            CustomTextField(
+              enabled: isEditEnabled,
+              width: 50,
+              controller: leagueMatchTextEditingController,
+              textAlign: TextAlign.center,
+              textAlignVertical: TextAlignVertical.top,
+              maxLines: 1,
+              textInputType: TextInputType.number,
+              textColor: textStyle.color,
+              textFontSize: textStyle.fontSize,
+              textFontWeight: textStyle.fontWeight,
+              bottomBorderPadding: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget matchDateWidget(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle) {
+    return Expanded(
+      flex: 1,
+      child: GestureDetector(
+        onTap: () async {
+          if(isEditEnabled) {
+            DateTime curDate = DateTime.now();
+            await showDatePicker(
+                context: context,
+                initialDate: matchInfo.matchDate,
+                firstDate: DateTime.utc(2020),
+                lastDate: DateTime.utc(curDate.year + 1),
+                initialDatePickerMode: DatePickerMode.day,
+                helpText: "Seleziona la data della partita"
+            ).then((date) {
+              if(date != null)
+                setState(() {
+                  matchInfo.matchDate = date;
+                });
+            });
+          }
+        },
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                margin: EdgeInsets.only(left: 12, right: 5, top: 10),
-                child: SvgPicture.asset(
-                  IconAssets.ICON_FOOTBALL_BALL,
-                  width: 24,
-                  height: 24,
-                  color: blueAgonisticaColor,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                    margin: EdgeInsets.only(top: 10, right: 20),
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: CustomRichText(
-                            onTap: () => updateHomeTeamOnInsert(context, isEditEnabled, matchInfo),
-                            enabled: isEditEnabled,
-                            text: matchInfo.getHomeSeasonTeamName(),
-                            textAlign: TextAlign.center,
-                            fontColor: teamsColor,
-                            fontWeight: teamsFontWeight,
-                            fontSize: teamsFontSize,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: resultWidget(resultTextEditingController1, resultTextEditingController2, teamsColor, teamsFontSize, teamsFontWeight, isEditEnabled),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: CustomRichText(
-                            onTap: () => updateAwayTeamOnInsert(context, isEditEnabled, matchInfo),
-                            enabled: isEditEnabled,
-                            text: matchInfo.getAwaySeasonTeamName(),
-                            textAlign: TextAlign.center,
-                            fontColor: teamsColor,
-                            fontWeight: teamsFontWeight,
-                            fontSize: teamsFontSize,
-                          ),
-                        ),
-                      ],
-                    )
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.only(left: 12, top: 10, bottom: 10),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Giornata',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: matchFontColor,
-                          fontWeight: matchFontWeight,
-                          fontSize: matchFontSize,
-                        ),
-                      ),
-                      SizedBox(width: 5,),
-                      CustomTextField(
-                        enabled: isEditEnabled,
-                        width: 50,
-                        controller: leagueMatchTextEditingController,
-                        textAlign: TextAlign.center,
-                        textAlignVertical: TextAlignVertical.top,
-                        maxLines: 1,
-                        textInputType: TextInputType.number,
-                        textColor: matchFontColor,
-                        textFontSize: matchFontSize,
-                        textFontWeight: matchFontWeight,
-                        bottomBorderPadding: 1,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: GestureDetector(
-                  onTap: () async {
-                    if(isEditEnabled) {
-                      DateTime curDate = DateTime.now();
-                      await showDatePicker(
-                          context: context,
-                          initialDate: matchInfo.matchDate,
-                          firstDate: DateTime.utc(2020),
-                          lastDate: DateTime.utc(curDate.year + 1),
-                          initialDatePickerMode: DatePickerMode.day,
-                          helpText: "Seleziona la data della partita"
-                      ).then((date) {
-                        if(date != null)
-                          setState(() {
-                            matchInfo.matchDate = date;
-                          });
-                      });
-                    }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(right: 15, top: 10, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.calendar_today, color: blueAgonisticaColor, size: 20,),
-                        SizedBox(width: 5,),
-                        Text(
-                          "${matchInfo.matchDate.day} " + DateUtils.monthToString(matchInfo.matchDate.month).substring(0, 3) + " ${matchInfo.matchDate.year}",
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                            color: matchFontColor,
-                            fontSize: matchFontSize,
-                            fontWeight: matchFontWeight,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+              Icon(Icons.calendar_today, color: Colors.white, size: 20,),
+              SizedBox(width: 5,),
+              Text(
+                "${matchInfo.matchDate.day} " + DateUtils.monthToString(matchInfo.matchDate.month).substring(0, 3) + " ${matchInfo.matchDate.year}",
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  color: textStyle.color,
+                  fontWeight: textStyle.fontWeight,
+                  fontSize: textStyle.fontSize,
                 ),
               )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -471,9 +546,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -490,14 +563,21 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 10, bottom: 20),
       child: Column(
         children: [
+          divider(),
           lineUpText("Note Partita"),
           textBox(isEditEnabled),
         ],
+      ),
+    );
+  }
+
+  Widget divider() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: blueAgonisticaColor.withAlpha(128), width: 0.5)),
       ),
     );
   }

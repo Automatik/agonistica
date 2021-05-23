@@ -42,7 +42,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
         widget._baseScaffoldService.scaffoldContext = childContext;
-        double width = 0.9 * sizingInformation.localWidgetSize.width;
+        double width = 1 * sizingInformation.localWidgetSize.width;
         return _matchDetail(childContext, isEditEnabled, tempMatch, width, matchDetailController);
       },
     );
