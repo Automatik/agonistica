@@ -36,7 +36,7 @@ class _PlayersMobile extends StatelessWidget {
             return Align(
               alignment: Alignment.center,
               child: Container(
-                margin: EdgeInsets.only(top: 10, bottom: 10),
+                margin: EdgeInsets.only(top: 5, bottom: 5),
                 width: itemsWidth,
                 child: PlayerReview(
                   onTap: () => viewModel.openPlayerDetail(context, index),
