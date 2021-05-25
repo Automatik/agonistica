@@ -33,6 +33,7 @@ class MatchDetailLayout extends StatefulWidget {
   static const String INSERTED_TEAM_ERROR_ALREADY_INSERTED = "Squadra già inserita nella partita";
 
   static const double MATCH_INFO_HEIGHT = 250;
+  static const double MATCH_INFO_LOGO_SIZE = 60;
 
   final Match match;
   final bool isEditEnabled;
@@ -360,10 +361,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   Widget matchInfoTopRow(BuildContext context, Match matchInfo, bool isEditEnabled, double matchInfoHeight) {
     double height = 0.75 * matchInfoHeight;
-    print("$height");
     double topMargin = 0.24 * matchInfoHeight;
     TextStyle textStyle = DetailViewTitleTextStyle();
-    double avatarSize = 60;
+    double avatarSize = MatchDetailLayout.MATCH_INFO_LOGO_SIZE;
     return Container(
       height: height,
       padding: EdgeInsets.only(top: topMargin),
