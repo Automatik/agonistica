@@ -12,7 +12,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => viewModel.onBottomBarItemChanged(context, index),
       childBuilder: (childContext, sizingInformation, parentSizingInformation) {
-        double itemsWidth = 0.7 * sizingInformation.screenSize.width;
+        double itemsWidth = 0.95 * sizingInformation.screenSize.width;
 
         return Container(
           margin: EdgeInsets.only(top: 20, bottom: 20),
@@ -29,20 +29,29 @@ class _PlayerMatchesMobile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Container(
                   width: itemsWidth,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: MatchNotesElement(
-                    object: object,
-                    onTap: () => viewModel.onPlayerMatchNotesClick(context, object),
-                    onSettingsTap: (tapDownDetails) => onPlayerMatchNotesSettingsClick(context, object, tapDownDetails.globalPosition),
-                    width: itemsWidth,
-                    minHeight: 50,
-                  ),
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: _getMatchReview(context, index, itemsWidth),
                 ),
               );
             },
           ),
         );
       },
+    );
+  }
+
+  Widget _getMatchReview(BuildContext context, int index, double itemsWidth) {
+    MatchNotesObject object = viewModel.objects[index];
+    Match match = object.match;
+    return MatchReview(
+      onTap: () => viewModel.onPlayerMatchNotesClick(context, object),
+      onSettingsTap: (tapDownDetails) => onPlayerMatchNotesSettingsClick(context, object, tapDownDetails),
+      width: itemsWidth,
+      team1: match.getHomeSeasonTeamName(),
+      team2: match.getAwaySeasonTeamName(),
+      result: "${match.team1Goals} - ${match.team2Goals}",
+      leagueMatch: match.leagueMatch,
+      matchDate: match.matchDate,
     );
   }
 
@@ -70,6 +79,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
   }
 
   Future<void> onPlayerMatchNotesSettingsClick(BuildContext context, MatchNotesObject object, Offset offset) async {
+    print("ciao");
     final popupMenu = PlayerMatchesViewPopupMenu(
       offset: offset,
       itemValues: viewModel.getPopupMenuItemValues()
