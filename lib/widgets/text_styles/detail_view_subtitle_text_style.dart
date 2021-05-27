@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DetailViewSubtitleTextStyle extends TextStyle {
 
-  DetailViewSubtitleTextStyle()
-    : super(fontSize: 14, color: Colors.white, fontWeight: FontWeight.normal);
+  DetailViewSubtitleTextStyle({color = Colors.white})
+    : super(fontSize: 14, color: color, fontWeight: FontWeight.normal);
 
 }

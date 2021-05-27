@@ -9,14 +9,21 @@ import 'package:agonistica/views/roster/name_label.dart';
 import 'package:agonistica/views/roster/stat_row.dart';
 import 'package:agonistica/views/roster/team_label.dart';
 import 'package:agonistica/widgets/base/base_widget.dart';
+import 'package:agonistica/widgets/common/date_widget.dart';
+import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/roster/stat_element.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_header_text_style.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_sub_header_text_style.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_subtitle_text_style.dart';
+import 'package:agonistica/widgets/text_styles/detail_view_title_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlayerDetailLayout extends StatefulWidget {
 
@@ -27,7 +34,9 @@ class PlayerDetailLayout extends StatefulWidget {
   static const int STAT_YELLOW_CARDS = 4;
   static const int STAT_RED_CARDS = 5;
 
-//  final bool isNewPlayer;
+  static const double PLAYER_AVATAR_SIZE = 70;
+  static const double ICON_SIZE = 20;
+
   final SeasonPlayer seasonPlayer;
   final bool isEditEnabled;
   final double maxWidth;
@@ -195,6 +204,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(
         child: Container(
+          margin: const EdgeInsets.only(top: 0),
           width: widget.maxWidth,
           child: Column(
             children: [
@@ -211,205 +221,227 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   Widget playerInfo(BuildContext context, bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController nameTextController,
       TextEditingController surnameTextController, TextEditingController heightTextController,
       TextEditingController weightTextController) {
-
-    final Color playerNameTextColor = blueAgonisticaColor;
-    final double playerNameTextSize = 20;
-    final FontWeight playerNameTextWeight = FontWeight.bold;
-
-    final Color playerTeamTextColor = Colors.black;
-    final double playerTeamTextSize = 18;
-    final FontWeight playerTeamTextWeight = FontWeight.normal;
-
-    final Color playerCategoryTextColor = Colors.black;
-    final double playerCategoryTextSize = 16;
-    final FontWeight playerCategoryTextWeight = FontWeight.normal;
-
-    final Color playerHeightTextColor = Colors.black;
-    final double playerHeightTextSize = 14;
-    final FontWeight playerHeightTextWeight = FontWeight.normal;
-
-    final double heightWidth = 40;
-
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
       constraints: BoxConstraints(
-        minHeight: 90,
-        // maxHeight: 90,
+        minHeight: 150,
       ),
-      margin: EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      child: Column(
+        children: [
+          playerInfoHeader(isEditEnabled, playerInfo, nameTextController, surnameTextController),
+          playerInfoSubHeader(context, isEditEnabled, playerInfo, heightTextController, weightTextController),
+        ]
+      ),
+    );
+  }
+
+  Widget playerInfoHeader(bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController nameTextController,
+      TextEditingController surnameTextController) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        playerAvatar(),
+        playerInfoHeaderName(isEditEnabled, playerInfo, nameTextController, surnameTextController),
+      ],
+    );
+  }
+
+  Widget playerAvatar() {
+    return Expanded(
+      flex: 2,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  child: SvgPicture.asset(
-                    IconAssets.ICON_PERSON,
-                    height: 50,
-                    width: 50,
-                    color: blueAgonisticaColor,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Container(
-                  margin: EdgeInsets.only(left: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      NameLabel(
-                        nameTextController: nameTextController,
-                        surnameTextController: surnameTextController,
-                        isEditEnabled: isEditEnabled,
-                        fontColor: playerNameTextColor,
-                        fontSize: playerNameTextSize,
-                        fontWeight: playerNameTextWeight,
-                      ),
-                      TeamLabel(
-                          teamName: playerInfo.getSeasonTeam().getTeamName(),
-                          seasonId: playerInfo.getSeasonTeam().seasonId,
-                          isEditEnabled: isEditEnabled,
-                          onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
-                          onTeamChange: (seasonTeam) {
-                            setState(() {
-                              playerInfo.setSeasonTeam(seasonTeam);
-                            });
-                          },
-                          fontColor: playerTeamTextColor,
-                          fontWeight: playerTeamTextWeight,
-                          fontSize: playerTeamTextSize
-                      ),
-                      CategoryLabel(
-                        categoryName: playerInfo.getCategory().name,
-                        isEditEnabled: isEditEnabled,
-                        teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
-                        onCategoryChange: (category) {
-                          setState(() {
-                            playerInfo.setCategory(category);
-                          });
-                        },
-                        fontColor: playerCategoryTextColor,
-                        fontSize: playerCategoryTextSize,
-                        fontWeight: playerCategoryTextWeight,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (isEditEnabled) {
-                              DateTime curDate = DateTime.now();
-                              await showDatePicker(
-                                  context: context,
-                                  initialDate: playerInfo.getPlayerBirthday(),
-                                  firstDate: DateTime.utc(
-                                      curDate.year - 50),
-                                  lastDate: DateTime.utc(
-                                      curDate.year + 1),
-                                  initialDatePickerMode: DatePickerMode
-                                      .day,
-                                  helpText: "Seleziona la data di nascita"
-                              ).then((date) {
-                                if (date != null)
-                                  setState(() {
-                                    playerInfo.setPlayerBirthday(date);
-                                  });
-                              });
-                            }
-                          },
-                          child: Text(
-                            "${playerInfo.getPlayerBirthday().day} ${DateUtils
-                                .monthToString(
-                                playerInfo.getPlayerBirthday().month).substring(
-                                0, 3)} ${playerInfo.getPlayerBirthday().year}",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              color: playerHeightTextColor,
-                              fontSize: playerHeightTextSize,
-                              fontWeight: playerHeightTextWeight,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomTextField(
-                              width: heightWidth,
-                              enabled: isEditEnabled,
-                              controller: heightTextController,
-                              textAlign: TextAlign.end,
-                              maxLines: 1,
-                              textInputType: TextInputType.number,
-                              textColor: playerHeightTextColor,
-                              textFontSize: playerHeightTextSize,
-                              textFontWeight: playerHeightTextWeight,
-                            ),
-                            SizedBox(width: 5,),
-                            Text(
-                              "cm",
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: playerHeightTextColor,
-                                fontSize: playerHeightTextSize,
-                                fontWeight: playerHeightTextWeight,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            CustomTextField(
-                              width: heightWidth,
-                              enabled: isEditEnabled,
-                              controller: weightTextController,
-                              textAlign: TextAlign.end,
-                              maxLines: 1,
-                              textInputType: TextInputType.number,
-                              textColor: playerHeightTextColor,
-                              textFontSize: playerHeightTextSize,
-                              textFontWeight: playerHeightTextWeight,
-                            ),
-                            SizedBox(width: 5,),
-                            Text(
-                              "kg",
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: playerHeightTextColor,
-                                fontSize: playerHeightTextSize,
-                                fontWeight: playerHeightTextWeight,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle
+        ),
+        alignment: Alignment.center,
+        child: SvgImage(
+          imageAsset: IconAssets.ICON_FOOTBALL_PLAYER,
+          width: PlayerDetailLayout.PLAYER_AVATAR_SIZE,
+          height: PlayerDetailLayout.PLAYER_AVATAR_SIZE,
+        ),
+      ),
+    );
+  }
+
+  Widget playerInfoHeaderName(bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController nameTextController,
+      TextEditingController surnameTextController) {
+    TextStyle titleStyle = DetailViewTitleTextStyle();
+    TextStyle teamStyle = DetailViewHeaderTextStyle();
+    TextStyle categoryStyle = DetailViewSubHeaderTextStyle();
+    return Expanded(
+      flex: 4,
+      child: Container(
+        margin: EdgeInsets.only(left: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NameLabel(
+              nameTextController: nameTextController,
+              surnameTextController: surnameTextController,
+              isEditEnabled: isEditEnabled,
+              fontColor: titleStyle.color,
+              fontSize: titleStyle.fontSize,
+              fontWeight: titleStyle.fontWeight,
+            ),
+            SizedBox(height: 10,),
+            TeamLabel(
+                teamName: playerInfo.getSeasonTeam().getTeamName(),
+                seasonId: playerInfo.getSeasonTeam().seasonId,
+                isEditEnabled: isEditEnabled,
+                onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
+                onTeamChange: (seasonTeam) {
+                  setState(() {
+                    playerInfo.setSeasonTeam(seasonTeam);
+                  });
+                },
+                fontColor: teamStyle.color,
+                fontWeight: teamStyle.fontWeight,
+                fontSize: teamStyle.fontSize
+            ),
+            SizedBox(height: 10,),
+            CategoryLabel(
+              categoryName: playerInfo.getCategory().name,
+              isEditEnabled: isEditEnabled,
+              teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
+              onCategoryChange: (category) {
+                setState(() {
+                  playerInfo.setCategory(category);
+                });
+              },
+              fontColor: categoryStyle.color,
+              fontSize: categoryStyle.fontSize,
+              fontWeight: categoryStyle.fontWeight,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget playerInfoSubHeader(BuildContext context, bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController heightTextController,
+      TextEditingController weightTextController) {
+    final double textFieldWidth = 30;
+    TextStyle textStyle = DetailViewSubtitleTextStyle();
+    return Container(
+      margin: const EdgeInsets.only(top: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          playerInfoHeight(isEditEnabled, playerInfo, heightTextController, textFieldWidth, textStyle),
+          playerInfoWeight(isEditEnabled, playerInfo, weightTextController, textFieldWidth, textStyle),
+          playerInfoBirthday(context, isEditEnabled, playerInfo, textStyle),
+        ],
+      ),
+    );
+  }
+
+  Widget playerInfoHeight(bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController heightTextController, double textFieldWidth, TextStyle textStyle) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgImage(
+            imageAsset: IconAssets.ICON_HEIGHT,
+            width: PlayerDetailLayout.ICON_SIZE,
+            height: PlayerDetailLayout.ICON_SIZE,
+            color: Colors.white,
           ),
+          // SizedBox(width: 5,),
+          CustomTextField(
+            width: textFieldWidth,
+            enabled: isEditEnabled,
+            controller: heightTextController,
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            textInputType: TextInputType.number,
+            textColor: textStyle.color,
+            textFontSize: textStyle.fontSize,
+            textFontWeight: textStyle.fontWeight,
+          ),
+          SizedBox(width: 5,),
+          Text(
+            "cm",
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              color: textStyle.color,
+              fontSize: textStyle.fontSize,
+              fontWeight: textStyle.fontWeight,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget playerInfoWeight(bool isEditEnabled, SeasonPlayer playerInfo, TextEditingController weightTextController, double textFieldWidth, TextStyle textStyle) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            FontAwesomeIcons.weight,
+            color: Colors.white,
+            size: PlayerDetailLayout.ICON_SIZE,
+          ),
+          // SizedBox(width: 5,),
+          CustomTextField(
+            width: textFieldWidth,
+            enabled: isEditEnabled,
+            controller: weightTextController,
+            textAlign: TextAlign.end,
+            maxLines: 1,
+            textInputType: TextInputType.number,
+            textColor: textStyle.color,
+            textFontSize: textStyle.fontSize,
+            textFontWeight: textStyle.fontWeight,
+          ),
+          SizedBox(width: 5,),
+          Text(
+            "kg",
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              color: textStyle.color,
+              fontSize: textStyle.fontSize,
+              fontWeight: textStyle.fontWeight,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget playerInfoBirthday(BuildContext context, bool isEditEnabled, SeasonPlayer playerInfo, TextStyle textStyle) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () async {
+          if (isEditEnabled) {
+            DateTime curDate = DateTime.now();
+            await showDatePicker(
+                context: context,
+                initialDate: playerInfo.getPlayerBirthday(),
+                firstDate: DateTime.utc(
+                    curDate.year - 50),
+                lastDate: DateTime.utc(
+                    curDate.year + 1),
+                initialDatePickerMode: DatePickerMode
+                    .day,
+                helpText: "Seleziona la data di nascita"
+            ).then((date) {
+              if (date != null)
+                setState(() {
+                  playerInfo.setPlayerBirthday(date);
+                });
+            });
+          }
+        },
+        child: DateWidget(
+          dateTime: playerInfo.getPlayerBirthday(),
+          textStyle: textStyle,
+          iconSize: PlayerDetailLayout.ICON_SIZE,
         ),
       ),
     );
@@ -424,9 +456,8 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
       ),
-      margin: EdgeInsets.only(top: 20, bottom: 20),
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

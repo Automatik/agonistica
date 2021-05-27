@@ -6,11 +6,13 @@ class SvgImage extends StatelessWidget {
   final String imageAsset;
   final double width;
   final double height;
+  final Color color;
 
   SvgImage({
     @required this.imageAsset,
     this.width,
-    this.height
+    this.height,
+    this.color,
   });
 
   @override
@@ -20,6 +22,7 @@ class SvgImage extends StatelessWidget {
       height: height,
       child: SvgPicture.asset(
         imageAsset,
+        color: color,
         width: width,
         height: height,
         excludeFromSemantics: true,

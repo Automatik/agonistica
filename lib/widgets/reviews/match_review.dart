@@ -1,6 +1,7 @@
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/reviews/base_review.dart';
 import 'package:agonistica/widgets/text_styles/base_review_result_text_style.dart';
@@ -134,18 +135,12 @@ class MatchReview extends BaseReview {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(right: 5),
-        child: Row(
+        child: DateWidget(
+          dateTime: matchDate,
+          textStyle: BaseReviewSubtitleTextStyle(),
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
-            SizedBox(width: 5,),
-            Text(
-              "${matchDate.day} " + DateUtils.monthToString(matchDate.month).substring(0, 3) + " ${matchDate.year}",
-              textAlign: TextAlign.center,
-              style: BaseReviewSubtitleTextStyle(),
-            )
-          ],
-        ),
+          iconColor: blueAgonisticaColor,
+        )
       ),
     );
   }

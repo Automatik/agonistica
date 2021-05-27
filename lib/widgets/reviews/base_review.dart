@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class BaseReview extends StatelessWidget {
 
-  final double iconsSize = 24;
+  final double iconsSize = 20;
   final double avatarSize = 40;
   final double verticalMargin = 10;
   final double horizontalMargin = 15;

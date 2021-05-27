@@ -1,5 +1,6 @@
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
+import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/reviews/base_review.dart';
 import 'package:agonistica/widgets/text_styles/base_review_subtitle_text_style.dart';
@@ -107,18 +108,13 @@ class PlayerReview extends BaseReview{
           ),
           Expanded(
             child: Container(
-              child: Row(
+              child: DateWidget(
+                dateTime: birthDay,
+                textStyle: BaseReviewSubtitleTextStyle(),
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
-                  SizedBox(width: 5,),
-                  Text(
-                    "${birthDay.day} " + DateUtils.monthToString(birthDay.month).substring(0, 3) + " ${birthDay.year}",
-                    textAlign: TextAlign.end,
-                    style: BaseReviewSubtitleTextStyle(),
-                  )
-                ],
-              ),
+                iconColor: blueAgonisticaColor,
+                iconSize: iconsSize,
+              )
             ),
           ),
         ],

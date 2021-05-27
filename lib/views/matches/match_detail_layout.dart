@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/assets/image_assets.dart';
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/locator.dart';
@@ -9,6 +7,7 @@ import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
+import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
@@ -521,21 +520,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           }
         },
         child: Container(
-          child: Row(
+          child: DateWidget(
+            dateTime: matchInfo.matchDate,
+            textStyle: textStyle,
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Icon(Icons.calendar_today, color: Colors.white, size: 20,),
-              SizedBox(width: 5,),
-              Text(
-                "${matchInfo.matchDate.day} " + DateUtils.monthToString(matchInfo.matchDate.month).substring(0, 3) + " ${matchInfo.matchDate.year}",
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: textStyle.color,
-                  fontWeight: textStyle.fontWeight,
-                  fontSize: textStyle.fontSize,
-                ),
-              )
-            ],
           ),
         ),
       ),
