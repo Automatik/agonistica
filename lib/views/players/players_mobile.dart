@@ -21,13 +21,14 @@ class _PlayersMobile extends StatelessWidget {
   }
 
   Widget _getPlayersLayout(BuildContext context, MySizingInformation sizingInformation) {
-    double itemsWidth = 0.7 * sizingInformation.screenSize.width;
+    double itemsWidth = 0.95 * sizingInformation.screenSize.width;
 
     return Container(
       constraints: BoxConstraints(
         maxHeight: sizingInformation.screenSize.height,
         maxWidth: sizingInformation.screenSize.width,
       ),
+      margin: const EdgeInsets.symmetric(vertical: 20),
       child: ListView.builder(
           scrollDirection: Axis.vertical,
           itemCount: viewModel.getSeasonPlayersSize(),
