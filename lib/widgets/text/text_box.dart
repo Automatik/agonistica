@@ -1,3 +1,4 @@
+import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
 class TextBox extends StatelessWidget {
@@ -35,6 +36,9 @@ class TextBox extends StatelessWidget {
       constraints: BoxConstraints(
         minHeight: minHeight,
       ),
+      decoration: BoxDecoration(
+        border: showBorder(),
+      ),
       child: TextField(
         enabled: isEnabled,
         autofocus: autofocus,
@@ -51,6 +55,19 @@ class TextBox extends StatelessWidget {
         keyboardType: TextInputType.multiline,
       ),
     );
+  }
+
+  Border showBorder() {
+    if(isEnabled) {
+      return Border.symmetric(
+          horizontal: BorderSide(
+              color: blueAgonisticaColor,
+              width: 0.5,
+              style: BorderStyle.solid
+          )
+      );
+    }
+    return null; //Border none
   }
 
 }

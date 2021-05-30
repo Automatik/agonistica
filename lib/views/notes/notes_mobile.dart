@@ -51,11 +51,12 @@ class _NotesMobileState extends State<_NotesMobile> {
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => widget.viewModel.onBottomBarItemChanged(context, index),
       childBuilder: (childContext, sizingInformation, parentSizingInformation) {
-        double itemsWidth = 0.9 * sizingInformation.screenSize.width;
+        double itemsWidth = 1 * sizingInformation.screenSize.width;
 
         return SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
+            color: Colors.white,
             constraints: BoxConstraints(
               minWidth: sizingInformation.screenSize.width,
               maxWidth: sizingInformation.screenSize.width,
@@ -63,93 +64,32 @@ class _NotesMobileState extends State<_NotesMobile> {
             ),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                margin: EdgeInsets.only(top: 20, bottom: 20),
-                width: itemsWidth,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 12, right: 5, top: topMargin),
-                          width: iconsSize,
-                          height: iconsSize,
-                          child: SvgPicture.asset(
-                            IconAssets.ICON_FOOTBALL_BALL,
-                            excludeFromSemantics: true,
-                            color: blueAgonisticaColor,
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(top: topMargin, right: 20),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "${tempMatch.getHomeSeasonTeamName()} ${tempMatch.team1Goals} - ${tempMatch.team2Goals} ${tempMatch.getAwaySeasonTeamName()}",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  MatchInfoWidget(
+                    match: tempMatch,
+                    isEditEnabled: false,
+                    width: itemsWidth,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.white,
+                    child: Text(
+                      "Note Partita",
+                      textAlign: TextAlign.center,
+                      style: DetailViewHeaderTextStyle(color: blueAgonisticaColor),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 12, top: topMargin, bottom: bottomMargin),
-                            child: Text(
-                              "Giornata ${tempMatch.leagueMatch}",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 15, top: topMargin, bottom: bottomMargin),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.calendar_today, color: blueAgonisticaColor, size: iconsSize,),
-                                SizedBox(width: 5,),
-                                Text(
-                                  "${tempMatch.matchDate.day} " + DateUtils.monthToString(tempMatch.matchDate.month).substring(0, 3) + " ${tempMatch.matchDate.year}",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 10, bottom: 5),
-                      color: blueAgonisticaColor,
-                      height: 1.5,
-                    ),
-                    TextBox(
+                  ),
+                  Container(
+                    color: Colors.white,
+                    child: TextBox(
                       isEnabled: isEditEnabled,
                       controller: notesController
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
