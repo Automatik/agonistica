@@ -3,6 +3,7 @@ import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlayerMatchesViewPopupMenu extends PopupMenu {
 
@@ -15,7 +16,7 @@ class PlayerMatchesViewPopupMenu extends PopupMenu {
   @override
   ItemTileObject selectItemTileObject(BuildContext context, int value) {
     switch(value) {
-      case VIEW_MATCH_CARD: return ItemTileObject("Scheda Partita", Icons.category);
+      case VIEW_MATCH_CARD: return ItemTileObject("Scheda Partita", FontAwesomeIcons.futbol);
       case VIEW_NOTES_CARD: return ItemTileObject("Note Partita", Icons.assignment_rounded);
       case DELETE_MATCH_CARD: return ItemTileObject("Elimina Partita", PlatformIcons(context).delete);
       default: throw ArgumentException("Value not found");

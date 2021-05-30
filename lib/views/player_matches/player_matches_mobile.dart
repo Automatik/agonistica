@@ -79,7 +79,6 @@ class _PlayerMatchesMobile extends StatelessWidget {
   }
 
   Future<void> onPlayerMatchNotesSettingsClick(BuildContext context, MatchNotesObject object, Offset offset) async {
-    print("ciao");
     final popupMenu = PlayerMatchesViewPopupMenu(
       offset: offset,
       itemValues: viewModel.getPopupMenuItemValues()
