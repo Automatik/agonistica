@@ -1,7 +1,7 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
-class AppBackground {
+class AppColor {
 
   static LinearGradient getBackground() {
     return LinearGradient(

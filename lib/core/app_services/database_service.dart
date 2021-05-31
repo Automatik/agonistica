@@ -10,6 +10,7 @@ import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/pojo/home_menus.dart';
 import 'package:agonistica/core/services/app_user_service.dart';
 import 'package:agonistica/core/services/category_service.dart';
 import 'package:agonistica/core/services/firebase_auth_user_service.dart';
@@ -208,6 +209,12 @@ class DatabaseService {
       menus.add(menu);
     }
     return menus;
+  }
+
+  Future<HomeMenus> getHomeMenus() async {
+    List<Menu> followedTeamsMenus = await menuService.getFollowedTeamsMenus();
+    List<Menu> followedPlayersMenus = await menuService.getFollowedPlayersMenus();
+    return HomeMenus.from(followedTeamsMenus, followedPlayersMenus);
   }
 
   CategoryService get categoryService => _categoryService;

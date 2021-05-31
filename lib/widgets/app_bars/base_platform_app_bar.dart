@@ -1,5 +1,5 @@
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/widgets/app_bar_actions/app_bar_leading.dart';
+import 'package:agonistica/widgets/app_bar_actions/drawer_menu_app_bar_leading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -13,8 +13,18 @@ class BasePlatformAppBar extends PlatformAppBar {
     this.leading,
     this.actions,
   }) : super(
-      material: (_, __) => composeMaterialData(title, leading, actions),
-  );
+        material: (_, __) => composeMaterialData(title, leading, actions),
+      );
+
+  static MaterialAppBarData composeMaterialData(String title, Widget leading, List<Widget> actions) {
+    return MaterialAppBarData(
+      title: composeTitle(title),
+      leading: chooseLeading(leading),
+      actions: actions,
+      backgroundColor: appBarBackgroundColor,
+      shape: CustomShapeBorder(),
+    );
+  }
 
   static Widget composeTitle(String title) {
     return Text(
@@ -29,18 +39,8 @@ class BasePlatformAppBar extends PlatformAppBar {
     return leading == null ? defaultLeading() : leading;
   }
 
-  static MaterialAppBarData composeMaterialData(String title, Widget leading, List<Widget> actions) {
-    return MaterialAppBarData(
-      title: composeTitle(title),
-      leading: chooseLeading(leading),
-      actions: actions,
-      backgroundColor: appBarBackgroundColor,
-      shape: CustomShapeBorder(),
-    );
-  }
-
   static Widget defaultLeading() {
-    return AppBarLeading();
+    return DrawerMenuAppBarLeading();
   }
 
 }

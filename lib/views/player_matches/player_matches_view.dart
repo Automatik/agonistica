@@ -7,7 +7,7 @@ import 'package:agonistica/widgets/app_bars/player_matches_view_platform_app_bar
 import 'package:agonistica/widgets/popups/player_matches_view_popup_menu.dart';
 import 'package:agonistica/widgets/reviews/match_review.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
-import 'package:agonistica/views/player_matches/match_notes_object.dart';
+import 'package:agonistica/core/pojo/match_notes_object.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';

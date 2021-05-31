@@ -11,7 +11,7 @@ import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/widgets/popups/player_matches_view_popup_menu.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/notes/notes_view.dart';
-import 'package:agonistica/views/player_matches/match_notes_object.dart';
+import 'package:agonistica/core/pojo/match_notes_object.dart';
 import 'package:agonistica/views/team/team_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';

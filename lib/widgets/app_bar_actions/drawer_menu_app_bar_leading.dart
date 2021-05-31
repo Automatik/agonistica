@@ -1,21 +1,19 @@
 import 'package:agonistica/widgets/app_bar_actions/app_bar_leading.dart';
 import 'package:flutter/material.dart';
 
-class BackArrowAppBarLeading extends StatelessWidget {
+class DrawerMenuAppBarLeading extends StatelessWidget {
 
-  final Function onLeadingTap;
   final Color color;
 
-  BackArrowAppBarLeading({
-    this.onLeadingTap,
+  DrawerMenuAppBarLeading({
     this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBarLeading(
-      icon: Icons.arrow_back,
-      onLeadingTap: onLeadingTap,
+      icon: Icons.menu,
+      onLeadingTap: () => Scaffold.of(context).openDrawer(),
       color: color,
     );
   }
