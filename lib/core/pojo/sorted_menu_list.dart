@@ -16,6 +16,10 @@ class SortedMenuList {
     return list;
   }
 
+  void add(Menu menu) {
+    _sortedMenuList.add(menu);
+  }
+
   void addAll(List<Menu> menus) {
     _sortedMenuList.addAll(menus);
   }

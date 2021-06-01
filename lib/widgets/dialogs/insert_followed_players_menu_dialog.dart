@@ -1,15 +1,15 @@
 import 'package:agonistica/widgets/dialogs/base_insert_dialog.dart';
 
-class InsertCategoryDialog extends BaseInsertDialog {
+class InsertFollowedPlayersMenuDialog extends BaseInsertDialog {
 
-  InsertCategoryDialog({
+  InsertFollowedPlayersMenuDialog({
     validateInput,
     onSubmit,
   }) : super(validateInput: validateInput, onSubmit: onSubmit);
 
   @override
   String getTitle() {
-    return "Inserisci il nome di una nuova categoria";
+    return "Inserisci il nome di una macro-categoria di cui fanno parte giocatori seguiti";
   }
 
 }

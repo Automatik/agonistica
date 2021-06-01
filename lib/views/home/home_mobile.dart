@@ -11,7 +11,7 @@ class _HomeMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScrollScaffoldWidget(
       showAppBar: true,
-      platformAppBar: getPlatformAppBar(),
+      platformAppBar: getPlatformAppBar(context),
       childBuilder: (context, sizingInformation, parentSizingInformation) {
         return Container(
           constraints: BoxConstraints(
@@ -24,10 +24,10 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  PlatformAppBar getPlatformAppBar() {
+  PlatformAppBar getPlatformAppBar(BuildContext context) {
     return AddActionPlatformAppBar(
       title: viewModel.getAppBarTitle(),
-      onActionTap: null, // TODO OnActionTap
+      onActionTap: (tapDownDetails) => onActionAdd(context, tapDownDetails.globalPosition), // TODO OnActionTap
     );
   }
 
@@ -140,6 +140,47 @@ class _HomeMobile extends StatelessWidget {
         itemBuilder: (BuildContext listContext, int index) => itemBuilder(listContext, index, imageWidth),
       ),
     );
+  }
+
+  Future<void> onActionAdd(BuildContext context, Offset offset) async {
+    final popupMenu = HomeViewPopupMenu(offset: offset);
+    int menuType = await popupMenu.showPopupMenu(context);
+    if(menuType == Menu.TYPE_FOLLOWED_TEAMS) {
+      await showInsertFollowedTeamMenuDialog(context);
+      return;
+    }
+    if(menuType == Menu.TYPE_FOLLOWED_PLAYERS) {
+      await showInsertFollowedPlayersMenuDialog(context);
+      return;
+    }
+  }
+
+  Future<void> showInsertFollowedTeamMenuDialog(BuildContext context) async {
+    final dialog = InsertFollowedTeamMenuDialog(
+        validateInput: (menuName) {
+          return viewModel.validateNewMenu(menuName);
+        },
+        onSubmit: (menuName) {
+          viewModel.createNewMenu(menuName, Menu.TYPE_FOLLOWED_TEAMS);
+          // close dialog
+          Navigator.of(context).pop();
+        }
+    );
+    await dialog.showInsertDialog(context);
+  }
+
+  Future<void> showInsertFollowedPlayersMenuDialog(BuildContext context) async {
+    final dialog = InsertFollowedPlayersMenuDialog(
+      validateInput: (menuName) {
+        return viewModel.validateNewMenu(menuName);
+      },
+      onSubmit: (menuName) {
+        viewModel.createNewMenu(menuName, Menu.TYPE_FOLLOWED_PLAYERS);
+        // close dialog
+        Navigator.of(context).pop();
+      }
+    );
+    await dialog.showInsertDialog(context);
   }
 
 }

@@ -14,6 +14,9 @@ class InputValidation {
   static const String MESSAGE_TEAM_EMPTY = "Inserire un nome di squadra";
   static const String MESSAGE_TEAM_TOO_LONG = "Nome di squadra troppo lungo";
   static const String MESSAGE_TEAM_NOT_VALID = "Inserire un nome di squadra valido";
+  static const String MESSAGE_MENU_EMPTY = "Inserire un nome";
+  static const String MESSAGE_MENU_TOO_LONG = "Nome inserito troppo lungo";
+  static const String MESSAGE_MENU_NOT_VALID = "Inserire un nome valido";
   static const String MESSAGE_CATEGORY_EMPTY = "Inserire un nome di categoria";
   static const String MESSAGE_CATEGORY_TOO_LONG = "Nome di categoria troppo lungo";
   static const String MESSAGE_CATEGORY_NOT_VALID = "Inserire un nome di categoria valido";
@@ -80,6 +83,16 @@ class InputValidation {
     if(isPersonSurname(value))
       return null; //Everything is ok
     return MESSAGE_SURNAME_NOT_VALID;
+  }
+
+  static String validateMenuName(String value) {
+    if(value.isEmpty)
+      return MESSAGE_MENU_EMPTY;
+    if(value.length > _MAX_CHARS)
+      return MESSAGE_MENU_TOO_LONG;
+    if(isMenuName(value))
+      return null; //Everything ok
+    return MESSAGE_MENU_NOT_VALID;
   }
 
   static String validateCategoryName(String value) {
@@ -168,6 +181,12 @@ class InputValidation {
       multiLine: false,
     );
     return regExp.hasMatch(surname);
+  }
+
+  /// The menu can be the name of a team or a name of a macro-category,
+  /// so use the isTeamName and isCategoryName functions
+  static bool isMenuName(String menu) {
+    return isTeamName(menu) || isCategoryName(menu);
   }
 
   /// Valid for categories like

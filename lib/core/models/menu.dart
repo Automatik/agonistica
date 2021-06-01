@@ -12,6 +12,8 @@ class Menu {
 
   int type;
 
+  String imageFilename;
+
   String teamId;
   List<String> categoriesIds;
 
@@ -19,28 +21,30 @@ class Menu {
     id = DbUtils.newUuid();
   }
 
-  Menu._create(String name, int type) {
+  Menu._create(String name, int type, String imageFilename) {
     Preconditions.requireArgumentNotEmpty(name);
     Preconditions.requireArgumentGreaterThan(type, TYPE_FOLLOWED_TEAMS - 1);
     Preconditions.requireArgumentLessThan(type, TYPE_FOLLOWED_PLAYERS + 1);
+    Preconditions.requireArgumentNotEmpty(imageFilename);
 
     id = DbUtils.newUuid();
     this.name = name;
     this.type = type;
+    this.imageFilename = imageFilename;
   }
 
-  factory Menu.createTeamMenu(String name, int type, String teamId) {
+  factory Menu.createTeamMenu(String name, String teamId, String imageFilename) {
     Preconditions.requireArgumentNotEmpty(teamId);
 
-    Menu menu = Menu._create(name, type);
+    Menu menu = Menu._create(name, TYPE_FOLLOWED_TEAMS, imageFilename);
     menu.teamId = teamId;
     return menu;
   }
 
-  factory Menu.createPlayersMenu(String name, int type, List<String> categoriesIds) {
+  factory Menu.createPlayersMenu(String name, List<String> categoriesIds, String imageFilename) {
     Preconditions.requireArgumentsNotNulls(categoriesIds);
 
-    Menu menu = Menu._create(name, type);
+    Menu menu = Menu._create(name, TYPE_FOLLOWED_PLAYERS, imageFilename);
     menu.categoriesIds = categoriesIds;
     return menu;
   }
@@ -73,7 +77,8 @@ class Menu {
       'name': name,
       'type': type,
       'teamId': teamId,
-      'categoriesIds': categoriesIds
+      'categoriesIds': categoriesIds,
+      'imageFilename': imageFilename
     };
   }
 
@@ -82,7 +87,8 @@ class Menu {
       name = json['name'],
       type = json['type'],
       teamId = json['teamId'],
-      categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']);
+      categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']),
+      imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
@@ -94,6 +100,7 @@ class Menu {
     } else {
       Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds);
     }
+    Preconditions.requireFieldNotEmpty("imageFilename", imageFilename);
   }
 
 }

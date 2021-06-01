@@ -69,6 +69,12 @@ class MenuService extends CrudService<Menu> {
     return null;
   }
 
+  /// Get the current images used in the user's menus
+  Future<List<String>> getUsedMenuImages() async {
+    List<Menu> menus = await getAllItems();
+    return menus.map((e) => e.imageFilename).toList();
+  }
+
   @override
   Future<void> deleteItem(String itemId) async {
     throw NotImplementedYetException("Still need to think of consequences");

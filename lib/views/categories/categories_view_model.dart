@@ -13,6 +13,7 @@ import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/views/players/players_view.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/views/team/team_view.dart';
@@ -163,9 +164,18 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   /// Check if no other category exist with this name (within that menu)
-  Future<bool> validateNewCategory(String categoryName) async {
+  String validateNewCategory(String categoryName) {
+    String validationResult = InputValidation.validateCategoryName(categoryName);
+    if(validationResult != null) {
+      // not valid
+      return validationResult;
+    }
     List<String> categories = _sortedCategories.map((e) => e.name);
-    return categories.contains(categoryName);
+    bool categoryAlreadyExists = categories.contains(categoryName);
+    if(categoryAlreadyExists) {
+      return "Categoria esiste già";
+    }
+    return null; //Everything ok
   }
 
   Future<void> createNewCategory(String categoryName) async {

@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 
 class AddActionPlatformAppBar extends BasePlatformAppBar {
 
-  final Function onActionTap;
+  final Function(TapDownDetails) onActionTap;
 
   AddActionPlatformAppBar({
     @required title,
     this.onActionTap,
   }) : super(title: title, actions: composeActions(onActionTap));
 
-  static List<Widget> composeActions(Function onActionTap) {
+  static List<Widget> composeActions(Function(TapDownDetails) onActionTap) {
     return [
       addAction(onActionTap),
     ];
   }
 
-  static Widget addAction(Function onActionTap) {
+  static Widget addAction(Function(TapDownDetails) onActionTap) {
     return AppBarAction(
       icon: Icons.add,
       onActionTap: onActionTap,

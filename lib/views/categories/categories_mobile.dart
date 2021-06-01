@@ -108,14 +108,14 @@ class _CategoriesMobile extends StatelessWidget {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     return AddActionPlatformAppBar(
       title: viewModel.getAppBarTitle(),
-      onActionTap: () => onActionAdd(context),
+      onActionTap: (tapDownDetails) => onActionAdd(context),
     );
   }
 
-  void onActionAdd(BuildContext context) {
+  Future<void> onActionAdd(BuildContext context) async {
     final dialog = InsertCategoryDialog(
-      validateCategoryName: (categoryName) async {
-        return await viewModel.validateNewCategory(categoryName);
+      validateInput: (categoryName) {
+        return viewModel.validateNewCategory(categoryName);
         },
       onSubmit: (categoryName)  {
         viewModel.createNewCategory(categoryName);
@@ -123,7 +123,7 @@ class _CategoriesMobile extends StatelessWidget {
         Navigator.of(context).pop();
       }
     );
-    dialog.showInsertCategoryDialog(context);
+    await dialog.showInsertDialog(context);
   }
 
   Future<void> onItemLongPress(BuildContext context, Offset offset, int index) async {

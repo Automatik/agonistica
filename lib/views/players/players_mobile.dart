@@ -9,7 +9,7 @@ class _PlayersMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScrollScaffoldWidget(
-      platformAppBar: AddActionPlatformAppBar(title: viewModel.getWidgetTitle(), onActionTap: () {
+      platformAppBar: AddActionPlatformAppBar(title: viewModel.getWidgetTitle(), onActionTap: (tapDownDetails) {
         // on add action pressed
         viewModel.addNewPlayer(context);
       }),

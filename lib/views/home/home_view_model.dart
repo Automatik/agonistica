@@ -1,5 +1,6 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
+import 'package:agonistica/core/assets/menu_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/menu.dart';
@@ -8,6 +9,7 @@ import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';
+import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +83,42 @@ class HomeViewModel extends BaseViewModel {
       CategoriesView.routeName,
       arguments: CategoriesViewArguments(categoriesIds),
     );
+  }
+
+  /// Check if no other menu exist with this name and the menu name is valid
+  String validateNewMenu(String menuName) {
+    String validationResult = InputValidation.validateMenuName(menuName);
+    if(validationResult != null) {
+      // not valid
+      return validationResult;
+    }
+    List<String> menuNames = _getAllMenuNames();
+    bool menuAlreadyExists = menuNames.contains(menuName);
+    if(menuAlreadyExists) {
+      return "Nome già presente";
+    }
+    return null; //Everything ok
+  }
+
+  Future<void> createNewMenu(String menuName, int menuType) async {
+    Menu menu = await _databaseService.createNewMenu(menuName, menuType);
+    if(menu == null) {
+      return;
+    }
+    if(menuType == Menu.TYPE_FOLLOWED_TEAMS) {
+      _homeMenus.addFollowedTeamMenu(menu);
+    } else {
+      _homeMenus.addFollowedPlayersMenu(menu);
+    }
+    // update view
+    notifyListeners();
+  }
+
+  List<String> _getAllMenuNames() {
+    List<String> list1 = _homeMenus.getFollowedTeamsMenusList().map((e) => e.name).toList();
+    List<String> list2 = _homeMenus.getFollowedPlayersMenusList().map((e) => e.name).toList();
+    list1.addAll(list2);
+    return list1;
   }
 
 }

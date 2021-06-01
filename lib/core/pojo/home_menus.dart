@@ -18,6 +18,14 @@ class HomeMenus {
     return homeMenus;
   }
 
+  void addFollowedTeamMenu(Menu menu) {
+    _followedTeamsMenus.add(menu);
+  }
+
+  void addFollowedPlayersMenu(Menu menu) {
+    _followedPlayersMenus.add(menu);
+  }
+
   SortedMenuList getFollowedTeamsMenus() {
     return _followedTeamsMenus;
   }
