@@ -67,6 +67,9 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> _getTeamCategories(List<SeasonTeam> seasonTeams, String seasonId) async {
+    if(seasonTeams.isEmpty) {
+      return;
+    }
     SeasonTeam seasonTeam = seasonTeams.firstWhere((st) => st.seasonId == seasonId);
     List<Category> categories = await _databaseService.categoryService.getItemsByIds(seasonTeam.categoriesIds);
     _sortedCategories.addAll(categories);
@@ -170,7 +173,7 @@ class CategoriesViewModel extends BaseViewModel {
       // not valid
       return validationResult;
     }
-    List<String> categories = _sortedCategories.map((e) => e.name);
+    List<String> categories = _sortedCategories.map((e) => e.name).toList();
     bool categoryAlreadyExists = categories.contains(categoryName);
     if(categoryAlreadyExists) {
       return "Categoria esiste già";

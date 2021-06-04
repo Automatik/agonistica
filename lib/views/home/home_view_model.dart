@@ -73,18 +73,6 @@ class HomeViewModel extends BaseViewModel {
     _appStateService.selectFollowedPlayersMenu(context, menu);
   }
 
-  void setAppBarTitle(String name) {
-    _baseScaffoldService.teamSelected = name;
-  }
-
-  Future<void> navigateToCategoriesView(BuildContext context, List<String> categoriesIds) async {
-    await Navigator.pushNamed(
-      context,
-      CategoriesView.routeName,
-      arguments: CategoriesViewArguments(categoriesIds),
-    );
-  }
-
   /// Check if no other menu exist with this name and the menu name is valid
   String validateNewMenu(String menuName) {
     String validationResult = InputValidation.validateMenuName(menuName);

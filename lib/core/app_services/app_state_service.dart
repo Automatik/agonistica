@@ -29,6 +29,7 @@ class AppStateService {
     return selectedMenu.type == Menu.TYPE_FOLLOWED_PLAYERS;
   }
 
+  /// Navigate to the season team of the current season
   Future<void> selectFollowedTeamMenu(BuildContext context, Menu menu) async {
     final _databaseService = locator<DatabaseService>();
     _setAppBarTitle(menu.name);
@@ -37,8 +38,17 @@ class AppStateService {
     // Get the team corresponding to this menu
     Team team = await _databaseService.teamService.getItemById(menu.teamId);
     selectedTeam = team;
-    // Get the current season team
-    SeasonTeam seasonTeam = await _databaseService.seasonTeamService.getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+    SeasonTeam seasonTeam;
+    bool currentSeasonTeamExists = await _databaseService.seasonTeamService.currentSeasonTeamExists(team.id);
+    if(currentSeasonTeamExists) {
+      // Get the current season team
+      seasonTeam = await _databaseService.seasonTeamService
+          .getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+    } else {
+      // Create the current season team
+      Season season = await _databaseService.seasonService.getCurrentSeason();
+      seasonTeam = SeasonTeam.empty(team.id, season.id);
+    }
     seasonTeam.team = team;
     selectedSeasonTeam = seasonTeam;
     selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);

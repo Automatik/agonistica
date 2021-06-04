@@ -25,6 +25,7 @@ class SeasonTeam {
     id = DbUtils.newUuid();
     this.teamId = teamId;
     this.seasonId = seasonId;
+    categoriesIds = List();
     matchesIds = List();
     seasonPlayersIds = List();
   }

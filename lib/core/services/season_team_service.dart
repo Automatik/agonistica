@@ -64,6 +64,17 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     await super.saveItem(seasonTeam);
   }
 
+  // CHECK
+
+  Future<bool> currentSeasonTeamExists(String teamId) async {
+    TeamService teamService = TeamService(databaseReference);
+    SeasonService seasonService = SeasonService(databaseReference);
+    Team team = await teamService.getItemById(teamId);
+    Season currentSeason = await seasonService.getCurrentSeason();
+    List<SeasonTeam> seasonTeams = await getItemsByIds(team.seasonTeamsIds);
+    return seasonTeams.any((st) => st.seasonId == currentSeason.id);
+  }
+
   // GET
 
   Future<SeasonTeam> getFullSeasonTeamById(String seasonTeamId) async {
