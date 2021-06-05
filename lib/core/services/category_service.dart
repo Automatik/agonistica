@@ -11,6 +11,7 @@ import 'package:agonistica/core/services/player_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 
 class CategoryService extends CrudService<Category> {
 
@@ -48,6 +49,12 @@ class CategoryService extends CrudService<Category> {
     if(seasonTeam.categoriesIds == null || seasonTeam.categoriesIds.isEmpty)
       return [];
     return await getItemsByIds(seasonTeam.categoriesIds);
+  }
+
+  /// Get the current images used in the menu's categories
+  Future<List<String>> getUsedCategoryImages(List<String> menuCategoriesIds) async {
+    List<Category> categories = await getItemsByIds(menuCategoriesIds);
+    return categories.map((e) => e.imageFilename).toList();
   }
 
   @override

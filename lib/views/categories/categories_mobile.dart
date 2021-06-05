@@ -96,7 +96,7 @@ class _CategoriesMobile extends StatelessWidget {
     return ImageMenuCard(
       onTap: () => viewModel.onCategoryTap(context, index),
       onLongTap: (longPressDetails) => onItemLongPress(context, longPressDetails.globalPosition, index),
-      imageAsset: MenuAssets.getRandomImage(),
+      imageAsset: viewModel.getCategoryImage(index),
       title: viewModel.getCategory(index),
       width: width,
       height: 150,

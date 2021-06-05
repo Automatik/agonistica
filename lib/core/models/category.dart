@@ -7,13 +7,16 @@ class Category {
 
   String name;
 
+  String imageFilename;
+
   Category() {
     id = DbUtils.newUuid();
   }
 
-  Category.name(String name) {
+  Category.name(String name, String imageFilename) {
     id = DbUtils.newUuid();
     this.name = name;
+    this.imageFilename = imageFilename;
   }
 
   static int compare(Category c1, Category c2) {
@@ -25,13 +28,15 @@ class Category {
 
     return {
       'id': id,
-      'name': name
+      'name': name,
+      'imageFilename': imageFilename
     };
   }
 
   Category.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
-      name = json['name'];
+      name = json['name'],
+      imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

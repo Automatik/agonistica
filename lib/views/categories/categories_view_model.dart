@@ -115,6 +115,10 @@ class CategoriesViewModel extends BaseViewModel {
     return _sortedCategories.elementAt(index).name;
   }
 
+  String getCategoryImage(int index) {
+    return _sortedCategories.elementAt(index).imageFilename;
+  }
+
   List<String> getSeasonPeriods() {
     return _getReversedSeasons().map((e) => e.period).toList();
   }
@@ -187,14 +191,16 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> createNewCategory(String categoryName) async {
-    Category category = Category.name(categoryName);
+    Category category;
     if(_currentMenu.isTeamMenu()) {
       if(_seasonTeams.isEmpty) {
         return;
       }
       SeasonTeam seasonTeam = _getSeasonTeamFromSeason(_seasonTeams, _currentSeasonSelected.id);
+      category = await _databaseService.createNewCategory(categoryName, seasonTeam.categoriesIds);
       await _databaseService.categoryService.saveFollowedTeamCategory(category, _currentMenu.id, seasonTeam.id);
     } else {
+      category = await _databaseService.createNewCategory(categoryName, _currentMenu.categoriesIds);
       await _databaseService.categoryService.saveFollowedPlayersCategory(category, _currentMenu.id);
     }
     _sortedCategories.add(category);

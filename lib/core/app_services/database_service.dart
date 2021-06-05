@@ -241,6 +241,14 @@ class DatabaseService {
     return null;
   }
 
+  Future<Category> createNewCategory(String categoryName, List<String> otherCategoriesIds) async {
+    // associate image filename
+    List<String> usedCategoriesImages = await categoryService.getUsedCategoryImages(otherCategoriesIds);
+    String categoryImageFilename = MenuAssets.getNewImage(usedCategoriesImages);
+    Category category = Category.name(categoryName, categoryImageFilename);
+    return category;
+  }
+
   CategoryService get categoryService => _categoryService;
 
   FollowedPlayersService get followedPlayersService => _followedPlayersService;
