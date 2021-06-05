@@ -108,7 +108,7 @@ class _CategoriesMobile extends StatelessWidget {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     return AddActionPlatformAppBar(
       title: viewModel.getAppBarTitle(),
-      onActionTap: (tapDownDetails) => onActionAdd(context),
+      onActionTap: () => onActionAdd(context),
     );
   }
 

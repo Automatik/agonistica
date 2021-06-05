@@ -45,9 +45,10 @@ class AppStateService {
       seasonTeam = await _databaseService.seasonTeamService
           .getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
     } else {
-      // Create the current season team
+      // Create the current season team and save it
       Season season = await _databaseService.seasonService.getCurrentSeason();
       seasonTeam = SeasonTeam.empty(team.id, season.id);
+      await _databaseService.seasonTeamService.saveItem(seasonTeam);
     }
     seasonTeam.team = team;
     selectedSeasonTeam = seasonTeam;

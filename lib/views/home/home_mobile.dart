@@ -27,7 +27,7 @@ class _HomeMobile extends StatelessWidget {
   PlatformAppBar getPlatformAppBar(BuildContext context) {
     return AddActionPlatformAppBar(
       title: viewModel.getAppBarTitle(),
-      onActionTap: (tapDownDetails) => onActionAdd(context, tapDownDetails.globalPosition), // TODO OnActionTap
+      onActionTapDown: (tapDownDetails) => onActionAdd(context, tapDownDetails.globalPosition),
     );
   }
 
@@ -101,19 +101,19 @@ class _HomeMobile extends StatelessWidget {
 
   Widget followedTeamsMenusBuilder(BuildContext context, int index, double width, Axis axis) {
     Menu menu = viewModel.getFollowedTeamMenu(index);
-    return menuBuilder(menu.name, width, () => viewModel.onFollowedTeamMenuTap(context, index), axis);
+    return menuBuilder(menu.name, menu.imageFilename, width, () => viewModel.onFollowedTeamMenuTap(context, index), axis);
   }
 
   Widget followedPlayersMenusBuilder(BuildContext context, int index, double width, Axis axis) {
     Menu menu = viewModel.getFollowedPlayerMenu(index);
-    return menuBuilder(menu.name, width, () => viewModel.onFollowedPlayerMenuTap(context, index), axis);
+    return menuBuilder(menu.name, menu.imageFilename, width, () => viewModel.onFollowedPlayerMenuTap(context, index), axis);
   }
 
-  Widget menuBuilder(String title, double width, Function onTap, Axis axis) {
+  Widget menuBuilder(String title, String imageAsset, double width, Function onTap, Axis axis) {
     bool isPortrait = axis == Axis.vertical;
     return ImageMenuCard(
       onTap: onTap,
-      imageAsset: MenuAssets.getRandomImage(),
+      imageAsset: imageAsset,
       title: title,
       width: width,
       height: imageMenuCardHeight,

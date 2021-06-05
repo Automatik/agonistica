@@ -6,13 +6,15 @@ class AppBarAction extends StatelessWidget {
   static const double actionIconsMargin = 20;
 
   final IconData icon;
-  final Function(TapDownDetails) onActionTap;
+  final Function(TapDownDetails) onActionTapDown;
+  final Function onActionTap;
   final Color color;
   final double rightMargin;
 
   AppBarAction({
     @required this.icon,
     this.onActionTap,
+    this.onActionTapDown,
     this.color = blueAgonisticaColor,
     this.rightMargin = actionIconsMargin,
   }) : assert(icon != null);
@@ -22,7 +24,8 @@ class AppBarAction extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: rightMargin),
       child: GestureDetector(
-        onTapDown: this.onActionTap,
+        onTap: this.onActionTap,
+        onTapDown: this.onActionTapDown,
         child: Icon(
           this.icon,
           color: this.color,
