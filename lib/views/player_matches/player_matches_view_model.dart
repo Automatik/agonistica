@@ -125,7 +125,9 @@ class PlayerMatchesViewModel extends BaseViewModel {
   Future<void> addNewMatch(BuildContext context) async {
     String categoryId = _appStateService.selectedCategory.id;
     String seasonId = _appStateService.selectedSeason.id;
-    NavUtils.navToNewMatch(context, categoryId, seasonId, _onPlayerMatchesDetailUpdate);
+    String team1ImageFilename = await _databaseService.getNewTeamImage();
+    String team2ImageFilename = await _databaseService.getNewTeamImage();
+    NavUtils.navToNewMatch(context, categoryId, seasonId, team1ImageFilename, team2ImageFilename, _onPlayerMatchesDetailUpdate);
   }
 
   Future<void> deleteMatch(MatchNotesObject object) async {

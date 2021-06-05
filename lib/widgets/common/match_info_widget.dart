@@ -114,7 +114,7 @@ class MatchInfoWidget extends StatelessWidget {
 
   Widget homeTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
     final widgets = [
-      teamImageWidget(TeamAssets.getRandomImage(), avatarSize),
+      teamImageWidget(matchInfo.getHomeSeasonTeamImage(), avatarSize),
       CustomRichText(
         onTap: () => onHomeTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,
@@ -130,7 +130,7 @@ class MatchInfoWidget extends StatelessWidget {
 
   Widget awayTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
     final widgets = [
-      teamImageWidget(TeamAssets.getRandomImage(), avatarSize),
+      teamImageWidget(matchInfo.getAwaySeasonTeamImage(), avatarSize),
       CustomRichText(
         onTap: () => onAwayTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,

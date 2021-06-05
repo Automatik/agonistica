@@ -11,19 +11,23 @@ class Team {
 
   List<String> seasonTeamsIds;
 
+  String imageFilename;
+
   Team() {
     id = DbUtils.newUuid();
   }
 
-  Team.name(String name) {
+  Team.name(String name, String imageFilename) {
     id = DbUtils.newUuid();
     this.name = name;
+    this.imageFilename = imageFilename;
     seasonTeamsIds = List();
   }
 
-  Team.nameWithNoId(String name) {
+  Team.nameWithNoId(String name, String imageFilename) {
     id = null;
     this.name = name;
+    this.imageFilename = imageFilename;
     seasonTeamsIds = List();
   }
 
@@ -49,13 +53,15 @@ class Team {
     return {
       'id': id,
       'name': name,
-      'seasonTeamsIds': seasonTeamsIds
+      'imageFilename': imageFilename,
+      'seasonTeamsIds': seasonTeamsIds,
     };
   }
 
   Team.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],
         name = json['name'],
+        imageFilename = json['imageFilename'],
         seasonTeamsIds = json['seasonTeamsIds'] == null ? List(): List<String>.from(json['seasonTeamsIds']);
 
   void checkRequiredFields() {

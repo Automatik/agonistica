@@ -1,4 +1,5 @@
 import 'package:agonistica/core/assets/team_assets.dart';
+import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/date_utils.dart';
 import 'package:agonistica/widgets/common/date_widget.dart';
@@ -11,7 +12,8 @@ import 'package:flutter/material.dart';
 
 class MatchReview extends BaseReview {
 
-  final String team1, team2, result;
+  final Team team1, team2;
+  final String result;
   final int leagueMatch;
   final DateTime matchDate;
 
@@ -47,11 +49,11 @@ class MatchReview extends BaseReview {
   Widget mainRow() {
     return Row(
       children: [
-        homeTeamWidget(),
-        teamNameWidget(team1),
+        homeTeamWidget(team1.imageFilename),
+        teamNameWidget(team1.name),
         resultWidget(result),
-        teamNameWidget(team2),
-        awayTeamWidget(),
+        teamNameWidget(team2.name),
+        awayTeamWidget(team2.imageFilename),
       ],
     );
   }
@@ -69,11 +71,11 @@ class MatchReview extends BaseReview {
     );
   }
 
-  Widget homeTeamWidget() {
+  Widget homeTeamWidget(String teamImage) {
     return Container(
       margin: EdgeInsets.only(right: 5),
       child: SvgImage(
-        imageAsset: TeamAssets.getRandomImage(),
+        imageAsset: teamImage,
         width: avatarSize,
         height: avatarSize,
       ),
@@ -108,11 +110,11 @@ class MatchReview extends BaseReview {
     );
   }
 
-  Widget awayTeamWidget() {
+  Widget awayTeamWidget(String teamImage) {
     return Container(
       margin: EdgeInsets.only(left: 5),
       child: SvgImage(
-        imageAsset: TeamAssets.getRandomImage(),
+        imageAsset: teamImage,
         width: avatarSize,
         height: avatarSize,
       ),

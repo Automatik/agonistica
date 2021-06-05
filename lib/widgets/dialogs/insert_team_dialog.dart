@@ -1,3 +1,5 @@
+import 'package:agonistica/core/app_services/database_service.dart';
+import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -175,10 +177,10 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                         fontSize: 18,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if(_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        SeasonTeam seasonTeam = submitFinalValue();
+                        SeasonTeam seasonTeam = await submitFinalValue();
                         widget.onSubmit(seasonTeam);
                       }
                     },
@@ -205,13 +207,26 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
     });
   }
 
-  SeasonTeam submitFinalValue() {
+  Future<SeasonTeam> submitFinalValue() async {
     //textEditingController.text is already validated
 
     // team's name should be unique to use this comparison in order to find which team is selected
     String text = textEditingController.text;
-    SeasonTeam team = suggestionsList.firstWhere((element) => element.getTeamName() == text, orElse: () => SeasonTeam.newTeam(text, widget.seasonId));
+    SeasonTeam team;
+    int index = suggestionsList.indexWhere((element) => element.getTeamName() == text);
+    if(index == -1) {
+      // no team exists with this name
+      team = await createNewSeasonTeam(text, widget.seasonId);
+    } else {
+      // a team already exists with this name
+      team = suggestionsList[index];
+    }
     return team;
+  }
+
+  Future<SeasonTeam> createNewSeasonTeam(String text, String seasonId) async {
+    DatabaseService databaseService = locator<DatabaseService>();
+    return await databaseService.createNewSeasonTeamAndTeam(text, seasonId);
   }
 
   Widget suggestions() {

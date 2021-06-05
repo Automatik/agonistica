@@ -1,5 +1,6 @@
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/assets/menu_assets.dart';
+import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
@@ -225,7 +226,7 @@ class DatabaseService {
 
     if(menuType == Menu.TYPE_FOLLOWED_TEAMS) {
       // Create team with the menu name
-      Team team = Team.name(menuName);
+      Team team = await createNewTeam(menuName);
       await teamService.saveItem(team);
       // Create menu
       Menu menu = Menu.createTeamMenu(menuName, team.id, menuImageFilename);
@@ -247,6 +248,29 @@ class DatabaseService {
     String categoryImageFilename = MenuAssets.getNewImage(usedCategoriesImages);
     Category category = Category.name(categoryName, categoryImageFilename);
     return category;
+  }
+
+  Future<Team> createNewTeam(String teamName) async {
+    // associate image filename
+    String teamImageFilename = await getNewTeamImage();
+
+    // create team
+    Team team = Team.name(teamName, teamImageFilename);
+    return team;
+  }
+
+  /// Create both a new Team and a new SeasonTeam
+  Future<SeasonTeam> createNewSeasonTeamAndTeam(String teamName, String seasonId) async {
+    // Create new team
+    Team team = await createNewTeam(teamName);
+
+    // Create new season team
+    return SeasonTeam.newTeam(team.name, team.imageFilename, seasonId);
+  }
+
+  Future<String> getNewTeamImage() async {
+    List<String> usedTeamImages = await teamService.getUsedTeamImages();
+    return TeamAssets.getNewImage(usedTeamImages);
   }
 
   CategoryService get categoryService => _categoryService;

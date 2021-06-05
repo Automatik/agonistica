@@ -26,6 +26,19 @@ class TeamAssets {
     ];
   }
 
+  static String getNewImage(List<String> usedTeamImages) {
+    List<String> images = getImagesArray();
+    images.removeWhere((i) => usedTeamImages.contains(i));
+    if(images.isEmpty) {
+      // All images are already in use by some menu
+      // Get a random image and use an image for more than one menu
+      return getRandomImage();
+    }
+    // Get an image not used yet
+    int number = RandomUtils.randomInt(images.length);
+    return images[number];
+  }
+
   static String getRandomImage() {
     List<String> images = getImagesArray();
     int number = RandomUtils.randomInt(images.length);

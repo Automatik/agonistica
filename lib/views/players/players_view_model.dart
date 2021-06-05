@@ -107,7 +107,7 @@ class PlayersViewModel extends BaseViewModel {
   }
 
   Future<void> addNewPlayer(BuildContext context) async {
-    SeasonTeam seasonTeam = SeasonTeam.newTeam(Team.EMPTY_TEAM_NAME, _appStateService.selectedSeason.id);
+    SeasonTeam seasonTeam = await _databaseService.createNewSeasonTeamAndTeam(Team.EMPTY_TEAM_NAME, _appStateService.selectedSeason.id);
     Category category = _appStateService.selectedCategory;
     NavUtils.navToNewPlayer(context, seasonTeam, category, _onPlayerDetailUpdate);
   }

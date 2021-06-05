@@ -32,11 +32,11 @@ class SeasonTeam {
 
   /// Useful constructor to create both a new Team and a new SeasonTeam
   /// with all the temporary objects populated
-  factory SeasonTeam.newTeam(String teamName, String seasonId) {
+  factory SeasonTeam.newTeam(String teamName, String teamImageFilename, String seasonId) {
     Preconditions.requireArgumentNotEmpty(seasonId);
 
     // New Empty Team
-    Team team = Team.name(teamName);
+    Team team = Team.name(teamName, teamImageFilename);
     // Create new empty SeasonTeam
     SeasonTeam seasonTeam = SeasonTeam.empty(team.id, seasonId);
     // Set temporary values

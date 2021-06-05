@@ -32,7 +32,7 @@ class Match {
     id = DbUtils.newUuid();
   }
 
-  Match.empty(String categoryId, String seasonId) {
+  Match.empty(String categoryId, String seasonId, String team1ImageFilename, String team2ImageFilename) {
     id = DbUtils.newUuid();
     this.categoryId = categoryId;
     this.seasonId = seasonId;
@@ -42,8 +42,8 @@ class Match {
     team2Goals = 0;
     leagueMatch = 0;
     matchDate = DateTime.now();
-    team1 = Team.nameWithNoId("Squadra 1");
-    team2 = Team.nameWithNoId("Squadra 2");
+    team1 = Team.nameWithNoId("Squadra 1", team1ImageFilename);
+    team2 = Team.nameWithNoId("Squadra 2", team2ImageFilename);
     matchNotes = "";
   }
 
@@ -98,6 +98,14 @@ class Match {
     return seasonTeam;
   }
 
+  Team getHomeTeam() {
+    return getSeasonTeam1().team;
+  }
+
+  Team getAwayTeam() {
+    return getSeasonTeam2().team;
+  }
+
   String getHomeSeasonTeamId() {
     return getSeasonTeam1().id;
   }
@@ -112,6 +120,14 @@ class Match {
 
   String getAwaySeasonTeamName() {
     return getSeasonTeam2().team.name;
+  }
+
+  String getHomeSeasonTeamImage() {
+    return getSeasonTeam1().team.imageFilename;
+  }
+
+  String getAwaySeasonTeamImage() {
+    return getSeasonTeam2().team.imageFilename;
   }
 
   List<MatchPlayerData> getHomePlayers() {

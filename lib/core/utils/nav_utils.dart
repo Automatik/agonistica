@@ -13,9 +13,9 @@ import 'package:flutter/material.dart';
 
 class NavUtils {
 
-  static Future<void> navToNewMatch(BuildContext context, String categoryId, String seasonId, Function(Match) onMatchDetailUpdate) async {
+  static Future<void> navToNewMatch(BuildContext context, String categoryId, String seasonId, String team1ImageFilename, String team2ImageFilename, Function(Match) onMatchDetailUpdate) async {
     bool isNewMatch = true;
-    Match match = Match.empty(categoryId, seasonId);
+    Match match = Match.empty(categoryId, seasonId, team1ImageFilename, team2ImageFilename);
     navToMatchesView(context, MatchesViewArguments(isNewMatch, match, onMatchDetailUpdate));
   }
 

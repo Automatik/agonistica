@@ -57,6 +57,11 @@ class TeamService extends CrudService<Team> {
     return team;
   }
 
+  Future<List<String>> getUsedTeamImages() async {
+    List<Team> teams = await getAllItems();
+    return teams.map((e) => e.imageFilename).toList();
+  }
+
   // DELETE
 
   @override
