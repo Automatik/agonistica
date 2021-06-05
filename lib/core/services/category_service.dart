@@ -17,6 +17,25 @@ class CategoryService extends CrudService<Category> {
   CategoryService(DatabaseReference databaseReference)
       : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
+  Future<void> saveFollowedTeamCategory(Category category, String menuId, String seasonTeamId) async {
+    await _saveCategoryToMenu(category, menuId);
+
+    // Add category to the seasonTeam
+    SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
+    await seasonTeamService.addCategoryToSeasonTeam(seasonTeamId, category.id);
+  }
+
+  Future<void> saveFollowedPlayersCategory(Category category, String menuId) async {
+    await _saveCategoryToMenu(category, menuId);
+  }
+
+  Future<void> _saveCategoryToMenu(Category category, String menuId) async {
+    // Save category
+    await saveItem(category);
+    // Add category to the menu
+    MenuService menuService = MenuService(databaseReference);
+    await menuService.addCategoryToMenu(category, menuId);
+  }
 
   /// Get the team's categories
   Future<List<Category>> getTeamCategories(String seasonTeamId) async {
@@ -46,7 +65,7 @@ class CategoryService extends CrudService<Category> {
     MenuService menuService = MenuService(databaseReference);
     Menu menu = await menuService.findMenuWithCategory(categoryId);
     if(menu != null) {
-      await menuService.removeCategoryFromMenu(categoryId, menu);
+      await menuService.removeCategoryFromMenu(categoryId, menu.id);
     }
 
     // Delete category

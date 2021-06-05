@@ -4,7 +4,6 @@ import 'package:agonistica/core/exceptions/not_implemented_yet_exception.dart';
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/repositories/menu_repository.dart';
-import 'package:agonistica/core/services/category_service.dart';
 import 'package:agonistica/core/services/crud_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,17 +13,14 @@ class MenuService extends CrudService<Menu> {
   MenuService(DatabaseReference databaseReference)
     : super(databaseReference, MenuRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
-  Future<void> addCategoryToMenu(Category category, Menu menu) async {
-
-    // Save new category
-    CategoryService categoryService = CategoryService(databaseReference);
-    await categoryService.saveItem(category);
-
+  Future<void> addCategoryToMenu(Category category, String menuId) async {
+    Menu menu = await getItemById(menuId);
     menu.addCategory(category.id);
     await saveItem(menu);
   }
 
-  Future<void> removeCategoryFromMenu(String categoryId, Menu menu) async {
+  Future<void> removeCategoryFromMenu(String categoryId, String menuId) async {
+    Menu menu = await getItemById(menuId);
     menu.removeCategory(categoryId);
     await saveItem(menu);
   }

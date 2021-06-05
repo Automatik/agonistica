@@ -27,6 +27,7 @@ class CategoriesViewModel extends BaseViewModel {
   final _appStateService = locator<AppStateService>();
 
   Menu _currentMenu;
+  Season _currentSeasonSelected;
   List<SeasonTeam> _seasonTeams;
   SplayTreeSet<Season> _sortedSeasons;
   SplayTreeSet<Category> _sortedCategories;
@@ -46,8 +47,8 @@ class CategoriesViewModel extends BaseViewModel {
     _currentMenu = _appStateService.selectedMenu;
     if(_currentMenu.isTeamMenu()) {
       await _getTeamSeasons(_currentMenu);
-      Season lastSeason = _getFirstSeasonItem();
-      await _getTeamCategories(_seasonTeams, lastSeason.id);
+      _currentSeasonSelected = _getFirstSeasonItem();
+      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id);
     } else {
       await _getPlayersSeasons();
       await _getPlayersCategories(_currentMenu);
@@ -66,11 +67,15 @@ class CategoriesViewModel extends BaseViewModel {
     await _mergeSeasons(teamSeasons);
   }
 
+  SeasonTeam _getSeasonTeamFromSeason(List<SeasonTeam> seasonTeams, String seasonId) {
+    return seasonTeams.firstWhere((st) => st.seasonId == seasonId);
+  }
+
   Future<void> _getTeamCategories(List<SeasonTeam> seasonTeams, String seasonId) async {
     if(seasonTeams.isEmpty) {
       return;
     }
-    SeasonTeam seasonTeam = seasonTeams.firstWhere((st) => st.seasonId == seasonId);
+    SeasonTeam seasonTeam = _getSeasonTeamFromSeason(seasonTeams, seasonId);
     List<Category> categories = await _databaseService.categoryService.getItemsByIds(seasonTeam.categoriesIds);
     _sortedCategories.addAll(categories);
   }
@@ -128,10 +133,10 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> onSeasonItemChanged(int index) async {
-    Season selectedSeason = _getSeasonItemAtIndex(index);
+    _currentSeasonSelected = _getSeasonItemAtIndex(index);
     _sortedCategories.clear();
     if(_currentMenu.isTeamMenu()) {
-      await _getTeamCategories(_seasonTeams, selectedSeason.id);
+      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id);
     } else {
       await _getPlayersCategories(_currentMenu);
     }
@@ -183,7 +188,15 @@ class CategoriesViewModel extends BaseViewModel {
 
   Future<void> createNewCategory(String categoryName) async {
     Category category = Category.name(categoryName);
-    await _databaseService.menuService.addCategoryToMenu(category, _appStateService.selectedMenu);
+    if(_currentMenu.isTeamMenu()) {
+      if(_seasonTeams.isEmpty) {
+        return;
+      }
+      SeasonTeam seasonTeam = _getSeasonTeamFromSeason(_seasonTeams, _currentSeasonSelected.id);
+      await _databaseService.categoryService.saveFollowedTeamCategory(category, _currentMenu.id, seasonTeam.id);
+    } else {
+      await _databaseService.categoryService.saveFollowedPlayersCategory(category, _currentMenu.id);
+    }
     _sortedCategories.add(category);
     notifyListeners();
   }
