@@ -7,6 +7,7 @@ import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
 import 'package:agonistica/widgets/app_bars/base_platform_app_bar.dart';
+import 'package:agonistica/widgets/cards/empty_menu_card.dart';
 import 'package:agonistica/widgets/cards/image_menu_card.dart';
 import 'package:agonistica/widgets/dialogs/insert_followed_players_menu_dialog.dart';
 import 'package:agonistica/widgets/dialogs/insert_followed_team_menu_dialog.dart';

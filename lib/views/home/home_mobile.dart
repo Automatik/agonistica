@@ -2,6 +2,9 @@ part of home_view;
 
 class _HomeMobile extends StatelessWidget {
 
+  static const String EMPTY_TITLE_FOLLOWED_TEAM = "Aggiungi squadra";
+  static const String EMPTY_TITLE_FOLLOWED_PLAYERS = "Aggiungi macro categoria";
+
   final HomeViewModel viewModel;
   final double imageMenuCardHeight = 150;
 
@@ -50,9 +53,9 @@ class _HomeMobile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         followedTeamsMenusTitle(context),
-        followedTeamsMenusWidget(sizingInformation, axis),
+        followedTeamsMenusWidget(context, sizingInformation, axis),
         followedPlayersMenusTitle(context),
-        followedPlayersMenusWidget(sizingInformation, axis),
+        followedPlayersMenusWidget(context, sizingInformation, axis),
       ],
     );
   }
@@ -81,21 +84,25 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget followedTeamsMenusWidget(MySizingInformation sizingInformation, Axis axis) {
+  Widget followedTeamsMenusWidget(BuildContext context, MySizingInformation sizingInformation, Axis axis) {
     return listMenusWidget(
       sizingInformation: sizingInformation,
       axis: axis,
       itemCount: viewModel.getFollowedTeamsMenusSize(),
       itemBuilder: (context, index, width) => followedTeamsMenusBuilder(context, index, width, axis),
+      emptyTitle: EMPTY_TITLE_FOLLOWED_TEAM,
+      onEmptyTap: () => showInsertFollowedTeamMenuDialog(context)
     );
   }
 
-  Widget followedPlayersMenusWidget(MySizingInformation sizingInformation, Axis axis) {
+  Widget followedPlayersMenusWidget(BuildContext context, MySizingInformation sizingInformation, Axis axis) {
     return listMenusWidget(
       sizingInformation: sizingInformation,
       axis: axis,
       itemCount: viewModel.getFollowedPlayersMenusSize(),
       itemBuilder: (context, index, width) => followedPlayersMenusBuilder(context, index, width, axis),
+      emptyTitle: EMPTY_TITLE_FOLLOWED_PLAYERS,
+      onEmptyTap: () => showInsertFollowedPlayersMenuDialog(context)
     );
   }
 
@@ -122,7 +129,7 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget listMenusWidget({MySizingInformation sizingInformation, Axis axis, int itemCount, Widget Function(BuildContext, int, double) itemBuilder}) {
+  Widget listMenusWidget({MySizingInformation sizingInformation, Axis axis, int itemCount, Widget Function(BuildContext, int, double) itemBuilder, String emptyTitle, Function onEmptyTap}) {
     double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.95;
     double listWidth = widthFactor * sizingInformation.screenSize.width;
     bool isPortrait = sizingInformation.isPortrait();
@@ -132,13 +139,33 @@ class _HomeMobile extends StatelessWidget {
       width: listWidth,
       height: isPortrait ? null : imageMenuCardHeight,
       alignment: Alignment.center,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: isPortrait ? NeverScrollableScrollPhysics() : null,
-        scrollDirection: axis,
-        itemCount: itemCount,
-        itemBuilder: (BuildContext listContext, int index) => itemBuilder(listContext, index, imageWidth),
-      ),
+      child: listMenusContent(axis, isPortrait, imageWidth, itemCount, itemBuilder, emptyTitle, onEmptyTap)
+    );
+  }
+
+  Widget listMenusContent(Axis axis, bool isPortrait, double imageWidth, int itemCount, Widget Function(BuildContext, int, double) itemBuilder, String emptyTitle, Function onEmptyTap) {
+    if(itemCount == 0) {
+      return emptyMenu(emptyTitle, imageWidth, onEmptyTap);
+    }
+    return listMenusBuilder(axis, isPortrait, imageWidth, itemCount, itemBuilder);
+  }
+
+  Widget listMenusBuilder(Axis axis, bool isPortrait, double imageWidth, int itemCount, Widget Function(BuildContext, int, double) itemBuilder) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: isPortrait ? NeverScrollableScrollPhysics() : null,
+      scrollDirection: axis,
+      itemCount: itemCount,
+      itemBuilder: (BuildContext listContext, int index) => itemBuilder(listContext, index, imageWidth),
+    );
+  }
+
+  Widget emptyMenu(String emptyTitle, double imageWidth, Function onEmptyTap) {
+    return EmptyMenuCard(
+      title: emptyTitle,
+      width: imageWidth,
+      height: imageMenuCardHeight,
+      onTap: onEmptyTap,
     );
   }
 

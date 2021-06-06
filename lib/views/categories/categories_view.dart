@@ -5,6 +5,7 @@ import 'package:agonistica/core/assets/menu_assets.dart';
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';
+import 'package:agonistica/widgets/cards/empty_menu_card.dart';
 import 'package:agonistica/widgets/cards/image_menu_card.dart';
 import 'package:agonistica/widgets/cards/season_card.dart';
 import 'package:agonistica/widgets/dialogs/confirm_dialog.dart';

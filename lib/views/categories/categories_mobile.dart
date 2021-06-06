@@ -2,6 +2,10 @@ part of categories_view;
 
 class _CategoriesMobile extends StatelessWidget {
 
+  static const String EMPTY_TITLE_CATEGORY = "Aggiungi categoria";
+
+  static const double IMAGE_MENU_CARD_HEIGHT = 150;
+
   final CategoriesViewModel viewModel;
 
   _CategoriesMobile(this.viewModel);
@@ -82,13 +86,33 @@ class _CategoriesMobile extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       width: width,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemCount: viewModel.getCategoriesCount(),
-        itemBuilder: (BuildContext listContext, int index) => categoryBuilder(context, index, width),
-      ),
+      child: categoriesListContent(context, width)
+    );
+  }
+
+  Widget categoriesListContent(BuildContext context, double width) {
+    if(viewModel.getCategoriesCount() == 0) {
+      return emptyMenu(width, () => onActionAdd(context));
+    }
+    return categoriesListBuilder(context, width);
+  }
+
+  Widget categoriesListBuilder(BuildContext context, double width) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      itemCount: viewModel.getCategoriesCount(),
+      itemBuilder: (BuildContext listContext, int index) => categoryBuilder(context, index, width),
+    );
+  }
+
+  Widget emptyMenu(double imageWidth, Function onEmptyTap) {
+    return EmptyMenuCard(
+      title: EMPTY_TITLE_CATEGORY,
+      width: imageWidth,
+      height: IMAGE_MENU_CARD_HEIGHT,
+      onTap: onEmptyTap,
     );
   }
 
@@ -99,7 +123,7 @@ class _CategoriesMobile extends StatelessWidget {
       imageAsset: viewModel.getCategoryImage(index),
       title: viewModel.getCategory(index),
       width: width,
-      height: 150,
+      height: IMAGE_MENU_CARD_HEIGHT,
       useWhiteBackground: true,
       useVerticalMargin: true,
     );
