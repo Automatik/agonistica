@@ -23,6 +23,7 @@ class PlayerItem extends StatelessWidget {
   final Function(MatchPlayerData) onInsertNotesCallback;
 
   PlayerItem({
+    key,
     @required this.matchPlayer,
     @required this.isLeftOrientation,
     @required this.isEditEnabled,
@@ -37,6 +38,7 @@ class PlayerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: key,
       onTap: () => onPlayerItemClick(context),
       onLongPressStart: (longPressDetails) => onPlayerItemLongClick(context, longPressDetails.globalPosition),
       child: Container(

@@ -5,6 +5,7 @@ import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
+import 'package:agonistica/views/matches/player_reorderable_list.dart';
 import 'package:agonistica/widgets/common/match_info_widget.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -400,6 +401,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       areRemainingRegularPlayersToFill = false;
     }
 
+    // Widget list1 = reOrderableListPlayers(homeRegularPlayers, isEditEnabled, true, true);
+    // Widget list2 = reOrderableListPlayers(awayRegularPlayers, isEditEnabled, false, true);
+    // return sideListPlayers(list1, list2);
     return listPlayers(homeRegularPlayers, awayRegularPlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, true);
   }
 
@@ -423,6 +427,57 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     }
 
     return listPlayers(homeReservePlayers, awayReservePlayers, rowsCount, areRemainingRegularPlayersToFill, isEditEnabled, false);
+  }
+
+  Widget sideListPlayers(Widget list1, Widget list2) {
+    return Row(
+      children: [
+        list1,
+        list2
+        // Expanded(child: list1),
+        // Expanded(child: list2)
+      ],
+    );
+  }
+
+  Widget reOrderableListPlayers(List<MatchPlayerData> players,  bool isEditEnabled, bool areHomePlayers, bool areRegulars) {
+    return PlayerReorderableList(
+      isEditEnabled: isEditEnabled,
+      isLeftOrientation: areHomePlayers,
+      players: players,
+      onReorder: (oldIndex, newIndex) => onReorder(players, oldIndex, newIndex),
+      onPlayerValidation: (id, shirtNumber) => validatePlayerShirtNumber(id, shirtNumber, areHomePlayers),
+      onPlayerSuggestionCallback: (namePattern, surnamePattern) {
+        String seasonTeamId = areHomePlayers ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
+        List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId);
+        // Remove players already in the lineup
+        List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList();
+        seasonPlayers.removeWhere((p) => lineupPlayersIds.contains(p.id));
+        return seasonPlayers;
+      },
+      onSaveCallback: (matchPlayerData) {
+        setState(() {
+          _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
+        });
+      },
+      onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId),
+      onDeleteCallback: (matchPlayerData) {
+        setState(() {
+          tempMatch.playersData.remove(matchPlayerData);
+        });
+      },
+      onInsertNotesCallback: (matchPlayerData) =>  widget.onInsertNotesCallback(tempMatch, matchPlayerData),
+    );
+  }
+
+  void onReorder(List<MatchPlayerData> players, int oldIndex, int newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final MatchPlayerData item = players.removeAt(oldIndex);
+      players.insert(newIndex, item);
+    });
   }
 
   Widget listPlayers(List<MatchPlayerData> homePlayers, List<MatchPlayerData> awayPlayers, int rowsCount, bool areRemainingRegularPlayersToFill, bool isEditEnabled, bool areRegulars) {
@@ -469,7 +524,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                     _addNewRowWithReservePlayers();
                   }
                 } else {
-                  MySnackBar.showSnackBar(context, MatchDetailLayout.SNACKBAR_TEXT_SELECT_TEAMS);
+                  MySnackBar.showSnackBar(ctx, MatchDetailLayout.SNACKBAR_TEXT_SELECT_TEAMS);
                 }
               },
             );
