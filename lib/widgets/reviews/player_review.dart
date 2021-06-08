@@ -7,7 +7,7 @@ import 'package:agonistica/widgets/text_styles/base_review_subtitle_text_style.d
 import 'package:agonistica/widgets/text_styles/base_review_team_text_style.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/utils/date_utils.dart';
+import '../../core/utils/my_date_utils.dart';
 
 class PlayerReview extends BaseReview{
 

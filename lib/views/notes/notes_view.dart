@@ -10,7 +10,7 @@ import 'package:agonistica/widgets/app_bars/view_mode_notes_view_platform_app_ba
 import 'package:agonistica/widgets/common/match_info_widget.dart';
 import 'package:agonistica/widgets/scaffolds/tab_scaffold_widget.dart';
 import 'package:agonistica/widgets/text/text_box.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/widgets/text_styles/detail_view_header_text_style.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';

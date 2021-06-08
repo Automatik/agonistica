@@ -1,4 +1,4 @@
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:flutter/material.dart';
 
 class DateWidget extends StatelessWidget {
@@ -19,7 +19,7 @@ class DateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String dateText = "${dateTime.day} ${DateUtils.monthToString(dateTime.month).substring(0, 3)} ${dateTime.year}";
+    String dateText = "${dateTime.day} ${MyDateUtils.monthToString(dateTime.month).substring(0, 3)} ${dateTime.year}";
     return Row(
       mainAxisAlignment: mainAxisAlignment,
       children: [

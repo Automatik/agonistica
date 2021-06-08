@@ -1,4 +1,4 @@
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:flutter/material.dart';
 
 class DateLabel extends StatefulWidget {
@@ -59,7 +59,7 @@ class _DateLabelState extends State<DateLabel> {
         }
       },
       child: Text(
-        "${dateTime.day} ${DateUtils
+        "${dateTime.day} ${MyDateUtils
             .monthToString(
             dateTime.month).substring(
             0, 3)} ${dateTime.year}",

@@ -1,5 +1,5 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class Player {
@@ -33,7 +33,7 @@ class Player {
     id = p.id;
     name = p.name;
     surname = p.surname;
-    birthDay = DateUtils.fromDateTime(p.birthDay);
+    birthDay = MyDateUtils.fromDateTime(p.birthDay);
     isRightHanded = p.isRightHanded;
     seasonPlayersIds = p.seasonPlayersIds;
   }

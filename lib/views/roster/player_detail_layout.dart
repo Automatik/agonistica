@@ -13,7 +13,7 @@ import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/roster/stat_element.dart';

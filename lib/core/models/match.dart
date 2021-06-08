@@ -2,7 +2,7 @@ import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class Match {
@@ -56,7 +56,7 @@ class Match {
     team1Goals = match.team1Goals;
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
-    matchDate = DateUtils.fromDateTime(match.matchDate);
+    matchDate = MyDateUtils.fromDateTime(match.matchDate);
     playersData = match.playersData == null ? List() : List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
     matchNotes = match.matchNotes;
   }

@@ -1,4 +1,4 @@
-class DateUtils {
+class MyDateUtils {
 
   static String monthToString(int month) {
     if(month < 1 || month > 12)

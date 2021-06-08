@@ -1,7 +1,7 @@
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils/date_utils.dart';
+import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/reviews/base_review.dart';
