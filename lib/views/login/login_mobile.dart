@@ -31,10 +31,10 @@ class _LoginMobile extends StatelessWidget {
       onLogin: (data) => viewModel.loginUser(data),
       onRecoverPassword: (name) => viewModel.recoverPassword(name),
       onSubmitAnimationCompleted: () => viewModel.onSubmitAnimationCompleted(context),
-      emailValidator: (email) => InputValidation.validateEmail(email),
+      userValidator: (email) => InputValidation.validateEmail(email),
       passwordValidator: (psw) => InputValidation.validatePassword(psw),
       messages: LoginMessages(
-        usernameHint: "Email",
+        userHint: "Email",
         passwordHint: "Password",
         confirmPasswordHint: "Conferma",
         loginButton: "ACCEDI",

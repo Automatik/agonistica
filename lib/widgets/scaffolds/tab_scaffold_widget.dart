@@ -49,7 +49,6 @@ class _TabScaffoldWidgetState extends BaseScaffoldWidgetState<TabScaffoldWidget>
   Widget scaffold(BuildContext context, HomeMenus homeMenus) {
     return PlatformTabScaffold(
       tabController: _tabController,
-      currentIndex: _tabController.index(context),
       appBarBuilder: (_, index) => widget.platformAppBar ?? BasePlatformAppBar(title: widget.title),
       pageBackgroundColor: AppColor.getScaffoldBackground(),
       material: (_, __) => MaterialTabScaffoldData(
