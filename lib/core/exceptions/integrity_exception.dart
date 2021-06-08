@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class IntegrityException implements Exception {
 
   /// A message describing the format error.

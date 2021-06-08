@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class BaseScaffoldService {
 
-  BuildContext scaffoldContext;
+  late BuildContext scaffoldContext;
 
   int bottomBarSelectedIndex = 0;
 
-  String teamSelected;
+  String? teamSelected;
 
   BaseScaffoldService();
 

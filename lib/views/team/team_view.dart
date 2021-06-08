@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library team_view;
 
 import 'package:agonistica/core/arguments/team_view_arguments.dart';

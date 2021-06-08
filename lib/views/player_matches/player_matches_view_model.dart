@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/notes_view_arguments.dart';
 import 'package:agonistica/core/arguments/team_view_arguments.dart';

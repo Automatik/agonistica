@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';

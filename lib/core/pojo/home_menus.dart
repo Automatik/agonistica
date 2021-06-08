@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/pojo/sorted_menu_list.dart';
 

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/widgets/app_bar_actions/app_bar_leading.dart';
 import 'package:flutter/material.dart';
 

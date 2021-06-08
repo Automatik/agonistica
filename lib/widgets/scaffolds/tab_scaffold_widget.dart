@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/colors/app_color.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';

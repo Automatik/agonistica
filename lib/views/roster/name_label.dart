@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:flutter/material.dart';
 

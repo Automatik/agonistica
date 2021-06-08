@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library notes_view;
 
 import 'package:agonistica/core/arguments/notes_view_arguments.dart';

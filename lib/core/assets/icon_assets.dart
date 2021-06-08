@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class IconAssets {
 
   static const String ICON_FOOTWEAR = "assets/icons/006-footwear.svg";

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';

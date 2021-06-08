@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library categories_view;
 
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';

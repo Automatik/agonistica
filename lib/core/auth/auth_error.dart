@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:flutter/material.dart';
 

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/views/matches/player_item.dart';

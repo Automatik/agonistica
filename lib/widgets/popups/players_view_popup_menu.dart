@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/exceptions/argument_exception.dart';
 import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';

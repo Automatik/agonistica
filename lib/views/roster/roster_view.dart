@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library roster_view;
 
 import 'package:agonistica/core/arguments/roster_view_arguments.dart';

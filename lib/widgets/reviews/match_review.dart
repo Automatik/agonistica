@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';

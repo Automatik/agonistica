@@ -1,3 +1,5 @@
+// @dart=2.9
+
 part of roster_view;
 
 class _RosterMobile extends StatefulWidget {

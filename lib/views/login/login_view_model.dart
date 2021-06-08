@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:agonistica/core/app_services/app_state_service.dart';

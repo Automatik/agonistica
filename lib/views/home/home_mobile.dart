@@ -1,3 +1,5 @@
+// @dart=2.9
+
 part of home_view;
 
 class _HomeMobile extends StatelessWidget {

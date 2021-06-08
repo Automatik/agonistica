@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/shared/my_sizing_information.dart';
 import 'package:flutter/material.dart';
 

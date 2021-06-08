@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/season_team.dart';

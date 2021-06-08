@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library player_matches_view;
 
 import 'package:agonistica/core/arguments/player_matches_view_arguments.dart';

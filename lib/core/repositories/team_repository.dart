@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';

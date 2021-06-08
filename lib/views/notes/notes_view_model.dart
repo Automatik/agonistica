@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';

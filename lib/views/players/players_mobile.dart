@@ -1,3 +1,5 @@
+// @dart=2.9
+
 part of players_view;
 
 class _PlayersMobile extends StatelessWidget {

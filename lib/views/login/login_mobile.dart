@@ -1,3 +1,5 @@
+// @dart=2.9
+
 part of login_view;
 
 class _LoginMobile extends StatelessWidget {

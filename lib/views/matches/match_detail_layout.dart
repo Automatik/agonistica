@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:math';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';

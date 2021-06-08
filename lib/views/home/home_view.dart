@@ -1,3 +1,5 @@
+// @dart=2.9
+
 library home_view;
 
 import 'package:agonistica/core/assets/image_assets.dart';

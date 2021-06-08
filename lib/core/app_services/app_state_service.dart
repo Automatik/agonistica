@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/app_user.dart';

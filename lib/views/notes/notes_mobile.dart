@@ -1,3 +1,5 @@
+// @dart=2.9
+
 part of notes_view;
 
 class _NotesMobile extends StatefulWidget {

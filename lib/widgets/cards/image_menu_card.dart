@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/widgets/text_styles/image_menu_card_text_style.dart';
 import 'package:flutter/material.dart';
 

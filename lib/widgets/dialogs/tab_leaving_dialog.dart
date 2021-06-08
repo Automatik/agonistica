@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/confirm_dialog.dart';
 import 'package:flutter/material.dart';

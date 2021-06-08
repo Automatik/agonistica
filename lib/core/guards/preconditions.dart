@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/exceptions/argument_exception.dart';
 import 'package:agonistica/core/exceptions/field_exception.dart';
 

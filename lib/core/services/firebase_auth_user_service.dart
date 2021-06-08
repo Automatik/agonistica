@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/auth/auth_error.dart';
 import 'package:agonistica/core/auth/auth_result.dart';

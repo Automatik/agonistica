@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:developer' as prefix0;
 import 'package:logger/logger.dart';
 

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/colors/app_color.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';

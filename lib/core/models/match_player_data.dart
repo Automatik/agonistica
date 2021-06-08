@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/player.dart';

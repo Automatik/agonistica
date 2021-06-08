@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class ImageAssets {
 
   static const String IMAGE_PRINETTI = "assets/images/prinetti.png";
