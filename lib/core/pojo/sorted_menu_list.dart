@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:collection';
 
@@ -6,7 +6,7 @@ import 'package:agonistica/core/models/menu.dart';
 
 class SortedMenuList {
 
-  SplayTreeSet<Menu> _sortedMenuList;
+  late SplayTreeSet<Menu> _sortedMenuList;
 
   SortedMenuList() {
     _sortedMenuList = SplayTreeSet((m1, m2) => Menu.compare(m1, m2));

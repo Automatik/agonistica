@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
@@ -9,26 +9,26 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class Match {
 
-  String id;
+  String? id;
 
-  String categoryId;
+  String? categoryId;
 
-  String seasonTeam1Id, seasonTeam2Id;
+  String? seasonTeam1Id, seasonTeam2Id;
 
-  String seasonId;
+  String? seasonId;
 
-  int team1Goals, team2Goals;
+  int? team1Goals, team2Goals;
 
-  int leagueMatch;
-  DateTime/*!*/ matchDate;
+  int? leagueMatch;
+  DateTime? matchDate;
 
   // Leave this as temporary
   // String team1Name, team2Name;
-  Team team1, team2;
+  Team? team1, team2;
 
-  List<MatchPlayerData> playersData;
+  List<MatchPlayerData>? playersData;
 
-  String matchNotes;
+  String? matchNotes;
 
   Match() {
     id = DbUtils.newUuid();
@@ -58,15 +58,15 @@ class Match {
     team1Goals = match.team1Goals;
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
-    matchDate = MyDateUtils.fromDateTime(match.matchDate);
-    playersData = match.playersData == null ? List() : List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
+    matchDate = MyDateUtils.fromDateTime(match.matchDate!);
+    playersData = match.playersData == null ? List.empty() : List.generate(match.playersData!.length, (index) => MatchPlayerData.clone(match.playersData![index]));
     matchNotes = match.matchNotes;
   }
 
   /// If leagueMatch is null consider it as zero
   static int compare(Match m1, Match m2) {
-    int leagueMatch1 = m1.leagueMatch;
-    int leagueMatch2 = m2.leagueMatch;
+    int leagueMatch1 = m1.leagueMatch!;
+    int leagueMatch2 = m2.leagueMatch!;
     if(leagueMatch1 == null) {
       leagueMatch1 = 0;
     }
@@ -78,10 +78,10 @@ class Match {
 
   SeasonTeam getSeasonTeam1() {
     SeasonTeam seasonTeam;
-    if(team1.id == null) {
+    if(team1!.id == null) {
       seasonTeam = SeasonTeam();
     } else {
-      seasonTeam = SeasonTeam.empty(team1.id, seasonId);
+      seasonTeam = SeasonTeam.empty(team1!.id!, seasonId!);
     }
     seasonTeam.id = seasonTeam1Id;
     seasonTeam.team = team1;
@@ -90,46 +90,46 @@ class Match {
 
   SeasonTeam getSeasonTeam2() {
     SeasonTeam seasonTeam;
-    if(team2.id == null) {
+    if(team2!.id == null) {
       seasonTeam = SeasonTeam();
     } else {
-      seasonTeam = SeasonTeam.empty(team2.id, seasonId);
+      seasonTeam = SeasonTeam.empty(team2!.id!, seasonId!);
     }
     seasonTeam.id = seasonTeam2Id;
     seasonTeam.team = team2;
     return seasonTeam;
   }
 
-  Team getHomeTeam() {
+  Team? getHomeTeam() {
     return getSeasonTeam1().team;
   }
 
-  Team getAwayTeam() {
+  Team? getAwayTeam() {
     return getSeasonTeam2().team;
   }
 
-  String getHomeSeasonTeamId() {
+  String? getHomeSeasonTeamId() {
     return getSeasonTeam1().id;
   }
 
-  String getAwaySeasonTeamId() {
+  String? getAwaySeasonTeamId() {
     return getSeasonTeam2().id;
   }
 
-  String getHomeSeasonTeamName() {
-    return getSeasonTeam1().team.name;
+  String? getHomeSeasonTeamName() {
+    return getSeasonTeam1().team!.name;
   }
 
-  String getAwaySeasonTeamName() {
-    return getSeasonTeam2().team.name;
+  String? getAwaySeasonTeamName() {
+    return getSeasonTeam2().team!.name;
   }
 
-  String getHomeSeasonTeamImage() {
-    return getSeasonTeam1().team.imageFilename;
+  String? getHomeSeasonTeamImage() {
+    return getSeasonTeam1().team!.imageFilename;
   }
 
-  String getAwaySeasonTeamImage() {
-    return getSeasonTeam2().team.imageFilename;
+  String? getAwaySeasonTeamImage() {
+    return getSeasonTeam2().team!.imageFilename;
   }
 
   List<MatchPlayerData> getHomePlayers() {
@@ -156,20 +156,20 @@ class Match {
     return getReservePlayers(getAwaySeasonTeamId());
   }
 
-  List<MatchPlayerData> getRegularPlayers(String seasonTeamId) {
+  List<MatchPlayerData> getRegularPlayers(String? seasonTeamId) {
     return _getLineUpPlayers(seasonTeamId, true);
   }
 
-  List<MatchPlayerData> getReservePlayers(String seasonTeamId) {
+  List<MatchPlayerData> getReservePlayers(String? seasonTeamId) {
     return _getLineUpPlayers(seasonTeamId, false);
   }
 
-  List<MatchPlayerData> _getPlayers(String seasonTeamId) {
-    return playersData.where((p) => p.seasonTeamId == seasonTeamId).toList();
+  List<MatchPlayerData> _getPlayers(String? seasonTeamId) {
+    return playersData!.where((p) => p.seasonTeamId == seasonTeamId).toList();
   }
 
-  List<MatchPlayerData> _getLineUpPlayers(String seasonTeamId, bool isRegular) {
-    return playersData.where((p) => p.seasonTeamId == seasonTeamId && p.isRegular == isRegular).toList();
+  List<MatchPlayerData> _getLineUpPlayers(String? seasonTeamId, bool isRegular) {
+    return playersData!.where((p) => p.seasonTeamId == seasonTeamId && p.isRegular == isRegular).toList();
   }
 
   void setSeasonTeam1(SeasonTeam seasonTeam) {
@@ -194,9 +194,9 @@ class Match {
       'team1Goals': team1Goals,
       'team2Goals': team2Goals,
       'leagueMatch': leagueMatch,
-      'matchDate': matchDate.toIso8601String(),
-      'playersData': playersData == null ? List() : List.generate(
-          playersData.length, (index) => playersData[index].toJson()),
+      'matchDate': matchDate!.toIso8601String(),
+      'playersData': playersData == null ? List.empty() : List.generate(
+          playersData!.length, (index) => playersData![index].toJson()),
       'matchNotes': matchNotes == null ? "" : matchNotes
     };
   }
@@ -211,15 +211,15 @@ class Match {
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
       matchDate = DateTime.tryParse(json['matchDate']),
-      playersData = json['playersData'] == null ? List() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
+      playersData = json['playersData'] == null ? List.empty() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
       matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
-    Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id);
-    Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId!);
+    Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id!);
+    Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id!);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
     Preconditions.requireFieldNotNull("matchDate", matchDate);
   }
 }

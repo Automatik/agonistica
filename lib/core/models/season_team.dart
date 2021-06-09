@@ -1,20 +1,18 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class SeasonTeam {
 
-  String id;
-  String teamId;
-  String seasonId;
-  List<String> categoriesIds;
-  List<String> matchesIds;
-  List<String> seasonPlayersIds;
+  String? id;
+  String? teamId;
+  String? seasonId;
+  List<String?>? categoriesIds;
+  List<String?>? matchesIds;
+  List<String?>? seasonPlayersIds;
 
   // temporary, do not store
-  Team team;
+  Team? team;
 
   SeasonTeam() {
     id = DbUtils.newUuid();
@@ -27,43 +25,43 @@ class SeasonTeam {
     id = DbUtils.newUuid();
     this.teamId = teamId;
     this.seasonId = seasonId;
-    categoriesIds = List();
-    matchesIds = List();
-    seasonPlayersIds = List();
+    categoriesIds = List.empty();
+    matchesIds = List.empty();
+    seasonPlayersIds = List.empty();
   }
 
   /// Useful constructor to create both a new Team and a new SeasonTeam
   /// with all the temporary objects populated
-  factory SeasonTeam.newTeam(String teamName, String teamImageFilename, String seasonId) {
+  factory SeasonTeam.newTeam(String? teamName, String? teamImageFilename, String seasonId) {
     Preconditions.requireArgumentNotEmpty(seasonId);
 
     // New Empty Team
     Team team = Team.name(teamName, teamImageFilename);
     // Create new empty SeasonTeam
-    SeasonTeam seasonTeam = SeasonTeam.empty(team.id, seasonId);
+    SeasonTeam seasonTeam = SeasonTeam.empty(team.id!, seasonId);
     // Set temporary values
     seasonTeam.team = team;
     return seasonTeam;
   }
 
-  String getTeamName() {
+  String? getTeamName() {
     _checkTeamTempField();
-    return team.name;
+    return team!.name;
   }
 
-  void addMatch(String matchId) {
+  void addMatch(String? matchId) {
     matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
   }
 
-  void addCategory(String categoryId) {
+  void addCategory(String? categoryId) {
     categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
   }
 
-  void addSeasonPlayer(String seasonPlayerId) {
+  void addSeasonPlayer(String? seasonPlayerId) {
     seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
   }
 
-  void removeMatch(String matchId) {
+  void removeMatch(String? matchId) {
     matchesIds = DbUtils.removeFromList(matchesIds, matchId);
   }
 
@@ -71,7 +69,7 @@ class SeasonTeam {
     categoriesIds = DbUtils.removeFromList(categoriesIds, categoryId);
   }
 
-  void removeSeasonPlayer(String seasonPlayerId) {
+  void removeSeasonPlayer(String? seasonPlayerId) {
     seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
   }
 
@@ -92,14 +90,14 @@ class SeasonTeam {
     : id = json['id'],
       teamId = json['teamId'],
       seasonId = json['seasonId'],
-      categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']),
-      matchesIds = json['matchesIds'] == null ? List() : List<String>.from(json['matchesIds']),
-      seasonPlayersIds = json['seasonPlayersIds'] == null ? List() : List<String>.from(json['seasonPlayersIds']);
+      categoriesIds = json['categoriesIds'] == null ? List.empty() : List<String>.from(json['categoriesIds']),
+      matchesIds = json['matchesIds'] == null ? List.empty() : List<String>.from(json['matchesIds']),
+      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty() : List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("teamId", teamId);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("teamId", teamId!);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
   }
 
   void _checkTeamTempField() {

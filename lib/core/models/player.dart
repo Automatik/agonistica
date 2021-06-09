@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
@@ -9,13 +7,13 @@ class Player {
   static const String EMPTY_PLAYER_NAME = "Nome";
   static const String EMPTY_PLAYER_SURNAME = "Surname";
 
-  String id;
-  String name, surname;
+  String? id;
+  String? name, surname;
 
-  DateTime birthDay;
-  bool isRightHanded;
+  DateTime? birthDay;
+  bool? isRightHanded;
 
-  List<String> seasonPlayersIds;
+  List<String?>? seasonPlayersIds;
 
 
   Player() {
@@ -28,19 +26,19 @@ class Player {
     surname = EMPTY_PLAYER_SURNAME;
     birthDay = DateTime.utc(2020, 1, 1);
     isRightHanded = true;
-    seasonPlayersIds = List();
+    seasonPlayersIds = List.empty();
   }
 
   Player.clone(Player p) {
     id = p.id;
     name = p.name;
     surname = p.surname;
-    birthDay = MyDateUtils.fromDateTime(p.birthDay);
+    birthDay = MyDateUtils.fromDateTime(p.birthDay!);
     isRightHanded = p.isRightHanded;
     seasonPlayersIds = p.seasonPlayersIds;
   }
 
-  void addSeasonPlayer(String seasonPlayerId) {
+  void addSeasonPlayer(String? seasonPlayerId) {
     seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
   }
 
@@ -56,11 +54,11 @@ class Player {
     return isEmptySurname(surname);
   }
 
-  static bool isEmptyName(String name) {
+  static bool isEmptyName(String? name) {
     return name == EMPTY_PLAYER_NAME;
   }
 
-  static bool isEmptySurname(String surname) {
+  static bool isEmptySurname(String? surname) {
     return surname == EMPTY_PLAYER_SURNAME;
   }
 
@@ -71,7 +69,7 @@ class Player {
       'id': id,
       'name': name,
       'surname': surname,
-      'birthDay': birthDay.toIso8601String(),
+      'birthDay': birthDay!.toIso8601String(),
       'isRightHanded': isRightHanded,
       'seasonPlayersIds': seasonPlayersIds
     };
@@ -83,12 +81,12 @@ class Player {
       surname = json['surname'],
       birthDay = DateTime.tryParse(json['birthDay']),
       isRightHanded = json['isRightHanded'],
-      seasonPlayersIds = json['seasonPlayersIds'] == null ? List(): List<String>.from(json['seasonPlayersIds']);
+      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(): List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name);
-    Preconditions.requireFieldNotEmpty("surname", surname);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("name", name!);
+    Preconditions.requireFieldNotEmpty("surname", surname!);
   }
 
 }

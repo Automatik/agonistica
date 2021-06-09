@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/player.dart';
@@ -20,22 +18,22 @@ class MatchPlayerData {
   static const String EMPTY_PLAYER_NAME = "Nome";
   static const String EMPTY_PLAYER_SURNAME = "Giocatore";
 
-  String id;
+  String? id;
 
-  String seasonPlayerId;
+  String? seasonPlayerId;
 
   // the name and surname fields are updated every time the player card is
   // modified in databaseService.savePlayer()
-  String name, surname;
+  String? name, surname;
 
-  String seasonTeamId;
+  String? seasonTeamId;
 
-  bool isRegular; // is regular player or a reserve
+  bool? isRegular; // is regular player or a reserve
 
-  int shirtNumber;
-  int numGoals;
-  int substitution;
-  int card;
+  int? shirtNumber;
+  int? numGoals;
+  int? substitution;
+  int? card;
 
   MatchPlayerData() {
     id = DbUtils.newUuid();
@@ -46,7 +44,7 @@ class MatchPlayerData {
     return seasonPlayerId == null && name == EMPTY_PLAYER_NAME && surname == EMPTY_PLAYER_SURNAME;
   }
 
-  MatchPlayerData.empty(String teamId, {bool isRegular = true}) {
+  MatchPlayerData.empty(String teamId, {bool? isRegular = true}) {
     Preconditions.requireArgumentNotEmpty(teamId);
 
     id = DbUtils.newUuid();
@@ -110,7 +108,7 @@ class MatchPlayerData {
     p.name = name;
     p.surname = surname;
 
-    SeasonPlayer sp = SeasonPlayer.empty(p.id, seasonTeamId, seasonId, categoryId);
+    SeasonPlayer sp = SeasonPlayer.empty(p.id!, seasonTeamId!, seasonId, categoryId);
     sp.id = seasonPlayerId;
     sp.player = p;
 
@@ -203,11 +201,11 @@ class MatchPlayerData {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId);
-    Preconditions.requireFieldNotEmpty("name", name);
-    Preconditions.requireFieldNotEmpty("surname", surname);
-    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId!);
+    Preconditions.requireFieldNotEmpty("name", name!);
+    Preconditions.requireFieldNotEmpty("surname", surname!);
+    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId!);
   }
 
 }

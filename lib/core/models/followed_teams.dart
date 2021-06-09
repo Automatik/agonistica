@@ -1,13 +1,13 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class FollowedTeams {
 
-  String id;
+  String? id;
 
-  List<String> teamsIds;
+  List<String?>? teamsIds;
 
   FollowedTeams() {
     id = DbUtils.newUuid();
@@ -15,7 +15,7 @@ class FollowedTeams {
 
   FollowedTeams.empty() {
     id = DbUtils.newUuid();
-    teamsIds = List();
+    teamsIds = List.empty();
   }
 
   void addTeam(String teamId) {
@@ -37,10 +37,10 @@ class FollowedTeams {
 
   FollowedTeams.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
-      teamsIds = json['teamsIds'] == null ? List() : List<String>.from(json['teamsIds']);
+      teamsIds = json['teamsIds'] == null ? List.empty() : List<String>.from(json['teamsIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("id", id!);
   }
 
 }

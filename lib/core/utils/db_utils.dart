@@ -38,7 +38,7 @@ class DbUtils {
     return [...list1, ...list2].toSet().toList();
   }
 
-  static List<dynamic> removeFromList(List<dynamic>? values, dynamic value) {
+  static List<T> removeFromList<T>(List<T>? values, T value) {
     if(values == null) {
       return [];
     }

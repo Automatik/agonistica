@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -22,36 +20,36 @@ class SeasonPlayer {
 
   static Logger _logger = getLogger('SeasonPlayer');
 
-  String id;
-  String playerId;
-  String seasonTeamId;
-  String seasonId;
-  String categoryId;
-  List<String> matchesIds;
-  List<String> playerMatchNotesIds;
+  String? id;
+  String? playerId;
+  String? seasonTeamId;
+  String? seasonId;
+  String? categoryId;
+  List<String?>? matchesIds;
+  List<String?>? playerMatchNotesIds;
 
-  int height;
-  int weight;
-  int position;
+  int? height;
+  int? weight;
+  int? position;
 
   // Player's stats
-  int matches, goals, yellowCards, redCards;
+  int? matches, goals, yellowCards, redCards;
 
   //Player's characteristics
-  int tecnica, agonistica, fisica, tattica, capMotorie;
+  int? tecnica, agonistica, fisica, tattica, capMotorie;
 
   //Player's conditional capacities
-  int velocita, rapidita, scatto, resistenza, corsa, progressione, cambioPasso, elevazione;
+  int? velocita, rapidita, scatto, resistenza, corsa, progressione, cambioPasso, elevazione;
 
-  String morfologia, sommatoTipo;
+  String? morfologia, sommatoTipo;
 
-  String attitudine1, attitudine2, attitudine3;
+  String? attitudine1, attitudine2, attitudine3;
 
   // Only temporary, do not store
-  SeasonTeam seasonTeam;
-  String categoryName;
-  Player player;
-  List<PlayerMatchNotes> playerMatchesNotes;
+  SeasonTeam? seasonTeam;
+  String? categoryName;
+  Player? player;
+  List<PlayerMatchNotes>? playerMatchesNotes;
 
   SeasonPlayer() {
     id = DbUtils.newUuid();
@@ -68,8 +66,8 @@ class SeasonPlayer {
     this.seasonTeamId = seasonTeamId;
     this.seasonId = seasonId;
     this.categoryId = categoryId;
-    matchesIds = List();
-    playerMatchNotesIds = List();
+    matchesIds = List.empty();
+    playerMatchNotesIds = List.empty();
 
     height = 0;
     weight = 0;
@@ -95,7 +93,7 @@ class SeasonPlayer {
     // New Empty Player
     Player player = Player.empty();
     // Create new empty SeasonPlayer
-    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId, category.id);
+    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id!, seasonTeam.id!, seasonTeam.seasonId!, category.id!);
     // Set temporary values
     seasonPlayer.setCategory(category);
     seasonPlayer.setSeasonTeam(seasonTeam);
@@ -150,8 +148,8 @@ class SeasonPlayer {
   }
 
   static int compare(SeasonPlayer sp1, SeasonPlayer sp2) {
-    String nm1 = sp1.player.name + " " + sp1.player.surname;
-    String nm2 = sp2.player.name + " " + sp2.player.surname;
+    String nm1 = sp1.player!.name! + " " + sp1.player!.surname!;
+    String nm2 = sp2.player!.name! + " " + sp2.player!.surname!;
     return nm1.compareTo(nm2);
   }
 
@@ -161,21 +159,24 @@ class SeasonPlayer {
   }
 
   void updateFromMatch(MatchPlayerData playerData) {
-    matches += 1;
-    goals += playerData.numGoals;
-    yellowCards += playerData.getYellowCardsCount();
-    redCards += playerData.getRedCardCount();
+    if(matches == null || goals == null || yellowCards == null || redCards == null) {
+      return;
+    }
+    matches = matches! + 1;
+    goals = goals! + playerData.numGoals!;
+    yellowCards = yellowCards! + playerData.getYellowCardsCount();
+    redCards = redCards! + playerData.getRedCardCount();
   }
 
-  void addMatch(String matchId) {
+  void addMatch(String? matchId) {
     matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
   }
 
-  void addPlayerMatchNotesId(String playerMatchNotesId) {
+  void addPlayerMatchNotesId(String? playerMatchNotesId) {
     playerMatchNotesIds = DbUtils.addToListIfAbsent(playerMatchNotesIds, playerMatchNotesId);
   }
 
-  void removeMatch(String matchId) {
+  void removeMatch(String? matchId) {
     matchesIds = DbUtils.removeFromList(matchesIds, matchId);
   }
 
@@ -228,8 +229,8 @@ class SeasonPlayer {
       seasonTeamId = json['seasonTeamId'],
       seasonId = json['seasonId'],
       categoryId = json['categoryId'],
-      matchesIds = json['matchesIds'] == null ? List() : List<String>.from(json['matchesIds']),
-      playerMatchNotesIds = json['playerMatchNotesIds'] == null ? List(): List<String>.from(json['playerMatchNotesIds']),
+      matchesIds = json['matchesIds'] == null ? List.empty() : List<String>.from(json['matchesIds']),
+      playerMatchNotesIds = json['playerMatchNotesIds'] == null ? List.empty(): List<String>.from(json['playerMatchNotesIds']),
       height = json['height'],
       weight = json['weight'],
       position = json['position'],
@@ -256,27 +257,27 @@ class SeasonPlayer {
       attitudine2 = json['attitudine2'],
       attitudine3 = json['attitudine3'];
 
-  String getPlayerName() {
+  String? getPlayerName() {
     _checkPlayerTempField();
-    return player.name;
+    return player!.name;
   }
 
-  String getPlayerSurname() {
+  String? getPlayerSurname() {
     _checkPlayerTempField();
-    return player.surname;
+    return player!.surname;
   }
 
-  DateTime getPlayerBirthday() {
+  DateTime? getPlayerBirthday() {
     _checkPlayerTempField();
-    return player.birthDay;
+    return player!.birthDay;
   }
 
-  bool isRightHanded() {
+  bool? isRightHanded() {
     _checkPlayerTempField();
-    return player.isRightHanded;
+    return player!.isRightHanded;
   }
 
-  SeasonTeam getSeasonTeam() {
+  SeasonTeam? getSeasonTeam() {
     _checkSeasonTeamTempField();
     return seasonTeam;
   }
@@ -300,30 +301,30 @@ class SeasonPlayer {
 
   void setPlayerName(String name) {
     _checkPlayerTempField();
-    player.name = name;
+    player!.name = name;
   }
 
   void setPlayerSurname(String surname) {
     _checkPlayerTempField();
-    player.surname = surname;
+    player!.surname = surname;
   }
 
   void setPlayerBirthday(DateTime birthday) {
     _checkPlayerTempField();
-    player.birthDay = birthday;
+    player!.birthDay = birthday;
   }
 
   void setIsRightHanded(bool isRightHanded) {
     _checkPlayerTempField();
-    player.isRightHanded = isRightHanded;
+    player!.isRightHanded = isRightHanded;
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("playerId", playerId);
-    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
-    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("playerId", playerId!);
+    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId!);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId!);
   }
 
   void _checkPlayerTempField() {
@@ -334,7 +335,7 @@ class SeasonPlayer {
     Preconditions.requireFieldNotNull("seasonTeam", seasonTeam);
   }
 
-  static String positionToString(int position) {
+  static String positionToString(int? position) {
     switch(position) {
       case POSITION_FORWARD: return "Attaccante";
       case POSITION_MIDFIELDER: return "Centrocampista";
@@ -344,7 +345,7 @@ class SeasonPlayer {
     }
   }
 
-  static int stringToPosition(String position) {
+  static int stringToPosition(String? position) {
     switch(position) {
       case "Attaccante": return POSITION_FORWARD;
       case "Centrocampista": return POSITION_MIDFIELDER;

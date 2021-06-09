@@ -1,15 +1,13 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class PlayerMatchNotes {
 
-  String id;
-  String seasonPlayerId;
-  String matchId;
+  String? id;
+  String? seasonPlayerId;
+  String? matchId;
 
-  String notes;
+  String? notes;
 
   PlayerMatchNotes(this.matchId, this.seasonPlayerId) {
     id = DbUtils.newUuid();
@@ -40,9 +38,9 @@ class PlayerMatchNotes {
       notes = json['notes'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId);
-    Preconditions.requireFieldNotEmpty("matchId", matchId);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId!);
+    Preconditions.requireFieldNotEmpty("matchId", matchId!);
     Preconditions.requireFieldNotNull("notes", notes);
   }
 

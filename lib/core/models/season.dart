@@ -1,8 +1,5 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
-import 'package:uuid/uuid.dart';
 
 class Season {
 
@@ -12,11 +9,11 @@ class Season {
   static const String _MAP_BEGIN_YEAR = "beginYear";
   static const String _MAP_END_YEAR = "endYear";
 
-  String id;
+  String? id;
 
-  String period; // es. 2020/21
-  int beginYear; // es. 2020
-  int endYear; // es. 2021
+  String? period; // es. 2020/21
+  int? beginYear; // es. 2020
+  int? endYear; // es. 2021
 
   Season() {
     id = DbUtils.newUuid();
@@ -35,8 +32,8 @@ class Season {
 
   factory Season.createCurrentSeason() {
     Map<String, int> yearsMap = getCurrentBeginAndEndYears();
-    int beginYear = yearsMap[_MAP_BEGIN_YEAR];
-    int endYear = yearsMap[_MAP_END_YEAR];
+    int beginYear = yearsMap[_MAP_BEGIN_YEAR]!;
+    int endYear = yearsMap[_MAP_END_YEAR]!;
     return Season.create(beginYear, endYear);
   }
 
@@ -61,7 +58,7 @@ class Season {
   }
 
   static int compare(Season s1, Season s2) {
-    return s1.beginYear.compareTo(s2.beginYear);
+    return s1.beginYear!.compareTo(s2.beginYear!);
   }
 
   Map<String, dynamic> toJson() {
@@ -91,13 +88,13 @@ class Season {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
+    Preconditions.requireFieldNotEmpty("id", id!);
     Preconditions.requireFieldNotNull("beginYear", beginYear);
     Preconditions.requireFieldNotNull("endYear", endYear);
-    Preconditions.requireFieldNotEmpty("period", period);
-    Preconditions.requireFieldGreaterThanZero("beginYear", beginYear);
-    Preconditions.requireFieldGreaterThanZero("endYear", endYear);
-    Preconditions.requireFieldGreaterThan("endYear", endYear, beginYear);
+    Preconditions.requireFieldNotEmpty("period", period!);
+    Preconditions.requireFieldGreaterThanZero("beginYear", beginYear!);
+    Preconditions.requireFieldGreaterThanZero("endYear", endYear!);
+    Preconditions.requireFieldGreaterThan("endYear", endYear!, beginYear!);
   }
 
 }

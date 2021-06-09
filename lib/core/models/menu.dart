@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
@@ -8,16 +6,16 @@ class Menu {
   static const int TYPE_FOLLOWED_TEAMS = 0;
   static const int TYPE_FOLLOWED_PLAYERS = 1;
 
-  String id;
+  String? id;
 
-  String name;
+  String? name;
 
-  int type;
+  int? type;
 
-  String imageFilename;
+  String? imageFilename;
 
-  String teamId;
-  List<String> categoriesIds;
+  String? teamId;
+  List<String?>? categoriesIds;
 
   Menu() {
     id = DbUtils.newUuid();
@@ -51,7 +49,7 @@ class Menu {
     return menu;
   }
 
-  void addCategory(String categoryId) {
+  void addCategory(String? categoryId) {
     categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
   }
 
@@ -68,7 +66,7 @@ class Menu {
   }
 
   static int compare(Menu m1, Menu m2) {
-    return m1.name.compareTo(m2.name);
+    return m1.name!.compareTo(m2.name!);
   }
 
   Map<String, dynamic> toJson() {
@@ -89,20 +87,20 @@ class Menu {
       name = json['name'],
       type = json['type'],
       teamId = json['teamId'],
-      categoriesIds = json['categoriesIds'] == null ? List() : List<String>.from(json['categoriesIds']),
+      categoriesIds = json['categoriesIds'] == null ? List.empty() : List<String>.from(json['categoriesIds']),
       imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name);
-    Preconditions.requireFieldGreaterThan("type", type, TYPE_FOLLOWED_TEAMS - 1);
-    Preconditions.requireFieldLessThan("type", type, TYPE_FOLLOWED_PLAYERS + 1);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("name", name!);
+    Preconditions.requireFieldGreaterThan("type", type!, TYPE_FOLLOWED_TEAMS - 1);
+    Preconditions.requireFieldLessThan("type", type!, TYPE_FOLLOWED_PLAYERS + 1);
     if(isTeamMenu()) {
-      Preconditions.requireFieldNotEmpty("teamId", teamId);
+      Preconditions.requireFieldNotEmpty("teamId", teamId!);
     } else {
-      Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds);
+      Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds!);
     }
-    Preconditions.requireFieldNotEmpty("imageFilename", imageFilename);
+    Preconditions.requireFieldNotEmpty("imageFilename", imageFilename!);
   }
 
 }

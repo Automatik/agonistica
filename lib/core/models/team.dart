@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
@@ -7,33 +5,33 @@ class Team {
 
   static const String EMPTY_TEAM_NAME = "Squadra";
 
-  String id;
+  String? id;
 
-  String name;
+  String? name;
 
-  List<String> seasonTeamsIds;
+  List<String?>? seasonTeamsIds;
 
-  String imageFilename;
+  String? imageFilename;
 
   Team() {
     id = DbUtils.newUuid();
   }
 
-  Team.name(String name, String imageFilename) {
+  Team.name(String? name, String? imageFilename) {
     id = DbUtils.newUuid();
     this.name = name;
     this.imageFilename = imageFilename;
-    seasonTeamsIds = List();
+    seasonTeamsIds = List.empty();
   }
 
   Team.nameWithNoId(String name, String imageFilename) {
     id = null;
     this.name = name;
     this.imageFilename = imageFilename;
-    seasonTeamsIds = List();
+    seasonTeamsIds = List.empty();
   }
 
-  void addSeasonTeam(String seasonTeamId) {
+  void addSeasonTeam(String? seasonTeamId) {
     seasonTeamsIds = DbUtils.addToListIfAbsent(seasonTeamsIds, seasonTeamId);
   }
 
@@ -45,7 +43,7 @@ class Team {
     return isEmptyName(name);
   }
 
-  static bool isEmptyName(String name) {
+  static bool isEmptyName(String? name) {
     return name == EMPTY_TEAM_NAME;
   }
 
@@ -64,11 +62,11 @@ class Team {
       : id = json['id'],
         name = json['name'],
         imageFilename = json['imageFilename'],
-        seasonTeamsIds = json['seasonTeamsIds'] == null ? List(): List<String>.from(json['seasonTeamsIds']);
+        seasonTeamsIds = json['seasonTeamsIds'] == null ? List.empty() : List<String>.from(json['seasonTeamsIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name);
+    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("name", name!);
   }
 
 }
