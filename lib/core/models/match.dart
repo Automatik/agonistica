@@ -65,8 +65,8 @@ class Match {
 
   /// If leagueMatch is null consider it as zero
   static int compare(Match m1, Match m2) {
-    int leagueMatch1 = m1.leagueMatch!;
-    int leagueMatch2 = m2.leagueMatch!;
+    int? leagueMatch1 = m1.leagueMatch;
+    int? leagueMatch2 = m2.leagueMatch;
     if(leagueMatch1 == null) {
       leagueMatch1 = 0;
     }
