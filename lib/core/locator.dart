@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';

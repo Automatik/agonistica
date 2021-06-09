@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class MyDateUtils {
 
   static String monthToString(int month) {
@@ -18,19 +16,20 @@ class MyDateUtils {
       case 10: return "Ottobre";
       case 11: return "Novembre";
       case 12: return "Dicembre";
+      default: return "";
     }
   }
 
   /// Use this to clone DateTime
   static DateTime fromDateTime(
       DateTime src, {
-        int year: null,
-        int month : null,
-        int day : null,
-        int hour : null,
-        int minute : null,
-        int second : null,
-        int millisecond : null}) {
+        int? year,
+        int? month,
+        int? day,
+        int? hour,
+        int? minute,
+        int? second,
+        int? millisecond}) {
     return new DateTime(
         year == null ? src.year : year,
         month == null ? src.month : month,

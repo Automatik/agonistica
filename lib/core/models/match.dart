@@ -20,7 +20,7 @@ class Match {
   int team1Goals, team2Goals;
 
   int leagueMatch;
-  DateTime matchDate;
+  DateTime/*!*/ matchDate;
 
   // Leave this as temporary
   // String team1Name, team2Name;

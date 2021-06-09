@@ -53,23 +53,23 @@ class DatabaseService {
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 
   final _firebaseAuth = FirebaseAuth.instance;
-  final _appStateService = locator<AppStateService>();
+  /*late*/ final _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('DatabaseService');
 
-  AppUserService _appUserService;
-  FirebaseAuthUserService _firebaseAuthUserService;
-  CategoryService _categoryService;
-  FollowedPlayersService _followedPlayersService;
-  FollowedTeamsService _followedTeamsService;
-  MatchService _matchService;
-  MenuService _menuService;
-  PlayerNotesService _playerNotesService;
-  PlayerService _playerService;
-  SeasonPlayerService _seasonPlayerService;
-  SeasonService _seasonService;
-  SeasonTeamService _seasonTeamService;
-  TeamService _teamService;
+  /*late final*/ AppUserService _appUserService;
+  /*late final*/ FirebaseAuthUserService _firebaseAuthUserService;
+  /*late final*/ CategoryService _categoryService;
+  /*late final*/ FollowedPlayersService _followedPlayersService;
+  /*late final*/ FollowedTeamsService _followedTeamsService;
+  /*late final*/ MatchService _matchService;
+  /*late final*/ MenuService _menuService;
+  /*late final*/ PlayerNotesService _playerNotesService;
+  /*late final*/ PlayerService _playerService;
+  /*late final*/ SeasonPlayerService _seasonPlayerService;
+  /*late final*/ SeasonService _seasonService;
+  /*late final*/ SeasonTeamService _seasonTeamService;
+  /*late final*/ TeamService _teamService;
 
   /// Call this when opening the app
   Future<void> initialize() async {
@@ -83,7 +83,7 @@ class DatabaseService {
   /// Call this after the user has logged in or if the user is already signed in
   Future<void> initializeUser() async {
     AppUser appUser = await fetchAppUser();
-    _appStateService.selectedAppUser = appUser;
+    _appStateService/*!*/.selectedAppUser = appUser;
     await _initializeDataServices();
   }
 

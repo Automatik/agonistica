@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:uuid/uuid.dart';
 
@@ -24,7 +24,7 @@ class DbUtils {
 
   /// If the list is null, initialize it. If the value provided is not in
   /// the list, add it to the list
-  static List<T> addToListIfAbsent<T>(List<T> values, T value) {
+  static List<T> addToListIfAbsent<T>(List<T>? values, T value) {
     if(values == null) {
       values = [];
     }
@@ -38,7 +38,7 @@ class DbUtils {
     return [...list1, ...list2].toSet().toList();
   }
 
-  static List<dynamic> removeFromList(List<dynamic> values, dynamic value) {
+  static List<dynamic> removeFromList(List<dynamic>? values, dynamic value) {
     if(values == null) {
       return [];
     }

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/team.dart';
 
@@ -38,7 +36,7 @@ class InputValidation {
   static const int _MAX_CHARS = 50;
   static const int _MIN_PSW_LEN = 8;
 
-  static String validateEmail(String value) {
+  static String? validateEmail(String value) {
     if(value.isEmpty)
       return MESSAGE_EMAIL_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -48,7 +46,7 @@ class InputValidation {
     return MESSAGE_EMAIL_NOT_VALID;
   }
 
-  static String validatePassword(String value) {
+  static String? validatePassword(String value) {
     if(value.isEmpty)
       return MESSAGE_PASSWORD_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -58,16 +56,16 @@ class InputValidation {
     return null;
   }
 
-  static String validatePlayerShirtNumber(String value) {
+  static String? validatePlayerShirtNumber(String value) {
     if(value.isEmpty)
       return MESSAGE_SHIRT_EMPTY;
-    int number = int.tryParse(value);
+    int? number = int.tryParse(value);
     if(number == null || !(number > 0 && number < 100))
       return MESSAGE_SHIRT_RANGE;
     return null; //Everything is ok
   }
 
-  static String validatePlayerName(String value) {
+  static String? validatePlayerName(String value) {
     if(value.isEmpty || Player.isEmptyName(value))
       return MESSAGE_NAME_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -77,7 +75,7 @@ class InputValidation {
     return MESSAGE_NAME_NOT_VALID;
   }
 
-  static String validatePlayerSurname(String value) {
+  static String? validatePlayerSurname(String value) {
     if(value.isEmpty || Player.isEmptySurname(value))
       return MESSAGE_SURNAME_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -87,7 +85,7 @@ class InputValidation {
     return MESSAGE_SURNAME_NOT_VALID;
   }
 
-  static String validateMenuName(String value) {
+  static String? validateMenuName(String value) {
     if(value.isEmpty)
       return MESSAGE_MENU_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -97,7 +95,7 @@ class InputValidation {
     return MESSAGE_MENU_NOT_VALID;
   }
 
-  static String validateCategoryName(String value) {
+  static String? validateCategoryName(String value) {
     if(value.isEmpty)
       return MESSAGE_CATEGORY_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -107,7 +105,7 @@ class InputValidation {
     return MESSAGE_CATEGORY_NOT_VALID;
   }
 
-  static String validateTeamName(String value) {
+  static String? validateTeamName(String value) {
     if(value.isEmpty || Team.isEmptyName(value))
       return MESSAGE_TEAM_EMPTY;
     if(value.length > _MAX_CHARS)
@@ -117,7 +115,7 @@ class InputValidation {
     return MESSAGE_TEAM_NOT_VALID;
   }
 
-  static String validateResultGoal(String value) {
+  static String? validateResultGoal(String value) {
     if(value.isEmpty)
       return MESSAGE_RESULT_EMPTY;
     if(isInteger(value))
@@ -125,7 +123,7 @@ class InputValidation {
     return MESSAGE_RESULT_NOT_VALID;
   }
 
-  static String validateLeagueMatch(String value) {
+  static String? validateLeagueMatch(String value) {
     if(value.isEmpty)
       return MESSAGE_LEAGUE_MATCH_EMPTY;
     if(isInteger(value))
@@ -136,7 +134,7 @@ class InputValidation {
   /// Check if the string value is a valid integer for values like height,
   /// weight, number of matches, goals, etc. It's not needed to check for
   /// empty value
-  static String validateInteger(String value) {
+  static String? validateInteger(String value) {
     if(value.isEmpty || isInteger(value))
       return null; //Everything ok
     return MESSAGE_INTEGERS_NOT_VALID;

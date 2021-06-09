@@ -16,19 +16,19 @@ import 'database_service.dart';
 
 class AppStateService {
 
-  Menu selectedMenu;
-  Team selectedTeam;
-  Category selectedCategory;
-  SeasonTeam selectedSeasonTeam;
-  Season selectedSeason;
-  AppUser selectedAppUser;
+  Menu/*!*/ selectedMenu;
+  Team/*?*/ selectedTeam;
+  Category/*?*/ selectedCategory;
+  SeasonTeam/*?*/ selectedSeasonTeam;
+  Season/*?*/ selectedSeason;
+  AppUser/*?*/ selectedAppUser;
 
   bool isTeamMenu() {
-    return selectedMenu.type == Menu.TYPE_FOLLOWED_TEAMS;
+    return selectedMenu/*!*/.type == Menu.TYPE_FOLLOWED_TEAMS;
   }
 
   bool isPlayersMenu() {
-    return selectedMenu.type == Menu.TYPE_FOLLOWED_PLAYERS;
+    return selectedMenu/*!*/.type == Menu.TYPE_FOLLOWED_PLAYERS;
   }
 
   /// Navigate to the season team of the current season
