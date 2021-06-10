@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class FollowedTeamsRepository extends CrudRepository<FollowedTeams> {
 
-  FollowedTeamsRepository(DatabaseReference databaseReference, String firebaseUserId)
+  FollowedTeamsRepository(DatabaseReference databaseReference, String? firebaseUserId)
       : super(databaseReference, DatabaseService.firebaseFollowedTeamsChild, firebaseUserId: firebaseUserId);
 
   @override
@@ -22,7 +22,7 @@ class FollowedTeamsRepository extends CrudRepository<FollowedTeams> {
 
   @override
   String getItemId(FollowedTeams item) {
-    return item.id;
+    return item.id!;
   }
 
 }

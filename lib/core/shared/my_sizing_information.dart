@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -9,9 +9,9 @@ class MySizingInformation {
   final Size localWidgetSize;
 
   MySizingInformation({
-    this.orientation,
-    this.screenSize,
-    this.localWidgetSize,
+    required this.orientation,
+    required this.screenSize,
+    required this.localWidgetSize,
   });
 
   bool isPortrait() {

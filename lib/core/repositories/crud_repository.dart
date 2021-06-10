@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
@@ -12,7 +12,7 @@ abstract class CrudRepository<T> extends BaseRepository{
 
   static Logger logger = getLogger('CrudRepository');
 
-  CrudRepository(DatabaseReference databaseReference, String firebaseChild, {String firebaseUserId})
+  CrudRepository(DatabaseReference databaseReference, String firebaseChild, {String? firebaseUserId})
     : super(databaseReference, firebaseChild, firebaseUserId: firebaseUserId);
 
   // SET
@@ -54,7 +54,7 @@ abstract class CrudRepository<T> extends BaseRepository{
   Future<List<T>> getItemsByIds(List<String> itemsIds) async {
     Preconditions.requireArgumentsNotNulls(itemsIds);
 
-    List<T> items = List();
+    List<T> items = List.empty();
     for(String itemId in itemsIds) {
       final snapshot = await getItem(itemId);
       if(snapshot.value == null) {
@@ -69,7 +69,7 @@ abstract class CrudRepository<T> extends BaseRepository{
   Future<List<T>> getAllItems() async {
     final DataSnapshot snapshot = await getItems();
     List<T> items = [];
-    Map<dynamic, dynamic> values = snapshot.value;
+    Map<dynamic, dynamic>? values = snapshot.value;
     if(values != null) {
       values.forEach((key, value) => items.add(jsonToItem(value)));
     }

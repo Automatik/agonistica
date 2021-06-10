@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class SeasonTeamRepository extends CrudRepository<SeasonTeam> {
 
-  SeasonTeamRepository(DatabaseReference databaseReference, String firebaseUserId)
+  SeasonTeamRepository(DatabaseReference databaseReference, String? firebaseUserId)
     : super(databaseReference, DatabaseService.firebaseSeasonTeamsChild, firebaseUserId: firebaseUserId);
 
 
@@ -24,7 +24,7 @@ class SeasonTeamRepository extends CrudRepository<SeasonTeam> {
 
   @override
   String getItemId(SeasonTeam item) {
-    return item.id;
+    return item.id!;
   }
 
 }

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class PlayerNotesRepository extends CrudRepository<PlayerMatchNotes> {
 
-  PlayerNotesRepository(DatabaseReference databaseReference, String firebaseUserId)
+  PlayerNotesRepository(DatabaseReference databaseReference, String? firebaseUserId)
     : super(databaseReference, DatabaseService.firebasePlayersNotesChild, firebaseUserId: firebaseUserId);
 
   @override
@@ -22,7 +22,7 @@ class PlayerNotesRepository extends CrudRepository<PlayerMatchNotes> {
 
   @override
   String getItemId(PlayerMatchNotes item) {
-    return item.id;
+    return item.id!;
   }
 
 }

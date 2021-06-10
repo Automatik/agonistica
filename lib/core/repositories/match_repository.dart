@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class MatchRepository extends CrudRepository<Match> {
 
-  MatchRepository(DatabaseReference databaseReference, String firebaseUserId)
+  MatchRepository(DatabaseReference databaseReference, String? firebaseUserId)
     : super(databaseReference, DatabaseService.firebaseMatchesChild, firebaseUserId: firebaseUserId);
 
   @override
@@ -22,7 +22,7 @@ class MatchRepository extends CrudRepository<Match> {
 
   @override
   String getItemId(Match item) {
-    return item.id;
+    return item.id!;
   }
 
 }

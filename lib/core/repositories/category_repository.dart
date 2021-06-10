@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class CategoryRepository extends CrudRepository<Category>{
 
-  CategoryRepository(DatabaseReference databaseReference, String firebaseUserId)
+  CategoryRepository(DatabaseReference databaseReference, String? firebaseUserId)
       : super(databaseReference, DatabaseService.firebaseCategoriesChild, firebaseUserId: firebaseUserId);
 
   @override
@@ -22,7 +22,7 @@ class CategoryRepository extends CrudRepository<Category>{
 
   @override
   String getItemId(Category item) {
-    return item.id;
+    return item.id!;
   }
 
 }

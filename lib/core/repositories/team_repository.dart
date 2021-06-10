@@ -1,5 +1,6 @@
-// @dart=2.9
 
+
+import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -8,7 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class TeamRepository extends CrudRepository<Team> {
 
-  TeamRepository(DatabaseReference databaseReference, String firebaseUserId)
+  TeamRepository(DatabaseReference databaseReference, String? firebaseUserId)
     : super(databaseReference, DatabaseService.firebaseTeamsChild, firebaseUserId: firebaseUserId);
 
   // SET
@@ -17,16 +18,16 @@ class TeamRepository extends CrudRepository<Team> {
   @override
   Future<void> saveItem(Team team) async {
     // check if the team exists already by using its id
-    bool teamAlreadyExists = await itemExists(team.id);
+    bool teamAlreadyExists = await itemExists(team.id!);
     if(!teamAlreadyExists) {
       // if the team is not found, check first if the team's name is unique, so that
       // no other team is stored with the same name
-      bool isNameUnique = await isTeamNameUnique(team.name);
-      if(!isNameUnique)
-        return false;
+      bool isNameUnique = await isTeamNameUnique(team.name!);
+      if(!isNameUnique) {
+        throw IntegrityException("The name of the new team already exists");
+      }
     }
     await super.saveItem(team);
-    return true;
   }
 
   // UTILS
@@ -59,7 +60,7 @@ class TeamRepository extends CrudRepository<Team> {
 
   @override
   String getItemId(Team item) {
-    return item.id;
+    return item.id!;
   }
 
 }

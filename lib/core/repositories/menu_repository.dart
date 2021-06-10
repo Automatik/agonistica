@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 class MenuRepository extends CrudRepository<Menu> {
 
-  MenuRepository(DatabaseReference databaseReference, String firebaseUserId)
+  MenuRepository(DatabaseReference databaseReference, String? firebaseUserId)
     : super(databaseReference, DatabaseService.firebaseMenusChild, firebaseUserId: firebaseUserId);
   
   @override
@@ -22,7 +22,7 @@ class MenuRepository extends CrudRepository<Menu> {
 
   @override
   String getItemId(Menu item) {
-    return item.id;
+    return item.id!;
   }
 
 }
