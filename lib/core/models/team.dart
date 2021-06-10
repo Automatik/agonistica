@@ -9,7 +9,7 @@ class Team {
 
   String? name;
 
-  List<String?>? seasonTeamsIds;
+  List<String>? seasonTeamsIds;
 
   String? imageFilename;
 
@@ -31,7 +31,7 @@ class Team {
     seasonTeamsIds = List.empty();
   }
 
-  void addSeasonTeam(String? seasonTeamId) {
+  void addSeasonTeam(String seasonTeamId) {
     seasonTeamsIds = DbUtils.addToListIfAbsent(seasonTeamsIds, seasonTeamId);
   }
 

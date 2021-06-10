@@ -5,7 +5,7 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class AppUser {
 
-  String? id;
+  late String id;
 
   // Personal Data
   String? email;
@@ -14,10 +14,10 @@ class AppUser {
   // App Data
   bool? areItemsInitialized; // true if the requested items are created
 
-  AppUser._() {} // private constructor
+  AppUser._(); // private constructor
 
   /// The id is generated from the FirebaseAuthUser because the latter is created first
-  AppUser(String? id, String email) {
+  AppUser(String id, String email) {
     this.id = id;
     this.email = email;
     isEmailVerified = false;
@@ -42,7 +42,7 @@ class AppUser {
      areItemsInitialized = json['areItemsInitialized'] == null ? false : json['areItemsInitialized'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("email", email!);
   }
 }

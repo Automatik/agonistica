@@ -6,7 +6,7 @@ class Menu {
   static const int TYPE_FOLLOWED_TEAMS = 0;
   static const int TYPE_FOLLOWED_PLAYERS = 1;
 
-  String? id;
+  late String id;
 
   String? name;
 
@@ -91,7 +91,7 @@ class Menu {
       imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("name", name!);
     Preconditions.requireFieldGreaterThan("type", type!, TYPE_FOLLOWED_TEAMS - 1);
     Preconditions.requireFieldLessThan("type", type!, TYPE_FOLLOWED_PLAYERS + 1);

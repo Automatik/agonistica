@@ -4,11 +4,11 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class SeasonTeam {
 
-  String? id;
+  late String id;
   String? teamId;
   String? seasonId;
-  List<String?>? categoriesIds;
-  List<String?>? matchesIds;
+  List<String>? categoriesIds;
+  List<String>? matchesIds;
   List<String?>? seasonPlayersIds;
 
   // temporary, do not store
@@ -49,19 +49,19 @@ class SeasonTeam {
     return team!.name;
   }
 
-  void addMatch(String? matchId) {
+  void addMatch(String matchId) {
     matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
   }
 
-  void addCategory(String? categoryId) {
+  void addCategory(String categoryId) {
     categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
   }
 
-  void addSeasonPlayer(String? seasonPlayerId) {
+  void addSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
   }
 
-  void removeMatch(String? matchId) {
+  void removeMatch(String matchId) {
     matchesIds = DbUtils.removeFromList(matchesIds, matchId);
   }
 
@@ -69,7 +69,7 @@ class SeasonTeam {
     categoriesIds = DbUtils.removeFromList(categoriesIds, categoryId);
   }
 
-  void removeSeasonPlayer(String? seasonPlayerId) {
+  void removeSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.removeFromList(seasonPlayersIds, seasonPlayerId);
   }
 
@@ -95,7 +95,7 @@ class SeasonTeam {
       seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty() : List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("teamId", teamId!);
     Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
   }

@@ -5,7 +5,7 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class FirebaseAuthUser {
 
-  String? id; // firebase auth id
+  late String id; // firebase auth id
   String? appUserId;
 
   //Temporary

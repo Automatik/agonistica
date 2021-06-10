@@ -7,13 +7,13 @@ class Player {
   static const String EMPTY_PLAYER_NAME = "Nome";
   static const String EMPTY_PLAYER_SURNAME = "Surname";
 
-  String? id;
+  late String id;
   String? name, surname;
 
   DateTime? birthDay;
   bool? isRightHanded;
 
-  List<String?>? seasonPlayersIds;
+  List<String>? seasonPlayersIds;
 
 
   Player() {
@@ -84,7 +84,7 @@ class Player {
       seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(): List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("name", name!);
     Preconditions.requireFieldNotEmpty("surname", surname!);
   }

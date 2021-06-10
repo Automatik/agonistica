@@ -32,13 +32,13 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
     // if team does already exist, add seasonTeamId to the list
     Team team = await teamService.getItemById(seasonTeam.teamId!);
-    await teamService.addSeasonTeamToTeam(seasonTeam.id!, team);
+    await teamService.addSeasonTeamToTeam(seasonTeam.id, team);
 
     await super.saveItem(seasonTeam);
   }
 
   Future<void> saveSeasonTeamIfNotExists(SeasonTeam seasonTeam) async {
-    bool seasonTeamExists = await itemExists(seasonTeam.id!);
+    bool seasonTeamExists = await itemExists(seasonTeam.id);
     if(!seasonTeamExists) {
       await saveItem(seasonTeam);
     }
@@ -46,10 +46,10 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
   /// Upload Team data (update)
   Future<void> updateSeasonTeamFromMatch(Match match, SeasonTeam seasonTeam, List<String> matchSeasonPlayersIds) async {
-    SeasonTeam latestVersion = await getItemById(seasonTeam.id!);
+    SeasonTeam latestVersion = await getItemById(seasonTeam.id);
     seasonTeam = latestVersion;
     // update the categories in which the team appears
-    seasonTeam.addCategory(match.categoryId);
+    seasonTeam.addCategory(match.categoryId!);
     // update the matches in which the team plays
     seasonTeam.addMatch(match.id);
     // update the team's players
@@ -112,7 +112,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   Future<List<SeasonTeam>> getCurrentSeasonTeams() async {
     SeasonService seasonService = SeasonService(databaseReference);
     Season currentSeason = await seasonService.getCurrentSeason();
-    return await getSeasonTeamsWithSeason(currentSeason.id!);
+    return await getSeasonTeamsWithSeason(currentSeason.id);
   }
 
   Future<List<SeasonTeam>> getSeasonTeamsWithSeason(String seasonId) async {
@@ -159,7 +159,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
               await super.saveItem(st);
               return;
             }
-            await deleteItem(st.id!);
+            await deleteItem(st.id);
           }
     });
   }

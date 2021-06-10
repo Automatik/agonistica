@@ -5,9 +5,9 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class FollowedPlayers {
 
-  String? id;
+  late String id;
 
-  List<String?>? playersIds;
+  List<String>? playersIds;
 
   FollowedPlayers() {
     id = DbUtils.newUuid();
@@ -40,7 +40,7 @@ class FollowedPlayers {
         playersIds = json['playersIds'] == null ? List.empty() : List<String>.from(json['playersIds']);
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
   }
 
 }

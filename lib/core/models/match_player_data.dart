@@ -18,7 +18,7 @@ class MatchPlayerData {
   static const String EMPTY_PLAYER_NAME = "Nome";
   static const String EMPTY_PLAYER_SURNAME = "Giocatore";
 
-  String? id;
+  late String id;
 
   String? seasonPlayerId;
 
@@ -109,7 +109,7 @@ class MatchPlayerData {
     p.surname = surname;
 
     SeasonPlayer sp = SeasonPlayer.empty(p.id!, seasonTeamId!, seasonId, categoryId);
-    sp.id = seasonPlayerId;
+    sp.id = seasonPlayerId!;
     sp.player = p;
 
     // match data
@@ -201,7 +201,7 @@ class MatchPlayerData {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId!);
     Preconditions.requireFieldNotEmpty("name", name!);
     Preconditions.requireFieldNotEmpty("surname", surname!);

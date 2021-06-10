@@ -9,7 +9,7 @@ class Season {
   static const String _MAP_BEGIN_YEAR = "beginYear";
   static const String _MAP_END_YEAR = "endYear";
 
-  String? id;
+  late String id;
 
   String? period; // es. 2020/21
   int? beginYear; // es. 2020
@@ -88,7 +88,7 @@ class Season {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotNull("beginYear", beginYear);
     Preconditions.requireFieldNotNull("endYear", endYear);
     Preconditions.requireFieldNotEmpty("period", period!);

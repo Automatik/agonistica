@@ -20,13 +20,13 @@ class SeasonPlayer {
 
   static Logger _logger = getLogger('SeasonPlayer');
 
-  String? id;
+  late String id;
   String? playerId;
   String? seasonTeamId;
   String? seasonId;
   String? categoryId;
-  List<String?>? matchesIds;
-  List<String?>? playerMatchNotesIds;
+  List<String>? matchesIds;
+  List<String>? playerMatchNotesIds;
 
   int? height;
   int? weight;
@@ -168,15 +168,15 @@ class SeasonPlayer {
     redCards = redCards! + playerData.getRedCardCount();
   }
 
-  void addMatch(String? matchId) {
+  void addMatch(String matchId) {
     matchesIds = DbUtils.addToListIfAbsent(matchesIds, matchId);
   }
 
-  void addPlayerMatchNotesId(String? playerMatchNotesId) {
+  void addPlayerMatchNotesId(String playerMatchNotesId) {
     playerMatchNotesIds = DbUtils.addToListIfAbsent(playerMatchNotesIds, playerMatchNotesId);
   }
 
-  void removeMatch(String? matchId) {
+  void removeMatch(String matchId) {
     matchesIds = DbUtils.removeFromList(matchesIds, matchId);
   }
 
@@ -284,7 +284,7 @@ class SeasonPlayer {
 
   Category getCategory() {
     Category category = Category();
-    category.id = categoryId;
+    category.id = categoryId!;
     category.name = categoryName;
     return category;
   }
@@ -320,7 +320,7 @@ class SeasonPlayer {
   }
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("playerId", playerId!);
     Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId!);
     Preconditions.requireFieldNotEmpty("seasonId", seasonId!);

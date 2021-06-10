@@ -9,7 +9,7 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class Match {
 
-  String? id;
+  late String id;
 
   String? categoryId;
 
@@ -83,7 +83,7 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team1!.id!, seasonId!);
     }
-    seasonTeam.id = seasonTeam1Id;
+    seasonTeam.id = seasonTeam1Id!;
     seasonTeam.team = team1;
     return seasonTeam;
   }
@@ -95,7 +95,7 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team2!.id!, seasonId!);
     }
-    seasonTeam.id = seasonTeam2Id;
+    seasonTeam.id = seasonTeam2Id!;
     seasonTeam.team = team2;
     return seasonTeam;
   }
@@ -215,7 +215,7 @@ class Match {
       matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("categoryId", categoryId!);
     Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id!);
     Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id!);

@@ -5,7 +5,7 @@ import 'package:agonistica/core/utils/db_utils.dart';
 
 class Category {
 
-  String? id;
+  late String id;
 
   String? name;
 
@@ -41,7 +41,7 @@ class Category {
       imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("id", id!);
+    Preconditions.requireFieldNotEmpty("id", id);
     Preconditions.requireFieldNotEmpty("name", name!);
   }
 
