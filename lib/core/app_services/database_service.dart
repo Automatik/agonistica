@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/assets/menu_assets.dart';
@@ -53,23 +53,23 @@ class DatabaseService {
   final DatabaseReference _databaseReference = FirebaseDatabase(databaseURL: "https://agonistica-67769.firebaseio.com/").reference();
 
   final _firebaseAuth = FirebaseAuth.instance;
-  /*late*/ final _appStateService = locator<AppStateService>();
+  late final AppStateService _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('DatabaseService');
 
-  /*late final*/ AppUserService _appUserService;
-  /*late final*/ FirebaseAuthUserService _firebaseAuthUserService;
-  /*late final*/ CategoryService _categoryService;
-  /*late final*/ FollowedPlayersService _followedPlayersService;
-  /*late final*/ FollowedTeamsService _followedTeamsService;
-  /*late final*/ MatchService _matchService;
-  /*late final*/ MenuService _menuService;
-  /*late final*/ PlayerNotesService _playerNotesService;
-  /*late final*/ PlayerService _playerService;
-  /*late final*/ SeasonPlayerService _seasonPlayerService;
-  /*late final*/ SeasonService _seasonService;
-  /*late final*/ SeasonTeamService _seasonTeamService;
-  /*late final*/ TeamService _teamService;
+  late final AppUserService _appUserService;
+  late final FirebaseAuthUserService _firebaseAuthUserService;
+  late final CategoryService _categoryService;
+  late final FollowedPlayersService _followedPlayersService;
+  late final FollowedTeamsService _followedTeamsService;
+  late final MatchService _matchService;
+  late final MenuService _menuService;
+  late final PlayerNotesService _playerNotesService;
+  late final PlayerService _playerService;
+  late final SeasonPlayerService _seasonPlayerService;
+  late final SeasonService _seasonService;
+  late final SeasonTeamService _seasonTeamService;
+  late final TeamService _teamService;
 
   /// Call this when opening the app
   Future<void> initialize() async {
@@ -83,7 +83,7 @@ class DatabaseService {
   /// Call this after the user has logged in or if the user is already signed in
   Future<void> initializeUser() async {
     AppUser appUser = await fetchAppUser();
-    _appStateService/*!*/.selectedAppUser = appUser;
+    _appStateService.selectedAppUser = appUser;
     await _initializeDataServices();
   }
 
@@ -93,7 +93,7 @@ class DatabaseService {
   }
 
   Future<AppUser> fetchAppUser() async {
-    String userId = await PrefsUtils.getUserId();
+    String userId = await (PrefsUtils.getUserId() as Future<String>);
     bool userExists = await _appUserService.itemExists(userId);
     if(!userExists) {
       throw NotFoundException("User with id $userId not found in database.");
@@ -122,7 +122,7 @@ class DatabaseService {
     return HomeMenus.from(followedTeamsMenus, followedPlayersMenus);
   }
 
-  Future<Menu> createNewMenu(String menuName, int menuType) async {
+  Future<Menu?> createNewMenu(String menuName, int menuType) async {
     // associate image filename
     List<String> usedMenuImages = await menuService.getUsedMenuImages();
     String menuImageFilename = MenuAssets.getNewImage(usedMenuImages);
@@ -132,13 +132,13 @@ class DatabaseService {
       Team team = await createNewTeam(menuName);
       await teamService.saveItem(team);
       // Create menu
-      Menu menu = Menu.createTeamMenu(menuName, team.id, menuImageFilename);
+      Menu menu = Menu.createTeamMenu(menuName, team.id!, menuImageFilename);
       await menuService.saveItem(menu);
       return menu;
     }
     if(menuType == Menu.TYPE_FOLLOWED_PLAYERS) {
       // Create menu with currently no category
-      Menu menu = Menu.createPlayersMenu(menuName, List(), menuImageFilename);
+      Menu menu = Menu.createPlayersMenu(menuName, List.empty(), menuImageFilename);
       await menuService.saveItem(menu);
       return menu;
     }

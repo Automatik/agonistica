@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
@@ -16,19 +16,19 @@ import 'database_service.dart';
 
 class AppStateService {
 
-  Menu/*!*/ selectedMenu;
-  Team/*?*/ selectedTeam;
-  Category/*?*/ selectedCategory;
-  SeasonTeam/*?*/ selectedSeasonTeam;
-  Season/*?*/ selectedSeason;
-  AppUser/*?*/ selectedAppUser;
+  late Menu selectedMenu;
+  late Team selectedTeam;
+  late Category selectedCategory;
+  late SeasonTeam selectedSeasonTeam;
+  late Season selectedSeason;
+  late AppUser selectedAppUser;
 
   bool isTeamMenu() {
-    return selectedMenu/*!*/.type == Menu.TYPE_FOLLOWED_TEAMS;
+    return selectedMenu.type == Menu.TYPE_FOLLOWED_TEAMS;
   }
 
   bool isPlayersMenu() {
-    return selectedMenu/*!*/.type == Menu.TYPE_FOLLOWED_PLAYERS;
+    return selectedMenu.type == Menu.TYPE_FOLLOWED_PLAYERS;
   }
 
   /// Navigate to the season team of the current season
@@ -38,25 +38,25 @@ class AppStateService {
     // Set menu selected
     selectedMenu = menu;
     // Get the team corresponding to this menu
-    Team team = await _databaseService.teamService.getItemById(menu.teamId);
+    Team team = await _databaseService.teamService.getItemById(menu.teamId!);
     selectedTeam = team;
     SeasonTeam seasonTeam;
-    bool currentSeasonTeamExists = await _databaseService.seasonTeamService.currentSeasonTeamExists(team.id);
+    bool currentSeasonTeamExists = await _databaseService.seasonTeamService.currentSeasonTeamExists(team.id!);
     if(currentSeasonTeamExists) {
       // Get the current season team
       seasonTeam = await _databaseService.seasonTeamService
-          .getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
+          .getCurrentSeasonTeamFromIds(team.seasonTeamsIds!);
     } else {
       // Create the current season team and save it
       Season season = await _databaseService.seasonService.getCurrentSeason();
-      seasonTeam = SeasonTeam.empty(team.id, season.id);
+      seasonTeam = SeasonTeam.empty(team.id!, season.id);
       await _databaseService.seasonTeamService.saveItem(seasonTeam);
     }
     seasonTeam.team = team;
     selectedSeasonTeam = seasonTeam;
-    selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
+    selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId!);
     // Get season team's categories
-    List<String> categoriesIds = seasonTeam.categoriesIds;
+    List<String> categoriesIds = seasonTeam.categoriesIds!;
     _navigateToCategoriesView(context, categoriesIds);
   }
 
@@ -68,10 +68,10 @@ class AppStateService {
 
     // Get the current season
     selectedSeason = await _databaseService.seasonService.getCurrentSeason();
-    _navigateToCategoriesView(context, menu.categoriesIds);
+    _navigateToCategoriesView(context, menu.categoriesIds as List<String>);
   }
 
-  void _setAppBarTitle(String name) {
+  void _setAppBarTitle(String? name) {
     final _baseScaffoldService = locator<BaseScaffoldService>();
     _baseScaffoldService.teamSelected = name;
   }
