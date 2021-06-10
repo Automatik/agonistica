@@ -49,7 +49,7 @@ class Menu {
     return menu;
   }
 
-  void addCategory(String? categoryId) {
+  void addCategory(String categoryId) {
     categoriesIds = DbUtils.addToListIfAbsent(categoriesIds, categoryId);
   }
 

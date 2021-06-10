@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -13,19 +11,18 @@ import 'package:agonistica/core/services/player_service.dart';
 import 'package:agonistica/core/services/season_team_service.dart';
 import 'package:agonistica/core/services/team_service.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
 
 class CategoryService extends CrudService<Category> {
 
   CategoryService(DatabaseReference databaseReference)
-      : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
+      : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
 
   Future<void> saveFollowedTeamCategory(Category category, String menuId, String seasonTeamId) async {
     await _saveCategoryToMenu(category, menuId);
 
     // Add category to the seasonTeam
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    await seasonTeamService.addCategoryToSeasonTeam(seasonTeamId, category.id);
+    await seasonTeamService.addCategoryToSeasonTeam(seasonTeamId, category.id!);
   }
 
   Future<void> saveFollowedPlayersCategory(Category category, String menuId) async {
@@ -48,15 +45,15 @@ class CategoryService extends CrudService<Category> {
       return [];
     }
     SeasonTeam seasonTeam = await seasonTeamService.getItemById(seasonTeamId);
-    if(seasonTeam.categoriesIds == null || seasonTeam.categoriesIds.isEmpty)
+    if(seasonTeam.categoriesIds == null || seasonTeam.categoriesIds!.isEmpty)
       return [];
-    return await getItemsByIds(seasonTeam.categoriesIds);
+    return await getItemsByIds(seasonTeam.categoriesIds as List<String>);
   }
 
   /// Get the current images used in the menu's categories
   Future<List<String>> getUsedCategoryImages(List<String> menuCategoriesIds) async {
     List<Category> categories = await getItemsByIds(menuCategoriesIds);
-    return categories.map((e) => e.imageFilename).toList();
+    return categories.map((e) => e.imageFilename).toList() as List<String>;
   }
 
   @override
@@ -72,9 +69,9 @@ class CategoryService extends CrudService<Category> {
     await teamService.deleteTeamsInCategory(categoryId);
     // Delete category from menu
     MenuService menuService = MenuService(databaseReference);
-    Menu menu = await menuService.findMenuWithCategory(categoryId);
+    Menu? menu = await menuService.findMenuWithCategory(categoryId);
     if(menu != null) {
-      await menuService.removeCategoryFromMenu(categoryId, menu.id);
+      await menuService.removeCategoryFromMenu(categoryId, menu.id!);
     }
 
     // Delete category

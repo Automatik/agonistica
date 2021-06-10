@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
@@ -18,7 +18,7 @@ import 'package:firebase_database/firebase_database.dart';
 class SeasonTeamService extends CrudService<SeasonTeam> {
 
   SeasonTeamService(DatabaseReference databaseReference)
-    : super(databaseReference, SeasonTeamRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
+    : super(databaseReference, SeasonTeamRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
 
   // SET
 
@@ -31,14 +31,14 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     await teamService.createTeamFromSeasonTeam(seasonTeam);
 
     // if team does already exist, add seasonTeamId to the list
-    Team team = await teamService.getItemById(seasonTeam.teamId);
-    await teamService.addSeasonTeamToTeam(seasonTeam.id, team);
+    Team team = await teamService.getItemById(seasonTeam.teamId!);
+    await teamService.addSeasonTeamToTeam(seasonTeam.id!, team);
 
     await super.saveItem(seasonTeam);
   }
 
   Future<void> saveSeasonTeamIfNotExists(SeasonTeam seasonTeam) async {
-    bool seasonTeamExists = await itemExists(seasonTeam.id);
+    bool seasonTeamExists = await itemExists(seasonTeam.id!);
     if(!seasonTeamExists) {
       await saveItem(seasonTeam);
     }
@@ -46,7 +46,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
   /// Upload Team data (update)
   Future<void> updateSeasonTeamFromMatch(Match match, SeasonTeam seasonTeam, List<String> matchSeasonPlayersIds) async {
-    SeasonTeam latestVersion = await getItemById(seasonTeam.id);
+    SeasonTeam latestVersion = await getItemById(seasonTeam.id!);
     seasonTeam = latestVersion;
     // update the categories in which the team appears
     seasonTeam.addCategory(match.categoryId);
@@ -68,7 +68,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
   Future<void> addCategoryToSeasonTeam(String seasonTeamId, String categoryId) async {
     SeasonTeam seasonTeam = await getItemById(seasonTeamId);
-    seasonTeam.categoriesIds.add(categoryId);
+    seasonTeam.categoriesIds!.add(categoryId);
     await super.saveItem(seasonTeam);
   }
 
@@ -79,7 +79,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
     SeasonService seasonService = SeasonService(databaseReference);
     Team team = await teamService.getItemById(teamId);
     Season currentSeason = await seasonService.getCurrentSeason();
-    List<SeasonTeam> seasonTeams = await getItemsByIds(team.seasonTeamsIds);
+    List<SeasonTeam> seasonTeams = await getItemsByIds(team.seasonTeamsIds as List<String>);
     return seasonTeams.any((st) => st.seasonId == currentSeason.id);
   }
 
@@ -92,7 +92,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
   Future<SeasonTeam> completeSeasonTeamWithMissingInfo(SeasonTeam seasonTeam) async {
     TeamService teamService = TeamService(databaseReference);
-    Team team = await teamService.getItemById(seasonTeam.teamId);
+    Team team = await teamService.getItemById(seasonTeam.teamId!);
     seasonTeam.team = team;
     return seasonTeam;
   }
@@ -112,7 +112,7 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
   Future<List<SeasonTeam>> getCurrentSeasonTeams() async {
     SeasonService seasonService = SeasonService(databaseReference);
     Season currentSeason = await seasonService.getCurrentSeason();
-    return await getSeasonTeamsWithSeason(currentSeason.id);
+    return await getSeasonTeamsWithSeason(currentSeason.id!);
   }
 
   Future<List<SeasonTeam>> getSeasonTeamsWithSeason(String seasonId) async {
@@ -137,29 +137,29 @@ class SeasonTeamService extends CrudService<SeasonTeam> {
 
     // Delete season team id from team
     TeamService teamService = TeamService(databaseReference);
-    Team team = await teamService.getItemById(seasonTeam.teamId);
+    Team team = await teamService.getItemById(seasonTeam.teamId!);
     await teamService.deleteSeasonTeamFromTeam(seasonTeamId, team);
 
     // Delete season players that belong to this season team
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    await seasonPlayerService.deleteSeasonPlayersByIds(seasonTeam.seasonPlayersIds);
+    await seasonPlayerService.deleteSeasonPlayersByIds(seasonTeam.seasonPlayersIds as List<String>);
 
     // Delete matches the team has played
     MatchService matchService = MatchService(databaseReference);
-    await matchService.deleteMatchesFromIds(seasonTeam.matchesIds);
+    await matchService.deleteMatchesFromIds(seasonTeam.matchesIds as List<String>);
 
     await super.deleteItem(seasonTeamId);
   }
 
   Future<void> deleteSeasonTeamsInCategory(List<SeasonTeam> seasonTeams, String categoryId) async {
     seasonTeams.forEach((st) async {
-          if(st.categoriesIds.contains(categoryId)) {
-            st.categoriesIds.remove(categoryId);
-            if(st.categoriesIds.length > 0) {
+          if(st.categoriesIds!.contains(categoryId)) {
+            st.categoriesIds!.remove(categoryId);
+            if(st.categoriesIds!.length > 0) {
               await super.saveItem(st);
               return;
             }
-            await deleteItem(st.id);
+            await deleteItem(st.id!);
           }
     });
   }

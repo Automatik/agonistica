@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/auth/auth_error.dart';
@@ -18,28 +18,28 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
 
   final FirebaseAuth _firebaseAuth;
 
-  UserCredential _firebaseUser;
+  UserCredential? _firebaseUser;
 
   FirebaseAuthUserService(this._firebaseAuth, DatabaseReference databaseReference)
     : super(databaseReference, FirebaseAuthUserRepository(databaseReference));
 
   Future<String> getAppUserIdFromFirebaseUser(String firebaseUserId) async {
     FirebaseAuthUser firebaseUser = await getItemById(firebaseUserId);
-    return firebaseUser.appUserId;
+    return firebaseUser.appUserId!;
   }
 
   Future<AuthResult> loginUser(String email, String password) async {
     AuthError authError = await _startLoginOperation(email, password);
 
-    User user = await _getFirebaseAuthStateChanges().first;
+    User? user = await _getFirebaseAuthStateChanges().first;
 
     if(user == null) {
       _logger.d('User is currently signed out');
-      String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
     if(authError.isError) {
-      String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToLoginDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
 
@@ -68,15 +68,15 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
     AuthError authError = await _startSignUpOperation(email, password);
 
     // Use a future instead of a Stream. Get the first User returned
-    User user = await _getFirebaseAuthStateChanges().first;
+    User? user = await _getFirebaseAuthStateChanges().first;
 
     if(user == null) {
       _logger.d('User is currently signed out');
-      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
     if(authError.isError) {
-      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
 
@@ -89,15 +89,15 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
   Future<AuthResult> resetUserPassword(String email) async {
     AuthError authError = await _sendPasswordResetEmail(email);
 
-    User user = await _getFirebaseAuthStateChanges().first;
+    User? user = await _getFirebaseAuthStateChanges().first;
 
     if(user == null) {
       _logger.d('User is currently signed out');
-      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
     if(authError.isError) {
-      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode);
+      String errorMessage = AuthError.firebaseErrorCodeToRegisterDisplayError(authError.errorCode!);
       return AuthResult(isOk: false, errorMessage: errorMessage);
     }
 
@@ -138,11 +138,11 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
         password: password,
       );
 
-      await userCredential.user.updateProfile(displayName: DbUtils.getDisplayNameFromEmail(email));
-      await userCredential.user.reload();
+      await userCredential.user!.updateProfile(displayName: DbUtils.getDisplayNameFromEmail(email));
+      await userCredential.user!.reload();
       _firebaseUser = userCredential;
       // verify email
-      if(DatabaseService.REQUIRE_EMAIL_VERIFICATION && !_firebaseUser.user.emailVerified) {
+      if(DatabaseService.REQUIRE_EMAIL_VERIFICATION && !_firebaseUser!.user!.emailVerified) {
         _logger.d("Sending email verification");
         await sendEmailVerification();
       }
@@ -178,13 +178,13 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
   }
 
   Future<bool> sendEmailVerification() async {
-    if(_firebaseUser == null || _firebaseUser.user == null)
+    if(_firebaseUser == null || _firebaseUser!.user == null)
       return false;
-    await _firebaseUser.user.sendEmailVerification();
+    await _firebaseUser!.user!.sendEmailVerification();
     return true;
   }
 
-  Stream<User> _getFirebaseAuthStateChanges() {
+  Stream<User?> _getFirebaseAuthStateChanges() {
     return _firebaseAuth.authStateChanges();
   }
 

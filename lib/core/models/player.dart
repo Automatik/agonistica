@@ -38,7 +38,7 @@ class Player {
     seasonPlayersIds = p.seasonPlayersIds;
   }
 
-  void addSeasonPlayer(String? seasonPlayerId) {
+  void addSeasonPlayer(String seasonPlayerId) {
     seasonPlayersIds = DbUtils.addToListIfAbsent(seasonPlayersIds, seasonPlayerId);
   }
 

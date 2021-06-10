@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -11,7 +11,7 @@ class CrudService<T> {
 
   final DatabaseReference databaseReference;
 
-  CrudRepository<T> repository;
+  late CrudRepository<T> repository;
 
   CrudService(this.databaseReference, CrudRepository<T> repository) {
     this.repository = repository;
