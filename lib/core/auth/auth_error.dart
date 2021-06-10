@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:flutter/material.dart';
 
@@ -16,13 +14,12 @@ class AuthError {
   static const String MY_FIREBASE_ERROR_EMAIL_NOT_VERIFIED = "email-not-verified";
 
   bool isError;
-  String errorCode;
+  String? errorCode;
 
   AuthError({
-    @required this.isError,
+    required this.isError,
     this.errorCode
-  }) : assert(isError != null),
-        assert((isError == true && errorCode != null)
+  }) : assert((isError == true && errorCode != null)
             || (isError == false && errorCode == null));
 
   static String firebaseErrorCodeToLoginDisplayError(String code) {

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 class ArgumentException implements Exception {
 
   /// A message describing the format error.

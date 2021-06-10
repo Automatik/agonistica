@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/utils/random_utils.dart';
 
