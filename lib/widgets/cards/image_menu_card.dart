@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/text_styles/image_menu_card_text_style.dart';
 import 'package:flutter/material.dart';
 
@@ -7,18 +5,18 @@ class ImageMenuCard extends StatelessWidget {
 
   final String imageAsset;
   final String title;
-  final Function onTap;
-  final Function onLongTap;
+  final Function()? onTap;
+  final Function(LongPressStartDetails)? onLongTap;
   final double width;
   final double height;
   final bool useWhiteBackground;
   final bool useVerticalMargin;
 
   ImageMenuCard({
-    @required this.imageAsset,
-    @required this.title,
-    @required this.width,
-    @required this.height,
+    required this.imageAsset,
+    required this.title,
+    required this.width,
+    required this.height,
     this.onTap,
     this.onLongTap,
     this.useWhiteBackground = true,

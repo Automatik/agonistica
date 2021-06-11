@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/assets/image_assets.dart';
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -22,23 +20,21 @@ class MatchInfoWidget extends StatelessWidget {
   final Function(BuildContext, bool, Match) onHomeTeamInserted;
   final Function(BuildContext, bool, Match) onAwayTeamInserted;
   final Function(DateTime) onDateInserted;
-  final TextEditingController resultTextEditingController1;
-  final TextEditingController resultTextEditingController2;
-  final TextEditingController leagueMatchTextEditingController;
+  final TextEditingController? resultTextEditingController1;
+  final TextEditingController? resultTextEditingController2;
+  final TextEditingController? leagueMatchTextEditingController;
 
   MatchInfoWidget({
-    @required this.match,
-    @required this.isEditEnabled,
-    @required this.width,
+    required this.match,
+    required this.isEditEnabled,
+    required this.width,
     this.resultTextEditingController1,
     this.resultTextEditingController2,
     this.leagueMatchTextEditingController,
-    this.onHomeTeamInserted,
-    this.onAwayTeamInserted,
-    this.onDateInserted,
-  }) : assert(match != null),
-       assert(isEditEnabled != null),
-       assert(width != null);
+    required this.onHomeTeamInserted,
+    required this.onAwayTeamInserted,
+    required this.onDateInserted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +112,7 @@ class MatchInfoWidget extends StatelessWidget {
 
   Widget homeTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
     final widgets = [
-      teamImageWidget(matchInfo.getHomeSeasonTeamImage(), avatarSize),
+      teamImageWidget(matchInfo.getHomeSeasonTeamImage()!, avatarSize),
       CustomRichText(
         onTap: () => onHomeTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,
@@ -132,7 +128,7 @@ class MatchInfoWidget extends StatelessWidget {
 
   Widget awayTeamColumn(BuildContext context, Match matchInfo, bool isEditEnabled, TextStyle textStyle, double avatarSize) {
     final widgets = [
-      teamImageWidget(matchInfo.getAwaySeasonTeamImage(), avatarSize),
+      teamImageWidget(matchInfo.getAwaySeasonTeamImage()!, avatarSize),
       CustomRichText(
         onTap: () => onAwayTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,
@@ -181,7 +177,7 @@ class MatchInfoWidget extends StatelessWidget {
     );
   }
 
-  Widget leagueMatchWidget(bool isEditEnabled, TextStyle textStyle, TextEditingController controller) {
+  Widget leagueMatchWidget(bool isEditEnabled, TextStyle textStyle, TextEditingController? controller) {
     if(controller == null) {
       controller = TextEditingController();
       controller.text = match.leagueMatch.toString();
@@ -231,7 +227,7 @@ class MatchInfoWidget extends StatelessWidget {
             DateTime curDate = DateTime.now();
             await showDatePicker(
                 context: context,
-                initialDate: matchInfo.matchDate,
+                initialDate: matchInfo.matchDate!,
                 firstDate: DateTime.utc(2020),
                 lastDate: DateTime.utc(curDate.year + 1),
                 initialDatePickerMode: DatePickerMode.day,
@@ -246,7 +242,7 @@ class MatchInfoWidget extends StatelessWidget {
         },
         child: Container(
           child: DateWidget(
-            dateTime: match.matchDate,
+            dateTime: match.matchDate!,
             textStyle: textStyle,
             mainAxisAlignment: MainAxisAlignment.end,
           ),
@@ -255,7 +251,7 @@ class MatchInfoWidget extends StatelessWidget {
     );
   }
 
-  Widget resultWidget(TextEditingController controller1, TextEditingController controller2, Color fontColor, double fontSize, FontWeight fontWeight, bool enabled) {
+  Widget resultWidget(TextEditingController? controller1, TextEditingController? controller2, Color? fontColor, double fontSize, FontWeight? fontWeight, bool enabled) {
     if(controller1 == null) {
       controller1 = TextEditingController();
       controller1.text = match.team1Goals.toString();

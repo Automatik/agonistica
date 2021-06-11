@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/app_bar_actions/drawer_menu_app_bar_leading.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +5,18 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class BasePlatformAppBar extends PlatformAppBar {
 
-  final Widget leading;
-  final List<Widget> actions;
+  final Widget? leading;
+  final List<Widget>? actions;
 
   BasePlatformAppBar({
-    @required title,
+    required title,
     this.leading,
     this.actions,
   }) : super(
         material: (_, __) => composeMaterialData(title, leading, actions),
       );
 
-  static MaterialAppBarData composeMaterialData(String title, Widget leading, List<Widget> actions) {
+  static MaterialAppBarData composeMaterialData(String title, Widget? leading, List<Widget>? actions) {
     return MaterialAppBarData(
       title: composeTitle(title),
       leading: chooseLeading(leading),
@@ -37,7 +35,7 @@ class BasePlatformAppBar extends PlatformAppBar {
     );
   }
 
-  static Widget chooseLeading(Widget leading) {
+  static Widget chooseLeading(Widget? leading) {
     return leading == null ? defaultLeading() : leading;
   }
 
@@ -52,7 +50,7 @@ class CustomShapeBorder extends ContinuousRectangleBorder {
   CustomShapeBorder() : super(side: BorderSide(color: blueAgonisticaColor, width: 1));
 
   @override
-  Path getOuterPath(Rect rect, {TextDirection textDirection}) {
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     Path path = Path();
     path.lineTo(0.0, rect.height + 40);
 

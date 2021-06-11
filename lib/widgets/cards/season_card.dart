@@ -1,16 +1,14 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/text_styles/season_card_text_style.dart';
 import 'package:flutter/material.dart';
 
 class SeasonCard extends StatelessWidget {
 
-  String title;
-  double height;
-  Function onTap;
+  final String title;
+  final double height;
+  final Function()? onTap;
 
   SeasonCard({
-    @required this.title,
+    required this.title,
     this.height = 100,
     this.onTap,
   });

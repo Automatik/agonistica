@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/text_styles/image_menu_card_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,12 +7,12 @@ class EmptyMenuCard extends StatelessWidget {
   final String title;
   final double width;
   final double height;
-  final Function onTap;
+  final Function()? onTap;
 
   EmptyMenuCard({
-    @required this.title,
-    @required this.width,
-    @required this.height,
+    required this.title,
+    required this.width,
+    required this.height,
     this.onTap
   });
 

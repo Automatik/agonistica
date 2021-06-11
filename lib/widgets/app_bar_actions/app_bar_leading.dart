@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
 class AppBarLeading extends StatelessWidget {
 
   final IconData icon;
-  final Function onLeadingTap;
+  final Function()? onLeadingTap;
   final Color color;
 
   AppBarLeading({

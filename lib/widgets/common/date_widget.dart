@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +10,8 @@ class DateWidget extends StatelessWidget {
   final double iconSize;
 
   DateWidget({
-    @required this.dateTime,
-    @required this.textStyle,
+    required this.dateTime,
+    required this.textStyle,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.iconColor = Colors.white,
     this.iconSize = 20,
