@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +9,8 @@ class SelectCategoryDialog {
   final Function(Category) onSelect;
 
   SelectCategoryDialog({
-    @required this.categories,
-    @required this.onSelect,
+    required this.categories,
+    required this.onSelect,
   });
 
   Future<void> showSelectCategoryDialog(BuildContext context) async {
@@ -49,7 +47,7 @@ class SelectCategoryDialog {
                     onTap: () async => await onSelect(cat),
                     dense: true,
                     title: Text(
-                      cat.name,
+                      cat.name!,
                       style: TextStyle(
                         fontSize: 18,
                       ),

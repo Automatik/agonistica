@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/dialogs/confirm_dialog.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +10,7 @@ class TabLeavingDialog extends ConfirmDialog {
   static const String DIALOG_CONFIRM = "Confermo";
   static const String DIALOG_CANCEL = "Annulla";
 
-  TabLeavingDialog({Function onConfirm, Function onCancel}) :
+  TabLeavingDialog({Function()? onConfirm, Function()? onCancel}) :
         super(onConfirm: onConfirm, onCancel: onCancel);
 
   Future<void> showTabLeavingDialog(BuildContext context) async {

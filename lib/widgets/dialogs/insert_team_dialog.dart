@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/season_team.dart';
@@ -11,19 +9,19 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class InsertTeamDialog {
 
-  final String initialValue;
+  final String? initialValue;
   final double maxHeight;
   final String seasonId;
   final List<SeasonTeam> Function(String) suggestionCallback;
-  final String Function(String) isInsertedTeamValid;
+  final String? Function(String)? isInsertedTeamValid;
   final Function(SeasonTeam) onSubmit;
 
   InsertTeamDialog({
     this.initialValue,
-    @required this.maxHeight,
-    @required this.seasonId,
-    @required this.suggestionCallback,
-    @required this.onSubmit,
+    required this.maxHeight,
+    required this.seasonId,
+    required this.suggestionCallback,
+    required this.onSubmit,
     this.isInsertedTeamValid,
   });
 
@@ -63,19 +61,19 @@ class InsertTeamDialog {
 
 class _InsertTeamForm extends StatefulWidget {
 
-  final String initialValue;
+  final String? initialValue;
   final double maxHeight;
   final String seasonId;
   final List<SeasonTeam> Function(String) suggestionCallback;
-  final String Function(String) isInsertedTeamValid;
+  final String? Function(String)? isInsertedTeamValid;
   final Function(SeasonTeam) onSubmit;
 
   _InsertTeamForm({
-    @required this.initialValue,
-    @required this.maxHeight,
-    @required this.seasonId,
-    @required this.suggestionCallback,
-    @required this.onSubmit,
+    this.initialValue,
+    required this.maxHeight,
+    required this.seasonId,
+    required this.suggestionCallback,
+    required this.onSubmit,
     this.isInsertedTeamValid,
   });
 
@@ -90,17 +88,17 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
   final TextEditingController textEditingController = TextEditingController();
 
   bool _isLoadingSuggestions = true;
-  List<SeasonTeam> suggestionsList;
+  late List<SeasonTeam> suggestionsList;
 
   @override
   void initState() {
     super.initState();
-    textEditingController.text = getTeamInitialValue();
+    textEditingController.text = getTeamInitialValue()!;
     String pattern = "";
     loadSuggestions(pattern);
   }
 
-  String getTeamInitialValue() {
+  String? getTeamInitialValue() {
     if(widget.initialValue == null) {
       return "";
     }
@@ -153,13 +151,13 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                           loadSuggestions(value);
                       },
                       validator: (value) {
-                        String nameValidationResult = InputValidation.validateTeamName(value);
+                        String? nameValidationResult = InputValidation.validateTeamName(value!);
                         bool isNameValid = nameValidationResult == null;
                         if(!isNameValid) {
                           return nameValidationResult;
                         }
                         if(widget.isInsertedTeamValid != null) {
-                          String insertedTeamValidationResult = widget.isInsertedTeamValid(value);
+                          String? insertedTeamValidationResult = widget.isInsertedTeamValid!(value);
                           bool isInsertedTeamValid = insertedTeamValidationResult == null;
                           if(!isInsertedTeamValid) {
                             return insertedTeamValidationResult;
@@ -180,8 +178,8 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
                       ),
                     ),
                     onPressed: () async {
-                      if(_formKey.currentState.validate()) {
-                        _formKey.currentState.save();
+                      if(_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
                         SeasonTeam seasonTeam = await submitFinalValue();
                         widget.onSubmit(seasonTeam);
                       }
@@ -262,7 +260,7 @@ class _InsertTeamFormState extends State<_InsertTeamForm> {
             scrollDirection: Axis.vertical,
             itemCount: elements.length,
             itemBuilder: (context, index) {
-              String suggestion = elements[index].getTeamName();
+              String suggestion = elements[index].getTeamName()!;
               return ListTile(
                 onTap: () => this.textEditingController.text = suggestion,
                 dense: true,

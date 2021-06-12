@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class ConfirmDialog {
 
-  final Function onConfirm, onCancel;
+  final Function()? onConfirm, onCancel;
 
   ConfirmDialog({
     this.onConfirm,
@@ -50,7 +48,7 @@ class ConfirmDialog {
     );
   }
 
-  Widget actionButton(String text, Function onTap) {
+  Widget actionButton(String text, Function()? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

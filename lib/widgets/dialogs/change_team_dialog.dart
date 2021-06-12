@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/dialogs/confirm_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +8,7 @@ class ChangeTeamDialog extends ConfirmDialog{
   static const String DIALOG_CONFIRM = "Confermo";
   static const String DIALOG_CANCEL = "Annulla";
 
-  ChangeTeamDialog({Function onConfirm, Function onCancel}) :
+  ChangeTeamDialog({Function()? onConfirm, Function()? onCancel}) :
     super(onConfirm: onConfirm, onCancel: onCancel);
 
   Future<void> showChangeTeamDialog(BuildContext context) async {

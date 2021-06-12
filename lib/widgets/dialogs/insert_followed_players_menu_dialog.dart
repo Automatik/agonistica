@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/dialogs/base_insert_dialog.dart';
 
 class InsertFollowedPlayersMenuDialog extends BaseInsertDialog {
 
   InsertFollowedPlayersMenuDialog({
-    validateInput,
-    onSubmit,
+    required validateInput,
+    required onSubmit,
   }) : super(validateInput: validateInput, onSubmit: onSubmit);
 
   @override

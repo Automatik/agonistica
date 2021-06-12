@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,8 @@ abstract class BaseInsertDialog {
   final Function(String) onSubmit;
 
   BaseInsertDialog({
-    @required this.validateInput,
-    @required this.onSubmit
+    required this.validateInput,
+    required this.onSubmit
   });
 
   Future<void> showInsertDialog(BuildContext context) async {
@@ -51,8 +51,8 @@ class _InsertForm extends StatefulWidget {
   final Function(String) onSubmit;
 
   _InsertForm({
-    @required this.validateInput,
-    @required this.onSubmit
+    required this.validateInput,
+    required this.onSubmit
   });
 
   @override
@@ -108,7 +108,7 @@ class _InsertFormState extends State<_InsertForm> {
                 autofocus: false,
                 keyboardType: TextInputType.text,
                 validator: (value) {
-                  return widget.validateInput(value);
+                  return widget.validateInput(value!);
                 },
               ),
             ),
@@ -122,8 +122,8 @@ class _InsertFormState extends State<_InsertForm> {
                 ),
               ),
               onPressed: () async {
-                if(_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
+                if(_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
                   String value = textEditingController.text;
                   widget.onSubmit(value);
                 }
