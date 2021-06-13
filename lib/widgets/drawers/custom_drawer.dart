@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/colors/app_color.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';
@@ -13,14 +11,14 @@ import 'package:flutter/material.dart';
 class CustomDrawer extends StatelessWidget {
 
   final HomeMenus homeMenus;
-  final Function(Menu) onFollowedTeamsMenuTap;
-  final Function(Menu) onFollowedPlayersMenuTap;
+  final Function(Menu)? onFollowedTeamsMenuTap;
+  final Function(Menu)? onFollowedPlayersMenuTap;
 
   CustomDrawer({
-    @required this.homeMenus,
+    required this.homeMenus,
     this.onFollowedTeamsMenuTap,
     this.onFollowedPlayersMenuTap
-  }) : assert(homeMenus != null);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +62,13 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  List<Widget> drawerItems(BuildContext context, List<Menu> menus, Function(Menu) onItemTap) {
+  List<Widget> drawerItems(BuildContext context, List<Menu> menus, Function(Menu)? onItemTap) {
     List<Widget> widgets = menus.map((m) {
       return Container(
         padding: const EdgeInsets.only(left: 15),
         child: ListTile(
           title: Text(
-            m.name,
+            m.name!,
             textAlign: TextAlign.start,
             style: DrawerItemStyle(),
           ),

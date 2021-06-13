@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 class RotatedListWheel extends StatefulWidget {
@@ -7,11 +5,11 @@ class RotatedListWheel extends StatefulWidget {
   final List<Widget> children;
   final double itemExtent;
   final int initialItem;
-  final Function(int) onSelectedItemChanged;
+  final Function(int)? onSelectedItemChanged;
 
   RotatedListWheel({
-    @required this.children,
-    @required this.itemExtent,
+    required this.children,
+    required this.itemExtent,
     this.initialItem = 0,
     this.onSelectedItemChanged
   });
@@ -23,7 +21,7 @@ class RotatedListWheel extends StatefulWidget {
 
 class _RotatedListWheelState extends State<RotatedListWheel> {
 
-  FixedExtentScrollController controller;
+  late FixedExtentScrollController controller;
 
   @override
   void initState() {
