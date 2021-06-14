@@ -116,11 +116,11 @@ class MatchInfoWidget extends StatelessWidget {
       CustomRichText(
         onTap: () => onHomeTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,
-        text: matchInfo.getHomeSeasonTeamName(),
+        text: matchInfo.getHomeSeasonTeamName()!,
         textAlign: TextAlign.center,
-        fontColor: textStyle.color,
-        fontWeight: textStyle.fontWeight,
-        fontSize: textStyle.fontSize,
+        fontColor: textStyle.color!,
+        fontWeight: textStyle.fontWeight!,
+        fontSize: textStyle.fontSize!,
       ),
     ];
     return teamColumn(widgets);
@@ -132,11 +132,11 @@ class MatchInfoWidget extends StatelessWidget {
       CustomRichText(
         onTap: () => onAwayTeamInserted(context, isEditEnabled, matchInfo),
         enabled: isEditEnabled,
-        text: matchInfo.getAwaySeasonTeamName(),
+        text: matchInfo.getAwaySeasonTeamName()!,
         textAlign: TextAlign.center,
-        fontColor: textStyle.color,
-        fontWeight: textStyle.fontWeight,
-        fontSize: textStyle.fontSize,
+        fontColor: textStyle.color!,
+        fontWeight: textStyle.fontWeight!,
+        fontSize: textStyle.fontSize!,
       ),
     ];
     return teamColumn(widgets);
@@ -172,7 +172,7 @@ class MatchInfoWidget extends StatelessWidget {
   Widget matchResult(bool isEditEnabled, TextStyle textStyle) {
     return Expanded(
       child: Container(
-        child: resultWidget(resultTextEditingController1, resultTextEditingController2, textStyle.color, 32, textStyle.fontWeight, isEditEnabled),
+        child: resultWidget(resultTextEditingController1, resultTextEditingController2, textStyle.color!, 32, textStyle.fontWeight!, isEditEnabled),
       ),
     );
   }
@@ -207,9 +207,9 @@ class MatchInfoWidget extends StatelessWidget {
               textAlignVertical: TextAlignVertical.top,
               maxLines: 1,
               textInputType: TextInputType.number,
-              textColor: textStyle.color,
-              textFontSize: textStyle.fontSize,
-              textFontWeight: textStyle.fontWeight,
+              textColor: textStyle.color!,
+              textFontSize: textStyle.fontSize!,
+              textFontWeight: textStyle.fontWeight!,
               bottomBorderPadding: 1,
             ),
           ],
@@ -251,7 +251,7 @@ class MatchInfoWidget extends StatelessWidget {
     );
   }
 
-  Widget resultWidget(TextEditingController? controller1, TextEditingController? controller2, Color? fontColor, double fontSize, FontWeight? fontWeight, bool enabled) {
+  Widget resultWidget(TextEditingController? controller1, TextEditingController? controller2, Color fontColor, double fontSize, FontWeight fontWeight, bool enabled) {
     if(controller1 == null) {
       controller1 = TextEditingController();
       controller1.text = match.team1Goals.toString();

@@ -393,7 +393,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
         fontColor: formFontColor,
         maxErrorLines: formErrorMaxLines,
         textInputType: TextInputType.number,
-        validator: (value) => InputValidation.validatePlayerShirtNumber(value),
+        validator: (value) => InputValidation.validatePlayerShirtNumber(value ?? ""),
       ),
     );
   }
@@ -416,7 +416,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
             loadPlayersSuggestions(value, surnameTextEditingController.text);
           }
         },
-        validator: (value) => InputValidation.validatePlayerName(value),
+        validator: (value) => InputValidation.validatePlayerName(value ?? ""),
       ),
     );
   }
@@ -439,7 +439,7 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
             loadPlayersSuggestions(nameTextEditingController.text, value);
           }
         },
-        validator: (value) => InputValidation.validatePlayerSurname(value),
+        validator: (value) => InputValidation.validatePlayerSurname(value ?? ""),
       ),
     );
   }
