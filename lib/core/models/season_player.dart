@@ -21,29 +21,29 @@ class SeasonPlayer {
   static Logger _logger = getLogger('SeasonPlayer');
 
   late String id;
-  String? playerId;
-  String? seasonTeamId;
-  String? seasonId;
-  String? categoryId;
-  List<String>? matchesIds;
-  List<String>? playerMatchNotesIds;
+  late String playerId;
+  late String seasonTeamId;
+  late String seasonId;
+  late String categoryId;
+  late List<String> matchesIds;
+  late List<String> playerMatchNotesIds;
 
-  int? height;
-  int? weight;
-  int? position;
+  late int height;
+  late int weight;
+  late int position;
 
   // Player's stats
-  int? matches, goals, yellowCards, redCards;
+  late int matches, goals, yellowCards, redCards;
 
   //Player's characteristics
-  int? tecnica, agonistica, fisica, tattica, capMotorie;
+  late int tecnica, agonistica, fisica, tattica, capMotorie;
 
   //Player's conditional capacities
-  int? velocita, rapidita, scatto, resistenza, corsa, progressione, cambioPasso, elevazione;
+  late int velocita, rapidita, scatto, resistenza, corsa, progressione, cambioPasso, elevazione;
 
-  String? morfologia, sommatoTipo;
+  late String morfologia, sommatoTipo;
 
-  String? attitudine1, attitudine2, attitudine3;
+  late String attitudine1, attitudine2, attitudine3;
 
   // Only temporary, do not store
   SeasonTeam? seasonTeam;
@@ -93,7 +93,7 @@ class SeasonPlayer {
     // New Empty Player
     Player player = Player.empty();
     // Create new empty SeasonPlayer
-    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id!, seasonTeam.id!, seasonTeam.seasonId!, category.id!);
+    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId!, category.id);
     // Set temporary values
     seasonPlayer.setCategory(category);
     seasonPlayer.setSeasonTeam(seasonTeam);
@@ -107,8 +107,8 @@ class SeasonPlayer {
     seasonTeamId = sp.seasonTeamId;
     seasonId = sp.seasonId;
     categoryId = sp.categoryId;
-    matchesIds = List.from(sp.matchesIds ?? []);
-    playerMatchNotesIds = List.from(sp.playerMatchNotesIds ?? []);
+    matchesIds = List.from(sp.matchesIds);
+    playerMatchNotesIds = List.from(sp.playerMatchNotesIds);
 
     height = sp.height;
     weight = sp.weight;
@@ -148,8 +148,8 @@ class SeasonPlayer {
   }
 
   static int compare(SeasonPlayer sp1, SeasonPlayer sp2) {
-    String nm1 = sp1.player!.name! + " " + sp1.player!.surname!;
-    String nm2 = sp2.player!.name! + " " + sp2.player!.surname!;
+    String nm1 = sp1.player!.name + " " + sp1.player!.surname;
+    String nm2 = sp2.player!.name + " " + sp2.player!.surname;
     return nm1.compareTo(nm2);
   }
 
@@ -159,13 +159,10 @@ class SeasonPlayer {
   }
 
   void updateFromMatch(MatchPlayerData playerData) {
-    if(matches == null || goals == null || yellowCards == null || redCards == null) {
-      return;
-    }
-    matches = matches! + 1;
-    goals = goals! + playerData.numGoals!;
-    yellowCards = yellowCards! + playerData.getYellowCardsCount();
-    redCards = redCards! + playerData.getRedCardCount();
+    matches = matches + 1;
+    goals = goals + playerData.numGoals;
+    yellowCards = yellowCards + playerData.getYellowCardsCount();
+    redCards = redCards + playerData.getRedCardCount();
   }
 
   void addMatch(String matchId) {
@@ -284,8 +281,8 @@ class SeasonPlayer {
 
   Category getCategory() {
     Category category = Category();
-    category.id = categoryId!;
-    category.name = categoryName;
+    category.id = categoryId;
+    category.name = categoryName!;
     return category;
   }
 
@@ -321,10 +318,10 @@ class SeasonPlayer {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("playerId", playerId!);
-    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId!);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
-    Preconditions.requireFieldNotEmpty("categoryId", categoryId!);
+    Preconditions.requireFieldNotEmpty("playerId", playerId);
+    Preconditions.requireFieldNotEmpty("seasonTeamId", seasonTeamId);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
   }
 
   void _checkPlayerTempField() {

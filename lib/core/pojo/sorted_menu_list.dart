@@ -1,5 +1,3 @@
-
-
 import 'dart:collection';
 
 import 'package:agonistica/core/models/menu.dart';

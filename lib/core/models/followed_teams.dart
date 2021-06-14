@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
@@ -7,7 +5,7 @@ class FollowedTeams {
 
   late String id;
 
-  List<String?>? teamsIds;
+  late List<String> teamsIds;
 
   FollowedTeams() {
     id = DbUtils.newUuid();

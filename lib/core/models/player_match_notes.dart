@@ -4,10 +4,10 @@ import 'package:agonistica/core/utils/db_utils.dart';
 class PlayerMatchNotes {
 
   late String id;
-  String? seasonPlayerId;
-  String? matchId;
+  late String seasonPlayerId;
+  late String matchId;
 
-  String? notes;
+  late String notes;
 
   PlayerMatchNotes(this.matchId, this.seasonPlayerId) {
     id = DbUtils.newUuid();
@@ -39,8 +39,8 @@ class PlayerMatchNotes {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId!);
-    Preconditions.requireFieldNotEmpty("matchId", matchId!);
+    Preconditions.requireFieldNotEmpty("seasonPlayerId", seasonPlayerId);
+    Preconditions.requireFieldNotEmpty("matchId", matchId);
     Preconditions.requireFieldNotNull("notes", notes);
   }
 

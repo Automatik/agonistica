@@ -7,17 +7,17 @@ class Team {
 
   String? id;
 
-  String? name;
+  late String name;
 
-  List<String>? seasonTeamsIds;
+  late List<String> seasonTeamsIds;
 
-  String? imageFilename;
+  late String imageFilename;
 
   Team() {
     id = DbUtils.newUuid();
   }
 
-  Team.name(String? name, String? imageFilename) {
+  Team.name(String name, String imageFilename) {
     id = DbUtils.newUuid();
     this.name = name;
     this.imageFilename = imageFilename;
@@ -66,7 +66,7 @@ class Team {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id!);
-    Preconditions.requireFieldNotEmpty("name", name!);
+    Preconditions.requireFieldNotEmpty("name", name);
   }
 
 }

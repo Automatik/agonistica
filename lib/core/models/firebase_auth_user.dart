@@ -1,12 +1,10 @@
-
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
 class FirebaseAuthUser {
 
   late String id; // firebase auth id
-  String? appUserId;
+  late String appUserId;
 
   //Temporary
   String? email;
@@ -33,7 +31,7 @@ class FirebaseAuthUser {
       appUserId = json['appUserId'];
 
   void checkRequiredFields() {
-    Preconditions.requireFieldNotEmpty("appUserId", appUserId!);
+    Preconditions.requireFieldNotEmpty("appUserId", appUserId);
   }
 
 }

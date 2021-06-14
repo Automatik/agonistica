@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
@@ -8,11 +6,11 @@ class AppUser {
   late String id;
 
   // Personal Data
-  String? email;
-  bool? isEmailVerified;
+  late String email;
+  late bool isEmailVerified;
 
   // App Data
-  bool? areItemsInitialized; // true if the requested items are created
+  late bool areItemsInitialized; // true if the requested items are created
 
   AppUser._(); // private constructor
 
@@ -43,6 +41,6 @@ class AppUser {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("email", email!);
+    Preconditions.requireFieldNotEmpty("email", email);
   }
 }

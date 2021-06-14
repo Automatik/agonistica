@@ -11,24 +11,24 @@ class Match {
 
   late String id;
 
-  String? categoryId;
+  late String categoryId;
 
-  String? seasonTeam1Id, seasonTeam2Id;
+  late String seasonTeam1Id, seasonTeam2Id;
 
-  String? seasonId;
+  late String seasonId;
 
-  int? team1Goals, team2Goals;
+  late int team1Goals, team2Goals;
 
-  int? leagueMatch;
-  DateTime? matchDate;
+  late int leagueMatch;
+  late DateTime matchDate;
 
   // Leave this as temporary
   // String team1Name, team2Name;
   Team? team1, team2;
 
-  List<MatchPlayerData>? playersData;
+  late List<MatchPlayerData> playersData;
 
-  String? matchNotes;
+  late String matchNotes;
 
   Match() {
     id = DbUtils.newUuid();
@@ -46,6 +46,7 @@ class Match {
     matchDate = DateTime.now();
     team1 = Team.nameWithNoId("Squadra 1", team1ImageFilename);
     team2 = Team.nameWithNoId("Squadra 2", team2ImageFilename);
+    playersData = List.empty();
     matchNotes = "";
   }
 
@@ -58,8 +59,8 @@ class Match {
     team1Goals = match.team1Goals;
     team2Goals = match.team2Goals;
     leagueMatch = match.leagueMatch;
-    matchDate = MyDateUtils.fromDateTime(match.matchDate!);
-    playersData = match.playersData == null ? List.empty() : List.generate(match.playersData!.length, (index) => MatchPlayerData.clone(match.playersData![index]));
+    matchDate = MyDateUtils.fromDateTime(match.matchDate);
+    playersData = List.generate(match.playersData.length, (index) => MatchPlayerData.clone(match.playersData[index]));
     matchNotes = match.matchNotes;
   }
 
@@ -67,12 +68,6 @@ class Match {
   static int compare(Match m1, Match m2) {
     int? leagueMatch1 = m1.leagueMatch;
     int? leagueMatch2 = m2.leagueMatch;
-    if(leagueMatch1 == null) {
-      leagueMatch1 = 0;
-    }
-    if(leagueMatch2 == null) {
-      leagueMatch2 = 0;
-    }
     return leagueMatch1.compareTo(leagueMatch2);
   }
 
@@ -81,9 +76,9 @@ class Match {
     if(team1!.id == null) {
       seasonTeam = SeasonTeam();
     } else {
-      seasonTeam = SeasonTeam.empty(team1!.id!, seasonId!);
+      seasonTeam = SeasonTeam.empty(team1!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam1Id!;
+    seasonTeam.id = seasonTeam1Id;
     seasonTeam.team = team1;
     return seasonTeam;
   }
@@ -93,9 +88,9 @@ class Match {
     if(team2!.id == null) {
       seasonTeam = SeasonTeam();
     } else {
-      seasonTeam = SeasonTeam.empty(team2!.id!, seasonId!);
+      seasonTeam = SeasonTeam.empty(team2!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam2Id!;
+    seasonTeam.id = seasonTeam2Id;
     seasonTeam.team = team2;
     return seasonTeam;
   }
@@ -165,11 +160,11 @@ class Match {
   }
 
   List<MatchPlayerData> _getPlayers(String? seasonTeamId) {
-    return playersData!.where((p) => p.seasonTeamId == seasonTeamId).toList();
+    return playersData.where((p) => p.seasonTeamId == seasonTeamId).toList();
   }
 
   List<MatchPlayerData> _getLineUpPlayers(String? seasonTeamId, bool isRegular) {
-    return playersData!.where((p) => p.seasonTeamId == seasonTeamId && p.isRegular == isRegular).toList();
+    return playersData.where((p) => p.seasonTeamId == seasonTeamId && p.isRegular == isRegular).toList();
   }
 
   void setSeasonTeam1(SeasonTeam seasonTeam) {
@@ -194,10 +189,9 @@ class Match {
       'team1Goals': team1Goals,
       'team2Goals': team2Goals,
       'leagueMatch': leagueMatch,
-      'matchDate': matchDate!.toIso8601String(),
-      'playersData': playersData == null ? List.empty() : List.generate(
-          playersData!.length, (index) => playersData![index].toJson()),
-      'matchNotes': matchNotes == null ? "" : matchNotes
+      'matchDate': matchDate.toIso8601String(),
+      'playersData': List.generate(playersData.length, (index) => playersData[index].toJson()),
+      'matchNotes': matchNotes
     };
   }
 
@@ -210,16 +204,16 @@ class Match {
       team1Goals = json['team1Goals'],
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
-      matchDate = DateTime.tryParse(json['matchDate']),
+      matchDate = DateTime.parse(json['matchDate']),
       playersData = json['playersData'] == null ? List.empty() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
       matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("categoryId", categoryId!);
-    Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id!);
-    Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id!);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
+    Preconditions.requireFieldNotEmpty("categoryId", categoryId);
+    Preconditions.requireFieldNotEmpty("seasonTeam1Id", seasonTeam1Id);
+    Preconditions.requireFieldNotEmpty("seasonTeam2Id", seasonTeam2Id);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
     Preconditions.requireFieldNotNull("matchDate", matchDate);
   }
 }

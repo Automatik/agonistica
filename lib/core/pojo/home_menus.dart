@@ -1,12 +1,10 @@
-
-
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/pojo/sorted_menu_list.dart';
 
 class HomeMenus {
 
-  SortedMenuList? _followedTeamsMenus;
-  SortedMenuList? _followedPlayersMenus;
+  late SortedMenuList _followedTeamsMenus;
+  late SortedMenuList _followedPlayersMenus;
 
   HomeMenus() {
     _followedTeamsMenus = SortedMenuList();
@@ -21,11 +19,11 @@ class HomeMenus {
   }
 
   void addFollowedTeamMenu(Menu menu) {
-    _followedTeamsMenus!.add(menu);
+    _followedTeamsMenus.add(menu);
   }
 
   void addFollowedPlayersMenu(Menu menu) {
-    _followedPlayersMenus!.add(menu);
+    _followedPlayersMenus.add(menu);
   }
 
   SortedMenuList? getFollowedTeamsMenus() {
@@ -37,11 +35,11 @@ class HomeMenus {
   }
 
   List<Menu> getFollowedTeamsMenusList() {
-    return _followedTeamsMenus!.toList();
+    return _followedTeamsMenus.toList();
   }
 
   List<Menu> getFollowedPlayersMenusList() {
-    return _followedPlayersMenus!.toList();
+    return _followedPlayersMenus.toList();
   }
 
 }

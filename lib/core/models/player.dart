@@ -8,12 +8,12 @@ class Player {
   static const String EMPTY_PLAYER_SURNAME = "Surname";
 
   late String id;
-  String? name, surname;
+  late String name, surname;
 
-  DateTime? birthDay;
-  bool? isRightHanded;
+  late DateTime birthDay;
+  late bool isRightHanded;
 
-  List<String>? seasonPlayersIds;
+  late List<String> seasonPlayersIds;
 
 
   Player() {
@@ -33,7 +33,7 @@ class Player {
     id = p.id;
     name = p.name;
     surname = p.surname;
-    birthDay = MyDateUtils.fromDateTime(p.birthDay!);
+    birthDay = MyDateUtils.fromDateTime(p.birthDay);
     isRightHanded = p.isRightHanded;
     seasonPlayersIds = p.seasonPlayersIds;
   }
@@ -69,7 +69,7 @@ class Player {
       'id': id,
       'name': name,
       'surname': surname,
-      'birthDay': birthDay!.toIso8601String(),
+      'birthDay': birthDay.toIso8601String(),
       'isRightHanded': isRightHanded,
       'seasonPlayersIds': seasonPlayersIds
     };
@@ -79,14 +79,14 @@ class Player {
     : id = json['id'],
       name = json['name'],
       surname = json['surname'],
-      birthDay = DateTime.tryParse(json['birthDay']),
+      birthDay = DateTime.parse(json['birthDay']),
       isRightHanded = json['isRightHanded'],
       seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(): List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name!);
-    Preconditions.requireFieldNotEmpty("surname", surname!);
+    Preconditions.requireFieldNotEmpty("name", name);
+    Preconditions.requireFieldNotEmpty("surname", surname);
   }
 
 }

@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/utils/db_utils.dart';
 
@@ -7,9 +5,9 @@ class Category {
 
   late String id;
 
-  String? name;
+  late String name;
 
-  String? imageFilename;
+  late String imageFilename;
 
   Category() {
     id = DbUtils.newUuid();
@@ -22,7 +20,7 @@ class Category {
   }
 
   static int compare(Category c1, Category c2) {
-    return c1.name!.compareTo(c2.name!);
+    return c1.name.compareTo(c2.name);
   }
 
   Map<String, dynamic> toJson() {
@@ -42,7 +40,7 @@ class Category {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name!);
+    Preconditions.requireFieldNotEmpty("name", name);
   }
 
 }

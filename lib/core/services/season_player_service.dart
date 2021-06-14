@@ -98,13 +98,9 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
       return Future.value(List<SeasonPlayer>.empty());
     }
     SeasonTeam seasonTeam = await seasonTeamService.getItemById(seasonTeamId);
-    if(seasonTeam.seasonPlayersIds == null || seasonTeam.seasonPlayersIds!.isEmpty)
+    if(seasonTeam.seasonPlayersIds.isEmpty)
       return Future.value(List<SeasonPlayer>.empty());
-    if (DbUtils.listContainsNulls(seasonTeam.seasonPlayersIds!)) {
-      CrudService.logger.w("The seasonTeam with id $seasonTeamId contains null values in seasonPlayersIds");
-      seasonTeam.seasonPlayersIds = DbUtils.removeNullValues(seasonTeam.seasonPlayersIds!) as List<String?>?;
-    }
-    List<SeasonPlayer> players = await getItemsByIds(seasonTeam.seasonPlayersIds as List<String>);
+    List<SeasonPlayer> players = await getItemsByIds(seasonTeam.seasonPlayersIds);
     players.removeWhere((player) => player.categoryId != categoryId);
     return players;
   }

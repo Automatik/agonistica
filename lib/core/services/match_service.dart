@@ -93,7 +93,7 @@ class MatchService extends CrudService<Match> {
   /// To avoid counting stats more time the count is done from start every time
   Future<void> _updatePlayerStatsFromMatchPlayerData(SeasonPlayer seasonPlayer) async {
     // Get matches in which the player has played
-    List<Match> matches = await getItemsByIds(seasonPlayer.matchesIds as List<String>);
+    List<Match> matches = await getItemsByIds(seasonPlayer.matchesIds);
 
     List<MatchPlayerData> playerDataList = matches.map((m) => m.playersData!.firstWhere((p) => p.seasonPlayerId == seasonPlayer.id)).toList();
 

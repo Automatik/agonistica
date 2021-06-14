@@ -5,11 +5,11 @@ import 'package:agonistica/core/utils/db_utils.dart';
 class SeasonTeam {
 
   late String id;
-  String? teamId;
-  String? seasonId;
-  List<String>? categoriesIds;
-  List<String>? matchesIds;
-  List<String?>? seasonPlayersIds;
+  late String teamId;
+  late String seasonId;
+  late List<String> categoriesIds;
+  late List<String> matchesIds;
+  late List<String> seasonPlayersIds;
 
   // temporary, do not store
   Team? team;
@@ -32,7 +32,7 @@ class SeasonTeam {
 
   /// Useful constructor to create both a new Team and a new SeasonTeam
   /// with all the temporary objects populated
-  factory SeasonTeam.newTeam(String? teamName, String? teamImageFilename, String seasonId) {
+  factory SeasonTeam.newTeam(String teamName, String teamImageFilename, String seasonId) {
     Preconditions.requireArgumentNotEmpty(seasonId);
 
     // New Empty Team
@@ -96,8 +96,8 @@ class SeasonTeam {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("teamId", teamId!);
-    Preconditions.requireFieldNotEmpty("seasonId", seasonId!);
+    Preconditions.requireFieldNotEmpty("teamId", teamId);
+    Preconditions.requireFieldNotEmpty("seasonId", seasonId);
   }
 
   void _checkTeamTempField() {

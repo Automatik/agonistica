@@ -8,14 +8,14 @@ class Menu {
 
   late String id;
 
-  String? name;
+  late String name;
 
-  int? type;
+  late int type;
 
-  String? imageFilename;
+  late String imageFilename;
 
   String? teamId;
-  List<String?>? categoriesIds;
+  List<String>? categoriesIds;
 
   Menu() {
     id = DbUtils.newUuid();
@@ -66,7 +66,7 @@ class Menu {
   }
 
   static int compare(Menu m1, Menu m2) {
-    return m1.name!.compareTo(m2.name!);
+    return m1.name.compareTo(m2.name);
   }
 
   Map<String, dynamic> toJson() {
@@ -92,15 +92,15 @@ class Menu {
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);
-    Preconditions.requireFieldNotEmpty("name", name!);
-    Preconditions.requireFieldGreaterThan("type", type!, TYPE_FOLLOWED_TEAMS - 1);
-    Preconditions.requireFieldLessThan("type", type!, TYPE_FOLLOWED_PLAYERS + 1);
+    Preconditions.requireFieldNotEmpty("name", name);
+    Preconditions.requireFieldGreaterThan("type", type, TYPE_FOLLOWED_TEAMS - 1);
+    Preconditions.requireFieldLessThan("type", type, TYPE_FOLLOWED_PLAYERS + 1);
     if(isTeamMenu()) {
       Preconditions.requireFieldNotEmpty("teamId", teamId!);
     } else {
       Preconditions.requireFieldsNotNulls("categoriesIds", categoriesIds!);
     }
-    Preconditions.requireFieldNotEmpty("imageFilename", imageFilename!);
+    Preconditions.requireFieldNotEmpty("imageFilename", imageFilename);
   }
 
 }
