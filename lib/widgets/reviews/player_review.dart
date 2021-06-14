@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -17,10 +17,10 @@ class PlayerReview extends BaseReview{
   final DateTime birthDay;
 
   PlayerReview({
-    this.name,
-    this.role,
-    this.birthDay,
-    width,
+    /*required*/ required this.name,
+    /*required*/ required this.role,
+    /*required*/ required this.birthDay,
+    /*required*/ required width,
     minHeight = 50.0,
     onTap,
     onSettingsTap
@@ -84,7 +84,7 @@ class PlayerReview extends BaseReview{
             ),
           ),
           GestureDetector(
-              onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
+              onTapDown: (tapDetails) => onSettingsTap!(tapDetails.globalPosition),
               child: Container(
                   child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)
               ),

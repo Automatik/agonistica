@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 
@@ -11,10 +11,11 @@ abstract class BaseReview extends StatelessWidget {
 
   final double width;
   final double minHeight;
-  final Function onTap, onSettingsTap;
+  final Function()? onTap;
+  final Function(Offset)? onSettingsTap;
 
   BaseReview({
-    @required this.width,
+    /*required*/ required this.width,
     this.minHeight = 50,
     this.onTap,
     this.onSettingsTap

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +17,8 @@ class TextBox extends StatelessWidget {
   final double minHeight;
 
   TextBox({
-    @required this.isEnabled,
-    @required this.controller,
+    required this.isEnabled,
+    required this.controller,
     this.autofocus = true,
     this.textAlign = TextAlign.start,
     this.fontSize = 16,
@@ -59,7 +57,7 @@ class TextBox extends StatelessWidget {
     );
   }
 
-  Border showBorder() {
+  Border? showBorder() {
     if(isEnabled) {
       return Border.symmetric(
           horizontal: BorderSide(

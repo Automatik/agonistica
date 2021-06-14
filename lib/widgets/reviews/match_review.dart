@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/team.dart';
@@ -20,12 +20,12 @@ class MatchReview extends BaseReview {
   final DateTime matchDate;
 
   MatchReview({
-    @required this.team1,
-    @required this.team2,
-    @required this.result,
-    @required this.leagueMatch,
-    @required this.matchDate,
-    @required width,
+    /*required*/ required this.team1,
+    /*required*/ required this.team2,
+    /*required*/ required this.result,
+    /*required*/ required this.leagueMatch,
+    /*required*/ required this.matchDate,
+    /*required*/ required width,
     minHeight = 50.0,
     onTap,
     onSettingsTap,
@@ -51,11 +51,11 @@ class MatchReview extends BaseReview {
   Widget mainRow() {
     return Row(
       children: [
-        homeTeamWidget(team1.imageFilename),
-        teamNameWidget(team1.name),
+        homeTeamWidget(team1.imageFilename!),
+        teamNameWidget(team1.name!),
         resultWidget(result),
-        teamNameWidget(team2.name),
-        awayTeamWidget(team2.imageFilename),
+        teamNameWidget(team2.name!),
+        awayTeamWidget(team2.imageFilename!),
       ],
     );
   }
@@ -151,7 +151,7 @@ class MatchReview extends BaseReview {
 
   Widget settingsWidget() {
     return GestureDetector(
-      onTapDown: (tapDetails) => onSettingsTap(tapDetails.globalPosition),
+      onTapDown: (tapDetails) => onSettingsTap!(tapDetails.globalPosition),
       child: Container(
           margin: EdgeInsets.only(left: 5),
           child: Icon(Icons.more_vert, color: blueAgonisticaColor, size: iconsSize,)

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/colors/app_color.dart';
@@ -16,13 +16,13 @@ class TabScaffoldWidget extends BaseScaffoldWidget {
   static const int MATCHES_VIEW_INDEX = 0;
   static const int ROSTER_VIEW_INDEX = 1;
 
-  final int initialIndex;
-  final Function(int) onBottomItemChanged;
+  final int? initialIndex;
+  final Function(int)? onBottomItemChanged;
 
   final double iconsSize = 24;
 
   TabScaffoldWidget({
-    title,
+    required title,
     this.initialIndex,
     platformAppBar,
     childBuilder,
@@ -36,7 +36,7 @@ class TabScaffoldWidget extends BaseScaffoldWidget {
 
 class _TabScaffoldWidgetState extends BaseScaffoldWidgetState<TabScaffoldWidget> {
 
-  PlatformTabController _tabController;
+  PlatformTabController? _tabController;
 
   @override
   void initState() {
@@ -60,20 +60,20 @@ class _TabScaffoldWidgetState extends BaseScaffoldWidgetState<TabScaffoldWidget>
         // Use a nested builder to get a context inside the Scaffold used then by the snackBars
         return Builder(
           builder: (innerContext) {
-            widget.baseScaffoldService.scaffoldContext = innerContext;
+            widget.baseScaffoldService!.scaffoldContext = innerContext;
             return Container(
               decoration: BoxDecoration(
                 gradient: AppColor.getBackground(),
               ),
               child: BaseWidget(
-                builder: widget.childBuilder,
+                builder: widget.childBuilder!,
               ),
             );
           },
         );
       },
       itemChanged: (index) {
-        widget.onBottomItemChanged.call(index);
+        widget.onBottomItemChanged!.call(index);
       },
       tabsBackgroundColor: appBarBackgroundColor,
       materialTabs: (_ , __) => MaterialNavBarData(
@@ -99,7 +99,7 @@ class _TabScaffoldWidgetState extends BaseScaffoldWidgetState<TabScaffoldWidget>
   }
 
   bool isMatchesViewSelected(BuildContext context) {
-    return _tabController.index(context) == TabScaffoldWidget.MATCHES_VIEW_INDEX;
+    return _tabController!.index(context) == TabScaffoldWidget.MATCHES_VIEW_INDEX;
   }
 
 }

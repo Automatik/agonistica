@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/exceptions/argument_exception.dart';
 import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';
@@ -12,7 +10,7 @@ class PlayerItemPopupMenu extends PopupMenu {
   static const int DELETE_PLAYER = 2;
   static const int VIEW_NOTES_CARD = 3;
 
-  PlayerItemPopupMenu({offset, itemValues})
+  PlayerItemPopupMenu({required offset, required itemValues})
       : super(offset: offset, itemValues: itemValues);
 
   @override

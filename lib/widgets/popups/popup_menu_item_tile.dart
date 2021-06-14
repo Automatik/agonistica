@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +9,11 @@ class PopupMenuItemTile extends StatelessWidget {
   final Color fontColor;
 
   PopupMenuItemTile({
-    @required this.text,
-    @required this.iconData,
+    required this.text,
+    required this.iconData,
     this.fontSize = 16,
     this.fontColor = blueAgonisticaColor,
-  }) : assert(text != null),
-        assert(iconData != null);
+  });
 
 
   @override

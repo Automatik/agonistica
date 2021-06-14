@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class BaseWidget extends StatelessWidget {
 
-  final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) builder;
-  final MySizingInformation parentSizingInformation;
+  final Widget Function(BuildContext context, MySizingInformation sizingInformation, MySizingInformation? parentSizingInformation) builder;
+  final MySizingInformation? parentSizingInformation;
 
-  const BaseWidget({Key? key, required this.builder, required this.parentSizingInformation}) : super(key: key);
+  const BaseWidget({Key? key, required this.builder, this.parentSizingInformation}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

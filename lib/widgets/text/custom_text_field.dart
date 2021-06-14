@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:flutter/material.dart';
@@ -8,19 +6,19 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class CustomTextField extends StatelessWidget {
 
-  final double width;
-  final TextEditingController controller;
+  final double? width;
+  final TextEditingController? controller;
   final bool enabled;
   final bool readOnly;
   final TextAlign textAlign;
   final TextAlignVertical textAlignVertical;
-  final int maxLines;
+  final int? maxLines;
   final TextInputType textInputType;
   final Color textColor;
   final double textFontSize;
   final FontWeight textFontWeight;
   final double bottomBorderPadding;
-  final String hint;
+  final String? hint;
 
   CustomTextField({
     this.width,

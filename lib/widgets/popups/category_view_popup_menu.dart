@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/exceptions/argument_exception.dart';
 import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';
@@ -10,7 +8,7 @@ class CategoryViewPopupMenu extends PopupMenu {
 
   static const int DELETE_CATEGORY = 0;
 
-  CategoryViewPopupMenu({offset})
+  CategoryViewPopupMenu({required offset})
       : super(offset: offset, itemValues: [DELETE_CATEGORY]);
 
   @override

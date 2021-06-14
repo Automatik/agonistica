@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/colors/app_color.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -36,7 +34,7 @@ class _ScrollScaffoldWidgetState extends BaseScaffoldWidgetState<ScrollScaffoldW
       ),
       body: Builder(
           builder: (BuildContext innerContext) {
-            widget.baseScaffoldService.scaffoldContext = innerContext;
+            widget.baseScaffoldService!.scaffoldContext = innerContext;
             return BaseWidget(
                 builder: (baseContext, sizingInfo, parentSizingInfo) {
                   return SingleChildScrollView(
@@ -49,7 +47,7 @@ class _ScrollScaffoldWidgetState extends BaseScaffoldWidgetState<ScrollScaffoldW
                       ),
                       child: BaseWidget(
                         parentSizingInformation: sizingInfo,
-                        builder: widget.childBuilder,
+                        builder: widget.childBuilder!,
                       ),
                     ),
                   );
@@ -60,7 +58,7 @@ class _ScrollScaffoldWidgetState extends BaseScaffoldWidgetState<ScrollScaffoldW
     );
   }
 
-  Widget chooseAppBar() {
+  PlatformAppBar? chooseAppBar() {
     if(!widget.showAppBar) {
       return null;
     }

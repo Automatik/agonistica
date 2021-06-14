@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 class CustomRichText extends StatelessWidget {
@@ -10,12 +8,12 @@ class CustomRichText extends StatelessWidget {
   final Color fontColor;
   final FontWeight fontWeight;
   final double fontSize;
-  final EdgeInsetsGeometry margins;
-  final Function onTap;
+  final EdgeInsetsGeometry? margins;
+  final Function()? onTap;
 
   CustomRichText({
     this.enabled = false,
-    this.text,
+    required this.text,
     this.textAlign = TextAlign.center,
     this.fontSize = 18,
     this.fontWeight = FontWeight.normal,

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,7 @@ class HomeViewPopupMenu extends PopupMenu {
   static const int CREATE_FOLLOWED_TEAM_MENU = 0;
   static const int CREATE_FOLLOWED_PLAYERS_MENU = 1;
   
-  HomeViewPopupMenu({offset})
+  HomeViewPopupMenu({required offset})
     : super(offset: offset, itemValues: [CREATE_FOLLOWED_TEAM_MENU, CREATE_FOLLOWED_PLAYERS_MENU]);
 
   @override

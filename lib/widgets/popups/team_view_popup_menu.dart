@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/exceptions/argument_exception.dart';
 import 'package:agonistica/widgets/popups/item_tile_object.dart';
 import 'package:agonistica/widgets/popups/popup_menu.dart';
@@ -14,7 +12,7 @@ class TeamViewPopupMenu extends PopupMenu {
   static const int DELETE_MATCH_CARD = 2;
   static const int DELETE_PLAYER_CARD = 3;
 
-  TeamViewPopupMenu({offset, itemValues}) : super(offset: offset, itemValues: itemValues);
+  TeamViewPopupMenu({required offset, required itemValues}) : super(offset: offset, itemValues: itemValues);
 
   @override
   selectItemTileObject(BuildContext context, int value) {

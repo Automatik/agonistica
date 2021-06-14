@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,19 +7,19 @@ class PlayerTextFormField extends StatelessWidget {
   final double labelIconSize = 24;
 
   final TextEditingController controller;
-  final String labelText;
-  final String labelSvgIconPath;
-  final Function(String) onChanged;
-  final Function(String) validator;
-  final double fontSize;
-  final Color fontColor;
-  final FontWeight fontWeight;
-  final int maxErrorLines;
+  final String? labelText;
+  final String? labelSvgIconPath;
+  final Function(String)? onChanged;
+  final Function(String?)? validator;
+  final double? fontSize;
+  final Color? fontColor;
+  final FontWeight? fontWeight;
+  final int? maxErrorLines;
   final TextInputType textInputType;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
 
   PlayerTextFormField({
-    @required this.controller,
+    required this.controller,
     this.labelText,
     this.labelSvgIconPath,
     this.onChanged,
@@ -74,8 +72,8 @@ class PlayerTextFormField extends StatelessWidget {
           autofocus: false,
           keyboardType: textInputType,
           focusNode: focusNode,
-          onChanged: (value) => onChanged(value),
-          validator: (value) => validator(value),
+          onChanged: (value) => onChanged!(value),
+          validator: (value) => validator!(value),
         ),
       ],
     );
@@ -87,7 +85,7 @@ class PlayerTextFormField extends StatelessWidget {
       height: labelIconSize,
       padding: const EdgeInsets.only(left: 5),
       child: Text(
-        labelText,
+        labelText!,
         textAlign: TextAlign.start,
         style: TextStyle(
           color: fontColor,
@@ -102,7 +100,7 @@ class PlayerTextFormField extends StatelessWidget {
     return Container(
       width: labelIconSize,
       height: labelIconSize,
-      child: SvgPicture.asset(labelSvgIconPath)
+      child: SvgPicture.asset(labelSvgIconPath!)
     );
   }
 
