@@ -68,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
         padding: const EdgeInsets.only(left: 15),
         child: ListTile(
           title: Text(
-            m.name!,
+            m.name,
             textAlign: TextAlign.start,
             style: DrawerItemStyle(),
           ),

@@ -1,5 +1,4 @@
 import 'package:agonistica/core/assets/image_assets.dart';
-import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
@@ -17,9 +16,9 @@ class MatchInfoWidget extends StatelessWidget {
   final Match match;
   final bool isEditEnabled;
   final double width;
-  final Function(BuildContext, bool, Match) onHomeTeamInserted;
-  final Function(BuildContext, bool, Match) onAwayTeamInserted;
-  final Function(DateTime) onDateInserted;
+  final Function(BuildContext, bool, Match)? onHomeTeamInserted;
+  final Function(BuildContext, bool, Match)? onAwayTeamInserted;
+  final Function(DateTime)? onDateInserted;
   final TextEditingController? resultTextEditingController1;
   final TextEditingController? resultTextEditingController2;
   final TextEditingController? leagueMatchTextEditingController;
@@ -31,9 +30,9 @@ class MatchInfoWidget extends StatelessWidget {
     this.resultTextEditingController1,
     this.resultTextEditingController2,
     this.leagueMatchTextEditingController,
-    required this.onHomeTeamInserted,
-    required this.onAwayTeamInserted,
-    required this.onDateInserted,
+    this.onHomeTeamInserted,
+    this.onAwayTeamInserted,
+    this.onDateInserted,
   });
 
   @override
@@ -114,7 +113,11 @@ class MatchInfoWidget extends StatelessWidget {
     final widgets = [
       teamImageWidget(matchInfo.getHomeSeasonTeamImage()!, avatarSize),
       CustomRichText(
-        onTap: () => onHomeTeamInserted(context, isEditEnabled, matchInfo),
+        onTap: () {
+          if(onHomeTeamInserted != null) {
+            onHomeTeamInserted!(context, isEditEnabled, matchInfo);
+          }
+        },
         enabled: isEditEnabled,
         text: matchInfo.getHomeSeasonTeamName()!,
         textAlign: TextAlign.center,
@@ -130,7 +133,11 @@ class MatchInfoWidget extends StatelessWidget {
     final widgets = [
       teamImageWidget(matchInfo.getAwaySeasonTeamImage()!, avatarSize),
       CustomRichText(
-        onTap: () => onAwayTeamInserted(context, isEditEnabled, matchInfo),
+        onTap: () {
+          if(onAwayTeamInserted != null) {
+            onAwayTeamInserted!(context, isEditEnabled, matchInfo);
+          }
+        },
         enabled: isEditEnabled,
         text: matchInfo.getAwaySeasonTeamName()!,
         textAlign: TextAlign.center,
@@ -227,22 +234,22 @@ class MatchInfoWidget extends StatelessWidget {
             DateTime curDate = DateTime.now();
             await showDatePicker(
                 context: context,
-                initialDate: matchInfo.matchDate!,
+                initialDate: matchInfo.matchDate,
                 firstDate: DateTime.utc(2020),
                 lastDate: DateTime.utc(curDate.year + 1),
                 initialDatePickerMode: DatePickerMode.day,
                 helpText: "Seleziona la data della partita"
             ).then((date) {
-              if(date != null) {
+              if(date != null && onDateInserted != null) {
                 matchInfo.matchDate = date;
-                onDateInserted(date);
+                onDateInserted!(date);
               }
             });
           }
         },
         child: Container(
           child: DateWidget(
-            dateTime: match.matchDate!,
+            dateTime: match.matchDate,
             textStyle: textStyle,
             mainAxisAlignment: MainAxisAlignment.end,
           ),

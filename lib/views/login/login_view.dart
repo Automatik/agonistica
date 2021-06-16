@@ -5,7 +5,6 @@ library login_view;
 import 'package:agonistica/core/assets/image_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
-import 'package:agonistica/widgets/scaffolds/scroll_scaffold_widget.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:stacked/stacked.dart';
 import 'package:responsive_builder/responsive_builder.dart';

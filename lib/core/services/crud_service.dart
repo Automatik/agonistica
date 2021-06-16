@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:firebase_database/firebase_database.dart';

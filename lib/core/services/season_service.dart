@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
@@ -12,11 +10,11 @@ import 'package:firebase_database/firebase_database.dart';
 class SeasonService extends CrudService<Season> {
 
   SeasonService(DatabaseReference databaseReference)
-    : super(databaseReference, SeasonRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, SeasonRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   @override
   Future<void> saveItem(Season item) async {
-    bool seasonExists = await itemWithGivenYearsExists(item.beginYear!, item.endYear!);
+    bool seasonExists = await itemWithGivenYearsExists(item.beginYear, item.endYear);
     if(seasonExists) {
       throw IntegrityException("Season with beginYear ${item.beginYear} and "
           "endYear ${item.endYear} already exists");

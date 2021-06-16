@@ -15,14 +15,14 @@ import 'package:firebase_database/firebase_database.dart';
 class CategoryService extends CrudService<Category> {
 
   CategoryService(DatabaseReference databaseReference)
-      : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+      : super(databaseReference, CategoryRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<void> saveFollowedTeamCategory(Category category, String menuId, String seasonTeamId) async {
     await _saveCategoryToMenu(category, menuId);
 
     // Add category to the seasonTeam
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    await seasonTeamService.addCategoryToSeasonTeam(seasonTeamId, category.id!);
+    await seasonTeamService.addCategoryToSeasonTeam(seasonTeamId, category.id);
   }
 
   Future<void> saveFollowedPlayersCategory(Category category, String menuId) async {
@@ -45,15 +45,15 @@ class CategoryService extends CrudService<Category> {
       return [];
     }
     SeasonTeam seasonTeam = await seasonTeamService.getItemById(seasonTeamId);
-    if(seasonTeam.categoriesIds == null || seasonTeam.categoriesIds!.isEmpty)
+    if(seasonTeam.categoriesIds.isEmpty)
       return [];
-    return await getItemsByIds(seasonTeam.categoriesIds as List<String>);
+    return await getItemsByIds(seasonTeam.categoriesIds);
   }
 
   /// Get the current images used in the menu's categories
   Future<List<String>> getUsedCategoryImages(List<String> menuCategoriesIds) async {
     List<Category> categories = await getItemsByIds(menuCategoriesIds);
-    return categories.map((e) => e.imageFilename).toList() as List<String>;
+    return categories.map((e) => e.imageFilename).toList();
   }
 
   @override
@@ -71,7 +71,7 @@ class CategoryService extends CrudService<Category> {
     MenuService menuService = MenuService(databaseReference);
     Menu? menu = await menuService.findMenuWithCategory(categoryId);
     if(menu != null) {
-      await menuService.removeCategoryFromMenu(categoryId, menu.id!);
+      await menuService.removeCategoryFromMenu(categoryId, menu.id);
     }
 
     // Delete category

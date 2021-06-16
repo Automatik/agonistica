@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/guards/preconditions.dart';
 import 'package:agonistica/core/models/team.dart';
@@ -22,7 +20,7 @@ class TeamRepository extends CrudRepository<Team> {
     if(!teamAlreadyExists) {
       // if the team is not found, check first if the team's name is unique, so that
       // no other team is stored with the same name
-      bool isNameUnique = await isTeamNameUnique(team.name!);
+      bool isNameUnique = await isTeamNameUnique(team.name);
       if(!isNameUnique) {
         throw IntegrityException("The name of the new team already exists");
       }

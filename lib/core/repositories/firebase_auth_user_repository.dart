@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/models/firebase_auth_user.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
@@ -12,7 +10,7 @@ class FirebaseAuthUserRepository extends CrudRepository<FirebaseAuthUser> {
 
   @override
   String getItemId(FirebaseAuthUser item) {
-    return item.id!;
+    return item.id;
   }
 
   @override

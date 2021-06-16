@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/auth/auth_error.dart';
 import 'package:agonistica/core/auth/auth_result.dart';
@@ -25,7 +23,7 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
 
   Future<String> getAppUserIdFromFirebaseUser(String firebaseUserId) async {
     FirebaseAuthUser firebaseUser = await getItemById(firebaseUserId);
-    return firebaseUser.appUserId!;
+    return firebaseUser.appUserId;
   }
 
   Future<AuthResult> loginUser(String email, String password) async {
@@ -138,7 +136,7 @@ class FirebaseAuthUserService extends CrudService<FirebaseAuthUser> {
         password: password,
       );
 
-      await userCredential.user!.updateProfile(displayName: DbUtils.getDisplayNameFromEmail(email));
+      await userCredential.user!.updateDisplayName(DbUtils.getDisplayNameFromEmail(email));
       await userCredential.user!.reload();
       _firebaseUser = userCredential;
       // verify email

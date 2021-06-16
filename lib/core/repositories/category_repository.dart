@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
@@ -22,7 +20,7 @@ class CategoryRepository extends CrudRepository<Category>{
 
   @override
   String getItemId(Category item) {
-    return item.id!;
+    return item.id;
   }
 
 }

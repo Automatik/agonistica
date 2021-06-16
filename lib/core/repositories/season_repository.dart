@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
@@ -22,7 +20,7 @@ class SeasonRepository extends CrudRepository<Season> {
 
   @override
   String getItemId(Season item) {
-    return item.id!;
+    return item.id;
   }
 
 }

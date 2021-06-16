@@ -1,19 +1,14 @@
 // @dart=2.9
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
-import 'package:agonistica/core/arguments/categories_view_arguments.dart';
-import 'package:agonistica/core/assets/menu_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/menu.dart';
-import 'package:agonistica/core/models/season_team.dart';
-import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/app_services/base_scaffold_service.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/pojo/home_menus.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_strings.dart';
-import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';

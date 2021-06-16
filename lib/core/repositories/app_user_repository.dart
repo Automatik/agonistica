@@ -12,7 +12,7 @@ class AppUserRepository extends CrudRepository<AppUser> {
 
   @override
   String getItemId(AppUser item) {
-    return item.id!;
+    return item.id;
   }
 
   @override

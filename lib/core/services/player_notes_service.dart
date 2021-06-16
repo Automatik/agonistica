@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/player_match_notes.dart';
@@ -12,7 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 class PlayerNotesService extends CrudService<PlayerMatchNotes> {
 
   PlayerNotesService(DatabaseReference databaseReference)
-    : super(databaseReference, PlayerNotesRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, PlayerNotesRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 
@@ -21,17 +19,17 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
     await super.saveItem(playerMatchNotes);
 
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId!);
-    await seasonPlayerService.addPlayerMatchNotesIdToSeasonPlayer(playerMatchNotes.id!, seasonPlayer);
+    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId);
+    await seasonPlayerService.addPlayerMatchNotesIdToSeasonPlayer(playerMatchNotes.id, seasonPlayer);
   }
 
   // GET
 
   /// Download the player's notes
   Future<List<PlayerMatchNotes>> getPlayerNotesByPlayer(SeasonPlayer? seasonPlayer) async {
-    if(seasonPlayer == null || seasonPlayer.playerMatchNotesIds == null || seasonPlayer.playerMatchNotesIds!.isEmpty)
+    if(seasonPlayer == null || seasonPlayer.playerMatchNotesIds.isEmpty)
       return Future.value(List<PlayerMatchNotes>.empty());
-    List<PlayerMatchNotes> playerMatchNotes = await getItemsByIds(seasonPlayer.playerMatchNotesIds as List<String>);
+    List<PlayerMatchNotes> playerMatchNotes = await getItemsByIds(seasonPlayer.playerMatchNotesIds);
     return playerMatchNotes;
   }
 
@@ -69,7 +67,7 @@ class PlayerNotesService extends CrudService<PlayerMatchNotes> {
     PlayerMatchNotes playerMatchNotes = await getItemById(playerMatchNotesId);
 
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId!);
+    SeasonPlayer seasonPlayer = await seasonPlayerService.getItemById(playerMatchNotes.seasonPlayerId);
     await seasonPlayerService.removePlayerMatchNotesIdFromSeasonPlayer(playerMatchNotesId, seasonPlayer);
 
     await super.deleteItem(playerMatchNotesId);

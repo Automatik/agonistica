@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/followed_teams.dart';
@@ -11,7 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 class FollowedTeamsService extends CrudService<FollowedTeams> {
 
   FollowedTeamsService(DatabaseReference databaseReference)
-    : super(databaseReference, FollowedTeamsRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, FollowedTeamsRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
 
   @override
@@ -21,7 +19,7 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
     if(isSameObject) {
       await super.saveItem(followedTeams);
     } else {
-      List<String> mergedTeamsIds = DbUtils.mergeLists(existingFollowedTeams.teamsIds!, followedTeams.teamsIds!) as List<String>;
+      List<String> mergedTeamsIds = DbUtils.mergeLists(existingFollowedTeams.teamsIds, followedTeams.teamsIds) as List<String>;
       existingFollowedTeams.teamsIds = mergedTeamsIds;
       await super.saveItem(existingFollowedTeams);
     }
@@ -29,7 +27,7 @@ class FollowedTeamsService extends CrudService<FollowedTeams> {
 
   Future<bool> isTeamFollowed(String teamId) async {
     FollowedTeams followedTeams = await getFollowedTeams();
-    return followedTeams.teamsIds!.contains(teamId);
+    return followedTeams.teamsIds.contains(teamId);
   }
 
   Future<void> followTeam(String teamId) async {

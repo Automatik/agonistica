@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
@@ -15,10 +13,10 @@ import 'package:firebase_database/firebase_database.dart';
 class PlayerService extends CrudService<Player> {
 
   PlayerService(DatabaseReference databaseReference)
-    : super(databaseReference, PlayerRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, PlayerRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<void> createPlayerFromSeasonPlayer(SeasonPlayer seasonPlayer) async {
-    bool playerExists = await itemExists(seasonPlayer.playerId!);
+    bool playerExists = await itemExists(seasonPlayer.playerId);
     if(!playerExists) {
       if(seasonPlayer.player == null) {
         throw NotFoundException("Player with id ${seasonPlayer.playerId} does not "
@@ -29,7 +27,7 @@ class PlayerService extends CrudService<Player> {
         throw IntegrityException("seasonPlayer.player.id must be equal to seasonPlayer.playerId");
       }
       Player player = seasonPlayer.player!;
-      player.addSeasonPlayer(seasonPlayer.id!);
+      player.addSeasonPlayer(seasonPlayer.id);
       await super.saveItem(player);
     }
   }
@@ -40,7 +38,7 @@ class PlayerService extends CrudService<Player> {
 
     // Delete season players for this player
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
-    for(String seasonPlayerId in player.seasonPlayersIds as Iterable<String>) {
+    for(String seasonPlayerId in player.seasonPlayersIds) {
       await seasonPlayerService.deleteItem(seasonPlayerId);
     }
 
@@ -58,7 +56,7 @@ class PlayerService extends CrudService<Player> {
     List<Player> players = await getAllItems();
     SeasonPlayerService seasonPlayerService = SeasonPlayerService(databaseReference);
     players.forEach((p) async {
-      List<SeasonPlayer> seasonPlayers = await seasonPlayerService.getItemsByIds(p.seasonPlayersIds as List<String>);
+      List<SeasonPlayer> seasonPlayers = await seasonPlayerService.getItemsByIds(p.seasonPlayersIds);
       await seasonPlayerService.deleteSeasonPlayersInCategory(seasonPlayers, categoryId);
       // TODO Delete player if there are no more seasonPlayers?
       // if(seasonPlayers.length <= 1) {

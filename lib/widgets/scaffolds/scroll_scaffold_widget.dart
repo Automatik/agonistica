@@ -47,7 +47,7 @@ class _ScrollScaffoldWidgetState extends BaseScaffoldWidgetState<ScrollScaffoldW
                       ),
                       child: BaseWidget(
                         parentSizingInformation: sizingInfo,
-                        builder: widget.childBuilder!,
+                        builder: widget.childBuilder,
                       ),
                     ),
                   );

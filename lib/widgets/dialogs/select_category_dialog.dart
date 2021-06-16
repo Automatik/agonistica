@@ -47,7 +47,7 @@ class SelectCategoryDialog {
                     onTap: () async => await onSelect(cat),
                     dense: true,
                     title: Text(
-                      cat.name!,
+                      cat.name,
                       style: TextStyle(
                         fontSize: 18,
                       ),

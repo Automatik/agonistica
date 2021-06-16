@@ -282,7 +282,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   /// Replace team players with an empty player
   void removeTeamPlayersFromMatch(Match match, String seasonTeamId) {
-    List<MatchPlayerData> newPlayerDataList = List();
+    List<MatchPlayerData> newPlayerDataList = List.empty();
     match.playersData.forEach((p) {
       if(p.seasonTeamId == seasonTeamId) {
         p = MatchPlayerData.empty(seasonTeamId, isRegular: p.isRegular);

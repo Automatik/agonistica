@@ -1,7 +1,6 @@
 // @dart=2.9
 
 import 'package:agonistica/core/assets/icon_assets.dart';
-import 'package:agonistica/core/models/player.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';

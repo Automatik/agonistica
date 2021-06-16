@@ -15,7 +15,6 @@ import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/core/utils/input_validation.dart';
 import 'package:agonistica/core/utils/my_snackbar.dart';
 import 'package:agonistica/views/roster/stat_element.dart';
@@ -24,7 +23,6 @@ import 'package:agonistica/widgets/text_styles/detail_view_sub_header_text_style
 import 'package:agonistica/widgets/text_styles/detail_view_subtitle_text_style.dart';
 import 'package:agonistica/widgets/text_styles/detail_view_title_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlayerDetailLayout extends StatefulWidget {

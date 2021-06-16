@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
@@ -22,7 +20,7 @@ class MenuRepository extends CrudRepository<Menu> {
 
   @override
   String getItemId(Menu item) {
-    return item.id!;
+    return item.id;
   }
 
 }

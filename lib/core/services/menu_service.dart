@@ -10,11 +10,11 @@ import 'package:firebase_database/firebase_database.dart';
 class MenuService extends CrudService<Menu> {
 
   MenuService(DatabaseReference databaseReference)
-    : super(databaseReference, MenuRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, MenuRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   Future<void> addCategoryToMenu(Category category, String menuId) async {
     Menu menu = await getItemById(menuId);
-    menu.addCategory(category.id!);
+    menu.addCategory(category.id);
     await saveItem(menu);
   }
 
@@ -55,7 +55,7 @@ class MenuService extends CrudService<Menu> {
   /// Get the current images used in the user's menus
   Future<List<String>> getUsedMenuImages() async {
     List<Menu> menus = await getAllItems();
-    return menus.map((e) => e.imageFilename).toList() as List<String>;
+    return menus.map((e) => e.imageFilename).toList();
   }
 
   @override

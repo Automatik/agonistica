@@ -93,7 +93,7 @@ class SeasonPlayer {
     // New Empty Player
     Player player = Player.empty();
     // Create new empty SeasonPlayer
-    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId!, category.id);
+    SeasonPlayer seasonPlayer = SeasonPlayer.empty(player.id, seasonTeam.id, seasonTeam.seasonId, category.id);
     // Set temporary values
     seasonPlayer.setCategory(category);
     seasonPlayer.setSeasonTeam(seasonTeam);

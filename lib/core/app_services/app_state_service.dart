@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/app_user.dart';
@@ -45,7 +43,7 @@ class AppStateService {
     if(currentSeasonTeamExists) {
       // Get the current season team
       seasonTeam = await _databaseService.seasonTeamService
-          .getCurrentSeasonTeamFromIds(team.seasonTeamsIds!);
+          .getCurrentSeasonTeamFromIds(team.seasonTeamsIds);
     } else {
       // Create the current season team and save it
       Season season = await _databaseService.seasonService.getCurrentSeason();
@@ -54,9 +52,9 @@ class AppStateService {
     }
     seasonTeam.team = team;
     selectedSeasonTeam = seasonTeam;
-    selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId!);
+    selectedSeason = await _databaseService.seasonService.getItemById(seasonTeam.seasonId);
     // Get season team's categories
-    List<String> categoriesIds = seasonTeam.categoriesIds!;
+    List<String> categoriesIds = seasonTeam.categoriesIds;
     _navigateToCategoriesView(context, categoriesIds);
   }
 

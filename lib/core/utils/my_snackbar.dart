@@ -9,7 +9,7 @@ class MySnackBar {
       content: Text(text,),
       duration: Duration(milliseconds: duration),
     );
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 }

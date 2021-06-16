@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,9 +13,9 @@ class PrefsUtils {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool(isRegisteredKey, true);
       prefs.setBool(isLoggedKey, false);
-      prefs.setString(loginUserIdKey, appUser.id!);
-      prefs.setString(loginEmailKey, appUser.email!);
-      prefs.setBool(isVerifiedKey, appUser.isEmailVerified!);
+      prefs.setString(loginUserIdKey, appUser.id);
+      prefs.setString(loginEmailKey, appUser.email);
+      prefs.setBool(isVerifiedKey, appUser.isEmailVerified);
     });
   }
 
@@ -25,9 +23,9 @@ class PrefsUtils {
     SharedPreferences.getInstance().then((prefs) {
       prefs.setBool(isRegisteredKey, true);
       prefs.setBool(isLoggedKey, true);
-      prefs.setString(loginUserIdKey, appUser.id!);
-      prefs.setString(loginEmailKey, appUser.email!);
-      prefs.setBool(isVerifiedKey, appUser.isEmailVerified!);
+      prefs.setString(loginUserIdKey, appUser.id);
+      prefs.setString(loginEmailKey, appUser.email);
+      prefs.setBool(isVerifiedKey, appUser.isEmailVerified);
     });
   }
 

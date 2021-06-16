@@ -1,5 +1,4 @@
 import 'package:agonistica/core/guards/preconditions.dart';
-import 'package:agonistica/core/utils/db_utils.dart';
 
 class AppUser {
 

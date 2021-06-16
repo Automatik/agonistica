@@ -3,7 +3,6 @@
 library categories_view;
 
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
-import 'package:agonistica/core/assets/menu_assets.dart';
 import 'package:agonistica/core/utils/my_strings.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/widgets/app_bars/add_action_platform_app_bar.dart';

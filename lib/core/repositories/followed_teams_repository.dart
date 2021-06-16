@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
@@ -22,7 +20,7 @@ class FollowedTeamsRepository extends CrudRepository<FollowedTeams> {
 
   @override
   String getItemId(FollowedTeams item) {
-    return item.id!;
+    return item.id;
   }
 
 }

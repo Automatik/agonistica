@@ -1,9 +1,5 @@
-
-
-import 'package:agonistica/core/assets/team_assets.dart';
 import 'package:agonistica/core/models/team.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
-import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:agonistica/widgets/common/date_widget.dart';
 import 'package:agonistica/widgets/images/svg_image.dart';
 import 'package:agonistica/widgets/reviews/base_review.dart';
@@ -20,21 +16,16 @@ class MatchReview extends BaseReview {
   final DateTime matchDate;
 
   MatchReview({
-    /*required*/ required this.team1,
-    /*required*/ required this.team2,
-    /*required*/ required this.result,
-    /*required*/ required this.leagueMatch,
-    /*required*/ required this.matchDate,
-    /*required*/ required width,
+    required this.team1,
+    required this.team2,
+    required this.result,
+    required this.leagueMatch,
+    required this.matchDate,
+    required width,
     minHeight = 50.0,
     onTap,
     onSettingsTap,
-  }) : assert(team1 != null),
-        assert(team2 != null),
-        assert(result != null),
-        assert(leagueMatch != null),
-        assert(matchDate != null),
-        super(width: width, minHeight: minHeight, onTap: onTap, onSettingsTap: onSettingsTap);
+  }) : super(width: width, minHeight: minHeight, onTap: onTap, onSettingsTap: onSettingsTap);
 
 
   @override
@@ -51,11 +42,11 @@ class MatchReview extends BaseReview {
   Widget mainRow() {
     return Row(
       children: [
-        homeTeamWidget(team1.imageFilename!),
-        teamNameWidget(team1.name!),
+        homeTeamWidget(team1.imageFilename),
+        teamNameWidget(team1.name),
         resultWidget(result),
-        teamNameWidget(team2.name!),
-        awayTeamWidget(team2.imageFilename!),
+        teamNameWidget(team2.name),
+        awayTeamWidget(team2.imageFilename),
       ],
     );
   }

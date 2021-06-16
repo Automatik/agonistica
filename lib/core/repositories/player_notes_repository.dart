@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/models/player_match_notes.dart';
 import 'package:agonistica/core/repositories/crud_repository.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
@@ -22,7 +20,7 @@ class PlayerNotesRepository extends CrudRepository<PlayerMatchNotes> {
 
   @override
   String getItemId(PlayerMatchNotes item) {
-    return item.id!;
+    return item.id;
   }
 
 }

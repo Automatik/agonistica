@@ -1,5 +1,3 @@
-
-
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:agonistica/widgets/common/date_widget.dart';
@@ -9,25 +7,20 @@ import 'package:agonistica/widgets/text_styles/base_review_subtitle_text_style.d
 import 'package:agonistica/widgets/text_styles/base_review_team_text_style.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/utils/my_date_utils.dart';
-
 class PlayerReview extends BaseReview{
 
   final String name, role;
   final DateTime birthDay;
 
   PlayerReview({
-    /*required*/ required this.name,
-    /*required*/ required this.role,
-    /*required*/ required this.birthDay,
-    /*required*/ required width,
+    required this.name,
+    required this.role,
+    required this.birthDay,
+    required width,
     minHeight = 50.0,
     onTap,
     onSettingsTap
-  }) : assert(name != null),
-        assert(role != null),
-        assert(birthDay != null),
-        super(width: width, minHeight: minHeight, onTap: onTap, onSettingsTap: onSettingsTap);
+  }) : super(width: width, minHeight: minHeight, onTap: onTap, onSettingsTap: onSettingsTap);
 
   @override
   Widget content() {

@@ -1,10 +1,7 @@
-
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/exceptions/not_found_exception.dart';
-import 'package:agonistica/core/models/followed_teams.dart';
 import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
@@ -18,12 +15,12 @@ import 'package:firebase_database/firebase_database.dart';
 class TeamService extends CrudService<Team> {
 
   TeamService(DatabaseReference databaseReference)
-    : super(databaseReference, TeamRepository(databaseReference, locator<AppStateService>().selectedAppUser!.id));
+    : super(databaseReference, TeamRepository(databaseReference, locator<AppStateService>().selectedAppUser.id));
 
   // SET
 
   Future<void> createTeamFromSeasonTeam(SeasonTeam seasonTeam) async {
-    bool teamExists = await itemExists(seasonTeam.teamId!);
+    bool teamExists = await itemExists(seasonTeam.teamId);
     if(!teamExists) {
       if(seasonTeam.team == null) {
         throw NotFoundException("Team with id ${seasonTeam.teamId} does not "
@@ -63,7 +60,7 @@ class TeamService extends CrudService<Team> {
 
   Future<List<String>> getUsedTeamImages() async {
     List<Team> teams = await getAllItems();
-    return teams.map((e) => e.imageFilename).toList() as List<String>;
+    return teams.map((e) => e.imageFilename).toList();
   }
 
   // DELETE
@@ -74,7 +71,7 @@ class TeamService extends CrudService<Team> {
 
     // Delete season teams for this team
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-    for(String seasonTeamId in team.seasonTeamsIds as Iterable<String>) {
+    for(String seasonTeamId in team.seasonTeamsIds) {
       await seasonTeamService.deleteItem(seasonTeamId);
     }
 
@@ -89,7 +86,7 @@ class TeamService extends CrudService<Team> {
       Menu? menu = await menuService.findMenuWithTeam(teamId);
       bool menuExists = menu != null;
       if(menuExists) {
-        await menuService.deleteItem(menu.id!);
+        await menuService.deleteItem(menu.id);
       }
     }
 
@@ -101,7 +98,7 @@ class TeamService extends CrudService<Team> {
     List<Team> teams = await getAllItems();
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
     teams.forEach((t) async {
-      List<SeasonTeam> seasonTeams = await seasonTeamService.getItemsByIds(t.seasonTeamsIds as List<String>);
+      List<SeasonTeam> seasonTeams = await seasonTeamService.getItemsByIds(t.seasonTeamsIds);
       await seasonTeamService.deleteSeasonTeamsInCategory(seasonTeams, categoryId);
       // TODO Delete team if there are no more seasonTeams?
       // if(seasonTeams.length <= 1) {

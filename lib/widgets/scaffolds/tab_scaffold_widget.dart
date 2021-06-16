@@ -22,7 +22,7 @@ class TabScaffoldWidget extends BaseScaffoldWidget {
   final double iconsSize = 24;
 
   TabScaffoldWidget({
-    required title,
+    title = defaultAppBarTitle,
     this.initialIndex,
     platformAppBar,
     childBuilder,
@@ -66,7 +66,7 @@ class _TabScaffoldWidgetState extends BaseScaffoldWidgetState<TabScaffoldWidget>
                 gradient: AppColor.getBackground(),
               ),
               child: BaseWidget(
-                builder: widget.childBuilder!,
+                builder: widget.childBuilder,
               ),
             );
           },

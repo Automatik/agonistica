@@ -106,11 +106,11 @@ class _PlayerItemEditDialogFormState extends State<_PlayerItemDialogForm> {
 
     nameTextEditingController.text = initializeName(widget.matchPlayerData.name);
     surnameTextEditingController.text = initializeSurname(widget.matchPlayerData.surname);
-    int shirt = widget.matchPlayerData.shirtNumber ?? 1;
+    int shirt = widget.matchPlayerData.shirtNumber;
     shirtTextEditingController.text = "$shirt";
-    goals = widget.matchPlayerData.numGoals ?? 0;
-    card = widget.matchPlayerData.card ?? MatchPlayerData.CARD_NONE;
-    substitution = widget.matchPlayerData.substitution ?? MatchPlayerData.SUBSTITUTION_NONE;
+    goals = widget.matchPlayerData.numGoals;
+    card = widget.matchPlayerData.card;
+    substitution = widget.matchPlayerData.substitution;
   }
 
   String initializeName(String? name) {

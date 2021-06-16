@@ -1,4 +1,3 @@
-import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
 class DrawerHeaderStyle extends TextStyle {
