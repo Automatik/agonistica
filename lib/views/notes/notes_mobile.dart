@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of notes_view;
 
 class _NotesMobile extends StatefulWidget {
@@ -19,11 +17,11 @@ class _NotesMobileState extends State<_NotesMobile> {
   final double topMargin = 10;
   final double bottomMargin = 10;
 
-  Match tempMatch;
-  PlayerMatchNotes tempNotes;
-  bool isEditEnabled;
+  late Match tempMatch;
+  late PlayerMatchNotes tempNotes;
+  late bool isEditEnabled;
 
-  TextEditingController notesController;
+  late TextEditingController notesController;
 
   @override
   void initState() {
@@ -37,7 +35,7 @@ class _NotesMobileState extends State<_NotesMobile> {
   }
 
   void initializeState() {
-    notesController.text = tempNotes.notes == null ? "" : "${tempNotes.notes}";
+    notesController.text = "${tempNotes.notes}";
   }
 
   Future<void> onSave() async {
@@ -53,7 +51,7 @@ class _NotesMobileState extends State<_NotesMobile> {
       platformAppBar: getPlatformAppBar(context),
       onBottomItemChanged: (index) => widget.viewModel.onBottomBarItemChanged(context, index),
       childBuilder: (childContext, sizingInformation, parentSizingInformation) {
-        double itemsWidth = 1 * sizingInformation.screenSize.width;
+        double itemsWidth = 1 * sizingInformation.screenSize.width as double;
 
         return SingleChildScrollView(
           scrollDirection: Axis.vertical,

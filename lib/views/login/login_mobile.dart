@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of login_view;
 
 class _LoginMobile extends StatelessWidget {
@@ -33,8 +31,8 @@ class _LoginMobile extends StatelessWidget {
       onLogin: (data) => viewModel.loginUser(data),
       onRecoverPassword: (name) => viewModel.recoverPassword(name),
       onSubmitAnimationCompleted: () => viewModel.onSubmitAnimationCompleted(context),
-      userValidator: (email) => InputValidation.validateEmail(email),
-      passwordValidator: (psw) => InputValidation.validatePassword(psw),
+      userValidator: (email) => InputValidation.validateEmail(email!),
+      passwordValidator: (psw) => InputValidation.validatePassword(psw!),
       messages: LoginMessages(
         userHint: "Email",
         passwordHint: "Password",

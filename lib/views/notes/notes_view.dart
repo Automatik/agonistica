@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library notes_view;
 
 import 'package:agonistica/core/arguments/notes_view_arguments.dart';
@@ -26,7 +24,7 @@ class NotesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final NotesViewArguments args = ModalRoute.of(context).settings.arguments;
+    final NotesViewArguments args = ModalRoute.of(context)!.settings.arguments as NotesViewArguments;
 
     return ViewModelBuilder<NotesViewModel>.reactive(
       viewModelBuilder: () => NotesViewModel(args.notes, args.match, args.playerName, args.playerSurname),

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
@@ -25,14 +23,14 @@ class LoginViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('LoginViewModel');
 
-  final _appStateService = locator<AppStateService>();
-  final _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
-  int currentAction;
+  late int currentAction;
 
   LoginViewModel();
 
-  Future<String> loginUser(LoginData loginData) async {
+  Future<String?> loginUser(LoginData loginData) async {
     currentAction = LOGIN_ACTION;
     try {
       AuthResult authResult = await _databaseService.firebaseAuthUserService
@@ -42,7 +40,7 @@ class LoginViewModel extends BaseViewModel {
       }
       // Everything is ok
       _logger.d('User is signed in and email is verified!');
-      FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser;
+      FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser!;
 
       bool appUserExists = await _databaseService.appUserService.itemExists(
           firebaseAuthUser.appUserId);
@@ -70,7 +68,7 @@ class LoginViewModel extends BaseViewModel {
     }
   }
 
-  Future<String> signUpUser(LoginData loginData) async {
+  Future<String?> signUpUser(LoginData loginData) async {
     currentAction = SIGN_UP_ACTION;
     try {
 
@@ -80,7 +78,7 @@ class LoginViewModel extends BaseViewModel {
       }
       // Everything is ok
       _logger.d('User is signed in and waiting for email verification!');
-      FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser;
+      FirebaseAuthUser firebaseAuthUser = authResult.firebaseAuthUser!;
 
       AppUser appUser = AppUser(firebaseAuthUser.appUserId, loginData.name);
 
@@ -99,7 +97,7 @@ class LoginViewModel extends BaseViewModel {
     }
   }
 
-  Future<String> recoverPassword(String name) async {
+  Future<String?> recoverPassword(String name) async {
     AuthResult authResult = await _databaseService.firebaseAuthUserService.resetUserPassword(name);
     if(!authResult.isOk) {
       return authResult.errorMessage;

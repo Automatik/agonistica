@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class PlayerItemsEmptyRow extends StatelessWidget {
 
-  final Function onTap;
+  final Function() onTap;
 
   final double iconSize = 24;
 

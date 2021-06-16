@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/arguments/team_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -12,7 +10,7 @@ import 'package:stacked/stacked.dart';
 
 class NotesViewModel extends BaseViewModel {
 
-  final _databaseService = locator<DatabaseService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
   final PlayerMatchNotes notes;
   final Match match;
