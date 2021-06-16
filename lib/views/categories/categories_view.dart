@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library categories_view;
 
 import 'package:agonistica/core/arguments/categories_view_arguments.dart';
@@ -29,7 +27,7 @@ class CategoriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final CategoriesViewArguments args = ModalRoute.of(context).settings.arguments;
+    final CategoriesViewArguments args = ModalRoute.of(context)!.settings.arguments as CategoriesViewArguments;
 
     return ViewModelBuilder<CategoriesViewModel>.reactive(
       viewModelBuilder: () => CategoriesViewModel(args.categoriesIds),

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:collection';
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
@@ -24,15 +22,15 @@ import 'package:stacked/stacked.dart';
 
 class CategoriesViewModel extends BaseViewModel {
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
-  final _databaseService = locator<DatabaseService>();
-  final _appStateService = locator<AppStateService>();
+  final BaseScaffoldService _baseScaffoldService = locator<BaseScaffoldService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
 
-  Menu _currentMenu;
-  Season _currentSeasonSelected;
-  List<SeasonTeam> _seasonTeams;
-  SplayTreeSet<Season> _sortedSeasons;
-  SplayTreeSet<Category> _sortedCategories;
+  late Menu _currentMenu;
+  late Season _currentSeasonSelected;
+  late List<SeasonTeam> _seasonTeams;
+  late SplayTreeSet<Season> _sortedSeasons;
+  late SplayTreeSet<Category> _sortedCategories;
 
   CategoriesViewModel(List<String> menuCategoriesIds) {
     _seasonTeams = [];
@@ -62,7 +60,7 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> _getTeamSeasons(Menu menu) async {
-    Team team = await _databaseService.teamService.getItemById(menu.teamId);
+    Team team = await _databaseService.teamService.getItemById(menu.teamId!);
     _seasonTeams = await _databaseService.seasonTeamService.getItemsByIds(team.seasonTeamsIds);
     List<String> teamSeasonsIds = _seasonTeams.map((e) => e.seasonId).toList();
     List<Season> teamSeasons = await _databaseService.seasonService.getUniqueSeasonsFromIds(teamSeasonsIds);
@@ -92,7 +90,7 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> _getPlayersCategories(Menu menu) async {
-    List<Category> menuCategories = await _databaseService.categoryService.getItemsByIds(menu.categoriesIds);
+    List<Category> menuCategories = await _databaseService.categoryService.getItemsByIds(menu.categoriesIds!);
     _sortedCategories.addAll(menuCategories);
   }
 
@@ -104,7 +102,7 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   String getAppBarTitle() {
-    return _baseScaffoldService.teamSelected;
+    return _baseScaffoldService.teamSelected!;
   }
 
   int getCategoriesCount() {
@@ -172,14 +170,14 @@ class CategoriesViewModel extends BaseViewModel {
   Future<void> onCategoryLongTap(int index) async {
     Category category = _sortedCategories.elementAt(index);
     await _databaseService.categoryService.deleteItem(category.id);
-    _appStateService.selectedMenu.categoriesIds.remove(category.id);
+    _appStateService.selectedMenu.categoriesIds!.remove(category.id);
     // update view
     notifyListeners();
   }
 
   /// Check if no other category exist with this name (within that menu)
-  String validateNewCategory(String categoryName) {
-    String validationResult = InputValidation.validateCategoryName(categoryName);
+  String? validateNewCategory(String categoryName) {
+    String? validationResult = InputValidation.validateCategoryName(categoryName);
     if(validationResult != null) {
       // not valid
       return validationResult;
@@ -202,7 +200,7 @@ class CategoriesViewModel extends BaseViewModel {
       category = await _databaseService.createNewCategory(categoryName, seasonTeam.categoriesIds);
       await _databaseService.categoryService.saveFollowedTeamCategory(category, _currentMenu.id, seasonTeam.id);
     } else {
-      category = await _databaseService.createNewCategory(categoryName, _currentMenu.categoriesIds);
+      category = await _databaseService.createNewCategory(categoryName, _currentMenu.categoriesIds!);
       await _databaseService.categoryService.saveFollowedPlayersCategory(category, _currentMenu.id);
     }
     _sortedCategories.add(category);

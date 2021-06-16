@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of categories_view;
 
 class _CategoriesMobile extends StatelessWidget {
@@ -109,7 +107,7 @@ class _CategoriesMobile extends StatelessWidget {
     );
   }
 
-  Widget emptyMenu(double imageWidth, Function onEmptyTap) {
+  Widget emptyMenu(double imageWidth, Function() onEmptyTap) {
     return EmptyMenuCard(
       title: EMPTY_TITLE_CATEGORY,
       width: imageWidth,
@@ -154,11 +152,11 @@ class _CategoriesMobile extends StatelessWidget {
 
   Future<void> onItemLongPress(BuildContext context, Offset offset, int index) async {
     final popupMenu = CategoryViewPopupMenu(offset: offset);
-    int value = await popupMenu.showPopupMenu(context);
+    int? value = await popupMenu.showPopupMenu(context);
     selectLongClickAction(context, value, index);
   }
 
-  void selectLongClickAction(BuildContext context, int value, int index) {
+  void selectLongClickAction(BuildContext context, int? value, int index) {
     switch(value) {
       case CategoryViewPopupMenu.DELETE_CATEGORY: askConfirmDialog(context, index); break;
       default: return;

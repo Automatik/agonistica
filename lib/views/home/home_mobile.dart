@@ -118,7 +118,7 @@ class _HomeMobile extends StatelessWidget {
     return menuBuilder(menu.name, menu.imageFilename, width, () => viewModel.onFollowedPlayerMenuTap(context, index), axis);
   }
 
-  Widget menuBuilder(String title, String imageAsset, double width, Function onTap, Axis axis) {
+  Widget menuBuilder(String title, String imageAsset, double width, Function() onTap, Axis axis) {
     bool isPortrait = axis == Axis.vertical;
     return ImageMenuCard(
       onTap: onTap,
@@ -162,7 +162,7 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget emptyMenu(String emptyTitle, double imageWidth, Function onEmptyTap) {
+  Widget emptyMenu(String emptyTitle, double imageWidth, Function() onEmptyTap) {
     return EmptyMenuCard(
       title: emptyTitle,
       width: imageWidth,
