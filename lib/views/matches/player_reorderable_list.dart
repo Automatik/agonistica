@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/views/matches/player_item.dart';
@@ -19,16 +17,16 @@ class PlayerReorderableList extends StatelessWidget {
   final Function(MatchPlayerData) onInsertNotesCallback;
 
   PlayerReorderableList({
-    @required this.isEditEnabled,
-    @required this.isLeftOrientation,
-    @required this.players,
-    @required this.onReorder,
-    @required this.onPlayerValidation,
-    @required this.onPlayerSuggestionCallback,
-    @required this.onSaveCallback,
-    @required this.onViewPlayerCardCallback,
-    @required this.onDeleteCallback,
-    @required this.onInsertNotesCallback,
+    required this.isEditEnabled,
+    required this.isLeftOrientation,
+    required this.players,
+    required this.onReorder,
+    required this.onPlayerValidation,
+    required this.onPlayerSuggestionCallback,
+    required this.onSaveCallback,
+    required this.onViewPlayerCardCallback,
+    required this.onDeleteCallback,
+    required this.onInsertNotesCallback,
   });
 
   @override

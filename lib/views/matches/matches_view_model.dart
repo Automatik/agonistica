@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/notes_view_arguments.dart';
 import 'package:agonistica/core/arguments/roster_view_arguments.dart';
@@ -27,12 +25,12 @@ class MatchesViewModel extends BaseViewModel {
   Match match;
   final Function(Match) onMatchDetailUpdate;
 
-  final _databaseService = locator<DatabaseService>();
-  final _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
 
-  List<SeasonTeam> seasonTeams;
+  late List<SeasonTeam> seasonTeams;
 
-  Map<String, List<SeasonPlayer>> teamsPlayersMap;
+  late Map<String, List<SeasonPlayer>> teamsPlayersMap;
 
   MatchesViewModel(this.isNewMatch, this.match, this.onMatchDetailUpdate){
     seasonTeams = [];
@@ -56,9 +54,9 @@ class MatchesViewModel extends BaseViewModel {
   }
 
   List<SeasonTeam> suggestTeamsByPattern(String pattern) {
-    if(pattern == null || pattern.isEmpty)
+    if(pattern.isEmpty)
       return seasonTeams;
-    return seasonTeams.where((st) => st.getTeamName().startsWith(pattern));
+    return seasonTeams.where((st) => st.getTeamName()!.startsWith(pattern)).toList();
   }
 
   Future<void> loadTeamPlayers(String seasonTeamId) async {
@@ -72,17 +70,17 @@ class MatchesViewModel extends BaseViewModel {
   }
 
   List<SeasonPlayer> suggestPlayersByPattern(String namePattern, String surnamePattern, String seasonTeamId) {
-    List<SeasonPlayer> teamSeasonPlayers = teamsPlayersMap[seasonTeamId];
+    List<SeasonPlayer>? teamSeasonPlayers = teamsPlayersMap[seasonTeamId];
     if(teamSeasonPlayers == null)
       return [];
     if(namePattern.isEmpty) {
-      return teamSeasonPlayers.where((sp) => sp.getPlayerSurname().startsWith(surnamePattern)).toList();
+      return teamSeasonPlayers.where((sp) => sp.getPlayerSurname()!.startsWith(surnamePattern)).toList();
     }
     if(surnamePattern.isEmpty) {
-      return teamSeasonPlayers.where((sp) => sp.getPlayerName().startsWith(namePattern)).toList();
+      return teamSeasonPlayers.where((sp) => sp.getPlayerName()!.startsWith(namePattern)).toList();
     }
     return teamSeasonPlayers.where((sp) {
-      return sp.getPlayerName().startsWith(namePattern) && sp.getPlayerSurname().startsWith(surnamePattern);
+      return sp.getPlayerName()!.startsWith(namePattern) && sp.getPlayerSurname()!.startsWith(surnamePattern);
     }).toList();
   }
 
@@ -105,19 +103,19 @@ class MatchesViewModel extends BaseViewModel {
   Future<void> viewPlayerCard(BuildContext context, String seasonPlayerId) async {
     Preconditions.requireArgumentStringNotNull(seasonPlayerId);
 
-    SeasonPlayer seasonPlayer = await _databaseService.seasonPlayerService.getItemById(seasonPlayerId);
-    seasonPlayer = await _databaseService.seasonPlayerService.completeSeasonPlayerWithMissingInfo(seasonPlayer);
-    bool playerExists = seasonPlayer != null;
+    bool playerExists = await _databaseService.seasonPlayerService.itemExists(seasonPlayerId);
     if(playerExists) {
+      SeasonPlayer seasonPlayer = await _databaseService.seasonPlayerService.getItemById(seasonPlayerId);
+      seasonPlayer = await _databaseService.seasonPlayerService.completeSeasonPlayerWithMissingInfo(seasonPlayer);
       bool isNewPlayer = false;
       NavUtils.navToRosterView(context, RosterViewArguments(isNewPlayer, seasonPlayer, null));
     }
   }
 
   Future<void> viewNotesCard(BuildContext context, Match match, MatchPlayerData matchPlayerData) async {
-    PlayerMatchNotes notes = await _databaseService.playerNotesService.getPlayerMatchNotesByPlayer(matchPlayerData.seasonPlayerId, match.id);
+    PlayerMatchNotes? notes = await _databaseService.playerNotesService.getPlayerMatchNotesByPlayer(matchPlayerData.seasonPlayerId!, match.id);
     if(notes == null) {
-      notes = PlayerMatchNotes(match.id, matchPlayerData.seasonPlayerId);
+      notes = PlayerMatchNotes(match.id, matchPlayerData.seasonPlayerId!);
     }
     Navigator.of(context).pushNamed(
       NotesView.routeName,

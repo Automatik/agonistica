@@ -26,8 +26,8 @@ class MatchService extends CrudService<Match> {
       Match oldMatch = await getItemById(match.id);
       // If a team is changed, remove the match's id from the old team
 
-      await _removeOldTeamFromMatch(oldMatch.seasonTeam1Id, match.seasonTeam1Id, match.id);
-      await _removeOldTeamFromMatch(oldMatch.seasonTeam2Id, match.seasonTeam2Id, match.id);
+      await _removeOldTeamFromMatch(oldMatch.seasonTeam1Id!, match.seasonTeam1Id!, match.id);
+      await _removeOldTeamFromMatch(oldMatch.seasonTeam2Id!, match.seasonTeam2Id!, match.id);
 
       // Remove the match's id from the players that are no more in the match
       // and also remove the stats regarding this match from the player stats
@@ -149,8 +149,8 @@ class MatchService extends CrudService<Match> {
     for(Match match in matches) {
       // Get teams' names
       SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
-      SeasonTeam seasonTeam1 = await seasonTeamService.getFullSeasonTeamById(match.seasonTeam1Id);
-      SeasonTeam seasonTeam2 = await seasonTeamService.getFullSeasonTeamById(match.seasonTeam2Id);
+      SeasonTeam seasonTeam1 = await seasonTeamService.getFullSeasonTeamById(match.seasonTeam1Id!);
+      SeasonTeam seasonTeam2 = await seasonTeamService.getFullSeasonTeamById(match.seasonTeam2Id!);
       match.team1 = seasonTeam1.team;
       match.team2 = seasonTeam2.team;
       newMatches.add(match);
@@ -165,8 +165,8 @@ class MatchService extends CrudService<Match> {
     Match match = await getItemById(matchId);
 
     // Delete match id from teams
-    String seasonTeam1Id = match.seasonTeam1Id;
-    String seasonTeam2Id = match.seasonTeam2Id;
+    String seasonTeam1Id = match.seasonTeam1Id!;
+    String seasonTeam2Id = match.seasonTeam2Id!;
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
     SeasonTeam seasonTeam1 = await seasonTeamService.getItemById(seasonTeam1Id);
     SeasonTeam seasonTeam2 = await seasonTeamService.getItemById(seasonTeam2Id);

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
@@ -26,15 +24,15 @@ class PlayerItem extends StatelessWidget {
 
   PlayerItem({
     key,
-    @required this.matchPlayer,
-    @required this.isLeftOrientation,
-    @required this.isEditEnabled,
-    @required this.onPlayerValidation,
-    @required this.onPlayersSuggestionCallback,
-    @required this.onSaveCallback,
-    @required this.onViewPlayerCardCallback,
-    @required this.onDeleteCallback,
-    @required this.onInsertNotesCallback,
+    required this.matchPlayer,
+    required this.isLeftOrientation,
+    required this.isEditEnabled,
+    required this.onPlayerValidation,
+    required this.onPlayersSuggestionCallback,
+    required this.onSaveCallback,
+    required this.onViewPlayerCardCallback,
+    required this.onDeleteCallback,
+    required this.onInsertNotesCallback,
   });
 
   @override
@@ -77,7 +75,7 @@ class PlayerItem extends StatelessWidget {
       offset: offset,
       itemValues: getPopupMenuItemValues()
     );
-    int value = await playerItemPopupMenu.showPopupMenu(context);
+    int? value = await playerItemPopupMenu.showPopupMenu(context);
     selectLongClickAction(value);
   }
 
@@ -96,7 +94,7 @@ class PlayerItem extends StatelessWidget {
     return itemValues;
   }
 
-  void selectLongClickAction(int value) {
+  void selectLongClickAction(int? value) {
     switch(value) {
       case PlayerItemPopupMenu.VIEW_PLAYER_CARD: onViewPlayerCardCallback(matchPlayer); break;
       case PlayerItemPopupMenu.DELETE_PLAYER: onDeleteCallback(matchPlayer); break;
@@ -190,8 +188,8 @@ class _PlayerItemShirtNumber extends StatelessWidget {
   final Color fontColor = Colors.black;
 
   _PlayerItemShirtNumber({
-    this.shirtNumber,
-    this.isLeftOrientation,
+    required this.shirtNumber,
+    required this.isLeftOrientation,
   });
 
   @override
@@ -226,9 +224,9 @@ class _PlayerItemName extends StatelessWidget {
   final Color fontColor = Colors.black;
 
   _PlayerItemName({
-    this.playerName,
-    this.playerSurname,
-    this.isLeftOrientation,
+    required this.playerName,
+    required this.playerSurname,
+    required this.isLeftOrientation,
   });
 
   @override
@@ -260,7 +258,7 @@ class _GoalItem extends StatelessWidget {
   final FontWeight fontWeight = FontWeight.normal;
 
   _GoalItem({
-    this.goals,
+    required this.goals,
   });
 
   @override
@@ -323,7 +321,7 @@ class _SubstitutionItem extends StatelessWidget {
   final double iconSize = ICON_SIZE;
 
   _SubstitutionItem({
-    this.substitution,
+    required this.substitution,
   });
 
   @override
@@ -370,7 +368,7 @@ class _CardItem extends StatelessWidget {
 
   final double iconSize = ICON_SIZE;
 
-  _CardItem({ this.card });
+  _CardItem({ required this.card });
 
   @override
   Widget build(BuildContext context) {

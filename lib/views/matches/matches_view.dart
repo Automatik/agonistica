@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library matches_view;
 
 import 'package:agonistica/core/arguments/matches_view_arguments.dart';
@@ -19,17 +17,16 @@ import 'matches_view_model.dart';
 
 part 'matches_mobile.dart';
 
-// ignore: must_be_immutable
 class MatchesView extends StatelessWidget {
   static const routeName = '/matches';
 
   @override
   Widget build(BuildContext context) {
 
-    final MatchesViewArguments args = ModalRoute.of(context).settings.arguments;
+    final MatchesViewArguments args = ModalRoute.of(context)!.settings.arguments as MatchesViewArguments;
 
     return ViewModelBuilder<MatchesViewModel>.reactive(
-      viewModelBuilder: () => MatchesViewModel(args.isNewMatch, args.match, args.onMatchDetailUpdate),
+      viewModelBuilder: () => MatchesViewModel(args.isNewMatch, args.match, args.onMatchDetailUpdate!),
       onModelReady: (viewModel) {
         // Do something once your viewModel is initialized
       },

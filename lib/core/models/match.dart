@@ -13,7 +13,7 @@ class Match {
 
   late String categoryId;
 
-  late String seasonTeam1Id, seasonTeam2Id;
+  String? seasonTeam1Id, seasonTeam2Id;
 
   late String seasonId;
 
@@ -78,7 +78,7 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team1!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam1Id;
+    seasonTeam.id = seasonTeam1Id!;
     seasonTeam.team = team1;
     return seasonTeam;
   }
@@ -90,7 +90,7 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team2!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam2Id;
+    seasonTeam.id = seasonTeam2Id!;
     seasonTeam.team = team2;
     return seasonTeam;
   }

@@ -1,11 +1,9 @@
-// @dart=2.9
-
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
 
 class PlayerItemsEmptyRow extends StatelessWidget {
 
-  final Function() onTap;
+  final Function()? onTap;
 
   final double iconSize = 24;
 

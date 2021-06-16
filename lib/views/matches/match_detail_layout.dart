@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:math';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -28,7 +26,7 @@ class MatchDetailLayout extends StatefulWidget {
 
   final Match match;
   final bool isEditEnabled;
-  final double maxWidth;
+  final double? maxWidth;
   final MatchDetailController controller;
   final List<SeasonTeam> Function(String) onTeamSuggestionCallback;
   final Function(String) onTeamInserted;
@@ -37,16 +35,16 @@ class MatchDetailLayout extends StatefulWidget {
   final Function(Match, MatchPlayerData) onInsertNotesCallback;
 
   MatchDetailLayout({
-    @required this.match,
-    @required this.isEditEnabled,
-    @required this.controller,
-    @required this.onTeamSuggestionCallback,
-    @required this.onTeamInserted,
-    @required this.onPlayersSuggestionCallback,
-    @required this.onViewPlayerCardCallback,
-    @required this.onInsertNotesCallback,
+    required this.match,
+    required this.isEditEnabled,
+    required this.controller,
+    required this.onTeamSuggestionCallback,
+    required this.onTeamInserted,
+    required this.onPlayersSuggestionCallback,
+    required this.onViewPlayerCardCallback,
+    required this.onInsertNotesCallback,
     this.maxWidth,
-  }) : assert(match != null);
+  });
 
   @override
   State<StatefulWidget> createState() => _MatchDetailLayoutState(controller);
@@ -55,12 +53,12 @@ class MatchDetailLayout extends StatefulWidget {
 
 class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
-  bool editEnabled;
+  late bool editEnabled;
 
   // temp values
-  Match tempMatch;
+  late Match tempMatch;
 
-  TextEditingController resultTextEditingController1, resultTextEditingController2,
+  TextEditingController? resultTextEditingController1, resultTextEditingController2,
       leagueMatchTextEditingController, notesTextEditingController;
 
   _MatchDetailLayoutState(MatchDetailController controller) {
@@ -94,10 +92,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void reset() {
-    resultTextEditingController1.text = widget.match.team1Goals.toString();
-    resultTextEditingController2.text = widget.match.team2Goals.toString();
-    leagueMatchTextEditingController.text = widget.match.leagueMatch.toString();
-    notesTextEditingController.text = widget.match.matchNotes;
+    resultTextEditingController1!.text = widget.match.team1Goals.toString();
+    resultTextEditingController2!.text = widget.match.team2Goals.toString();
+    leagueMatchTextEditingController!.text = widget.match.leagueMatch.toString();
+    notesTextEditingController!.text = widget.match.matchNotes;
   }
 
   void updateMatchObjects() {
@@ -105,8 +103,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void preloadTeams() {
-    String homeTeamId = tempMatch.getHomeSeasonTeamId();
-    String awayTeamId = tempMatch.getAwaySeasonTeamId();
+    String? homeTeamId = tempMatch.getHomeSeasonTeamId();
+    String? awayTeamId = tempMatch.getAwaySeasonTeamId();
     if(homeTeamId != null)
       widget.onTeamInserted(homeTeamId);
     if(awayTeamId != null)
@@ -115,7 +113,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   bool saveMatchState() {
 
-    String errorMessage = validateTextFields();
+    String? errorMessage = validateTextFields();
     bool isError = errorMessage != null;
     if(isError) {
       final _baseScaffoldService = locator<BaseScaffoldService>();
@@ -126,10 +124,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     // teams' names and ids are already inserted from the InsertTeamDialog
     // match's date is already saved from dialog
     // players data is inserted with addNewRow method
-    tempMatch.team1Goals = int.tryParse(resultTextEditingController1.text);
-    tempMatch.team2Goals = int.tryParse(resultTextEditingController2.text);
-    tempMatch.leagueMatch = int.tryParse(leagueMatchTextEditingController.text);
-    tempMatch.matchNotes = notesTextEditingController.text;
+    tempMatch.team1Goals = int.parse(resultTextEditingController1!.text);
+    tempMatch.team2Goals = int.parse(resultTextEditingController2!.text);
+    tempMatch.leagueMatch = int.parse(leagueMatchTextEditingController!.text);
+    tempMatch.matchNotes = notesTextEditingController!.text;
 
     removeEmptyPlayers();
 
@@ -145,16 +143,16 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     tempMatch.playersData.removeWhere((p) => p.isEmptyPlayer());
   }
 
-  String validateTextFields() {
-    String errorMessage = InputValidation.validateTeamName(tempMatch.getHomeSeasonTeamName());
+  String? validateTextFields() {
+    String? errorMessage = InputValidation.validateTeamName(tempMatch.getHomeSeasonTeamName()!);
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateTeamName(tempMatch.getAwaySeasonTeamName());
+    errorMessage = InputValidation.validateTeamName(tempMatch.getAwaySeasonTeamName()!);
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateResultGoal(resultTextEditingController1.text);
+    errorMessage = InputValidation.validateResultGoal(resultTextEditingController1!.text);
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateResultGoal(resultTextEditingController2.text);
+    errorMessage = InputValidation.validateResultGoal(resultTextEditingController2!.text);
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateLeagueMatch(leagueMatchTextEditingController.text);
+    errorMessage = InputValidation.validateLeagueMatch(leagueMatchTextEditingController!.text);
     if(errorMessage != null) return errorMessage;
     return null;
   }
@@ -200,7 +198,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   /// Check if the new Home Team name is not equal to the Away Team name, to
   /// avoid the same team playing against itself
-  String validateInsertedHomeTeam(String teamName) {
+  String? validateInsertedHomeTeam(String teamName) {
     if(isAwayTeamInserted() && tempMatch.getAwaySeasonTeamName() == teamName) {
       return MatchDetailLayout.INSERTED_TEAM_ERROR_ALREADY_INSERTED;
     }
@@ -209,7 +207,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   /// Check if the new Away Team name is not equal to the Home Team name, to
   /// avoid the same team playing against itself
-  String validateInsertedAwayTeam(String teamName) {
+  String? validateInsertedAwayTeam(String teamName) {
     if(isHomeTeamInserted() && tempMatch.getHomeSeasonTeamName() == teamName) {
       return MatchDetailLayout.INSERTED_TEAM_ERROR_ALREADY_INSERTED;
     }
@@ -218,20 +216,20 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   Future<void> updateHomeTeamOnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
-      SeasonTeam seasonTeam1;
-      String oldTeam1Id = match.getHomeSeasonTeamId();
+      SeasonTeam? seasonTeam1;
+      String oldTeam1Id = match.getHomeSeasonTeamId()!;
       bool isTeamPopulated = isHomeTeamPopulated();
       if(isTeamPopulated) {
-        seasonTeam1 = await updateTeamDialog(context, match.getHomeSeasonTeamName(), validateInsertedHomeTeam);
+        seasonTeam1 = await updateTeamDialog(context, match.getHomeSeasonTeamName()!, validateInsertedHomeTeam);
       } else {
-        seasonTeam1 = await updateTeamOnInsert(context, match.getHomeSeasonTeamName(), validateInsertedHomeTeam);
+        seasonTeam1 = await updateTeamOnInsert(context, match.getHomeSeasonTeamName()!, validateInsertedHomeTeam);
       }
       if(seasonTeam1 != null) {
         if(isTeamPopulated) {
           removeTeamPlayersFromMatch(match, oldTeam1Id);
         }
         setState(() {
-          match.setSeasonTeam1(seasonTeam1);
+          match.setSeasonTeam1(seasonTeam1!);
         });
       }
     }
@@ -239,27 +237,27 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
   Future<void> updateAwayTeamOnInsert(BuildContext context, bool isEditEnabled, Match match) async {
     if(isEditEnabled) {
-      SeasonTeam seasonTeam2;
-      String oldTeam2Id = match.getAwaySeasonTeamId();
+      SeasonTeam? seasonTeam2;
+      String oldTeam2Id = match.getAwaySeasonTeamId()!;
       bool isTeamPopulated = isAwayTeamPopulated();
       if(isTeamPopulated) {
-        seasonTeam2 = await updateTeamDialog(context, match.getAwaySeasonTeamName(), validateInsertedAwayTeam);
+        seasonTeam2 = await updateTeamDialog(context, match.getAwaySeasonTeamName()!, validateInsertedAwayTeam);
       } else {
-        seasonTeam2 = await updateTeamOnInsert(context, match.getAwaySeasonTeamName(), validateInsertedAwayTeam);
+        seasonTeam2 = await updateTeamOnInsert(context, match.getAwaySeasonTeamName()!, validateInsertedAwayTeam);
       }
       if(seasonTeam2 != null) {
         if(isTeamPopulated) {
           removeTeamPlayersFromMatch(match, oldTeam2Id);
         }
         setState(() {
-          match.setSeasonTeam2(seasonTeam2);
+          match.setSeasonTeam2(seasonTeam2!);
         });
       }
     }
   }
 
-  Future<SeasonTeam> updateTeamDialog(BuildContext context, String teamName, String Function(String) validateInsertedTeam) async {
-    SeasonTeam seasonTeam;
+  Future<SeasonTeam?> updateTeamDialog(BuildContext context, String teamName, String? Function(String) validateInsertedTeam) async {
+    SeasonTeam? seasonTeam;
     final dialog = ChangeTeamDialog(
       onConfirm: () async {
         print("onConfirm");
@@ -272,8 +270,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return seasonTeam;
   }
 
-  Future<SeasonTeam> updateTeamOnInsert(BuildContext context, String teamName, String Function(String) validateInsertedTeam) async {
-    SeasonTeam seasonTeam = await _showInsertTeamDialog(context, teamName, validateInsertedTeam);
+  Future<SeasonTeam?> updateTeamOnInsert(BuildContext context, String teamName, String? Function(String) validateInsertedTeam) async {
+    SeasonTeam? seasonTeam = await _showInsertTeamDialog(context, teamName, validateInsertedTeam);
     if(seasonTeam != null) {
       widget.onTeamInserted(seasonTeam.id);
     }
@@ -315,7 +313,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return MatchInfoWidget(
       match: matchInfo,
       isEditEnabled: isEditEnabled,
-      width: widget.maxWidth,
+      width: widget.maxWidth!,
       resultTextEditingController1: resultTextEditingController1,
       resultTextEditingController2: resultTextEditingController2,
       leagueMatchTextEditingController: leagueMatchTextEditingController,
@@ -390,8 +388,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeRegularPlayers = homeRegularPlayers.length;
     int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
-    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeSeasonTeamId(), true);
-    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwaySeasonTeamId(), true);
+    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeSeasonTeamId()!, true);
+    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwaySeasonTeamId()!, true);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -415,8 +413,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeReservePlayers = homeReservePlayers.length;
     int numAwayReservePlayers = awayReservePlayers.length;
     int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
-    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeSeasonTeamId(), false);
-    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwaySeasonTeamId(), false);
+    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeSeasonTeamId()!, false);
+    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwaySeasonTeamId()!, false);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -450,10 +448,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       onReorder: (oldIndex, newIndex) => onReorder(players, oldIndex, newIndex),
       onPlayerValidation: (id, shirtNumber) => validatePlayerShirtNumber(id, shirtNumber, areHomePlayers),
       onPlayerSuggestionCallback: (namePattern, surnamePattern) {
-        String seasonTeamId = areHomePlayers ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
-        List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId);
+        String? seasonTeamId = areHomePlayers ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
+        List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId!);
         // Remove players already in the lineup
-        List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList();
+        List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList() as List<String>;
         seasonPlayers.removeWhere((p) => lineupPlayersIds.contains(p.id));
         return seasonPlayers;
       },
@@ -462,7 +460,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
           _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
         });
       },
-      onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId),
+      onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId!),
       onDeleteCallback: (matchPlayerData) {
         setState(() {
           tempMatch.playersData.remove(matchPlayerData);
@@ -496,10 +494,10 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
               lineSeparatorWidth: _getLineSeparatorWidth(index, rowsCount),
               onPlayerValidation: (id, shirtNumber, isHomePlayer) => validatePlayerShirtNumber(id, shirtNumber, isHomePlayer),
               onPlayerSuggestionCallback: (namePattern, surnamePattern, isHomePlayer) {
-                String seasonTeamId = isHomePlayer ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
-                List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId);
+                String? seasonTeamId = isHomePlayer ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
+                List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId!);
                 // Remove players already in the lineup
-                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList();
+                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList() as List<String>;
                 seasonPlayers.removeWhere((p) => lineupPlayersIds.contains(p.id));
                 return seasonPlayers;
               },
@@ -508,7 +506,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                   _replacePlayerUsingId(tempMatch.playersData, matchPlayerData);
                 });
               },
-              onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId),
+              onViewPlayerCardCallback: (matchPlayerData) => widget.onViewPlayerCardCallback(matchPlayerData.seasonPlayerId!),
               onDeleteCallback: (matchPlayerData, isHomePlayer) {
                 setState(() {
                   tempMatch.playersData.remove(matchPlayerData);
@@ -545,7 +543,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
       ),
       child: TextBox(
         isEnabled: isEditEnabled,
-        controller: notesTextEditingController,
+        controller: notesTextEditingController!,
         autofocus: false,
         minLines: 5,
       ),
@@ -580,14 +578,14 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
   }
 
   void _addNewRowWithRegularPlayers() {
-    MatchPlayerData newHomePlayer = _addRegularPlayer(tempMatch.getHomeSeasonTeamId());
-    MatchPlayerData newAwayPlayer = _addRegularPlayer(tempMatch.getAwaySeasonTeamId());
+    MatchPlayerData newHomePlayer = _addRegularPlayer(tempMatch.getHomeSeasonTeamId()!);
+    MatchPlayerData newAwayPlayer = _addRegularPlayer(tempMatch.getAwaySeasonTeamId()!);
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
   void _addNewRowWithReservePlayers() {
-    MatchPlayerData newHomePlayer = _addReservePlayer(tempMatch.getHomeSeasonTeamId());
-    MatchPlayerData newAwayPlayer = _addReservePlayer(tempMatch.getAwaySeasonTeamId());
+    MatchPlayerData newHomePlayer = _addReservePlayer(tempMatch.getHomeSeasonTeamId()!);
+    MatchPlayerData newAwayPlayer = _addReservePlayer(tempMatch.getAwaySeasonTeamId()!);
     _addNewRow(newHomePlayer, newAwayPlayer);
   }
 
@@ -610,8 +608,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return index == 0 || index == rowsCount - 1 ? 0 : 0.5;
   }
 
-  Future<SeasonTeam> _showInsertTeamDialog(BuildContext context, String tempTeamName, String Function(String) validateInsertedTeam) async {
-    SeasonTeam tempSeasonTeam;
+  Future<SeasonTeam?> _showInsertTeamDialog(BuildContext context, String tempTeamName, String? Function(String) validateInsertedTeam) async {
+    SeasonTeam? tempSeasonTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
@@ -622,9 +620,7 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
         isInsertedTeamValid: validateInsertedTeam,
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
-          if(finalTeamValue != null) {
-            tempSeasonTeam = finalTeamValue;
-          }
+          tempSeasonTeam = finalTeamValue;
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);
@@ -635,6 +631,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
 
 class MatchDetailController {
 
-  bool Function() saveMatchStatus;
+  late bool Function() saveMatchStatus;
 
 }

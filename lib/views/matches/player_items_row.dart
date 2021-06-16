@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/match_player_data.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -20,16 +18,16 @@ class PlayerItemsRow extends StatelessWidget {
   final Function(MatchPlayerData) onInsertNotesCallback;
 
   PlayerItemsRow({
-    @required this.homePlayer,
-    @required this.awayPlayer,
+    required this.homePlayer,
+    required this.awayPlayer,
     this.lineSeparatorWidth = 0.5,
-    @required this.isEditEnabled,
-    @required this.onPlayerValidation,
-    @required this.onPlayerSuggestionCallback,
-    @required this.onSaveCallback,
-    @required this.onViewPlayerCardCallback,
-    @required this.onDeleteCallback,
-    @required this.onInsertNotesCallback,
+    required this.isEditEnabled,
+    required this.onPlayerValidation,
+    required this.onPlayerSuggestionCallback,
+    required this.onSaveCallback,
+    required this.onViewPlayerCardCallback,
+    required this.onDeleteCallback,
+    required this.onInsertNotesCallback,
   });
 
   @override

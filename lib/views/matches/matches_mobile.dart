@@ -1,10 +1,8 @@
-// @dart=2.9
-
 part of matches_view;
 
 class _MatchesMobile extends StatefulWidget {
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
+  final BaseScaffoldService? _baseScaffoldService = locator<BaseScaffoldService>();
   
   final MatchesViewModel viewModel;
 
@@ -17,9 +15,9 @@ class _MatchesMobile extends StatefulWidget {
 
 class _MatchesMobileState extends State<_MatchesMobile> {
 
-  bool isEditEnabled;
+  late bool isEditEnabled;
 
-  Match tempMatch;
+  late Match tempMatch;
 
   final MatchDetailController matchDetailController = MatchDetailController();
 
@@ -43,7 +41,7 @@ class _MatchesMobileState extends State<_MatchesMobile> {
         widget.viewModel.onBottomBarItemChanged(context, index, isEditEnabled);
       },
       childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
-        widget._baseScaffoldService.scaffoldContext = childContext;
+        widget._baseScaffoldService!.scaffoldContext = childContext;
         double width = 1 * sizingInformation.localWidgetSize.width;
         return _matchDetail(childContext, isEditEnabled, tempMatch, width, matchDetailController);
       },
