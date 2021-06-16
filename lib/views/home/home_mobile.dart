@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 part of home_view;
 
@@ -131,7 +131,7 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget listMenusWidget({MySizingInformation sizingInformation, Axis axis, int itemCount, Widget Function(BuildContext, int, double) itemBuilder, String emptyTitle, Function onEmptyTap}) {
+  Widget listMenusWidget({required MySizingInformation sizingInformation, required Axis axis, required int itemCount, required Widget Function(BuildContext, int, double) itemBuilder, required String emptyTitle, required Function() onEmptyTap}) {
     double widthFactor = sizingInformation.isPortrait() ? 0.95 : 0.95;
     double listWidth = widthFactor * sizingInformation.screenSize.width;
     bool isPortrait = sizingInformation.isPortrait();
@@ -145,7 +145,7 @@ class _HomeMobile extends StatelessWidget {
     );
   }
 
-  Widget listMenusContent(Axis axis, bool isPortrait, double imageWidth, int itemCount, Widget Function(BuildContext, int, double) itemBuilder, String emptyTitle, Function onEmptyTap) {
+  Widget listMenusContent(Axis axis, bool isPortrait, double imageWidth, int itemCount, Widget Function(BuildContext, int, double) itemBuilder, String emptyTitle, Function() onEmptyTap) {
     if(itemCount == 0) {
       return emptyMenu(emptyTitle, imageWidth, onEmptyTap);
     }
@@ -173,7 +173,7 @@ class _HomeMobile extends StatelessWidget {
 
   Future<void> onActionAdd(BuildContext context, Offset offset) async {
     final popupMenu = HomeViewPopupMenu(offset: offset);
-    int menuType = await popupMenu.showPopupMenu(context);
+    int? menuType = await popupMenu.showPopupMenu(context);
     if(menuType == Menu.TYPE_FOLLOWED_TEAMS) {
       await showInsertFollowedTeamMenuDialog(context);
       return;

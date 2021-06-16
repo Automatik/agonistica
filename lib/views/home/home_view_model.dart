@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/locator.dart';
@@ -15,13 +15,13 @@ import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
 
-  final _baseScaffoldService = locator<BaseScaffoldService>();
-  final _databaseService = locator<DatabaseService>();
-  final _appStateService = locator<AppStateService>();
+  final BaseScaffoldService _baseScaffoldService = locator<BaseScaffoldService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('HomeViewModel');
 
-  HomeMenus _homeMenus;
+  late HomeMenus _homeMenus;
 
   HomeViewModel(){
     _homeMenus = HomeMenus();
@@ -45,19 +45,19 @@ class HomeViewModel extends BaseViewModel {
   }
 
   int getFollowedTeamsMenusSize() {
-    return _homeMenus.getFollowedTeamsMenus().size();
+    return _homeMenus.getFollowedTeamsMenus()!.size();
   }
 
   int getFollowedPlayersMenusSize() {
-    return _homeMenus.getFollowedPlayersMenus().size();
+    return _homeMenus.getFollowedPlayersMenus()!.size();
   }
 
   Menu getFollowedTeamMenu(int index) {
-    return _homeMenus.getFollowedTeamsMenus().elementAt(index);
+    return _homeMenus.getFollowedTeamsMenus()!.elementAt(index);
   }
 
   Menu getFollowedPlayerMenu(int index) {
-    return _homeMenus.getFollowedPlayersMenus().elementAt(index);
+    return _homeMenus.getFollowedPlayersMenus()!.elementAt(index);
   }
 
   Future<void> onFollowedTeamMenuTap(BuildContext context, int index) async {
@@ -71,8 +71,8 @@ class HomeViewModel extends BaseViewModel {
   }
 
   /// Check if no other menu exist with this name and the menu name is valid
-  String validateNewMenu(String menuName) {
-    String validationResult = InputValidation.validateMenuName(menuName);
+  String? validateNewMenu(String menuName) {
+    String? validationResult = InputValidation.validateMenuName(menuName);
     if(validationResult != null) {
       // not valid
       return validationResult;
@@ -86,7 +86,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> createNewMenu(String menuName, int menuType) async {
-    Menu menu = await _databaseService.createNewMenu(menuName, menuType);
+    Menu? menu = await _databaseService.createNewMenu(menuName, menuType);
     if(menu == null) {
       return;
     }
