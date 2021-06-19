@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of player_matches_view;
 
 class _PlayerMatchesMobile extends StatelessWidget {
@@ -49,8 +47,8 @@ class _PlayerMatchesMobile extends StatelessWidget {
       onTap: () => viewModel.onPlayerMatchNotesClick(context, object),
       onSettingsTap: (tapDownDetails) => onPlayerMatchNotesSettingsClick(context, object, tapDownDetails),
       width: itemsWidth,
-      team1: match.getHomeTeam(),
-      team2: match.getAwayTeam(),
+      team1: match.getHomeTeam()!,
+      team2: match.getAwayTeam()!,
       result: "${match.team1Goals} - ${match.team2Goals}",
       leagueMatch: match.leagueMatch,
       matchDate: match.matchDate,
@@ -85,7 +83,7 @@ class _PlayerMatchesMobile extends StatelessWidget {
       offset: offset,
       itemValues: viewModel.getPopupMenuItemValues()
     );
-    int value = await popupMenu.showPopupMenu(context);
+    int? value = await popupMenu.showPopupMenu(context);
     await viewModel.onPopupMenuItemSelected(context, value, object);
   }
 

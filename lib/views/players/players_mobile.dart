@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of players_view;
 
 class _PlayersMobile extends StatelessWidget {
@@ -47,7 +45,7 @@ class _PlayersMobile extends StatelessWidget {
                   name: "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
                   role: SeasonPlayer.positionToString(seasonPlayer.position),
                   width: itemsWidth,
-                  birthDay: seasonPlayer.getPlayerBirthday(),
+                  birthDay: seasonPlayer.getPlayerBirthday()!,
                 ),
               ),
             );
@@ -65,11 +63,11 @@ class _PlayersMobile extends StatelessWidget {
         ]
     );
 
-    int value = await popupMenu.showPopupMenu(context);
+    int? value = await popupMenu.showPopupMenu(context);
     selectLongClickAction(context, value, index);
   }
 
-  void selectLongClickAction(BuildContext context, int choice, int index) {
+  void selectLongClickAction(BuildContext context, int? choice, int index) {
     switch(choice) {
       case PlayersViewPopupMenu.VIEW_PLAYER_CARD: viewModel.openPlayerDetail(context, index); break;
       case PlayersViewPopupMenu.DELETE_PLAYER_CARD: viewModel.deletePlayer(index); break;

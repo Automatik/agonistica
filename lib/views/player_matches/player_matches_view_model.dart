@@ -1,8 +1,7 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/notes_view_arguments.dart';
 import 'package:agonistica/core/arguments/team_view_arguments.dart';
+import 'package:agonistica/core/exceptions/not_found_exception.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/logger.dart';
 import 'package:agonistica/core/models/match.dart';
@@ -26,16 +25,16 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('PlayerMatchesViewModel');
 
-  final _appStateService = locator<AppStateService>();
-  final _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
   final String seasonPlayerId;
   final String playerName;
   final String playerSurname;
   final int addAction;
 
-  SeasonPlayer seasonPlayer;
-  List<MatchNotesObject> objects;
+  late SeasonPlayer seasonPlayer;
+  late List<MatchNotesObject> objects;
 
   PlayerMatchesViewModel(this.seasonPlayerId, this.playerName, this.playerSurname, this.addAction){
     objects = [];
@@ -48,22 +47,22 @@ class PlayerMatchesViewModel extends BaseViewModel {
     //Write your models loading codes here
 
     // Get the player's instance
+    bool seasonPlayerExists = await _databaseService.seasonPlayerService.itemExists(seasonPlayerId);
+    if(!seasonPlayerExists) {
+      throw NotFoundException("SeasonPlayer with id $seasonPlayerId not found");
+    }
     seasonPlayer = await _databaseService.seasonPlayerService.getItemById(seasonPlayerId);
 
-    if(seasonPlayer != null && seasonPlayer.matchesIds != null) {
+    // Get matches in which the player has played
+    List<Match> matches = await _databaseService.matchService.getItemsByIds(seasonPlayer.matchesIds);
 
-      // Get matches in which the player has played
-      List<Match> matches = await _databaseService.matchService.getItemsByIds(seasonPlayer.matchesIds);
+    matches = await _databaseService.matchService.completeMatchesWithMissingInfo(matches);
 
-      matches = await _databaseService.matchService.completeMatchesWithMissingInfo(matches);
+    // Get Player's match notes
+    final notes = await _databaseService.playerNotesService.getPlayerNotesByPlayer(seasonPlayer);
 
-      // Get Player's match notes
-      final notes = await _databaseService.playerNotesService.getPlayerNotesByPlayer(seasonPlayer);
-
-      // Combine matches with notes in the objects list
-      objects = createObjects(matches, notes);
-
-    }
+    // Combine matches with notes in the objects list
+    objects = createObjects(matches, notes);
 
     //Let other views to render again
     setBusy(false);
@@ -92,7 +91,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   void _onPlayerMatchesDetailUpdate(Match match) {
     _logger.d("PlayerMatchesModel/onMatchDetailUpdate");
-    List<String> matchesIds = objects.map((e) => e.match.id);
+    List<String> matchesIds = objects.map((e) => e.match.id) as List<String>;
     if(!matchesIds.contains(match.id)) {
       List<MatchNotesObject> newObjects = createObjects([match], []);
       objects.addAll(newObjects);
@@ -158,7 +157,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
     return itemValues;
   }
 
-  Future<void> onPopupMenuItemSelected(BuildContext context, int value, MatchNotesObject object) async {
+  Future<void> onPopupMenuItemSelected(BuildContext context, int? value, MatchNotesObject object) async {
     switch(value) {
       case PlayerMatchesViewPopupMenu.VIEW_MATCH_CARD: NavUtils.navToMatchDetail(context, object.match, _onPlayerMatchesDetailUpdate); break;
       case PlayerMatchesViewPopupMenu.VIEW_NOTES_CARD: onPlayerMatchNotesClick(context, object); break;

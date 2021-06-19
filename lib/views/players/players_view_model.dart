@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'dart:collection';
 
@@ -21,10 +21,10 @@ class PlayersViewModel extends BaseViewModel {
 
   static Logger _logger = getLogger('PlayersViewModel');
 
-  final _databaseService = locator<DatabaseService>();
-  final _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
 
-  SplayTreeSet<SeasonPlayer> _sortedSeasonPlayers;
+  late SplayTreeSet<SeasonPlayer> _sortedSeasonPlayers;
 
   PlayersViewModel() {
     _sortedSeasonPlayers = SplayTreeSet((sp1, sp2) => SeasonPlayer.compare(sp1, sp2));
@@ -70,15 +70,10 @@ class PlayersViewModel extends BaseViewModel {
   /// Use this callback to update the players listView. When this method is
   /// executed, the player has been already saved
   void _onPlayerDetailUpdate(SeasonPlayer seasonPlayer) {
-    if(_sortedSeasonPlayers == null) {
-      _logger.d("players list is null");
-      return;
-    }
-
     // check if player's id is already in players list
     // meaning the player is updated
-    SeasonPlayer player = _sortedSeasonPlayers.firstWhere((sp) => sp.id == seasonPlayer.id, orElse: () => null);
-    if(player != null) {
+    int index = _sortedSeasonPlayers.toList().indexWhere((sp) => sp.id == seasonPlayer.id);
+    if(index != -1) {
       // check if the player's team or category has changed
       if(seasonPlayer.seasonTeamId != _appStateService.selectedTeam.id || seasonPlayer.categoryId != _appStateService.selectedCategory.id) {
         // remove the player from the players list
@@ -99,7 +94,7 @@ class PlayersViewModel extends BaseViewModel {
   }
 
   Future<void> openPlayerDetail(BuildContext context, int index) async {
-    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }
@@ -114,7 +109,7 @@ class PlayersViewModel extends BaseViewModel {
   }
 
   Future<void> deletePlayer(int index) async {
-    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }

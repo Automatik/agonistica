@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library player_matches_view;
 
 import 'package:agonistica/core/arguments/player_matches_view_arguments.dart';
@@ -24,7 +22,7 @@ class PlayerMatchesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final PlayerMatchesViewArguments args = ModalRoute.of(context).settings.arguments;
+    final PlayerMatchesViewArguments args = ModalRoute.of(context)!.settings.arguments as PlayerMatchesViewArguments;
 
     return ViewModelBuilder<PlayerMatchesViewModel>.reactive(
       viewModelBuilder: () => PlayerMatchesViewModel(args.playerId, args.playerName, args.playerSurname, args.addAction),

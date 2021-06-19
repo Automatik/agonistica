@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library players_view;
 
 import 'package:agonistica/core/models/season_player.dart';
