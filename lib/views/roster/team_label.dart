@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/insert_team_dialog.dart';
@@ -17,14 +15,14 @@ class TeamLabel extends StatefulWidget {
   final FontWeight fontWeight;
 
   TeamLabel({
-    @required this.teamName,
-    @required this.seasonId,
-    @required this.isEditEnabled,
-    @required this.onSuggestionTeamCallback,
-    @required this.onTeamChange,
-    @required this.fontColor,
-    @required this.fontWeight,
-    @required this.fontSize,
+    required this.teamName,
+    required this.seasonId,
+    required this.isEditEnabled,
+    required this.onSuggestionTeamCallback,
+    required this.onTeamChange,
+    required this.fontColor,
+    required this.fontWeight,
+    required this.fontSize,
   });
 
   @override
@@ -34,7 +32,7 @@ class TeamLabel extends StatefulWidget {
 
 class _TeamLabelState extends State<TeamLabel> {
 
-  String teamText;
+  late String teamText;
 
   @override
   void initState() {
@@ -47,10 +45,10 @@ class _TeamLabelState extends State<TeamLabel> {
     return CustomRichText(
       onTap: () async {
         if(widget.isEditEnabled) {
-          SeasonTeam seasonTeam = await _showInsertTeamDialog(context, teamText);
+          SeasonTeam? seasonTeam = await _showInsertTeamDialog(context, teamText);
           if(seasonTeam != null) {
             setState(() {
-              teamText = seasonTeam.getTeamName();
+              teamText = seasonTeam.getTeamName()!;
             });
             widget.onTeamChange(seasonTeam);
           }
@@ -65,8 +63,8 @@ class _TeamLabelState extends State<TeamLabel> {
     );
   }
 
-  Future<SeasonTeam> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
-    SeasonTeam tempSeasonTeam;
+  Future<SeasonTeam?> _showInsertTeamDialog(BuildContext context, String tempTeamName) async {
+    SeasonTeam? tempSeasonTeam;
     InsertTeamDialog insertTeamDialog = InsertTeamDialog(
         initialValue: tempTeamName,
         maxHeight: MediaQuery.of(context).size.height,
@@ -76,9 +74,7 @@ class _TeamLabelState extends State<TeamLabel> {
         },
         onSubmit: (finalTeamValue) {
           Navigator.of(context).pop();
-          if(finalTeamValue != null) {
-            tempSeasonTeam = finalTeamValue;
-          }
+          tempSeasonTeam = finalTeamValue;
         }
     );
     await insertTeamDialog.showInsertTeamDialog(context);

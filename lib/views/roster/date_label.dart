@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/utils/my_date_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +5,14 @@ class DateLabel extends StatefulWidget {
 
   final DateTime birthDay;
   final bool isEditEnabled;
-  final Color fontColor;
-  final double fontSize;
-  final FontWeight fontWeight;
-  final Function(DateTime) onDateChange;
+  final Color? fontColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Function(DateTime)? onDateChange;
 
   DateLabel({
-    this.birthDay,
-    this.isEditEnabled,
+    required this.birthDay,
+    required this.isEditEnabled,
     this.fontColor,
     this.fontSize,
     this.fontWeight,
@@ -28,7 +26,7 @@ class DateLabel extends StatefulWidget {
 
 class _DateLabelState extends State<DateLabel> {
 
-  DateTime dateTime;
+  late DateTime dateTime;
 
   @override
   void initState() {

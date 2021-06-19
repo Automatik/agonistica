@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library roster_view;
 
 import 'package:agonistica/core/arguments/roster_view_arguments.dart';
@@ -23,7 +21,7 @@ class RosterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final RosterViewArguments args = ModalRoute.of(context).settings.arguments;
+    final RosterViewArguments args = ModalRoute.of(context)!.settings.arguments as RosterViewArguments;
 
     return ViewModelBuilder<RosterViewModel>.reactive(
       viewModelBuilder: () => RosterViewModel(args.isNewPlayer, args.seasonPlayer, args.onPlayerDetailUpdate),

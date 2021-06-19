@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/widgets/text/custom_rich_text.dart';
 import 'package:agonistica/widgets/dialogs/select_category_dialog.dart';
@@ -16,13 +14,13 @@ class CategoryLabel extends StatefulWidget {
   final FontWeight fontWeight;
 
   CategoryLabel({
-    @required this.categoryName,
-    @required this.isEditEnabled,
-    @required this.teamCategoriesCallback,
-    @required this.onCategoryChange,
-    @required this.fontColor,
-    @required this.fontSize,
-    @required this.fontWeight,
+    required this.categoryName,
+    required this.isEditEnabled,
+    required this.teamCategoriesCallback,
+    required this.onCategoryChange,
+    required this.fontColor,
+    required this.fontSize,
+    required this.fontWeight,
   });
 
   @override
@@ -32,7 +30,7 @@ class CategoryLabel extends StatefulWidget {
 
 class _CategoryLabelState extends State<CategoryLabel> {
 
-  String categoryText;
+  late String categoryText;
 
   @override
   void initState() {
@@ -49,12 +47,10 @@ class _CategoryLabelState extends State<CategoryLabel> {
           final dialog = SelectCategoryDialog(
               categories: categories,
               onSelect: (newCategory) {
-                if(newCategory != null) {
-                  setState(() {
-                    categoryText = newCategory.name;
-                  });
-                  widget.onCategoryChange(newCategory);
-                }
+                setState(() {
+                  categoryText = newCategory.name;
+                });
+                widget.onCategoryChange(newCategory);
                 // close dialog
                 Navigator.of(context).pop();
               }

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 library team_view;
 
 import 'package:agonistica/core/arguments/team_view_arguments.dart';
@@ -25,7 +23,7 @@ class TeamView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final TeamViewArguments args = ModalRoute.of(context).settings.arguments;
+    final TeamViewArguments args = ModalRoute.of(context)!.settings.arguments as TeamViewArguments;
 
     return ViewModelBuilder<TeamViewModel>.reactive(
       viewModelBuilder: () => TeamViewModel(),

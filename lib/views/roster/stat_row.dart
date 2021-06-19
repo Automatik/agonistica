@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +11,11 @@ class StatRow extends StatefulWidget {
   final double width;
 
   StatRow({
-    @required this.statName,
-    @required this.value,
-    @required this.isEditEnabled,
-    @required this.onChange,
-    @required this.width
+    required this.statName,
+    required this.value,
+    required this.isEditEnabled,
+    required this.onChange,
+    required this.width
   });
 
   @override
@@ -27,15 +25,12 @@ class StatRow extends StatefulWidget {
 
 class _StatRowState extends State<StatRow> {
 
-  double doubleValue;
+  late double doubleValue;
 
   @override
   void initState() {
     super.initState();
     doubleValue = widget.value.toDouble();
-    if(doubleValue == null) {
-      doubleValue = 1;
-    }
   }
 
   @override

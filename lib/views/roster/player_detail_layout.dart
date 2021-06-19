@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/models/category.dart';
@@ -39,21 +37,19 @@ class PlayerDetailLayout extends StatefulWidget {
 
   final SeasonPlayer seasonPlayer;
   final bool isEditEnabled;
-  final double maxWidth;
+  final double? maxWidth;
   final PlayerDetailController controller;
   final List<SeasonTeam> Function(String) onSuggestionTeamCallback;
   final Future<List<Category>> Function(SeasonTeam) teamCategoriesCallback;
-//  final Function(Player) onSave;
 
   PlayerDetailLayout({
-    @required this.seasonPlayer,
-    @required this.isEditEnabled,
-    @required this.controller,
-    @required this.onSuggestionTeamCallback,
-    @required this.teamCategoriesCallback,
-//    @required this.onSave,
+    required this.seasonPlayer,
+    required this.isEditEnabled,
+    required this.controller,
+    required this.onSuggestionTeamCallback,
+    required this.teamCategoriesCallback,
     this.maxWidth
-  }) : assert(seasonPlayer != null);
+  });
 
   @override
   State<StatefulWidget> createState() => _PlayerDetailLayoutState(controller);
@@ -62,20 +58,20 @@ class PlayerDetailLayout extends StatefulWidget {
 
 class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
-  bool editEnabled;
+  late bool editEnabled;
 
-  SeasonPlayer tempSeasonPlayer;
+  late SeasonPlayer tempSeasonPlayer;
 
-  TextEditingController nameTextController, surnameTextController,
+  late TextEditingController nameTextController, surnameTextController,
       heightTextController, weightTextController;
 
-  String roleText, footText;
-  TextEditingController matchesTextController, goalsTextController,
+  late String roleText, footText;
+  late TextEditingController matchesTextController, goalsTextController,
       yellowTextController, redTextController;
 
-  TextEditingController morfologiaTextController, sommatoTipoTextController;
+  late TextEditingController morfologiaTextController, sommatoTipoTextController;
 
-  TextEditingController attitude1TextController, attitude2TextController,
+  late TextEditingController attitude1TextController, attitude2TextController,
       attitude3TextController;
 
   _PlayerDetailLayoutState(PlayerDetailController controller) {
@@ -120,13 +116,13 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   void reset() {
-    nameTextController.text = tempSeasonPlayer.getPlayerName();
-    surnameTextController.text = tempSeasonPlayer.getPlayerSurname();
+    nameTextController.text = tempSeasonPlayer.getPlayerName()!;
+    surnameTextController.text = tempSeasonPlayer.getPlayerSurname()!;
     heightTextController.text = tempSeasonPlayer.height.toString();
     weightTextController.text = tempSeasonPlayer.weight.toString();
 
     roleText = SeasonPlayer.positionToString(tempSeasonPlayer.position);
-    footText = tempSeasonPlayer.isRightHanded() ? "Destro" : "Sinistro";
+    footText = tempSeasonPlayer.isRightHanded()! ? "Destro" : "Sinistro";
     matchesTextController.text = tempSeasonPlayer.matches.toString();
     goalsTextController.text = tempSeasonPlayer.goals.toString();
     yellowTextController.text = tempSeasonPlayer.yellowCards.toString();
@@ -145,7 +141,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
   }
 
   bool savePlayerState() {
-    String errorMessage = validateTextFields();
+    String? errorMessage = validateTextFields();
     bool isError = errorMessage != null;
     if(isError) {
       final _baseScaffoldService = locator<BaseScaffoldService>();
@@ -155,15 +151,15 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
     tempSeasonPlayer.setPlayerName(nameTextController.text);
     tempSeasonPlayer.setPlayerSurname(surnameTextController.text);
-    tempSeasonPlayer.height = int.tryParse(heightTextController.text);
-    tempSeasonPlayer.weight = int.tryParse(weightTextController.text);
+    tempSeasonPlayer.height = int.tryParse(heightTextController.text)!;
+    tempSeasonPlayer.weight = int.tryParse(weightTextController.text)!;
 
     tempSeasonPlayer.position = SeasonPlayer.stringToPosition(roleText);
     tempSeasonPlayer.setIsRightHanded(footText == "Destro" ? true : false);
-    tempSeasonPlayer.matches = int.tryParse(matchesTextController.text);
-    tempSeasonPlayer.goals = int.tryParse(goalsTextController.text);
-    tempSeasonPlayer.yellowCards = int.tryParse(yellowTextController.text);
-    tempSeasonPlayer.redCards = int.tryParse(redTextController.text);
+    tempSeasonPlayer.matches = int.tryParse(matchesTextController.text)!;
+    tempSeasonPlayer.goals = int.tryParse(goalsTextController.text)!;
+    tempSeasonPlayer.yellowCards = int.tryParse(yellowTextController.text)!;
+    tempSeasonPlayer.redCards = int.tryParse(redTextController.text)!;
 
     tempSeasonPlayer.morfologia = morfologiaTextController.text;
     tempSeasonPlayer.sommatoTipo = sommatoTipoTextController.text;
@@ -176,12 +172,12 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
   /// Validate Player's name, surname and integers values. Position and
   /// isRightHanded are already restricted values. The other fields are all text
-  String validateTextFields() {
-    String errorMessage = InputValidation.validatePlayerName(nameTextController.text);
+  String? validateTextFields() {
+    String? errorMessage = InputValidation.validatePlayerName(nameTextController.text);
     if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validatePlayerSurname(surnameTextController.text);
     if(errorMessage != null) return errorMessage;
-    errorMessage = InputValidation.validateTeamName(tempSeasonPlayer.getSeasonTeam().getTeamName());
+    errorMessage = InputValidation.validateTeamName(tempSeasonPlayer.getSeasonTeam()!.getTeamName()!);
     if(errorMessage != null) return errorMessage;
     errorMessage = InputValidation.validateInteger(heightTextController.text);
     if(errorMessage != null) return errorMessage;
@@ -282,14 +278,14 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
               nameTextController: nameTextController,
               surnameTextController: surnameTextController,
               isEditEnabled: isEditEnabled,
-              fontColor: titleStyle.color,
-              fontSize: titleStyle.fontSize,
-              fontWeight: titleStyle.fontWeight,
+              fontColor: titleStyle.color!,
+              fontSize: titleStyle.fontSize!,
+              fontWeight: titleStyle.fontWeight!,
             ),
             SizedBox(height: 10,),
             TeamLabel(
-                teamName: playerInfo.getSeasonTeam().getTeamName(),
-                seasonId: playerInfo.getSeasonTeam().seasonId,
+                teamName: playerInfo.getSeasonTeam()!.getTeamName()!,
+                seasonId: playerInfo.getSeasonTeam()!.seasonId,
                 isEditEnabled: isEditEnabled,
                 onSuggestionTeamCallback: (pattern) => widget.onSuggestionTeamCallback(pattern),
                 onTeamChange: (seasonTeam) {
@@ -297,23 +293,23 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
                     playerInfo.setSeasonTeam(seasonTeam);
                   });
                 },
-                fontColor: teamStyle.color,
-                fontWeight: teamStyle.fontWeight,
-                fontSize: teamStyle.fontSize
+                fontColor: teamStyle.color!,
+                fontWeight: teamStyle.fontWeight!,
+                fontSize: teamStyle.fontSize!
             ),
             SizedBox(height: 10,),
             CategoryLabel(
               categoryName: playerInfo.getCategory().name,
               isEditEnabled: isEditEnabled,
-              teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()),
+              teamCategoriesCallback: () => widget.teamCategoriesCallback(playerInfo.getSeasonTeam()!),
               onCategoryChange: (category) {
                 setState(() {
                   playerInfo.setCategory(category);
                 });
               },
-              fontColor: categoryStyle.color,
-              fontSize: categoryStyle.fontSize,
-              fontWeight: categoryStyle.fontWeight,
+              fontColor: categoryStyle.color!,
+              fontSize: categoryStyle.fontSize!,
+              fontWeight: categoryStyle.fontWeight!,
             ),
           ],
         ),
@@ -357,9 +353,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             textAlign: TextAlign.end,
             maxLines: 1,
             textInputType: TextInputType.number,
-            textColor: textStyle.color,
-            textFontSize: textStyle.fontSize,
-            textFontWeight: textStyle.fontWeight,
+            textColor: textStyle.color!,
+            textFontSize: textStyle.fontSize!,
+            textFontWeight: textStyle.fontWeight!,
           ),
           SizedBox(width: 5,),
           Text(
@@ -394,9 +390,9 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             textAlign: TextAlign.end,
             maxLines: 1,
             textInputType: TextInputType.number,
-            textColor: textStyle.color,
-            textFontSize: textStyle.fontSize,
-            textFontWeight: textStyle.fontWeight,
+            textColor: textStyle.color!,
+            textFontSize: textStyle.fontSize!,
+            textFontWeight: textStyle.fontWeight!,
           ),
           SizedBox(width: 5,),
           Text(
@@ -422,7 +418,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
             DateTime curDate = DateTime.now();
             await showDatePicker(
                 context: context,
-                initialDate: playerInfo.getPlayerBirthday(),
+                initialDate: playerInfo.getPlayerBirthday()!,
                 firstDate: DateTime.utc(
                     curDate.year - 50),
                 lastDate: DateTime.utc(
@@ -439,7 +435,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
           }
         },
         child: DateWidget(
-          dateTime: playerInfo.getPlayerBirthday(),
+          dateTime: playerInfo.getPlayerBirthday()!,
           textStyle: textStyle,
           iconSize: PlayerDetailLayout.ICON_SIZE,
         ),
@@ -723,7 +719,7 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
     );
   }
 
-  Widget summaryWidget(int value, int maxValue, {double size}) {
+  Widget summaryWidget(int value, int maxValue, {double? size}) {
 
     bool isTrendingUp = value > maxValue / 2;
 
@@ -939,6 +935,6 @@ class _PlayerDetailLayoutState extends State<PlayerDetailLayout> {
 
 class PlayerDetailController {
 
-  bool Function() savePlayerStatus;
+  late bool Function() savePlayerStatus;
 
 }

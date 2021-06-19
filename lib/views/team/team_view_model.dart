@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:collection';
 
 import 'package:agonistica/core/app_services/app_state_service.dart';
@@ -11,19 +9,20 @@ import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/utils/nav_utils.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class TeamViewModel extends BaseViewModel {
 
-  final _databaseService = locator<DatabaseService>();
-  final _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
 
   static Logger _logger = getLogger('TeamViewModel');
 
-  SplayTreeSet<Match> _sortedMatches;
-  SplayTreeSet<SeasonPlayer> _sortedSeasonPlayers;
+  late SplayTreeSet<Match> _sortedMatches;
+  late SplayTreeSet<SeasonPlayer> _sortedSeasonPlayers;
 
   TeamViewModel(){
     _sortedMatches = SplayTreeSet((m1, m2) => Match.compare(m1, m2));
@@ -67,15 +66,11 @@ class TeamViewModel extends BaseViewModel {
   /// Use this callback to update the players listView. When this method is
   /// executed, the player has been already saved
   void _onPlayerDetailUpdate(SeasonPlayer seasonPlayer) {
-    if(_sortedSeasonPlayers == null) {
-      _logger.d("players list is null");
-      return;
-    }
 
     // check if player's id is already in players list
     // meaning the player is updated
-    SeasonPlayer player = _sortedSeasonPlayers.firstWhere((sp) => sp.id == seasonPlayer.id, orElse: () => null);
-    if(player != null) {
+    int index = _sortedSeasonPlayers.toList().indexWhere((sp) => sp.id == seasonPlayer.id);
+    if(index != -1) {
       // check if the player's team or category has changed
       if(seasonPlayer.seasonTeamId != _appStateService.selectedTeam.id || seasonPlayer.categoryId != _appStateService.selectedCategory.id) {
         // remove the player from the players list
@@ -99,10 +94,6 @@ class TeamViewModel extends BaseViewModel {
 
   void _onMatchDetailUpdate(Match match) {
     _logger.d("TeamViewModel/onMatchDetailUpdate");
-    if(_sortedMatches == null) {
-      _logger.d("matches list is null");
-      return;
-    }
     _sortedMatches.removeWhere((m) => m.id == match.id);
     _sortedMatches.add(match);
     _updateView();
@@ -129,7 +120,7 @@ class TeamViewModel extends BaseViewModel {
   }
 
   Future<void> openMatchDetail(BuildContext context, int index) async {
-    if(_sortedMatches == null || _sortedMatches.isEmpty) {
+    if(_sortedMatches.isEmpty) {
       _logger.d("Matches is null or empty when calling deleteMatch");
       return;
     }
@@ -138,7 +129,7 @@ class TeamViewModel extends BaseViewModel {
   }
 
   Future<void> openPlayerDetail(BuildContext context, int index) async {
-    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }
@@ -161,7 +152,7 @@ class TeamViewModel extends BaseViewModel {
   }
 
   Future<void> deleteMatch(int index) async {
-    if(_sortedMatches == null || _sortedMatches.isEmpty) {
+    if(_sortedMatches.isEmpty) {
       _logger.d("Matches is null or empty when calling deleteMatch");
       return;
     }
@@ -172,7 +163,7 @@ class TeamViewModel extends BaseViewModel {
   }
 
   Future<void> deletePlayer(int index) async {
-    if(_sortedSeasonPlayers == null || _sortedSeasonPlayers.isEmpty) {
+    if(_sortedSeasonPlayers.isEmpty) {
       _logger.d("Players is null or empty when calling deleteMatch");
       return;
     }

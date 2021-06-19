@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/widgets/text/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +11,12 @@ class NameLabel extends StatelessWidget{
   final FontWeight fontWeight;
 
   NameLabel({
-    @required this.nameTextController,
-    @required this.surnameTextController,
-    @required this.isEditEnabled,
-    @required this.fontColor,
-    @required this.fontSize,
-    @required this.fontWeight,
+    required this.nameTextController,
+    required this.surnameTextController,
+    required this.isEditEnabled,
+    required this.fontColor,
+    required this.fontSize,
+    required this.fontWeight,
   });
 
   @override

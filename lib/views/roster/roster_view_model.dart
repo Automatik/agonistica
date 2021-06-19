@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
 import 'package:agonistica/core/arguments/player_matches_view_arguments.dart';
 import 'package:agonistica/core/locator.dart';
@@ -18,12 +16,12 @@ class RosterViewModel extends BaseViewModel {
 
   final bool isNewPlayer;
   SeasonPlayer seasonPlayer;
-  final Function(SeasonPlayer) onPlayerDetailUpdate;
+  final Function(SeasonPlayer)? onPlayerDetailUpdate;
 
-  final _appStateService = locator<AppStateService>();
-  final _databaseService = locator<DatabaseService>();
+  final AppStateService _appStateService = locator<AppStateService>();
+  final DatabaseService _databaseService = locator<DatabaseService>();
 
-  List<SeasonTeam> seasonTeams;
+  late List<SeasonTeam> seasonTeams;
 
   RosterViewModel(this.isNewPlayer, this.seasonPlayer, this.onPlayerDetailUpdate){
     seasonTeams = [];
@@ -46,10 +44,10 @@ class RosterViewModel extends BaseViewModel {
   }
 
   List<SeasonTeam> onSuggestionTeamCallback(String pattern) {
-    if(pattern == null || pattern.isEmpty)
+    if(pattern.isEmpty)
       return seasonTeams;
 
-    return seasonTeams.where((team) => team.getTeamName().startsWith(pattern));
+    return seasonTeams.where((team) => team.getTeamName()!.startsWith(pattern)).toList();
   }
 
   Future<List<Category>> getTeamCategories(SeasonTeam seasonTeam) async {
@@ -69,9 +67,8 @@ class RosterViewModel extends BaseViewModel {
     // save eventually playerMatchNotes?
 
     if(onPlayerDetailUpdate != null) {
-      onPlayerDetailUpdate(newSeasonPlayer);
+      onPlayerDetailUpdate!(newSeasonPlayer);
     }
-    print("clone");
     // return to TeamView
 //    Navigator.of(context).pop();
 
@@ -83,8 +80,8 @@ class RosterViewModel extends BaseViewModel {
       PlayerMatchesView.routeName,
       arguments: PlayerMatchesViewArguments(
         seasonPlayer.id,
-        seasonPlayer.getPlayerName(),
-        seasonPlayer.getPlayerSurname(),
+        seasonPlayer.getPlayerName()!,
+        seasonPlayer.getPlayerSurname()!,
         choosePlayerMatchesViewAddAction(),
       ),
     );

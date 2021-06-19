@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:agonistica/core/assets/icon_assets.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/widgets/text/custom_text_field.dart';
@@ -15,16 +13,16 @@ class StatElement extends StatefulWidget {
   final String elementName;
   final bool isEditEnabled;
   final bool isFreeText;
-  final TextEditingController elementController;
-  final String elementText;
-  final Function(String) onElementChange;
+  final TextEditingController? elementController;
+  final String? elementText;
+  final Function(String)? onElementChange;
 
   StatElement({
-    @required this.icon,
-    @required this.elementName,
-    @required this.isEditEnabled,
-    @required this.isFreeText,
-    @required this.onElementChange,
+    required this.icon,
+    required this.elementName,
+    required this.isEditEnabled,
+    required this.isFreeText,
+    this.onElementChange,
     this.elementController,
     this.elementText
   });
@@ -36,12 +34,12 @@ class StatElement extends StatefulWidget {
 
 class _StatElementState extends State<StatElement> {
 
-  String elementTextState;
+  late String elementTextState;
 
   @override
   void initState() {
     super.initState();
-    elementTextState = widget.elementText;
+    elementTextState = widget.elementText!;
   }
 
   @override
@@ -97,7 +95,7 @@ class _StatElementState extends State<StatElement> {
               elementTextState = choices[index];
             });
             if(widget.onElementChange != null) {
-              widget.onElementChange(elementTextState);
+              widget.onElementChange!(elementTextState);
             }
           }, isPositionChoice ? 250 : 150);
         }

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of roster_view;
 
 class _RosterMobile extends StatefulWidget {
@@ -15,9 +13,9 @@ class _RosterMobile extends StatefulWidget {
 
 class _RosterMobileState extends State<_RosterMobile> {
 
-  bool isEditEnabled;
+  late bool isEditEnabled;
 
-  SeasonPlayer tempSeasonPlayer;
+  late SeasonPlayer tempSeasonPlayer;
 
   final PlayerDetailController playerDetailController = PlayerDetailController();
 

@@ -1,5 +1,3 @@
-// @dart=2.9
-
 part of team_view;
 
 class _TeamMobile extends StatefulWidget {
@@ -17,7 +15,7 @@ class _TeamMobile extends StatefulWidget {
 
 class _TeamMobileState extends State<_TeamMobile> {
 
-  int _tabIndex;
+  late int _tabIndex;
 
   @override
   void initState() {
@@ -54,7 +52,7 @@ class _TeamMobileState extends State<_TeamMobile> {
 
   Widget _getBaseLayout(Widget Function(int, double) getItem, int itemCount) {
     return BaseWidget(
-      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+      builder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation? parentSizingInformation) {
 
         double itemsWidth = 0.95 * sizingInformation.screenSize.width;
 
@@ -97,8 +95,8 @@ class _TeamMobileState extends State<_TeamMobile> {
       onTap: () => widget.viewModel.openMatchDetail(context, index),
       onSettingsTap: (offset) => onMatchLongPress(context, offset, index),
       width: itemsWidth,
-      team1: match.getHomeTeam(),
-      team2: match.getAwayTeam(),
+      team1: match.getHomeTeam()!,
+      team2: match.getAwayTeam()!,
       result: "${match.team1Goals} - ${match.team2Goals}",
       leagueMatch: match.leagueMatch,
       matchDate: match.matchDate,
@@ -113,7 +111,7 @@ class _TeamMobileState extends State<_TeamMobile> {
       name: "${seasonPlayer.getPlayerName()} ${seasonPlayer.getPlayerSurname()}",
       role: SeasonPlayer.positionToString(seasonPlayer.position),
       width: itemsWidth,
-      birthDay: seasonPlayer.getPlayerBirthday(),
+      birthDay: seasonPlayer.getPlayerBirthday()!,
     );
   }
 
@@ -131,11 +129,11 @@ class _TeamMobileState extends State<_TeamMobile> {
       itemValues: [viewItemValue, deleteItemValue]
     );
 
-    int value = await popupMenu.showPopupMenu(context);
+    int? value = await popupMenu.showPopupMenu(context);
     selectLongClickAction(context, value, index);
   }
 
-  void selectLongClickAction(BuildContext context, int choice, int index) {
+  void selectLongClickAction(BuildContext context, int? choice, int index) {
     switch(choice) {
       case TeamViewPopupMenu.VIEW_MATCH_CARD: widget.viewModel.openMatchDetail(context, index); break;
       case TeamViewPopupMenu.VIEW_PLAYER_CARD: widget.viewModel.openPlayerDetail(context, index); break;
