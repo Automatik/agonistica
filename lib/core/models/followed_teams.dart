@@ -13,7 +13,7 @@ class FollowedTeams {
 
   FollowedTeams.empty() {
     id = DbUtils.newUuid();
-    teamsIds = List.empty();
+    teamsIds = List.empty(growable: true);
   }
 
   void addTeam(String teamId) {
@@ -35,7 +35,7 @@ class FollowedTeams {
 
   FollowedTeams.fromJson(Map<dynamic, dynamic> json)
     : id = json['id'],
-      teamsIds = json['teamsIds'] == null ? List.empty() : List<String>.from(json['teamsIds']);
+      teamsIds = json['teamsIds'] == null ? List.empty(growable: true) : List<String>.from(json['teamsIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

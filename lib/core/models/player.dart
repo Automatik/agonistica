@@ -26,7 +26,7 @@ class Player {
     surname = EMPTY_PLAYER_SURNAME;
     birthDay = DateTime.utc(2020, 1, 1);
     isRightHanded = true;
-    seasonPlayersIds = List.empty();
+    seasonPlayersIds = List.empty(growable: true);
   }
 
   Player.clone(Player p) {
@@ -81,7 +81,7 @@ class Player {
       surname = json['surname'],
       birthDay = DateTime.parse(json['birthDay']),
       isRightHanded = json['isRightHanded'],
-      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(): List<String>.from(json['seasonPlayersIds']);
+      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(growable: true): List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

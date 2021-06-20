@@ -21,14 +21,14 @@ class Team {
     id = DbUtils.newUuid();
     this.name = name;
     this.imageFilename = imageFilename;
-    seasonTeamsIds = List.empty();
+    seasonTeamsIds = List.empty(growable: true);
   }
 
   Team.nameWithNoId(String name, String imageFilename) {
     id = null;
     this.name = name;
     this.imageFilename = imageFilename;
-    seasonTeamsIds = List.empty();
+    seasonTeamsIds = List.empty(growable: true);
   }
 
   void addSeasonTeam(String seasonTeamId) {
@@ -62,7 +62,7 @@ class Team {
       : id = json['id'],
         name = json['name'],
         imageFilename = json['imageFilename'],
-        seasonTeamsIds = json['seasonTeamsIds'] == null ? List.empty() : List<String>.from(json['seasonTeamsIds']);
+        seasonTeamsIds = json['seasonTeamsIds'] == null ? List.empty(growable: true) : List<String>.from(json['seasonTeamsIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id!);

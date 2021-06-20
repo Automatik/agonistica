@@ -46,7 +46,7 @@ class Match {
     matchDate = DateTime.now();
     team1 = Team.nameWithNoId("Squadra 1", team1ImageFilename);
     team2 = Team.nameWithNoId("Squadra 2", team2ImageFilename);
-    playersData = List.empty();
+    playersData = List.empty(growable: true);
     matchNotes = "";
   }
 
@@ -205,7 +205,7 @@ class Match {
       team2Goals = json['team2Goals'],
       leagueMatch = json['leagueMatch'],
       matchDate = DateTime.parse(json['matchDate']),
-      playersData = json['playersData'] == null ? List.empty() : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
+      playersData = json['playersData'] == null ? List.empty(growable: true) : List.generate(json['playersData'].length, (index) => MatchPlayerData.fromJson(json['playersData'][index])),
       matchNotes = json['matchNotes'] == null ? "" : json['matchNotes'];
 
   void checkRequiredFields() {

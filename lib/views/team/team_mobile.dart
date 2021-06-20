@@ -20,7 +20,7 @@ class _TeamMobileState extends State<_TeamMobile> {
   @override
   void initState() {
     super.initState();
-    _tabIndex = widget.initialTabIndex ?? TabScaffoldWidget.MATCHES_VIEW_INDEX;
+    _tabIndex = widget.initialTabIndex;
   }
 
   @override

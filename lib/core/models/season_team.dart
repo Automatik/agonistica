@@ -25,9 +25,9 @@ class SeasonTeam {
     id = DbUtils.newUuid();
     this.teamId = teamId;
     this.seasonId = seasonId;
-    categoriesIds = List.empty();
-    matchesIds = List.empty();
-    seasonPlayersIds = List.empty();
+    categoriesIds = List.empty(growable: true);
+    matchesIds = List.empty(growable: true);
+    seasonPlayersIds = List.empty(growable: true);
   }
 
   /// Useful constructor to create both a new Team and a new SeasonTeam
@@ -90,9 +90,9 @@ class SeasonTeam {
     : id = json['id'],
       teamId = json['teamId'],
       seasonId = json['seasonId'],
-      categoriesIds = json['categoriesIds'] == null ? List.empty() : List<String>.from(json['categoriesIds']),
-      matchesIds = json['matchesIds'] == null ? List.empty() : List<String>.from(json['matchesIds']),
-      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty() : List<String>.from(json['seasonPlayersIds']);
+      categoriesIds = json['categoriesIds'] == null ? List.empty(growable: true) : List<String>.from(json['categoriesIds']),
+      matchesIds = json['matchesIds'] == null ? List.empty(growable: true) : List<String>.from(json['matchesIds']),
+      seasonPlayersIds = json['seasonPlayersIds'] == null ? List.empty(growable: true) : List<String>.from(json['seasonPlayersIds']);
 
   void checkRequiredFields() {
     Preconditions.requireFieldNotEmpty("id", id);

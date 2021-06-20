@@ -51,7 +51,7 @@ abstract class CrudRepository<T> extends BaseRepository{
   Future<List<T>> getItemsByIds(List<String> itemsIds) async {
     Preconditions.requireArgumentsNotNulls(itemsIds);
 
-    List<T> items = List.empty();
+    List<T> items = List.empty(growable: true);
     for(String itemId in itemsIds) {
       final snapshot = await getItem(itemId);
       if(snapshot.value == null) {

@@ -87,7 +87,7 @@ class Menu {
       name = json['name'],
       type = json['type'],
       teamId = json['teamId'],
-      categoriesIds = json['categoriesIds'] == null ? List.empty() : List<String>.from(json['categoriesIds']),
+      categoriesIds = json['categoriesIds'] == null ? List.empty(growable: true) : List<String>.from(json['categoriesIds']),
       imageFilename = json['imageFilename'];
 
   void checkRequiredFields() {

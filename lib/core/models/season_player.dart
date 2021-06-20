@@ -66,8 +66,8 @@ class SeasonPlayer {
     this.seasonTeamId = seasonTeamId;
     this.seasonId = seasonId;
     this.categoryId = categoryId;
-    matchesIds = List.empty();
-    playerMatchNotesIds = List.empty();
+    matchesIds = List.empty(growable: true);
+    playerMatchNotesIds = List.empty(growable: true);
 
     height = 0;
     weight = 0;
@@ -226,8 +226,8 @@ class SeasonPlayer {
       seasonTeamId = json['seasonTeamId'],
       seasonId = json['seasonId'],
       categoryId = json['categoryId'],
-      matchesIds = json['matchesIds'] == null ? List.empty() : List<String>.from(json['matchesIds']),
-      playerMatchNotesIds = json['playerMatchNotesIds'] == null ? List.empty(): List<String>.from(json['playerMatchNotesIds']),
+      matchesIds = json['matchesIds'] == null ? List.empty(growable: true) : List<String>.from(json['matchesIds']),
+      playerMatchNotesIds = json['playerMatchNotesIds'] == null ? List.empty(growable: true): List<String>.from(json['playerMatchNotesIds']),
       height = json['height'],
       weight = json['weight'],
       position = json['position'],

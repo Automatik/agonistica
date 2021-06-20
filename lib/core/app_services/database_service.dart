@@ -91,8 +91,8 @@ class DatabaseService {
   }
 
   Future<AppUser> fetchAppUser() async {
-    String userId = await (PrefsUtils.getUserId() as Future<String>);
-    bool userExists = await _appUserService.itemExists(userId);
+    String? userId = await PrefsUtils.getUserId();
+    bool userExists = userId != null && await _appUserService.itemExists(userId);
     if(!userExists) {
       throw NotFoundException("User with id $userId not found in database.");
     }
@@ -136,7 +136,7 @@ class DatabaseService {
     }
     if(menuType == Menu.TYPE_FOLLOWED_PLAYERS) {
       // Create menu with currently no category
-      Menu menu = Menu.createPlayersMenu(menuName, List.empty(), menuImageFilename);
+      Menu menu = Menu.createPlayersMenu(menuName, List.empty(growable: true), menuImageFilename);
       await menuService.saveItem(menu);
       return menu;
     }
