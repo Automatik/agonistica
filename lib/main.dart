@@ -1,6 +1,5 @@
-// @dart=2.9
-
 import 'package:agonistica/core/app_services/app_state_service.dart';
+import 'package:agonistica/core/exceptions/integrity_exception.dart';
 import 'package:agonistica/core/locator.dart';
 import 'package:agonistica/core/app_services/database_service.dart';
 import 'package:agonistica/core/shared/shared_variables.dart';
@@ -19,7 +18,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-bool _isRegistered, _isLogged;
+late bool _isRegistered, _isLogged;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +60,10 @@ Future<void> getUserState() async {
     if(!isEmailVerified) {
       _isLogged = false;
     } else {
-      String appUserId = await PrefsUtils.getUserId();
+      String? appUserId = await PrefsUtils.getUserId();
+      if(appUserId == null) {
+        throw IntegrityException("AppUserId is null in SharedPreferences");
+      }
       final appUser = await locator<DatabaseService>().appUserService.getItemById(appUserId);
       locator<AppStateService>().selectedAppUser = appUser;
     }
@@ -76,7 +78,7 @@ class MyApp extends StatelessWidget {
       onPointerDown: (_) {
         FocusScopeNode currentFocus = FocusScope.of(context);
         if(!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null)
-          currentFocus.focusedChild.unfocus();
+          currentFocus.focusedChild!.unfocus();
       },
       child: PlatformProvider(
         builder: (BuildContext context) {
