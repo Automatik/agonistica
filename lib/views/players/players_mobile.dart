@@ -14,7 +14,7 @@ class _PlayersMobile extends StatelessWidget {
         viewModel.addNewPlayer(context);
       }),
       showAppBar: true,
-      childBuilder: (BuildContext ctx, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+      childBuilder: (BuildContext ctx, MySizingInformation sizingInformation, MySizingInformation? parentSizingInformation) {
         return _getPlayersLayout(ctx, sizingInformation);
       },
     );

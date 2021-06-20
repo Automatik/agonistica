@@ -39,7 +39,7 @@ class _TeamMobileState extends State<_TeamMobile> {
           _tabIndex = index;
         });
       },
-      childBuilder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+      childBuilder: (BuildContext context, MySizingInformation sizingInformation, MySizingInformation? parentSizingInformation) {
         if(_tabIndex == TabScaffoldWidget.MATCHES_VIEW_INDEX) {
           return _getMatchesLayout();
         }

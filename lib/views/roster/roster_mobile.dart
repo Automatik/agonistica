@@ -38,7 +38,7 @@ class _RosterMobileState extends State<_RosterMobile> {
       onBottomItemChanged: (index) {
         widget.viewModel.onBottomBarItemChanged(context, index, isEditEnabled);
       },
-      childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation parentSizingInformation) {
+      childBuilder: (BuildContext childContext, MySizingInformation sizingInformation, MySizingInformation? parentSizingInformation) {
         double width = 1 * sizingInformation.localWidgetSize.width;
 
         return PlayerDetailLayout(
