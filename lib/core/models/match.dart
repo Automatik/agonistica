@@ -78,7 +78,9 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team1!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam1Id!;
+    if(seasonTeam1Id != null) {
+      seasonTeam.id = seasonTeam1Id!;
+    }
     seasonTeam.team = team1;
     return seasonTeam;
   }
@@ -90,7 +92,9 @@ class Match {
     } else {
       seasonTeam = SeasonTeam.empty(team2!.id!, seasonId);
     }
-    seasonTeam.id = seasonTeam2Id!;
+    if(seasonTeam2Id != null) {
+      seasonTeam.id = seasonTeam2Id!;
+    }
     seasonTeam.team = team2;
     return seasonTeam;
   }

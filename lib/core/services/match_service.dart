@@ -53,8 +53,8 @@ class MatchService extends CrudService<Match> {
 
     // get players data that is needed to both update the players's matchesIds
     // and teams's playersIds
-    List<String> team1MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam1Id).map((p) => p.seasonPlayerId).toList() as List<String>;
-    List<String> team2MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam2Id).map((p) => p.seasonPlayerId).toList() as List<String>;
+    List<String> team1MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam1Id).map((p) => p.seasonPlayerId!).toList(); // p.seasonTeamId == match.seasonTeam1Id && p.seasonPlayerId != null
+    List<String> team2MatchPlayerIds = match.playersData.where((p) => p.seasonTeamId == match.seasonTeam2Id).map((p) => p.seasonPlayerId!).toList();
     List<String> matchPlayersIds = List.from(team1MatchPlayerIds);
     matchPlayersIds.addAll(team2MatchPlayerIds);
     List<SeasonPlayer> matchPlayers = await seasonPlayerService.getItemsByIds(matchPlayersIds);
