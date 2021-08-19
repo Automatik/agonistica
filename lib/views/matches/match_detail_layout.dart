@@ -388,8 +388,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeRegularPlayers = homeRegularPlayers.length;
     int numAwayRegularPlayers = awayRegularPlayers.length;
     int numRegularPlayers = max(numHomeRegularPlayers, numAwayRegularPlayers);
-    balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeSeasonTeamId()!, true);
-    balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwaySeasonTeamId()!, true);
+    homeRegularPlayers = balanceTeamPlayers(homeRegularPlayers, numRegularPlayers, tempMatch.getHomeSeasonTeamId()!, true);
+    awayRegularPlayers = balanceTeamPlayers(awayRegularPlayers, numRegularPlayers, tempMatch.getAwaySeasonTeamId()!, true);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -413,8 +413,8 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int numHomeReservePlayers = homeReservePlayers.length;
     int numAwayReservePlayers = awayReservePlayers.length;
     int numReservePlayers = max(numHomeReservePlayers, numAwayReservePlayers);
-    balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeSeasonTeamId()!, false);
-    balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwaySeasonTeamId()!, false);
+    homeReservePlayers = balanceTeamPlayers(homeReservePlayers, numReservePlayers, tempMatch.getHomeSeasonTeamId()!, false);
+    awayReservePlayers = balanceTeamPlayers(awayReservePlayers, numReservePlayers, tempMatch.getAwaySeasonTeamId()!, false);
 
     bool areRemainingRegularPlayersToFill;
     int rowsCount;
@@ -497,7 +497,9 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
                 String? seasonTeamId = isHomePlayer ? tempMatch.getHomeSeasonTeamId() : tempMatch.getAwaySeasonTeamId();
                 List<SeasonPlayer> seasonPlayers = widget.onPlayersSuggestionCallback(namePattern, surnamePattern, seasonTeamId!);
                 // Remove players already in the lineup
-                List<String> lineupPlayersIds = tempMatch.playersData.map((p) => p.seasonPlayerId).toList() as List<String>;
+                List<String> lineupPlayersIds = tempMatch.playersData
+                    .where((p) => p.seasonPlayerId != null)
+                    .map((p) => p.seasonPlayerId!).toList();
                 seasonPlayers.removeWhere((p) => lineupPlayersIds.contains(p.id));
                 return seasonPlayers;
               },
@@ -569,12 +571,18 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     return !isRowWithNoPlayers;
   }
 
-  void balanceTeamPlayers(List<MatchPlayerData> players, int numPlayersToReach, String teamId, bool areRegulars) {
+  List<MatchPlayerData> balanceTeamPlayers(List<MatchPlayerData> players, int numPlayersToReach, String teamId, bool areRegulars) {
     int originalLength = players.length;
     if(numPlayersToReach <= originalLength)
-      return;
-    players.length = numPlayersToReach;
-    players.fillRange(originalLength, numPlayersToReach, areRegulars ? _addRegularPlayer(teamId) : _addReservePlayer(teamId));
+      return players;
+    //players.length = numPlayersToReach; //TODO Errore qui "type 'Null' is not a subtype of type 'MatchPlayerData' in type cast" probabilmente dovuto al fatto che non si può più aumentare una lista in questo modo
+    // Increase List's length with null values
+    List<MatchPlayerData?> newPlayers = List.from(players);
+    newPlayers.length = numPlayersToReach;
+    newPlayers.fillRange(originalLength, numPlayersToReach, areRegulars ? _addRegularPlayer(teamId) : _addReservePlayer(teamId));
+    // Copy new players to original List
+    players = List<MatchPlayerData>.from(newPlayers);
+    return players;
   }
 
   void _addNewRowWithRegularPlayers() {

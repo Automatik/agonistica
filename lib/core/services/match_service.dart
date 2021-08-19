@@ -112,8 +112,8 @@ class MatchService extends CrudService<Match> {
 
   Future<void> _removeMatchIdAndStatsFromRemovedPlayers(List<MatchPlayerData> oldMatchPlayersData, List<MatchPlayerData> currentMatchPlayerData, String matchId) async {
     // Map MatchPlayerData to a list of players ids
-    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.seasonPlayerId).toList() as List<String>;
-    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.seasonPlayerId).toList() as List<String>;
+    List<String> oldPlayerIds = oldMatchPlayersData.map((p) => p.seasonPlayerId!).toList();
+    List<String> currentPlayerIds = currentMatchPlayerData.map((p) => p.seasonPlayerId!).toList();
     // Keep in oldPlayerIds only the players that are now removed from the Match
     oldPlayerIds.retainWhere((op) => !currentPlayerIds.contains(op));
     // Do the same for the list of MatchPlayerData

@@ -72,8 +72,16 @@ class PlayerTextFormField extends StatelessWidget {
           autofocus: false,
           keyboardType: textInputType,
           focusNode: focusNode,
-          onChanged: (value) => onChanged!(value),
-          validator: (value) => validator!(value),
+          onChanged: (value) {
+            if(onChanged != null) {
+              onChanged!(value);
+            }
+          },
+          validator: (value) {
+            if(validator != null) {
+              validator!(value);
+            }
+          },
         ),
       ],
     );
