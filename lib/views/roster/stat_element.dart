@@ -39,7 +39,7 @@ class _StatElementState extends State<StatElement> {
   @override
   void initState() {
     super.initState();
-    elementTextState = widget.elementText!;
+    elementTextState = widget.elementText ?? "";
   }
 
   @override
