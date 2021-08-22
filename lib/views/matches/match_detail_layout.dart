@@ -575,7 +575,6 @@ class _MatchDetailLayoutState extends State<MatchDetailLayout> {
     int originalLength = players.length;
     if(numPlayersToReach <= originalLength)
       return players;
-    //players.length = numPlayersToReach; //TODO Errore qui "type 'Null' is not a subtype of type 'MatchPlayerData' in type cast" probabilmente dovuto al fatto che non si può più aumentare una lista in questo modo
     // Increase List's length with null values
     List<MatchPlayerData?> newPlayers = List.from(players);
     newPlayers.length = numPlayersToReach;

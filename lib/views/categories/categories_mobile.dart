@@ -138,10 +138,10 @@ class _CategoriesMobile extends StatelessWidget {
 
   Future<void> onActionAdd(BuildContext context) async {
     final dialog = InsertCategoryDialog(
-      validateInput: (categoryName) {
+      validateInput: (String categoryName) {
         return viewModel.validateNewCategory(categoryName);
         },
-      onSubmit: (categoryName)  {
+      onSubmit: (String categoryName)  {
         viewModel.createNewCategory(categoryName);
         // close dialog
         Navigator.of(context).pop();

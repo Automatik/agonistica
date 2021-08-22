@@ -6,7 +6,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 abstract class BaseInsertDialog {
 
-  final String Function(String) validateInput;
+  final String? Function(String) validateInput;
   final Function(String) onSubmit;
 
   BaseInsertDialog({
@@ -47,7 +47,7 @@ abstract class BaseInsertDialog {
 
 class _InsertForm extends StatefulWidget {
 
-  final String Function(String) validateInput;
+  final String? Function(String) validateInput;
   final Function(String) onSubmit;
 
   _InsertForm({
