@@ -11,6 +11,7 @@ class PlayerMatchNotes {
 
   PlayerMatchNotes(this.matchId, this.seasonPlayerId) {
     id = DbUtils.newUuid();
+    notes = "";
   }
 
   PlayerMatchNotes.clone(PlayerMatchNotes playerMatchNotes) {

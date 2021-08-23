@@ -91,7 +91,7 @@ class PlayerMatchesViewModel extends BaseViewModel {
 
   void _onPlayerMatchesDetailUpdate(Match match) {
     _logger.d("PlayerMatchesModel/onMatchDetailUpdate");
-    List<String> matchesIds = objects.map((e) => e.match.id) as List<String>;
+    List<String> matchesIds = objects.map((e) => e.match.id).toList();
     if(!matchesIds.contains(match.id)) {
       List<MatchNotesObject> newObjects = createObjects([match], []);
       objects.addAll(newObjects);
