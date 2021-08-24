@@ -69,7 +69,7 @@ class PlayersViewModel extends BaseViewModel {
 
   /// Use this callback to update the players listView. When this method is
   /// executed, the player has been already saved
-  void _onPlayerDetailUpdate(SeasonPlayer seasonPlayer) {
+  Future<void> _onPlayerDetailUpdate(SeasonPlayer seasonPlayer) async {
     // check if player's id is already in players list
     // meaning the player is updated
     int index = _sortedSeasonPlayers.toList().indexWhere((sp) => sp.id == seasonPlayer.id);
@@ -88,6 +88,8 @@ class PlayersViewModel extends BaseViewModel {
       // otherwise it's a new player
       _sortedSeasonPlayers.add(seasonPlayer);
       _logger.d("new player added to list");
+      // add the player to the followed players list
+      await _followPlayer(seasonPlayer.playerId);
     }
 
     _updateView();
@@ -116,7 +118,28 @@ class PlayersViewModel extends BaseViewModel {
     SeasonPlayer seasonPlayer = _sortedSeasonPlayers.elementAt(index);
     _sortedSeasonPlayers.removeWhere((element) => element.id == seasonPlayer.id);
     await _databaseService.seasonPlayerService.deleteItem(seasonPlayer.id);
+    await _unfollowPlayer(seasonPlayer.playerId);
     _updateView();
+  }
+
+  Future<void> _followPlayer(String playerId) async {
+    bool isPlayerFollowed = await _isPlayerFollowed(playerId);
+    if(!isPlayerFollowed) {
+      await _databaseService.followedPlayersService.followPlayer(playerId);
+      _logger.d("new player added is now followed");
+    }
+  }
+
+  Future<void> _unfollowPlayer(String playerId) async {
+    bool isPlayerFollowed = await _isPlayerFollowed(playerId);
+    if(isPlayerFollowed) {
+      await _databaseService.followedPlayersService.unFollowPlayer(playerId);
+      _logger.d("The player is not followed anymore");
+    }
+  }
+
+  Future<bool> _isPlayerFollowed(String playerId) async {
+    return await _databaseService.followedPlayersService.isPlayerFollowed(playerId);
   }
 
 }

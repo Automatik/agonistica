@@ -113,14 +113,14 @@ class SeasonPlayerService extends CrudService<SeasonPlayer> {
 
   Future<List<SeasonPlayer>> getSeasonPlayersWithCategoryAndSeasonFromPlayers(String categoryId, String seasonId, List<Player> players) async {
     List<SeasonPlayer> seasonPlayers = [];
-    players.forEach((p) async {
+    for(Player p in players) {
       List<SeasonPlayer> playerSeasonPlayers = await getItemsByIds(p.seasonPlayersIds);
       int index = playerSeasonPlayers.indexWhere((sp) => sp.categoryId == categoryId && sp.seasonId == seasonId);
       if(index != -1) {
         SeasonPlayer seasonPlayer = playerSeasonPlayers[index];
         seasonPlayers.add(seasonPlayer);
       }
-    });
+    }
     return seasonPlayers;
   }
 
