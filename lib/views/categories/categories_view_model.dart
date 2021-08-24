@@ -48,7 +48,7 @@ class CategoriesViewModel extends BaseViewModel {
     if(_currentMenu.isTeamMenu()) {
       await _getTeamSeasons(_currentMenu);
       _currentSeasonSelected = _getFirstSeasonItem();
-      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id);
+      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id, _currentMenu.id);
     } else {
       await _getPlayersSeasons();
       await _getPlayersCategories(_currentMenu);
@@ -71,12 +71,12 @@ class CategoriesViewModel extends BaseViewModel {
     return seasonTeams.firstWhere((st) => st.seasonId == seasonId);
   }
 
-  Future<void> _getTeamCategories(List<SeasonTeam> seasonTeams, String seasonId) async {
+  Future<void> _getTeamCategories(List<SeasonTeam> seasonTeams, String seasonId, String menuId) async {
     if(seasonTeams.isEmpty) {
       return;
     }
     SeasonTeam seasonTeam = _getSeasonTeamFromSeason(seasonTeams, seasonId);
-    List<Category> categories = await _databaseService.categoryService.getItemsByIds(seasonTeam.categoriesIds);
+    List<Category> categories = await _databaseService.categoryService.getMenuCategories(menuId, seasonTeam.categoriesIds);
     _sortedCategories.addAll(categories);
   }
 
@@ -90,7 +90,7 @@ class CategoriesViewModel extends BaseViewModel {
   }
 
   Future<void> _getPlayersCategories(Menu menu) async {
-    List<Category> menuCategories = await _databaseService.categoryService.getItemsByIds(menu.categoriesIds!);
+    List<Category> menuCategories = await _databaseService.categoryService.getMenuCategories(menu.id, menu.categoriesIds!);
     _sortedCategories.addAll(menuCategories);
   }
 
@@ -140,7 +140,7 @@ class CategoriesViewModel extends BaseViewModel {
     _currentSeasonSelected = _getSeasonItemAtIndex(index);
     _sortedCategories.clear();
     if(_currentMenu.isTeamMenu()) {
-      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id);
+      await _getTeamCategories(_seasonTeams, _currentSeasonSelected.id, _currentMenu.id);
     } else {
       await _getPlayersCategories(_currentMenu);
     }

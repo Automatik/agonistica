@@ -37,6 +37,18 @@ class CategoryService extends CrudService<Category> {
     await menuService.addCategoryToMenu(category, menuId);
   }
 
+  /// Filter categories that belong to the given menu
+  Future<List<Category>> getMenuCategories(String menuId, List<String> categoriesIds) async {
+    List<Category> categories = await getItemsByIds(categoriesIds);
+    MenuService menuService = MenuService(databaseReference);
+    Menu menu = await menuService.getItemById(menuId);
+    if(menu.categoriesIds == null) {
+      menu.categoriesIds = [];
+    }
+    categories.removeWhere((c) => !menu.categoriesIds!.contains(c.id));
+    return categories;
+  }
+
   /// Get the team's categories
   Future<List<Category>> getTeamCategories(String seasonTeamId) async {
     SeasonTeamService seasonTeamService = SeasonTeamService(databaseReference);
