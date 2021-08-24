@@ -6,6 +6,7 @@ import 'package:agonistica/core/models/menu.dart';
 import 'package:agonistica/core/models/season.dart';
 import 'package:agonistica/core/models/season_team.dart';
 import 'package:agonistica/core/models/team.dart';
+import 'package:agonistica/core/utils/nav_utils.dart';
 import 'package:agonistica/views/categories/categories_view.dart';
 import 'package:flutter/material.dart';
 
@@ -75,11 +76,7 @@ class AppStateService {
   }
 
   Future<void> _navigateToCategoriesView(BuildContext context, List<String> categoriesIds) async {
-    await Navigator.pushNamed(
-      context,
-      CategoriesView.routeName,
-      arguments: CategoriesViewArguments(categoriesIds),
-    );
+    await NavUtils.navToCategoriesView(context, categoriesIds);
   }
 
 }

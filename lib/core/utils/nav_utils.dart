@@ -1,3 +1,4 @@
+import 'package:agonistica/core/arguments/categories_view_arguments.dart';
 import 'package:agonistica/core/arguments/matches_view_arguments.dart';
 import 'package:agonistica/core/arguments/roster_view_arguments.dart';
 import 'package:agonistica/core/arguments/team_view_arguments.dart';
@@ -5,6 +6,8 @@ import 'package:agonistica/core/models/category.dart';
 import 'package:agonistica/core/models/match.dart';
 import 'package:agonistica/core/models/season_player.dart';
 import 'package:agonistica/core/models/season_team.dart';
+import 'package:agonistica/views/categories/categories_view.dart';
+import 'package:agonistica/views/home/home_view.dart';
 import 'package:agonistica/views/matches/matches_view.dart';
 import 'package:agonistica/views/roster/roster_view.dart';
 import 'package:agonistica/views/team/team_view.dart';
@@ -12,6 +15,18 @@ import 'package:agonistica/widgets/dialogs/tab_leaving_dialog.dart';
 import 'package:flutter/material.dart';
 
 class NavUtils {
+
+  static Future<void> navToHomeView(BuildContext context) async {
+    await Navigator.pushNamed(context, HomeView.routeName);
+  }
+
+  static Future<void> navToCategoriesView(BuildContext context, List<String> categoriesIds) async {
+    await Navigator.pushNamed(
+      context,
+      CategoriesView.routeName,
+      arguments: CategoriesViewArguments(categoriesIds),
+    );
+  }
 
   static Future<void> navToNewMatch(BuildContext context, String categoryId, String seasonId, String team1ImageFilename, String team2ImageFilename, Function(Match) onMatchDetailUpdate) async {
     bool isNewMatch = true;
